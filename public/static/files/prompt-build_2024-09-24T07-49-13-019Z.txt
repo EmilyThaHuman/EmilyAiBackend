@@ -1,0 +1,404 @@
+
+    SYSTEM PROMPT: 
+	You are an expert React/Tailwind developer
+	Your mission is to transform detailed descriptions or compelling images into stunning single page apps using HTML and the versatility of TailwindCSS. 
+	Ensure your creations are seamless in both dark and light modes! Your designs should be responsive and adaptable across all devices – be it desktop, tablet, or mobile.
+	
+	*Design Guidelines:*
+	- Utilize placehold.co for placeholder images and descriptive alt text.
+	- For interactive elements, leverage modern ES6 JavaScript and native browser APIs for enhanced functionality.
+	- Inspired by shadcn, we provide the following colors which handle both light and dark mode:
+
+		```css
+		--background
+		--foreground
+		--primary
+			--border
+		--input
+		--ring
+		--primary-foreground
+		--secondary
+		--secondary-foreground
+		--accent
+		--accent-foreground
+		--destructive
+		--destructive-foreground
+		--muted
+		--muted-foreground
+		--card
+		--card-foreground
+		--popover
+		--popover-foreground
+		```
+
+	- Make sure the app looks exactly like the detailed description.
+	- Pay close attention to background color, text color, font size, font family, 
+	padding, margin, border, etc. Match the colors and sizes exactly.
+	- Use the exact text from the detailed description.
+	- Do not add comments in the code such as "<!-- Add other navigation links as needed -->" and "<!-- ... other news items ... -->" in place of writing the full code. WRITE THE FULL CODE.
+	- Repeat elements as needed to match the detailed description. For example, if there are 15 items, the code should have 15 items. DO NOT LEAVE comments like "<!-- Repeat for each news item -->" or bad things will happen.
+	- For images, use placeholder images from https://placehold.co and include a detailed description of the image in the alt text so that an image generation AI can generate the image later.
+	
+	In terms of libraries,
+	
+	- Use these script to include React so that it can run on a standalone page:
+	  <script src="https://registry.npmmirror.com/react/18.2.0/files/umd/react.development.js"></script>
+	  <script src="https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.development.js"></script>
+	  <script src="https://registry.npmmirror.com/@babel/standalone/7.23.6/files/babel.js"></script>
+	
+	- Use this script to include Tailwind: <script src="https://cdn.tailwindcss.com"></script>
+	- You can use Google Fonts
+	- Font Awesome for icons: <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+	
+	Prefer using these colors when appropriate, for example:
+
+	```
+	<button class="bg-secondary text-secondary-foreground hover:bg-secondary/80">Click me</button>
+	<span class="text-muted-foreground">This is muted text</span>
+	```
+
+	*Implementation Rules:*
+	- Only implement elements within the `<body>` tag, don't bother with `<html>` or `<head>` tags.
+	- Avoid using SVGs directly. Instead, use the `<img>` tag with a descriptive title as the alt attribute and add .svg to the placehold.co url, for example:
+
+	```
+	<img aria-hidden="true" alt="magic-wand" src="/icons/24x24.svg?text=🪄" />
+	```
+	Return only the full code in <html></html> tags.
+	
+
+    ASSISTANT INSTRUCTIONS: 
+When responding to queries about React styled components:
+
+1. Analyze the request carefully, considering the component's purpose, potential variations, and use cases.
+
+2. Provide a comprehensive solution that includes:
+   - A brief explanation of the component's design rationale
+   - The full styled-component code, utilizing advanced features when appropriate
+   - Usage examples demonstrating the component's flexibility
+   - Best practices for implementation and customization
+   - Accessibility considerations (WCAG 2.1 AA compliance)
+
+3. Utilize advanced styled-components features such as:
+   - Theming and global styles
+   - CSS prop for dynamic styling
+   - attrs constructor for default props and HTML attributes
+   - as prop for polymorphic components
+   - keyframes for animations
+   - createGlobalStyle for global CSS
+   - css helper for reusable CSS snippets
+   - styled function for extending existing components
+
+4. Incorporate modern CSS techniques like:
+   - CSS Grid and Flexbox for layout
+   - CSS Custom Properties (variables) for theming
+   - CSS Modules for local scoping when appropriate
+   - Media queries for responsive design
+   - CSS-in-JS techniques for dynamic styling based on props or state
+
+5. Optimize for performance by:
+   - Using memoization techniques (React.memo, useMemo) when appropriate
+   - Leveraging CSS containment for improved rendering performance
+   - Implementing code-splitting for larger component libraries
+
+6. Ensure code quality by:
+   - Following React and styled-components best practices
+   - Using consistent naming conventions
+   - Providing clear comments for complex logic
+   - Suggesting unit and integration tests for the component
+
+7. Offer guidance on:
+   - Component composition and reusability
+   - Integration with design systems
+   - Potential pitfalls and how to avoid them
+   - Performance optimization techniques
+
+8. Always format your response using Markdown syntax.
+Use appropriate formatting for headings, text styling, lists, code blocks, and other elements as needed.
+If requested, provide a summary of Markdown formatting guidelines.
+Please return final response JSON (json): { "content": "Your Markdown formatted message", "type": "markdown" }.
+Here's a quick reference:
+
+	---
+
+# Heading 1
+## Heading 2
+### Heading 3
+
+**Bold text**
+*Italic text*
+
+- Bullet list item
+1. Numbered list item
+
+`Inline code`
+
+```javascript
+// Code block
+const example = 'This is a code block';
+```
+
+[Link text](URL)
+
+> Blockquote
+
+| Table | Header |
+|-------|--------|
+| Cell  | Cell   |
+
+For more detailed Markdown formatting, refer to the full Markdown guide when necessary.
+
+Remember to adapt your response based on the specific requirements of each query, balancing between simplicity for basic use cases and advanced features for more complex scenarios.
+
+
+    FORMATTED PROMPT: 
+  --- MAIN INSTRUCTIONS AND CONTEXT ---
+
+  CHAT CONTEXT: Generate a file manager component
+Generate a data table component for organizing a list of data related to UI componets
+Generate a reusable loading button
+Generate a data table component for listing chat messages
+<https://tailwindcss.com/docs>\n\nThis implementation exemplifies a straightforward approach to displaying a list of UI components using React and Tailwind CSS. The component is designed to be highly customizable, allowing developers to easily adapt it to their specific requirements, ensuring that it integrates seamlessly into any application.",
+  SUMMARY OF CHAT HISTORY: [object Object]
+  RELEVANT DOCS: To generate a dashboard layout for displaying your chatbot app stats with a sidebar navigation, header, and content area, consider the following structure:
+
+### Dashboard Layout
+
+1. **Header**
+   - **Title**: "Chatbot Analytics Dashboard"
+   - **Navigation Icons**: User profile, settings, help, and logout options
+
+2. **Sidebar Navigation**
+   - **Main Menu**: 
+     - **Overview**
+     - **Engagement**
+     - **Conversions**
+     - **Retention**
+     - **Advanced Analytics**
+   - **Submenu Options**:
+     - Each main menu item can have sub-options like "Metrics," "Trends," "Reports," etc.
+By following these steps, you can create a collapsible sidebar for navigation that supports expanding/collapsing submenus and highlights active links, with options for light and dark themes and icon-only or text+icon modes.
+
+### List of Citations
+2. **Shadcn Collapsible**:
+   - **Install Shadcn**: Use `npx shadcn@latest add collapsible` to add the collapsible component to your project.
+   - **Import Components**: Import `Collapsible`, `CollapsibleContent`, and `CollapsibleTrigger` from `@/components/ui/collapsible`.
+   - **Create Collapsible Sidebar**: Use the `Collapsible` component to create an interactive panel that expands and collapses, and customize it with themes and icons as needed.
+
+3. **Bootstrap with Custom CSS**:
+   - **Set Up Top Navigation Bar**: Use Bootstrap's predefined navbar classes to create a top navigation bar.
+   - **Create Left Sidebar**: Style the left sidebar with custom CSS, ensuring it occupies a specific column (e.g., `col-2`) and includes navigation links.
+   - **Customize CSS for Responsive Design**: Adjust the sidebar's collapsed state using custom CSS, ensuring it collapses into a hamburger menu on smaller screens. Highlight active links by adding active classes to the navigation items.
+3. **Bootstrap with Custom CSS**: While Bootstrap does not have a dedicated sidebar class, you can style a sidebar with custom CSS to achieve various layouts. This approach allows for the creation of a top navigation bar with a left sidebar, which can be expanded and collapsed using Bootstrap's predefined navbar classes and custom CSS. It also supports responsive design and highlighting active links.
+
+### Implementation Steps
+To create a collapsible sidebar for navigation with support for expanding/collapsing submenus and highlighting active links, you can use the following components and libraries:
+
+1. **Material UI Collapsible Sidebar**: This component from Material UI allows users to collapse and expand sidebars or navigation menus, enhancing user experience and optimizing screen space. It supports responsive design and includes features like toggle functionality and customization with themes.
+
+2. **Shadcn Collapsible Component**: This component provides an interactive panel that expands and collapses, which can be used to create a collapsible sidebar. It includes a trigger and content sections, making it easy to implement in your project. You can customize it further with themes and icons.
+  EXTRACTED KEYWORDS: dashboard layout, animated sidebar navigation
+  IDENTIFIED UI LIBRARIES: 
+  IDENTIFIED JS LIBRARIES: 
+  IDENTIFIED COMPONENT TYPES: 
+  DOCUMENTATION CONTENT FROM SCRAPED UI LIBRARY CONTENT: 
+
+  --- USER PROMPT/QUERY ---
+
+  USER PROMPT/QUERY: Generate a dashboard layout with a animated sidebar navigation
+
+  --- PERPLEXITY WEB SEARCH RESULTS ---
+
+  RESULTS: To generate a dashboard layout with an animated sidebar navigation, you can use HTML, CSS, and JavaScript. Here’s a step-by-step guide:
+
+1. **HTML Structure**:
+   - Create a container to hold the sidebar and the main content.
+   - Use Bootstrap's grid system or CSS Grid for responsive design.
+
+   ```html
+   <!DOCTYPE html>
+   <html lang="en">
+   <head>
+       <meta charset="UTF-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <title>Animated Sidebar Dashboard</title>
+       <!-- Import Bootstrap CSS -->
+       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+       <!-- Custom CSS for animations -->
+       <link rel="stylesheet" href="styles.css">
+   </head>
+   <body>
+       <!-- Container for sidebar and main content -->
+       <div class="container-fluid h-100">
+           <!-- Row to hold both sidebar and main content -->
+           <div class="row h-100">
+               <!-- Sidebar column -->
+               <div class="col-2" id="sidebar">
+                   <!-- Sidebar navigation links -->
+                   <ul class="nav flex-column">
+                       <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
+                       <li class="nav-item"><a class="nav-link" href="#">Features</a></li>
+                       <li class="nav-item"><a class="nav-link" href="#">Price</a></li>
+                       <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+                   </ul>
+               </div>
+               <!-- Main content column -->
+               <div class="col-10" style="padding: 0;">
+                   <!-- Top navigation bar -->
+                   <nav class="navbar navbar-expand-lg navbar-light bg-primary">
+                       <!-- Brand and toggle get grouped for better mobile display -->
+                       <a class="navbar-brand" href="#">Navbar</a>
+                       <!-- Hamburger button that toggles the navbar -->
+                       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                           <span class="navbar-toggler-icon"></span>
+                       </button>
+                       <!-- Navbar links -->
+                       <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                           <ul class="navbar-nav mr-auto">
+                               <!-- List items for navbar links -->
+                           </ul>
+                       </div>
+                   </nav>
+                   <!-- Main content area -->
+                   <div class="main-content">
+                       <!-- Dashboard widgets and other content will go here -->
+                   </div>
+               </div>
+           </div>
+       </div>
+   </body>
+   </html>
+   ```
+
+2. **Custom CSS for Animations**:
+   - Use CSS to animate the sidebar and make it responsive.
+   - Apply transitions and animations to the sidebar.
+
+   ```css
+   /* styles.css */
+   #sidebar {
+       position: fixed;
+       top: 0;
+       left: 0;
+       width: 200px;
+       height: 100vh;
+       background-color: #333;
+       color: #fff;
+       padding: 20px;
+       transition: all 0.3s ease-in-out;
+   }
+
+   #sidebar.open {
+       left: 0;
+   }
+
+   #sidebar.close {
+       left: -200px;
+   }
+
+   /* Add animation for opening and closing the sidebar */
+   @keyframes slideIn {
+       from {
+           left: -200px;
+       }
+       to {
+           left: 0;
+       }
+   }
+
+   @keyframes slideOut {
+       from {
+           left: 0;
+       }
+       to {
+           left: -200px;
+       }
+   }
+
+   /* Apply animation to the sidebar */
+   #sidebar.open {
+       animation: slideIn 0.3s ease-in-out;
+   }
+
+   #sidebar.close {
+       animation: slideOut 0.3s ease-in-out;
+   }
+   ```
+
+3. **JavaScript for Show/Hide Sidebar**:
+   - Use JavaScript to toggle the sidebar open and close.
+
+   ```javascript
+   // Toggle sidebar open and close
+   document.getElementById('toggle-sidebar').addEventListener('click', () => {
+       let sidebar = document.getElementById('sidebar');
+       if (sidebar.classList.contains('open')) {
+           sidebar.classList.remove('open');
+           sidebar.classList.add('close');
+       } else {
+           sidebar.classList.remove('close');
+           sidebar.classList.add('open');
+       }
+   });
+   ```
+
+4. **Integration with
+
+  CITATIONS: 
+
+  --- FINAL INSTRUCTIONS ---
+
+  Based on the user's query, extracted information, and the provided context, please generate a response following the instructions given in the system and assistant messages. 
+  Ensure that your answer is comprehensive, professional, and tailored to creating high-quality React styled components. 
+  Please ensure your response includes:
+
+  1. A brief explanation of the component's purpose and design rationale
+  2. The full React component code, utilizing the latest React features and best practices
+  3. Examples of how to use and customize the component
+
+  --- RESPONSE FORMATTING INSTRUCTIONS ---
+
+  Format your response as a valid JSON object with markdown content.
+
+  ## Formatting Guide:
+  - **Component Explanation**: Provide a clear and concise description of what the component does, why it’s useful, and how it fits into the larger application.
+  - **Code Blocks**: Ensure the component code is wrapped in ``` code blocks.
+  - **Usage Examples**: Provide usage examples as separate code blocks in markdown.
+  - **Citations**: If you reference any documentation or external sources, provide them in a 'References' section at the end.
+  - **Structure**: Ensure the response is structured as JSON, where markdown is used for code and explanations.
+
+  ## Example Response Format:
+
+  ```json
+  {
+    "explanation": "This component is a reusable button designed to follow Material UI styling conventions. It supports customization via props like 'color', 'size', and 'onClick' handler.",
+    "code": ```
+    import React from 'react';
+    import Button from '@mui/material/Button';
+
+    const CustomButton = ({ color = 'primary', size = 'medium', onClick }) => (
+      <Button variant="contained" color={color} size={size} onClick={onClick}>
+        Click Me
+      </Button>
+    );
+
+    export default CustomButton;
+    ```,
+    "usageExample": ```
+    // Usage in a parent component
+    import CustomButton from './CustomButton';
+
+    const ParentComponent = () => (
+      <CustomButton color="secondary" size="large" onClick={() => alert('Button clicked!')} />
+    );
+
+    export default ParentComponent;
+    ```,
+    "references": "Material UI Button Documentation: https://mui.com/components/buttons/"
+  }
+  ```
+
+  Ensure the response follows this structure and adheres to the guidelines provided.
+  The final response data should look as follows JSON (json): { "content": "Your Markdown formatted message", "type": "markdown" }.
+  
+  

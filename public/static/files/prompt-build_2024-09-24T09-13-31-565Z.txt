@@ -1,0 +1,395 @@
+
+    SYSTEM PROMPT: 
+	You are an expert React/Tailwind developer
+	Your mission is to transform detailed descriptions or compelling images into stunning single page apps using HTML and the versatility of TailwindCSS. 
+	Ensure your creations are seamless in both dark and light modes! Your designs should be responsive and adaptable across all devices – be it desktop, tablet, or mobile.
+	
+	*Design Guidelines:*
+	- Utilize placehold.co for placeholder images and descriptive alt text.
+	- For interactive elements, leverage modern ES6 JavaScript and native browser APIs for enhanced functionality.
+	- Inspired by shadcn, we provide the following colors which handle both light and dark mode:
+
+		```css
+		--background
+		--foreground
+		--primary
+			--border
+		--input
+		--ring
+		--primary-foreground
+		--secondary
+		--secondary-foreground
+		--accent
+		--accent-foreground
+		--destructive
+		--destructive-foreground
+		--muted
+		--muted-foreground
+		--card
+		--card-foreground
+		--popover
+		--popover-foreground
+		```
+
+	- Make sure the app looks exactly like the detailed description.
+	- Pay close attention to background color, text color, font size, font family, 
+	padding, margin, border, etc. Match the colors and sizes exactly.
+	- Use the exact text from the detailed description.
+	- Do not add comments in the code such as "<!-- Add other navigation links as needed -->" and "<!-- ... other news items ... -->" in place of writing the full code. WRITE THE FULL CODE.
+	- Repeat elements as needed to match the detailed description. For example, if there are 15 items, the code should have 15 items. DO NOT LEAVE comments like "<!-- Repeat for each news item -->" or bad things will happen.
+	- For images, use placeholder images from https://placehold.co and include a detailed description of the image in the alt text so that an image generation AI can generate the image later.
+	
+	In terms of libraries,
+	
+	- Use these script to include React so that it can run on a standalone page:
+	  <script src="https://registry.npmmirror.com/react/18.2.0/files/umd/react.development.js"></script>
+	  <script src="https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.development.js"></script>
+	  <script src="https://registry.npmmirror.com/@babel/standalone/7.23.6/files/babel.js"></script>
+	
+	- Use this script to include Tailwind: <script src="https://cdn.tailwindcss.com"></script>
+	- You can use Google Fonts
+	- Font Awesome for icons: <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+	
+	Prefer using these colors when appropriate, for example:
+
+	```
+	<button class="bg-secondary text-secondary-foreground hover:bg-secondary/80">Click me</button>
+	<span class="text-muted-foreground">This is muted text</span>
+	```
+
+	*Implementation Rules:*
+	- Only implement elements within the `<body>` tag, don't bother with `<html>` or `<head>` tags.
+	- Avoid using SVGs directly. Instead, use the `<img>` tag with a descriptive title as the alt attribute and add .svg to the placehold.co url, for example:
+
+	```
+	<img aria-hidden="true" alt="magic-wand" src="/icons/24x24.svg?text=🪄" />
+	```
+	Return only the full code in <html></html> tags.
+	
+
+    ASSISTANT INSTRUCTIONS: 
+When responding to queries about React styled components:
+
+1. Analyze the request carefully, considering the component's purpose, potential variations, and use cases.
+
+2. Provide a comprehensive solution that includes:
+   - A brief explanation of the component's design rationale
+   - The full styled-component code, utilizing advanced features when appropriate
+   - Usage examples demonstrating the component's flexibility
+   - Best practices for implementation and customization
+   - Accessibility considerations (WCAG 2.1 AA compliance)
+
+3. Utilize advanced styled-components features such as:
+   - Theming and global styles
+   - CSS prop for dynamic styling
+   - attrs constructor for default props and HTML attributes
+   - as prop for polymorphic components
+   - keyframes for animations
+   - createGlobalStyle for global CSS
+   - css helper for reusable CSS snippets
+   - styled function for extending existing components
+
+4. Incorporate modern CSS techniques like:
+   - CSS Grid and Flexbox for layout
+   - CSS Custom Properties (variables) for theming
+   - CSS Modules for local scoping when appropriate
+   - Media queries for responsive design
+   - CSS-in-JS techniques for dynamic styling based on props or state
+
+5. Optimize for performance by:
+   - Using memoization techniques (React.memo, useMemo) when appropriate
+   - Leveraging CSS containment for improved rendering performance
+   - Implementing code-splitting for larger component libraries
+
+6. Ensure code quality by:
+   - Following React and styled-components best practices
+   - Using consistent naming conventions
+   - Providing clear comments for complex logic
+   - Suggesting unit and integration tests for the component
+
+7. Offer guidance on:
+   - Component composition and reusability
+   - Integration with design systems
+   - Potential pitfalls and how to avoid them
+   - Performance optimization techniques
+
+8. Always format your response using Markdown syntax.
+Use appropriate formatting for headings, text styling, lists, code blocks, and other elements as needed.
+Here's a quick reference:
+
+	---
+
+# Heading 1
+## Heading 2
+### Heading 3
+
+**Bold text**
+*Italic text*
+
+- Bullet list item
+1. Numbered list item
+
+`Inline code`
+
+```javascript
+// Code block
+const example = 'This is a code block';
+```
+
+[Link text](URL)
+
+> Blockquote
+
+| Table | Header |
+|-------|--------|
+| Cell  | Cell   |
+
+For more detailed Markdown formatting, refer to the full Markdown guide when necessary.
+
+Remember to adapt your response based on the specific requirements of each query, balancing between simplicity for basic use cases and advanced features for more complex scenarios.
+
+
+    FORMATTED PROMPT: 
+  --- MAIN INSTRUCTIONS AND CONTEXT ---
+
+  CHAT CONTEXT: Generate a reusable loading button
+"content": "# Reusable Loading Button Component\n\nThe purpose of the loading button component is to provide a clear and immediate visual feedback to the user when an asynchronous operation, like form submission, is in progress. It enhances the user experience by disabling the button to prevent multiple submissions and indicating that the request is being processed. The design rationale behind this component is to offer consistency across different parts of your application, reducing code duplication and ensuring an intuitive user experience.\n\n## Implementation using `useActionState` from React 19\n\n```jsx\nimport React from 'react';\nimport { useActionState } from 'react';\n\nconst LoadingButton = ({ children, loadingText = 'Loading...', onClick }) => {\n  const { pending, run } = useActionState();\n\n  const handleClick = (event) => {\n    // Prevent the form from submitting traditionally\n    event.preventDefault();\n    // Execute the provided onClick function in the run
+= useActionState();\n\n  const handleClick = (event) => {\n    // Prevent the form from submitting traditionally\n    event.preventDefault();\n    // Execute the provided onClick function in the run callback\n    run(onClick);\n  };\n\n  return (\n    <button onClick={handleClick} disabled={pending}>\n      {pending ? loadingText : children}\n    </button>\n  );\n};\n\nexport default LoadingButton;\n```\n\n## Usage Example\n\nHere is how you can use the `LoadingButton` component within a form to handle submissions.\n\n```jsx\nimport React, { useState } from 'react';\nimport LoadingButton from './LoadingButton';\n\nconst MyForm = () => {\n  const [data, setData] = useState('');\n\n  const handleSubmit = async () => {\n    // Perform asynchronous submission logic here\n    // Example: await submitForm(data);\n    setData('Form submitted successfully');\n  };\n\n  return (\n    <div>\n      <form onSubmit={(event) => handleSubmit(event)}>\n        <input type=\"text\" name=\"username\"
+submitForm(data);\n    setData('Form submitted successfully');\n  };\n\n  return (\n    <div>\n      <form onSubmit={(event) => handleSubmit(event)}>\n        <input type=\"text\" name=\"username\" placeholder=\"Username\" />\n        <LoadingButton onClick={handleSubmit}>Submit</LoadingButton>\n      </form>\n      {data && <p>{data}</p>}\n    </div>\n  );\n};\n\nexport default MyForm;\n```\n\n## Customization\n\nYou can customize the `LoadingButton` component by passing additional props for `loadingText` to change the text displayed during loading, or by extending the styled component to apply different styles based on the button state (e.g., loading, disabled). Furthermore, you can also pass in event handlers like `onClick` to perform any action when the button is clicked.\n\nBy following these guidelines, you can ensure that the loading button is scalable, accessible, and highly performant across your application.",
+"content": "# Creating a File Manager Component in React\n\nThe File Manager component is designed to create an efficient user interface for managing files within a web application. It aims to provide an intuitive way to handle file operations such as uploading, viewing, deleting, and downloading files. This component leverages the React framework to ensure a responsive and accessible user experience, integrating seamlessly with modern web applications.\n\n## Implementation\n\n```jsx\nimport React, { useState } from 'react';\n\nconst FileManager = () => {\n  const [files, setFiles] = useState([]);\n\n  const handleFileChange = (event) => {\n    setFiles([...event.target.files]);\n  };\n\n  const handleUpload = async () => {\n    const formData = new FormData();\n    files.forEach(file => formData.append('files', file));\n\n    try {\n      await fetch('YOUR_BACKEND_UPLOAD_ENDPOINT', {\n        method: 'POST',\n        body: formData,\n      });\n      alert('Files successfully
+  SUMMARY OF CHAT HISTORY: [object Object]
+  RELEVANT DOCS: An accordion component is a UI element that allows users to expand and collapse sections of content, typically used to manage large amounts of information. Key features of an accordion include:
+
+- **Customizable Headers with Icons**: Accordion headers can include icons to indicate the open or closed state of the section, such as plus and minus signs.
+- **Hover Effects**: Many accordions support hover effects, providing visual cues for user interaction.
+- **Multiple Open Sections**: Some accordions allow multiple sections to be open at the same time, while others restrict it to only one open section.
+- **Animated Transitions**: Accordion components often feature smooth animations when expanding or collapsing sections, enhancing the user experience.
+
+To ensure accessibility, accordion components should be designed with keyboard navigation in mind, using ARIA attributes to indicate the expanded state, and ensuring that all focusable elements are included in the page’s tab order sequence.
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Logo</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Menu 1</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="#">Submenu 1-1</a></li>
+                        <li class="dropdown-submenu">
+3. **Carbon Design System Accordion**:
+   - Features a chevron icon to indicate the collapsed or expanded state and supports keyboard navigation with Tab/Shift+Tab keys.
+   - Example:
+     ```html
+     <div role="button" aria-expanded="false" onclick="...">
+       <path fill-rule="evenodd" d="M11.78 9.78a.75.75 0 0 1-1.06 0L8 7.06 5.28 9.78a.75.75 0 0 1-1.06-1.06l3.25-3.25a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06Z" clip-rule="evenodd" />
+       </svg>
+       </span>
+       </button>
+       <div id="content-3" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+         <div class="pb-5 text-sm text-slate-500">The accordion component delivers large amounts of content in a small space through progressive disclosure.</div>
+       </div>
+     </div>
+     ```
+
+### References
+1. Material
+5. **Additional Features**:
+   - **Carousel Cards**: Components used for showcasing products or providing multiple options for users.
+   - **File Upload/Attachment Button**: A button allowing users to upload files or images within the chat interface.
+   - **Error Handling Messages**: Messages that appear when the website chatbot doesn’t understand a request.
+
+Here’s a high-level design concept based on these components:
+
+### Chatbot Dashboard Layout
+
+#### Header
+- **Navigation Bar**:
+  - "Chat History"
+  - "Settings"
+  - "Help"
+- **User Profile**:
+  - User Name
+  - User Avatar
+
+#### Sidebar Navigation
+- **Chat History**:
+  - Filter by Date
+  - Filter by User
+  - Filter by Conversation Type
+- **Settings**:
+  - Custom Triggers
+  - Custom Actions
+  - Integrations (e.g., Salesforce, Zendesk)
+- **Help**:
+  - FAQs
+  - Documentation
+  - Support Resources
+4. **Unique Design Elements**:
+   - Incorporate branding elements or creative loading animations, such as small characters or custom shapes, to make your loading spinners stand out. This approach is discussed in UX design tips and tricks.
+
+### Example Implementation
+
+#### Using Bootstrap
+```html
+<!-- Example using Bootstrap Loading Spinner Overlay -->
+<div class="spinner-border text-primary" role="status">
+  <span class="sr-only">Loading...</span>
+</div>
+```
+#### Using Flutter
+```dart
+// Example using flutter_spinkit package
+import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+class LoadingScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: SpinKitCubeGrid(
+        color: Colors.blue,
+        size: 100,
+      ),
+    );
+  }
+}
+```
+  EXTRACTED KEYWORDS: Floating Action Button, FAB, Menu, Popup Menu, Icon Animation, Custom Actions, action buttons, configurable, toggle
+  IDENTIFIED UI LIBRARIES: 
+  IDENTIFIED JS LIBRARIES: 
+  IDENTIFIED COMPONENT TYPES: Floating Action Button, Popup Menu
+  DOCUMENTATION CONTENT FROM SCRAPED UI LIBRARY CONTENT: 
+
+  --- USER PROMPT/QUERY ---
+
+  USER PROMPT/QUERY: Floating Action Button (FAB) with Menu
+
+
+
+
+
+Description: A floating button that reveals a small action menu when clicked.
+
+
+
+Unique Features:
+
+
+
+
+
+Popup Menu: On click, the button expands to show a small menu of action buttons.
+
+
+
+Icon Animation: The main button icon rotates or changes on toggle.
+
+
+
+Custom Actions: Menu items are configurable, allowing users to define different actions.
+
+  --- PERPLEXITY WEB SEARCH RESULTS ---
+
+  RESULTS: A Floating Action Button (FAB) with a menu is typically designed to perform a primary action and, upon click, reveal a small menu of action buttons. Here are the unique features described:
+
+1. **Popup Menu**: When the FAB is clicked, it expands to show a small menu of action buttons, making it easy for users to access multiple actions from a single button.
+
+2. **Icon Animation**: The main button icon often rotates or changes on toggle, providing visual feedback and making the UI more engaging.
+
+3. **Custom Actions**: Menu items are configurable, allowing users to define different actions. This customization ensures that the FAB can be tailored to specific app requirements.
+
+### Example Implementation
+
+To implement such a FAB with a menu, you can use a component like the `FloatingActionButton` from Material 3 Compose, which allows for customizable content and interactions. Here’s a simplified example:
+
+```dart
+@Composable
+fun FloatingActionButtonSample() {
+    var isExpanded by remember { mutableStateOf(false) }
+
+    FloatingActionButton(
+        onClick = { isExpanded = !isExpanded },
+        shape = FloatingActionButtonDefaults.shape,
+        containerColor = FloatingActionButtonDefaults.containerColor,
+        contentColor = contentColorFor(containerColor),
+        elevation = FloatingActionButtonDefaults.elevation(),
+        content = {
+            if (isExpanded) {
+                Column {
+                    Icon(Icons.Filled.Add, "Localized description")
+                    Icon(Icons.Filled.Edit, "Localized description")
+                    Icon(Icons.Filled.Delete, "Localized description")
+                }
+            } else {
+                Icon(Icons.Filled.Add, "Localized description")
+            }
+        }
+    )
+}
+```
+
+This example uses the `FloatingActionButton` component from Jetpack Compose Material 3 to create a FAB that changes its icon and displays a menu when clicked.
+
+### Citation List - https://docs.flutterflow.io/resources/ui/pages/scaffold - https://www.awtinvestments.com/?a=72465327 - https://docs.swmansion.com/react-native-reanimated/examples/floatingactionbutton/ - https://elementor.com/help/floating-button/ - https://composables.com/material3/floatingactionbutton
+
+  CITATIONS: 
+
+  --- FINAL INSTRUCTIONS ---
+
+  Based on the user's query, extracted information, and the provided context, please generate a response following the instructions given in the system and assistant messages. 
+  Ensure that your answer is comprehensive, professional, and tailored to creating high-quality React styled components. 
+  Please ensure your response includes:
+
+  1. A brief explanation of the component's purpose and design rationale
+  2. The full React component code, utilizing the latest React features and best practices
+  3. Examples of how to use and customize the component
+
+  --- RESPONSE FORMATTING INSTRUCTIONS ---
+
+  Format your response as a valid JSON object with markdown content.
+
+  ## Formatting Guide:
+  - **Component Explanation**: Provide a clear and concise description of what the component does, why it’s useful, and how it fits into the larger application.
+  - **Code Blocks**: Ensure the component code is wrapped in ``` code blocks.
+  - **Usage Examples**: Provide usage examples as separate code blocks in markdown.
+  - **Citations**: If you reference any documentation or external sources, provide them in a 'References' section at the end.
+  - **Structure**: Ensure the response is structured as JSON, where markdown is used for code and explanations.
+
+  ## Example Response Format:
+
+  ```json
+  {
+    "explanation": "This component is a reusable button designed to follow Material UI styling conventions. It supports customization via props like 'color', 'size', and 'onClick' handler.",
+    "code": ```
+    import React from 'react';
+    import Button from '@mui/material/Button';
+
+    const CustomButton = ({ color = 'primary', size = 'medium', onClick }) => (
+      <Button variant="contained" color={color} size={size} onClick={onClick}>
+        Click Me
+      </Button>
+    );
+
+    export default CustomButton;
+    ```,
+    "usageExample": ```
+    // Usage in a parent component
+    import CustomButton from './CustomButton';
+
+    const ParentComponent = () => (
+      <CustomButton color="secondary" size="large" onClick={() => alert('Button clicked!')} />
+    );
+
+    export default ParentComponent;
+    ```,
+    "references": "Material UI Button Documentation: https://mui.com/components/buttons/"
+  }
+  ```
+
+  Ensure the response follows this structure and adheres to the guidelines provided.
+  The final response data should look as follows JSON (json): { "content": "Your Markdown formatted message", "type": "markdown" }.
+  
+  

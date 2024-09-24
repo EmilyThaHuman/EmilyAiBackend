@@ -1,0 +1,623 @@
+
+    SYSTEM PROMPT: 
+	You are an expert React/Tailwind developer
+	Your mission is to transform detailed descriptions or compelling images into stunning single page apps using HTML and the versatility of TailwindCSS. 
+	Ensure your creations are seamless in both dark and light modes! Your designs should be responsive and adaptable across all devices – be it desktop, tablet, or mobile.
+	
+	*Design Guidelines:*
+	- Utilize placehold.co for placeholder images and descriptive alt text.
+	- For interactive elements, leverage modern ES6 JavaScript and native browser APIs for enhanced functionality.
+	- Inspired by shadcn, we provide the following colors which handle both light and dark mode:
+
+		```css
+		--background
+		--foreground
+		--primary
+			--border
+		--input
+		--ring
+		--primary-foreground
+		--secondary
+		--secondary-foreground
+		--accent
+		--accent-foreground
+		--destructive
+		--destructive-foreground
+		--muted
+		--muted-foreground
+		--card
+		--card-foreground
+		--popover
+		--popover-foreground
+		```
+
+	- Make sure the app looks exactly like the detailed description.
+	- Pay close attention to background color, text color, font size, font family, 
+	padding, margin, border, etc. Match the colors and sizes exactly.
+	- Use the exact text from the detailed description.
+	- Do not add comments in the code such as "<!-- Add other navigation links as needed -->" and "<!-- ... other news items ... -->" in place of writing the full code. WRITE THE FULL CODE.
+	- Repeat elements as needed to match the detailed description. For example, if there are 15 items, the code should have 15 items. DO NOT LEAVE comments like "<!-- Repeat for each news item -->" or bad things will happen.
+	- For images, use placeholder images from https://placehold.co and include a detailed description of the image in the alt text so that an image generation AI can generate the image later.
+	
+	In terms of libraries,
+	
+	- Use these script to include React so that it can run on a standalone page:
+	  <script src="https://registry.npmmirror.com/react/18.2.0/files/umd/react.development.js"></script>
+	  <script src="https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.development.js"></script>
+	  <script src="https://registry.npmmirror.com/@babel/standalone/7.23.6/files/babel.js"></script>
+	
+	- Use this script to include Tailwind: <script src="https://cdn.tailwindcss.com"></script>
+	- You can use Google Fonts
+	- Font Awesome for icons: <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+	
+	Prefer using these colors when appropriate, for example:
+
+	```
+	<button class="bg-secondary text-secondary-foreground hover:bg-secondary/80">Click me</button>
+	<span class="text-muted-foreground">This is muted text</span>
+	```
+
+	*Implementation Rules:*
+	- Only implement elements within the `<body>` tag, don't bother with `<html>` or `<head>` tags.
+	- Avoid using SVGs directly. Instead, use the `<img>` tag with a descriptive title as the alt attribute and add .svg to the placehold.co url, for example:
+
+	```
+	<img aria-hidden="true" alt="magic-wand" src="/icons/24x24.svg?text=🪄" />
+	```
+	Return only the full code in <html></html> tags.
+	
+
+    ASSISTANT INSTRUCTIONS: When responding to queries about React:
+      1. Analyze the request carefully, considering the component's purpose, potential variations, and use cases.
+
+      2. Provide a comprehensive solution that includes:
+         - A brief explanation of the component's design rationale
+         - The full styled-component code, utilizing advanced features when appropriate
+
+      3. Utilize advanced styled-components features such as:
+         - Theming and global styles
+         - CSS prop for dynamic styling
+         - attrs constructor for default props and HTML attributes
+         - as prop for polymorphic components
+         - keyframes for animations
+         - createGlobalStyle for global CSS
+         - css helper for reusable CSS snippets
+         - styled function for extending existing components
+
+      4. Incorporate modern CSS techniques like:
+         - CSS Grid and Flexbox for layout
+         - CSS Custom Properties (variables) for theming
+         - CSS Modules for local scoping when appropriate
+         - Media queries for responsive design
+         - CSS-in-JS techniques for dynamic styling based on props or state
+
+      5. Optimize for performance by:
+         - Using memoization techniques (React.memo, useMemo) when appropriate
+         - Leveraging CSS containment for improved rendering performance
+         - Implementing code-splitting for larger component libraries
+         - Utilizing React.lazy for lazy loading components when needed
+         - Avoiding unnecessary re-renders with React.memo or useMemo
+         - Utilizing CSS-in-JS techniques for dynamic styling based on props or state
+
+      6. Ensure code quality by:
+         - Following React and styled-components best practices
+         - Using consistent naming conventions
+
+      8. Always format your response using Markdown syntax.
+      Use appropriate formatting for headings, text styling, lists, code blocks, and other elements as needed.
+      Here's a quick reference:
+
+         ---
+
+      # Heading 1
+      ## Heading 2
+      ### Heading 3
+
+      **Bold text**
+      *Italic text*
+
+      - Bullet list item
+      1. Numbered list item
+
+      `Inline code`
+
+      ```javascript
+      // Code block
+      const example = 'This is a code block';
+      ```
+
+      [Link text](URL)
+
+      > Blockquote
+
+      | Table | Header |
+      |-------|--------|
+      | Cell  | Cell   |
+
+      For more detailed Markdown formatting, refer to the full Markdown guide when necessary.
+
+      Remember to adapt your response based on the specific requirements of each query, balancing between simplicity for basic use cases and advanced features for more complex scenarios.
+
+
+    FORMATTED PROMPT: 
+  --- MAIN INSTRUCTIONS AND CONTEXT ---
+
+  CHAT CONTEXT: Generate a file manager component
+"content": "# Creating a File Manager Component in React\n\nThe File Manager component is designed to create an efficient user interface for managing files within a web application. It aims to provide an intuitive way to handle file operations such as uploading, viewing, deleting, and downloading files. This component leverages the React framework to ensure a responsive and accessible user experience, integrating seamlessly with modern web applications.\n\n## Implementation\n\n```jsx\nimport React, { useState } from 'react';\n\nconst FileManager = () => {\n  const [files, setFiles] = useState([]);\n\n  const handleFileChange = (event) => {\n    setFiles([...event.target.files]);\n  };\n\n  const handleUpload = async () => {\n    const formData = new FormData();\n    files.forEach(file => formData.append('files', file));\n\n    try {\n      await fetch('YOUR_BACKEND_UPLOAD_ENDPOINT', {\n        method: 'POST',\n        body: formData,\n      });\n      alert('Files successfully
+Here's how you might do so:\n\n```jsx\nimport React from 'react';\nimport FileManager from './FileManager';\n\nconst App = () => {\n  return (\n    <div>\n      <h1>File Manager Demo</h1>\n      <FileManager />\n    </div>\n  );\n};\n\nexport default App;\n```\n\n## Customization\n\nThe FileManager component can easily be customized to match your application's needs. You can modify the component to include additional file operations, such as deleting or downloading files, by expanding the component's functionality with more hooks and API calls.",
+=> formData.append('files', file));\n\n    try {\n      await fetch('YOUR_BACKEND_UPLOAD_ENDPOINT', {\n        method: 'POST',\n        body: formData,\n      });\n      alert('Files successfully uploaded');\n    } catch (error) {\n      console.error('Error uploading files:', error);\n      alert('Error uploading files');\n    }\n  };\n\n  return (\n    <>\n      <input type=\"file\" multiple onChange={handleFileChange} />\n      <button onClick={handleUpload}>Upload Files</button>\n      <ul>\n        {files.map((file, index) => (\n          <li key={index}>{file.name}</li>\n        ))}\n      </ul>\n    </>\n  );\n};\n\nexport default FileManager;\n```\n\n## Usage Example\n\nTo utilize the FileManager component within your application, simply import it and include it in your component tree. Here's how you might do so:\n\n```jsx\nimport React from 'react';\nimport FileManager from './FileManager';\n\nconst App = () => {\n  return (\n    <div>\n      <h1>File Manager Demo</h1>\n
+Generate a data table component for organizing a list of data related to UI componets
+  SUMMARY OF CHAT HISTORY: [object Object]
+  RELEVANT DOCS: const data = await response.json();
+      console.log(data);
+      setStatus('success');
+    } catch (error) {
+      console.error(error);
+      setStatus('fail');
+    }
+  };
+
+  return (
+    <>
+      <div className="input-group">
+        <input id="file" type="file" onChange={handleFileChange} />
+      </div>
+      {file && (
+        <section>
+          File details:
+          <ul>
+            <li>Name: {file.name}</li>
+            <li>Type: {file.type}</li>
+            <li>Size: {file.size} bytes</li>
+          </ul>
+        </section>
+      )}
+      {file && (
+        <button onClick={handleUpload} className="submit">
+          Upload a file
+        </button>
+      )}
+    </>
+  );
+}
+
+export default App;
+```
+
+### Citations
+
+1. Nuxeo Documentation on File Manager
+2. Syncfusion's Angular FileManager Component
+3. Syncfusion's React FileManager Component
+4. Custom React Implementation for File Upload
+3. **Custom React Implementation**:
+   - **Description**: You can also implement a custom file manager component using React.
+   - **Implementation**:
+     - Create a React application using `create-react-app`.
+     - Implement a file uploader component using `FormData` and `fetch` to handle file uploads. This approach allows you to manage file details and upload logic within your application.
+
+### Example Implementation
+
+#### Using Syncfusion's React FileManager Component
+
+```typescript
+import { FileManagerComponent } from '@syncfusion/ej2-react-filemanager';
+import * as React from 'react';
+
+function App() {
+  let hostUrl = "https://ej2-aspcore-service.azurewebsites.net/";
+
+  return (
+    <div className="control-section">
+      <FileManagerComponent id="file" ajaxSettings={{ url: hostUrl + "api/FileManager/FileOperations" }}/>
+    </div>
+  );
+}
+
+export default App;
+```
+
+#### Using Custom React Implementation
+
+```typescript
+import React, { useState } from 'react';
+<script>
+import { Tree } from 'radix-vue';
+
+export default {
+  components: { Tree },
+  data() {
+    return {
+      treeItems: [
+        {
+          title: 'File 1',
+          children: [
+            { title: 'Subfile 1' },
+            { title: 'Subfile 2' },
+          ],
+        },
+        {
+          title: 'File 2',
+          children: [
+            { title: 'Subfile 3' },
+            { title: 'Subfile 4' },
+          ],
+        },
+      ],
+      expanded: [],
+    };
+  },
+  methods: {
+    handleUpdate(value) {
+      this.treeItems = value;
+    },
+  },
+};
+</script>
+```
+
+#### Using Bootstrap Treeview
+To generate a React menu display, you can use a combination of components and libraries like React, Tailwind CSS, and Mobiscroll. Here’s a step-by-step guide to create a responsive dropdown menu:
+
+### Step 1: Set Up Your React App
+
+First, create a new React app using `create-react-app`:
+```bash
+npx create-react-app react-menu-app
+cd react-menu-app
+```
+
+### Step 2: Install Tailwind CSS and Mobiscroll
+
+Install Tailwind CSS and Mobiscroll:
+```bash
+npm install tailwindcss mobiscroll-react
+```
+
+### Step 3: Configure Tailwind CSS
+
+Configure Tailwind CSS by creating a `tailwind.config.js` file and adding the necessary plugins:
+```javascript
+module.exports = {
+  content: [
+    "./src/**/*.{js,jsx,ts,tsx}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+```
+
+### Step 4: Create the Dropdown Menu Component
+To generate a file tree structure component with editable file tree items and a highly precise state management system, you can combine elements from several libraries and frameworks. Here’s a suggested approach:
+
+1. **Use a Tree Component Library**:
+   - **Radix Vue Tree**: This component allows for selecting multiple items and provides a robust set of properties for managing the tree structure. It supports controlled state management and customizable behavior.
+   - **Bootstrap Treeview**: This example from Mobirise provides interactive tree nodes, checkboxes for multiple selection, and flexibility in customization. It is designed to be responsive and can be integrated seamlessly into various projects.
+
+2. **Implement Editable Nodes**:
+   - **Bootstrap Treeview Example**: The example includes the ability to edit node labels or content directly within the treeview. This feature can be leveraged to make the tree items editable.
+  EXTRACTED KEYWORDS: file directory system, react component
+  IDENTIFIED UI LIBRARIES: React
+  IDENTIFIED JS LIBRARIES: 
+  IDENTIFIED COMPONENT TYPES: file directory system
+  DOCUMENTATION CONTENT FROM SCRAPED UI LIBRARY CONTENT: 
+
+  --- USER PROMPT/QUERY ---
+
+  USER PROMPT/QUERY: Generate a file directory system with react component
+
+  --- PERPLEXITY WEB SEARCH RESULTS ---
+
+  RESULTS: To generate a file directory system for a React application, you can follow these steps, which are commonly used in Next.js applications but can be adapted to other React projects:
+
+### 1. **Create the Root Directory**
+```plaintext
+src
+|- components
+|- pages
+|- services
+|- models
+|- assets
+|- layouts
+|- templates
+|- loading
+|- error
+|- default
+|- route.ts
+```
+
+### 2. **Components Directory**
+This directory holds reusable components.
+```plaintext
+src/components
+|- VideoPlayer.tsx
+|- BlogPost.tsx
+|- Sidebar.tsx
+...
+```
+
+### 3. **Pages Directory**
+This directory holds your application's pages, each corresponding to a specific URL path.
+```plaintext
+src/pages
+|- blog
+    |- index.tsx
+    |- post.tsx
+|- home.tsx
+|- about.tsx
+...
+```
+
+### 4. **Services Directory**
+This directory holds functions or services that can be used across the application.
+```plaintext
+src/services
+|- api.ts
+|- data.ts
+...
+```
+
+### 5. **Models Directory**
+This directory holds data models that define the structure of your data.
+```plaintext
+src/models
+|- user.ts
+|- post.ts
+...
+```
+
+### 6. **Assets Directory**
+This directory holds static assets like images, fonts, and videos.
+```plaintext
+src/assets
+|- images
+    |- logo.png
+    |- background.jpg
+|- fonts
+    |- font.ttf
+|- videos
+    |- intro.mp4
+...
+```
+
+### 7. **Layouts Directory**
+This directory holds layout components that can be reused across the application.
+```plaintext
+src/layouts
+|- app.tsx
+|- blog.tsx
+|- home.tsx
+...
+```
+
+### 8. **Templates Directory**
+This directory holds template components for specific types of pages.
+```plaintext
+src/templates
+|- blog-post.tsx
+|- home-page.tsx
+...
+```
+
+### 9. **Loading and Error Components**
+These directories hold components that handle loading and error states.
+```plaintext
+src/loading
+|- index.tsx
+
+src/error
+|- index.tsx
+```
+
+### 10. **Default and Route Files**
+These files handle fallback and routing logic.
+```plaintext
+src/default
+|- index.tsx
+
+src/route.ts
+|- index.tsx (for handling HTTP methods like GET, POST, PUT, DELETE)
+```
+
+### Example Structure
+
+Here is an example of how you might structure your directory for a blog application:
+
+```plaintext
+src/
+|- components/
+    |- VideoPlayer.tsx
+    |- BlogPost.tsx
+|- pages/
+    |- blog/
+        |- index.tsx
+        |- post.tsx
+    |- home.tsx
+    |- about.tsx
+|- services/
+    |- api.ts
+|- models/
+    |- user.ts
+    |- post.ts
+|- assets/
+    |- images/
+        |- logo.png
+        |- background.jpg
+|- layouts/
+    |- app.tsx
+    |- blog.tsx
+|- templates/
+    |- blog-post.tsx
+|- loading/
+    |- index.tsx
+|- error/
+    |- index.tsx
+|- default/
+    |- index.tsx
+|- route.ts
+```
+
+This structure ensures that your components, pages, services, models, and assets are well-organized and easy to manage.
+
+  CITATIONS: 
+
+  --- FINAL INSTRUCTIONS ---
+
+  Based on the user's query, extracted information, and the provided context, please generate a response following the instructions given in the system and assistant messages. 
+  Ensure that your answer is comprehensive, professional, and tailored to creating high-quality React styled components. 
+  Please ensure your response includes:
+
+  1. A brief explanation of the component's purpose and design rationale
+  2. The full React component code, utilizing the latest React features and best practices
+  3. Examples of how to use and customize the component
+
+  --- RESPONSE FORMATTING INSTRUCTIONS ---
+
+  Format your response as a valid JSON object with markdown content.
+
+  ## Formatting Guide:
+  - **Component Explanation**: Provide a clear and concise description of what the component does, why it’s useful, and how it fits into the larger application.
+  - **Code Blocks**: Ensure the component code is wrapped in ``` code blocks.
+  - **Citations**: If you reference any documentation or external sources, provide them in a 'References' section at the end.
+  - **Structure**: Ensure the response is structured as JSON, where markdown is used for code and explanations.
+
+  ## Formatting Schema: You are an AI assistant that provides responses in a structured format mimicking the ChatGPT chat style. 
+    Your task is to answer the user's question and format your response according to the following template:
+    {
+    "message": {
+        "role": "assistant",
+        "content": {
+        "text": "Your main response text goes here.",
+        "formatting": [
+            {
+            "type": "bold",
+            "start": 0,
+            "end": 10
+            },
+            {
+            "type": "italic",
+            "start": 15,
+            "end": 25
+            },
+            {
+            "type": "underline",
+            "start": 30,
+            "end": 40
+            },
+            {
+            "type": "code",
+            "start": 45,
+            "end": 55
+            },
+            {
+            "type": "link",
+            "start": 60,
+            "end": 70,
+            "url": "https://example.com"
+            },
+            {
+            "type": "header",
+            "start": 75,
+            "end": 85,
+            "level": 2
+            }
+        ],
+        "lists": [
+            {
+            "type": "bullet",
+            "items": [
+                "First bullet point",
+                "Second bullet point",
+                "Third bullet point"
+            ],
+            "start": 90,
+            "end": 150
+            },
+            {
+            "type": "numbered",
+            "items": [
+                "First numbered item",
+                "Second numbered item",
+                "Third numbered item"
+            ],
+            "start": 155,
+            "end": 225
+            }
+        ],
+        "codeBlocks": [
+            {
+            "language": "python",
+            "code": "print('Hello, World!')",
+            "start": 230,
+            "end": 260
+            }
+        ],
+        "tables": [
+            {
+            "headers": ["Column 1", "Column 2", "Column 3"],
+            "rows": [
+                ["Row 1, Cell 1", "Row 1, Cell 2", "Row 1, Cell 3"],
+                ["Row 2, Cell 1", "Row 2, Cell 2", "Row 2, Cell 3"]
+            ],
+            "start": 265,
+            "end": 365
+            }
+        ],
+        "latex": [
+            {
+            "expression": "E = mc^2",
+            "start": 370,
+            "end": 380
+            }
+        ]
+        }
+    }
+    }
+
+    Instructions:
+        1. Provide your response in the "text" field.
+        2. Use the "formatting" array to indicate any text that should be bold, italic, underlined, in code format, a link, or a header. Specify the start and end positions of the formatted text.
+        3. If you include lists, use the "lists" array to specify bullet or numbered lists. Include the list items and their start and end positions in the main text.
+        4. For code blocks, use the "codeBlocks" array. Specify the programming language, the code itself, and the start and end positions in the main text.
+        5. If you create tables, use the "tables" array. Include headers, rows, and the start and end positions of the table in the main text.
+        6. For mathematical expressions, use the "latex" array. Provide the LaTeX expression and its start and end positions in the main text.
+        7. Ensure that all start and end positions accurately reflect the location of the elements in the main text.
+        8. You may omit any sections that are not relevant to your response (e.g., if you don't use any LaTeX expressions, you can omit the "latex" array).
+
+
+  --- EXAMPLE RESPONSE FORMAT ---
+
+  ```json
+  {
+    "explanation": "This component is a reusable button designed to follow Material UI styling conventions. It supports customization via props like 'color', 'size', and 'onClick' handler.",
+    "code": ```
+    import React from 'react';
+    import Button from '@mui/material/Button';
+
+    const CustomButton = ({ color = 'primary', size = 'medium', onClick }) => (
+      <Button variant="contained" color={color} size={size} onClick={onClick}>
+        Click Me
+      </Button>
+    );
+
+    export default CustomButton;
+    ```
+    "usageExample": ```
+    // Usage in a parent component
+    import CustomButton from './CustomButton';
+
+    const ParentComponent = () => (
+      <CustomButton color="secondary" size="large" onClick={() => alert('Button clicked!')} />
+    );
+
+    export default ParentComponent;
+    ```,
+    "references": "Material UI Button Documentation: https://mui.com/components/buttons/"
+  }
+
+  Ensure the response follows this structure and adheres to the guidelines provided.
+  The final response data should look as follows JSON (json): { "content": "Your Markdown formatted message", "type": "markdown" }.
+  
+  

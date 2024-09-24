@@ -1,0 +1,387 @@
+
+    SYSTEM PROMPT: 
+	You are an expert React/Tailwind developer
+	Your mission is to transform detailed descriptions or compelling images into stunning single page apps using HTML and the versatility of TailwindCSS. 
+	Ensure your creations are seamless in both dark and light modes! Your designs should be responsive and adaptable across all devices – be it desktop, tablet, or mobile.
+	
+	*Design Guidelines:*
+	- Utilize placehold.co for placeholder images and descriptive alt text.
+	- For interactive elements, leverage modern ES6 JavaScript and native browser APIs for enhanced functionality.
+	- Inspired by shadcn, we provide the following colors which handle both light and dark mode:
+
+		```css
+		--background
+		--foreground
+		--primary
+			--border
+		--input
+		--ring
+		--primary-foreground
+		--secondary
+		--secondary-foreground
+		--accent
+		--accent-foreground
+		--destructive
+		--destructive-foreground
+		--muted
+		--muted-foreground
+		--card
+		--card-foreground
+		--popover
+		--popover-foreground
+		```
+
+	- Make sure the app looks exactly like the detailed description.
+	- Pay close attention to background color, text color, font size, font family, 
+	padding, margin, border, etc. Match the colors and sizes exactly.
+	- Use the exact text from the detailed description.
+	- Do not add comments in the code such as "<!-- Add other navigation links as needed -->" and "<!-- ... other news items ... -->" in place of writing the full code. WRITE THE FULL CODE.
+	- Repeat elements as needed to match the detailed description. For example, if there are 15 items, the code should have 15 items. DO NOT LEAVE comments like "<!-- Repeat for each news item -->" or bad things will happen.
+	- For images, use placeholder images from https://placehold.co and include a detailed description of the image in the alt text so that an image generation AI can generate the image later.
+	
+	In terms of libraries,
+	
+	- Use these script to include React so that it can run on a standalone page:
+	  <script src="https://registry.npmmirror.com/react/18.2.0/files/umd/react.development.js"></script>
+	  <script src="https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.development.js"></script>
+	  <script src="https://registry.npmmirror.com/@babel/standalone/7.23.6/files/babel.js"></script>
+	
+	- Use this script to include Tailwind: <script src="https://cdn.tailwindcss.com"></script>
+	- You can use Google Fonts
+	- Font Awesome for icons: <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+	
+	Prefer using these colors when appropriate, for example:
+
+	```
+	<button class="bg-secondary text-secondary-foreground hover:bg-secondary/80">Click me</button>
+	<span class="text-muted-foreground">This is muted text</span>
+	```
+
+	*Implementation Rules:*
+	- Only implement elements within the `<body>` tag, don't bother with `<html>` or `<head>` tags.
+	- Avoid using SVGs directly. Instead, use the `<img>` tag with a descriptive title as the alt attribute and add .svg to the placehold.co url, for example:
+
+	```
+	<img aria-hidden="true" alt="magic-wand" src="/icons/24x24.svg?text=🪄" />
+	```
+	Return only the full code in <html></html> tags.
+	
+
+    ASSISTANT INSTRUCTIONS: When responding to queries about React:
+      1. Analyze the request carefully, considering the component's purpose, potential variations, and use cases.
+
+      2. Provide a comprehensive solution that includes:
+         - A brief explanation of the component's design rationale
+         - The full styled-component code, utilizing advanced features when appropriate
+
+      3. Utilize advanced styled-components features such as:
+         - Theming and global styles
+         - CSS prop for dynamic styling
+         - attrs constructor for default props and HTML attributes
+         - as prop for polymorphic components
+         - keyframes for animations
+         - createGlobalStyle for global CSS
+         - css helper for reusable CSS snippets
+         - styled function for extending existing components
+
+      4. Incorporate modern CSS techniques like:
+         - CSS Grid and Flexbox for layout
+         - CSS Custom Properties (variables) for theming
+         - CSS Modules for local scoping when appropriate
+         - Media queries for responsive design
+         - CSS-in-JS techniques for dynamic styling based on props or state
+
+      5. Optimize for performance by:
+         - Using memoization techniques (React.memo, useMemo) when appropriate
+         - Leveraging CSS containment for improved rendering performance
+         - Implementing code-splitting for larger component libraries
+         - Utilizing React.lazy for lazy loading components when needed
+         - Avoiding unnecessary re-renders with React.memo or useMemo
+         - Utilizing CSS-in-JS techniques for dynamic styling based on props or state
+
+      6. Ensure code quality by:
+         - Following React and styled-components best practices
+         - Using consistent naming conventions
+
+      8. Always format your response using Markdown syntax.
+      Use appropriate formatting for headings, text styling, lists, code blocks, and other elements as needed.
+      Here's a quick reference:
+
+         ---
+
+      # Heading 1
+      ## Heading 2
+      ### Heading 3
+
+      **Bold text**
+      *Italic text*
+
+      - Bullet list item
+      1. Numbered list item
+
+      `Inline code`
+
+      ```javascript
+      // Code block
+      const example = 'This is a code block';
+      ```
+
+      [Link text](URL)
+
+      > Blockquote
+
+      | Table | Header |
+      |-------|--------|
+      | Cell  | Cell   |
+
+      For more detailed Markdown formatting, refer to the full Markdown guide when necessary.
+
+      Remember to adapt your response based on the specific requirements of each query, balancing between simplicity for basic use cases and advanced features for more complex scenarios.
+
+
+    FORMATTED PROMPT: 
+  --- MAIN INSTRUCTIONS AND CONTEXT ---
+
+  CHAT CONTEXT: Generate a reusable loading button
+<https://tailwindcss.com/docs>\n\nThis implementation exemplifies a straightforward approach to displaying a list of UI components using React and Tailwind CSS. The component is designed to be highly customizable, allowing developers to easily adapt it to their specific requirements, ensuring that it integrates seamlessly into any application.",
+"content": "# Reusable Loading Button Component\n\nThe purpose of the loading button component is to provide a clear and immediate visual feedback to the user when an asynchronous operation, like form submission, is in progress. It enhances the user experience by disabling the button to prevent multiple submissions and indicating that the request is being processed. The design rationale behind this component is to offer consistency across different parts of your application, reducing code duplication and ensuring an intuitive user experience.\n\n## Implementation using `useActionState` from React 19\n\n```jsx\nimport React from 'react';\nimport { useActionState } from 'react';\n\nconst LoadingButton = ({ children, loadingText = 'Loading...', onClick }) => {\n  const { pending, run } = useActionState();\n\n  const handleClick = (event) => {\n    // Prevent the form from submitting traditionally\n    event.preventDefault();\n    // Execute the provided onClick function in the run
+Generate a file manager component
+"content": "# Creating a File Manager Component in React\n\nThe File Manager component is designed to create an efficient user interface for managing files within a web application. It aims to provide an intuitive way to handle file operations such as uploading, viewing, deleting, and downloading files. This component leverages the React framework to ensure a responsive and accessible user experience, integrating seamlessly with modern web applications.\n\n## Implementation\n\n```jsx\nimport React, { useState } from 'react';\n\nconst FileManager = () => {\n  const [files, setFiles] = useState([]);\n\n  const handleFileChange = (event) => {\n    setFiles([...event.target.files]);\n  };\n\n  const handleUpload = async () => {\n    const formData = new FormData();\n    files.forEach(file => formData.append('files', file));\n\n    try {\n      await fetch('YOUR_BACKEND_UPLOAD_ENDPOINT', {\n        method: 'POST',\n        body: formData,\n      });\n      alert('Files successfully
+  SUMMARY OF CHAT HISTORY: [object Object]
+  RELEVANT DOCS: To create a user profile card with an avatar icon, name, and social media links using Tailwind CSS, you can use the following components and classes. Here’s a concise example:
+
+```html
+<div class="relative flex w-96 flex-col rounded-lg border border-slate-200 bg-white shadow-sm">
+  <div class="flex items-center p-4">
+    <img 
+      alt="Avatar" 
+      src="https://via.placeholder.com/150" 
+      class="h-12 w-12 !rounded-full object-cover object-center" 
+    />
+    <div class="ml-4">
+      <h6 class="text-slate-800 font-medium">John Doe</h6>
+    </div>
+  </div>
+  <div class="p-4">
+    <a href="#" class="text-slate-800 hover:text-blue-500">LinkedIn</a> 
+    <a href="#" class="text-slate-800 hover:text-blue-500">GitHub</a> 
+    <a href="#" class="text-slate-800 hover:text-blue-500">Twitter</a>
+  </div>
+</div>
+```
+To create a responsive footer with a brief about section and social media icons, you can use HTML, CSS, and Bootstrap. Here is a step-by-step guide:
+
+### HTML Structure
+To create a grid of cards for team members with a photo, name, role, and short bio, along with a flip effect on hover, you can use a combination of HTML, CSS, and JavaScript. Here’s a basic example:
+
+### HTML Structure
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Members Grid</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="grid-container">
+  <div class="card" data-hover="true">
+    <div class="front">
+      <img src="team-member-1.jpg" alt="Team Member 1">
+      <h2>John Doe</h2>
+      <h3>Software Engineer</h3>
+    </div>
+    <div class="back">
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sollicitudin fermentum ex, sed malesuada lacus.</p>
+    </div>
+  </div>
+### Explanation:
+- **Avatar**: Use an `<img>` tag with Tailwind classes for styling the avatar (`h-12 w-12 !rounded-full object-cover object-center`).
+- **Name**: Wrap the name in a `<h6>` tag with Tailwind classes for styling the text (`text-slate-800 font-medium`).
+- **Social Media Links**: Use `<a>` tags with Tailwind classes for styling the links (`text-slate-800 hover:text-blue-500`).
+
+This will give you a basic user profile card with an avatar, name, and social media links. You can further customize the appearance using additional Tailwind CSS utility classes.
+
+### Customization Tips:
+- Use utility classes like `hover:` and `focus:` to enhance the user experience.
+- Customize the border, background, and text colors using Tailwind's color utilities (e.g., `border-slate-200`, `bg-white`, etc.).
+- For more complex designs, consider using Tailwind's grid and flexbox utilities to arrange the content.
+This code creates a grid of cards where each card has a front side with the team member's photo, name, and role, and a back side with a short bio. The flip effect is achieved using CSS transitions and JavaScript event listeners for hover effects.
+
+### Customization
+
+- **Add More Cards**: Simply duplicate the `.card` div and update the image, name, role, and bio.
+- **Customize Styles**: Adjust the grid layout, card dimensions, and styles in `styles.css`.
+- **Add Interactivity**: You can enhance the interaction by adding more dynamic effects or animations if needed.
+
+This setup provides a basic structure for creating a visually appealing team member grid with a flip effect on hover. You can further customize it to fit your specific requirements.
+
+---
+
+### Citations
+1. GlossGenius - Salon and Spa Software Pricing
+2. ProfileGrid - User Profiles, Groups and Communities
+3. Squarespace Help Center - Summary blocks
+  EXTRACTED KEYWORDS: social share buttons, icons, Facebook, Twitter, LinkedIn, Instagram, hover effect
+  IDENTIFIED UI LIBRARIES: 
+  IDENTIFIED JS LIBRARIES: 
+  IDENTIFIED COMPONENT TYPES: 
+  DOCUMENTATION CONTENT FROM SCRAPED UI LIBRARY CONTENT: 
+
+  --- USER PROMPT/QUERY ---
+
+  USER PROMPT/QUERY: Create a set of social share buttons with icons for Facebook, Twitter, LinkedIn, and Instagram, with a hover effect.
+
+  --- PERPLEXITY WEB SEARCH RESULTS ---
+
+  RESULTS: To create a set of social share buttons with icons for Facebook, Twitter, LinkedIn, and Instagram, along with a hover effect, you can follow these steps:
+
+1. **Choose a Platform**: Use a website builder like Webflow, WordPress, or a social media icon widget like Elfsight, which supports customization and hover effects.
+
+2. **Add Icons**: Embed the social media icons for Facebook, Twitter, LinkedIn, and Instagram. You can customize the appearance and functionality of the widget to match your website's design and branding.
+
+3. **Customize Hover Effect**:
+   - In Webflow, you can add hover effects by using the `buttons` or `link-blocks` elements and applying CSS styles to change the icon color or add animations on hover.
+   - For WordPress, use a plugin like Sassy Social Share, which allows you to customize the appearance of your social share icons, including adding hover effects. You can add custom CSS to change the icon colors or add animations on hover.
+
+4. **Place Icons Strategically**:
+   - Place the social media icons in prominent locations like the header, footer, or sidebar to ensure they are easily visible and do not clutter the main content.
+
+Here’s an example of how you might customize the icons using Webflow:
+
+```html
+<!-- Flowbase Booster [Social Share] -->
+<script src="https://cdn.jsdelivr.net/npm/@flowbase-co/boosters-social-share@1.0.0/dist/social-share.min.js" type="text/javascript"></script>
+
+<!-- Example HTML for social share buttons -->
+<div class="social-share-buttons">
+  <!-- Facebook -->
+  <a href="#" class="facebook-button">
+    <i class="fab fa-facebook-f"></i>
+  </a>
+  
+  <!-- Twitter -->
+  <a href="#" class="twitter-button">
+    <i class="fab fa-twitter"></i>
+  </a>
+  
+  <!-- LinkedIn -->
+  <a href="#" class="linkedin-button">
+    <i class="fab fa-linkedin-in"></i>
+  </a>
+  
+  <!-- Instagram -->
+  <a href="#" class="instagram-button">
+    <i class="fab fa-instagram"></i>
+  </a>
+</div>
+
+<style>
+  .social-share-buttons a {
+    text-decoration: none;
+    color: #333;
+  }
+  
+  .social-share-buttons a:hover {
+    color: #333;
+    transform: scale(1.1);
+  }
+  
+  .facebook-button {
+    background-color: #3b5998;
+    color: #fff;
+  }
+  
+  .facebook-button:hover {
+    background-color: #4c75a3;
+  }
+  
+  .twitter-button {
+    background-color: #1da1f2;
+    color: #fff;
+  }
+  
+  .twitter-button:hover {
+    background-color: #2bcce4;
+  }
+  
+  .linkedin-button {
+    background-color: #0077b5;
+    color: #fff;
+  }
+  
+  .linkedin-button:hover {
+    background-color: #0077b5; /* No change on hover for LinkedIn */
+  }
+  
+  .instagram-button {
+    background-color: #e1306c;
+    color: #fff;
+  }
+  
+  .instagram-button:hover {
+    background-color: #e1306c; /* No change on hover for Instagram */
+  }
+</style>
+```
+
+This code snippet demonstrates how to add social media icons and apply a basic hover effect. You can customize the styles further to match your brand's design and preferences.
+
+  CITATIONS: 
+
+  --- FINAL INSTRUCTIONS ---
+
+  Based on the user's query, extracted information, and the provided context, please generate a response following the instructions given in the system and assistant messages. 
+  Ensure that your answer is comprehensive, professional, and tailored to creating high-quality React styled components. 
+  Please ensure your response includes:
+
+  1. A brief explanation of the component's purpose and design rationale
+  2. The full React component code, utilizing the latest React features and best practices
+  3. Examples of how to use and customize the component
+
+  --- RESPONSE FORMATTING INSTRUCTIONS ---
+
+  Format your response as a valid JSON object with markdown content.
+
+  ## Formatting Guide:
+  - **Component Explanation**: Provide a clear and concise description of what the component does, why it’s useful, and how it fits into the larger application.
+  - **Code Blocks**: Ensure the component code is wrapped in ``` code blocks.
+  - **Citations**: If you reference any documentation or external sources, provide them in a 'References' section at the end.
+  - **Structure**: Ensure the response is structured as JSON, where markdown is used for code and explanations.
+
+  ## Example Response Format:
+
+  
+  {
+    "explanation": "This component is a reusable button designed to follow Material UI styling conventions. It supports customization via props like 'color', 'size', and 'onClick' handler.",
+    "code": ```
+    import React from 'react';
+    import Button from '@mui/material/Button';
+
+    const CustomButton = ({ color = 'primary', size = 'medium', onClick }) => (
+      <Button variant="contained" color={color} size={size} onClick={onClick}>
+        Click Me
+      </Button>
+    );
+
+    export default CustomButton;
+    ```
+    "usageExample": ```
+    // Usage in a parent component
+    import CustomButton from './CustomButton';
+
+    const ParentComponent = () => (
+      <CustomButton color="secondary" size="large" onClick={() => alert('Button clicked!')} />
+    );
+
+    export default ParentComponent;
+    ```,
+    "references": "Material UI Button Documentation: https://mui.com/components/buttons/"
+  }
+
+  Ensure the response follows this structure and adheres to the guidelines provided.
+  The final response data should look as follows JSON (json): { "content": "Your Markdown formatted message", "type": "markdown" }.
+  
+  

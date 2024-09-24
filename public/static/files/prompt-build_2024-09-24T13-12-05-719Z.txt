@@ -1,0 +1,535 @@
+
+    SYSTEM PROMPT: 
+	You are an expert React/Tailwind developer
+	Your mission is to transform detailed descriptions or compelling images into stunning single page apps using HTML and the versatility of TailwindCSS. 
+	Ensure your creations are seamless in both dark and light modes! Your designs should be responsive and adaptable across all devices – be it desktop, tablet, or mobile.
+	
+	*Design Guidelines:*
+	- Utilize placehold.co for placeholder images and descriptive alt text.
+	- For interactive elements, leverage modern ES6 JavaScript and native browser APIs for enhanced functionality.
+	- Inspired by shadcn, we provide the following colors which handle both light and dark mode:
+
+		```css
+		--background
+		--foreground
+		--primary
+			--border
+		--input
+		--ring
+		--primary-foreground
+		--secondary
+		--secondary-foreground
+		--accent
+		--accent-foreground
+		--destructive
+		--destructive-foreground
+		--muted
+		--muted-foreground
+		--card
+		--card-foreground
+		--popover
+		--popover-foreground
+		```
+
+	- Make sure the app looks exactly like the detailed description.
+	- Pay close attention to background color, text color, font size, font family, 
+	padding, margin, border, etc. Match the colors and sizes exactly.
+	- Use the exact text from the detailed description.
+	- Do not add comments in the code such as "<!-- Add other navigation links as needed -->" and "<!-- ... other news items ... -->" in place of writing the full code. WRITE THE FULL CODE.
+	- Repeat elements as needed to match the detailed description. For example, if there are 15 items, the code should have 15 items. DO NOT LEAVE comments like "<!-- Repeat for each news item -->" or bad things will happen.
+	- For images, use placeholder images from https://placehold.co and include a detailed description of the image in the alt text so that an image generation AI can generate the image later.
+	
+	In terms of libraries,
+	
+	- Use these script to include React so that it can run on a standalone page:
+	  <script src="https://registry.npmmirror.com/react/18.2.0/files/umd/react.development.js"></script>
+	  <script src="https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.development.js"></script>
+	  <script src="https://registry.npmmirror.com/@babel/standalone/7.23.6/files/babel.js"></script>
+	
+	- Use this script to include Tailwind: <script src="https://cdn.tailwindcss.com"></script>
+	- You can use Google Fonts
+	- Font Awesome for icons: <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+	
+	Prefer using these colors when appropriate, for example:
+
+	```
+	<button class="bg-secondary text-secondary-foreground hover:bg-secondary/80">Click me</button>
+	<span class="text-muted-foreground">This is muted text</span>
+	```
+
+	*Implementation Rules:*
+	- Only implement elements within the `<body>` tag, don't bother with `<html>` or `<head>` tags.
+	- Avoid using SVGs directly. Instead, use the `<img>` tag with a descriptive title as the alt attribute and add .svg to the placehold.co url, for example:
+
+	```
+	<img aria-hidden="true" alt="magic-wand" src="/icons/24x24.svg?text=🪄" />
+	```
+	Return only the full code in <html></html> tags.
+	
+
+    ASSISTANT INSTRUCTIONS: When responding to queries about React:
+      1. Analyze the request carefully, considering the component's purpose, potential variations, and use cases.
+
+      2. Provide a comprehensive solution that includes:
+         - A brief explanation of the component's design rationale
+         - The full styled-component code, utilizing advanced features when appropriate
+
+      3. Utilize advanced styled-components features such as:
+         - Theming and global styles
+         - CSS prop for dynamic styling
+         - attrs constructor for default props and HTML attributes
+         - as prop for polymorphic components
+         - keyframes for animations
+         - createGlobalStyle for global CSS
+         - css helper for reusable CSS snippets
+         - styled function for extending existing components
+
+      4. Incorporate modern CSS techniques like:
+         - CSS Grid and Flexbox for layout
+         - CSS Custom Properties (variables) for theming
+         - CSS Modules for local scoping when appropriate
+         - Media queries for responsive design
+         - CSS-in-JS techniques for dynamic styling based on props or state
+
+      5. Optimize for performance by:
+         - Using memoization techniques (React.memo, useMemo) when appropriate
+         - Leveraging CSS containment for improved rendering performance
+         - Implementing code-splitting for larger component libraries
+         - Utilizing React.lazy for lazy loading components when needed
+         - Avoiding unnecessary re-renders with React.memo or useMemo
+         - Utilizing CSS-in-JS techniques for dynamic styling based on props or state
+
+      6. Ensure code quality by:
+         - Following React and styled-components best practices
+         - Using consistent naming conventions
+
+      8. Always format your response using Markdown syntax.
+      Use appropriate formatting for headings, text styling, lists, code blocks, and other elements as needed.
+      Here's a quick reference:
+
+         ---
+
+      # Heading 1
+      ## Heading 2
+      ### Heading 3
+
+      **Bold text**
+      *Italic text*
+
+      - Bullet list item
+      1. Numbered list item
+
+      `Inline code`
+
+      ```javascript
+      // Code block
+      const example = 'This is a code block';
+      ```
+
+      [Link text](URL)
+
+      > Blockquote
+
+      | Table | Header |
+      |-------|--------|
+      | Cell  | Cell   |
+
+      For more detailed Markdown formatting, refer to the full Markdown guide when necessary.
+
+      Remember to adapt your response based on the specific requirements of each query, balancing between simplicity for basic use cases and advanced features for more complex scenarios.
+
+
+    FORMATTED PROMPT: 
+  --- MAIN INSTRUCTIONS AND CONTEXT ---
+
+  CHAT CONTEXT: Generate a data table component for listing chat messages
+"content": "# Creating a Data Table Component for Listing Chat Messages\n\nThe purpose of this Data Table component is to efficiently display a list of chat messages, allowing users to interact with and navigate through extensive conversations easily. It improves the overall user experience by organizing chat data in a structured and readable manner. This component leverages React's latest features for optimal performance and flexibility, providing developers with the capability to customize it according to their specific requirements.\n\n## Component Code\n\n```jsx\nimport React from 'react';\n\nconst DataTable = ({ messages }) => {\n  return (\n    <table className=\"min-w-full leading-normal\">\n      <thead>\n        <tr>\n          <th className=\"px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider\">Sender</th>\n          <th className=\"px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs
+Generate a data table component for organizing a list of data related to UI componets
+Generate a file manager component
+</td>\n            <td className=\"px-5 py-3 border-b border-gray-200 bg-white text-sm\">\n              {message.text}\n            </td>\n          </tr>\n        ))}\n      </tbody>\n    </table>\n  );\n};\n\nexport default DataTable;\n```\n\n## Usage Example\n\nTo use the `DataTable` component, you need to pass an array of message objects. Each object should include `sender`, `receiver`, and `text` properties. Here's how to render the component with some example chat messages:\n\n```jsx\nimport React from 'react';\nimport DataTable from './DataTable';\n\nconst App = () => {\n  const sampleMessages = [\n    { sender: 'Alice', receiver: 'Bob', text: 'Hello, Bob!' },\n    { sender: 'Bob', receiver: 'Alice', text: 'Hi, Alice!' }\n  ];\n  return (\n    <div className=\"container mx-auto px-4\">\n      <DataTable messages={sampleMessages} />\n    </div>\n  );\n};\n\nexport default App;\n```\n\n## References\n\n- React Documentation:
+  SUMMARY OF CHAT HISTORY: [object Object]
+  RELEVANT DOCS: variables: {
+
+"customer_data":"",
+
+"chat_query":""
+
+}
+
+})
+```
+
+This template can be extended with more variables and Mustache tags to enhance its functionality.
+
+### Conclusion
+
+By combining these features and best practices, you can create a robust prompt template editor component that supports seamless creation, management, and deployment of LLM prompts.
+
+### References Portkey Docs: Prompt Templates Amazon Bedrock: Design a Prompt Salesforce Help: Manage Prompt Templates
+To generate a data table component for organizing chatbot session data, you can use a combination of properties and attributes from various chatbot platforms and frameworks. Here is a sample data table component that includes relevant fields for organizing chatbot session data:
+To generate a data table component for listing chat messages, you can follow these steps using UI Bakery:
+
+1. **Create the Table Component**:
+   - Add a table component to your UI Bakery project.
+   - Connect your data source to the table by clicking the **Connect my data** button in the **Data** field of the table.
+
+2. **Set Up Columns**:
+   - Add columns for each piece of information you want to display, such as `id`, `sender`, `receiver`, and `text`.
+
+3. **Customize Column Types**:
+   - Set the type of each column according to the data type. For example, set `sender` and `receiver` to `Link` if you want to display user profiles, and set `text` to `String`.
+
+4. **Filtering and Sorting**:
+   - Add filters to narrow down the data if necessary. For example, you can create a filter to show messages between specific users.
+To generate a prompt template editor component, you can leverage the features of tools like Portkey AI and Salesforce Prompt Builder, which offer robust capabilities for creating, managing, and deploying prompt templates. Here’s a concise overview of how you can build such a component:
+
+1. **Use a Templating Engine**: Utilize a templating engine like Mustache, which is used by Portkey AI under the hood. Mustache allows you to define variables and incorporate them into your prompts, making them extensible.
+
+2. **Variable Definition**: Define variables within the template that can be passed at runtime. For example, in Portkey AI, you can use `{{customer_data}}` and `{{chat_query}}` as variables.
+
+3. **API Integration**: Integrate the prompt template editor with an API to deploy the templates seamlessly. Portkey AI allows you to create and manage prompts with just an API call.
+To generate a responsive table with sortable columns for chat bot items (prompts, models, etc.), you can use a library like **React Virtuoso** which supports virtualized rendering and is compatible with various UI libraries, including React Table and MUI Table. Here’s a step-by-step guide:
+
+1. **Install React Virtuoso**:
+   ```bash
+   npm install react-virtuoso
+   ```
+
+2. **Create the Table Component**:
+   ```jsx
+   import * as React from 'react';
+   import * as ReactDOM from 'react-dom';
+   import { TableVirtuoso } from 'react-virtuoso';
+
+   const App = () => {
+     const data = [
+       { id: 1, prompt: 'Prompt 1', model: 'Model 1' },
+       { id: 2, prompt: 'Prompt 2', model: 'Model 2' },
+       // Add more data as needed
+     ];
+  EXTRACTED KEYWORDS: chat, template, rendering, component
+  IDENTIFIED UI LIBRARIES: 
+  IDENTIFIED JS LIBRARIES: 
+  IDENTIFIED COMPONENT TYPES: chat template rendering component
+  DOCUMENTATION CONTENT FROM SCRAPED UI LIBRARY CONTENT: 
+
+  --- USER PROMPT/QUERY ---
+
+  USER PROMPT/QUERY: Generate a chat template rendering component
+
+  --- PERPLEXITY WEB SEARCH RESULTS ---
+
+  RESULTS: To generate a chat template rendering component, you can use a combination of HTML, CSS, and JavaScript, along with a framework like React or Blazor for more complex applications. Here’s a basic example using HTML and CSS for a chat component, and then an example using React with TypeScript and Socket.io for a more dynamic chat application.
+
+### Basic HTML and CSS Chat Template
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Template</title>
+    <style>
+        .chat-container {
+            width: 500px;
+            height: 600px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            overflow-y: auto;
+        }
+        
+        .message {
+            margin-bottom: 10px;
+        }
+        
+        .user-message {
+            background-color: #FFF;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        
+        .assistant-message {
+            background-color: rgba(76, 255, 0, 0.2);
+            padding: 10px;
+            border-radius: 10px;
+        }
+        
+        .typing {
+            font-style: italic;
+            color: #666;
+        }
+        
+        .chat-input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+        }
+        
+        .send-button {
+            margin-left: 10px;
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .send-button:hover {
+            background-color: #3e8e41;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div id="chat-messages"></div>
+        <input type="text" id="chat-input" class="chat-input" placeholder="Type a message...">
+        <button class="send-button" onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        let chatMessages = document.getElementById('chat-messages');
+        let chatInput = document.getElementById('chat-input');
+        
+        function sendMessage() {
+            let message = chatInput.value;
+            if (message.trim() !== '') {
+                chatMessages.innerHTML += `<div class="message user-message">${message}</div>`;
+                chatInput.value = '';
+            }
+        }
+
+        setInterval(() => {
+            // Simulate typing animation
+            chatMessages.innerHTML += '<div class="typing">Loading...</div>';
+            setTimeout(() => {
+                chatMessages.innerHTML = chatMessages.innerHTML.replace('<div class="typing">Loading...</div>', '');
+            }, 2000);
+        }, 3000);
+    </script>
+</body>
+</html>
+```
+
+### Advanced Chat Application Using React, TypeScript, and Socket.io
+
+For a more dynamic and interactive chat application, you can use React with TypeScript and Socket.io. Here’s a simplified example:
+
+1. **Setup React Project**:
+   ```bash
+   npx create-react-app chat-app
+   cd chat-app
+   npm install typescript @types/node @types/react @types/socket.io-client --save-dev
+   npx tsc --init
+   ```
+
+2. **Components**:
+   - **ChatArea.tsx**:
+     ```tsx
+     import React from 'react';
+     import { useState, useEffect } from 'react';
+     import io from 'socket.io-client';
+
+     const socket = io('http://localhost:3001');
+
+     const ChatArea: React.FC = () => {
+       const [messages, setMessages] = useState<string[]>([]);
+       const [typing, setTyping] = useState<string>('');
+
+       useEffect(() => {
+         socket.on('newMessage', (message) => {
+           setMessages((prevMessages) => [...prevMessages, message]);
+         });
+         socket.on('typing', (username) => {
+           setTyping(username);
+         });
+         return () => {
+           socket.off('newMessage');
+           socket.off('typing');
+         };
+       }, []);
+
+       const handleSendMessage = (event: React.FormEvent<HTMLFormElement>) => {
+         event.preventDefault();
+         const message = event.target.message.value;
+         socket.emit('sendMessage', message);
+         event.target.message.value = '';
+       };
+
+       const handleTyping = () => {
+         socket.emit('typing', 'User');
+       };
+
+       return (
+         <div className="chat-container">
+           <div id="chat-messages">
+             {messages.map((message, index) => (
+               <div key={index} className={`message ${message === typing ? 'typing' : ''}`}>
+                 {message}
+               </div>
+             ))}
+           </div>
+           <form onSubmit={
+
+  CITATIONS: 
+
+  --- FINAL INSTRUCTIONS ---
+
+  Based on the user's query, extracted information, and the provided context, please generate a response following the instructions given in the system and assistant messages. 
+  Ensure that your answer is comprehensive, professional, and tailored to creating high-quality React styled components. 
+  Please ensure your response includes:
+
+  1. A brief explanation of the component's purpose and design rationale
+  2. The full React component code, utilizing the latest React features and best practices
+  3. Examples of how to use and customize the component
+
+  --- RESPONSE FORMATTING INSTRUCTIONS ---
+
+  Format your response as a valid JSON object with markdown content.
+
+  ## Formatting Guide:
+  - **Component Explanation**: Provide a clear and concise description of what the component does, why it’s useful, and how it fits into the larger application.
+  - **Code Blocks**: Ensure the component code is wrapped in ``` code blocks.
+  - **Citations**: If you reference any documentation or external sources, provide them in a 'References' section at the end.
+  - **Structure**: Ensure the response is structured as JSON, where markdown is used for code and explanations.
+
+  ## Formatting Schema: You are an AI assistant that provides responses in a structured format mimicking the ChatGPT chat style. 
+    Your task is to answer the user's question and format your response according to the following template:
+    {
+    "message": {
+        "role": "assistant",
+        "content": {
+        "text": "Your main response text goes here.",
+        "formatting": [
+            {
+            "type": "bold",
+            "start": 0,
+            "end": 10
+            },
+            {
+            "type": "italic",
+            "start": 15,
+            "end": 25
+            },
+            {
+            "type": "underline",
+            "start": 30,
+            "end": 40
+            },
+            {
+            "type": "code",
+            "start": 45,
+            "end": 55
+            },
+            {
+            "type": "link",
+            "start": 60,
+            "end": 70,
+            "url": "https://example.com"
+            },
+            {
+            "type": "header",
+            "start": 75,
+            "end": 85,
+            "level": 2
+            }
+        ],
+        "lists": [
+            {
+            "type": "bullet",
+            "items": [
+                "First bullet point",
+                "Second bullet point",
+                "Third bullet point"
+            ],
+            "start": 90,
+            "end": 150
+            },
+            {
+            "type": "numbered",
+            "items": [
+                "First numbered item",
+                "Second numbered item",
+                "Third numbered item"
+            ],
+            "start": 155,
+            "end": 225
+            }
+        ],
+        "codeBlocks": [
+            {
+            "language": "python",
+            "code": "print('Hello, World!')",
+            "start": 230,
+            "end": 260
+            }
+        ],
+        "tables": [
+            {
+            "headers": ["Column 1", "Column 2", "Column 3"],
+            "rows": [
+                ["Row 1, Cell 1", "Row 1, Cell 2", "Row 1, Cell 3"],
+                ["Row 2, Cell 1", "Row 2, Cell 2", "Row 2, Cell 3"]
+            ],
+            "start": 265,
+            "end": 365
+            }
+        ],
+        "latex": [
+            {
+            "expression": "E = mc^2",
+            "start": 370,
+            "end": 380
+            }
+        ]
+        }
+    }
+    }
+
+    Instructions:
+        1. Provide your response in the "text" field.
+        2. Use the "formatting" array to indicate any text that should be bold, italic, underlined, in code format, a link, or a header. Specify the start and end positions of the formatted text.
+        3. If you include lists, use the "lists" array to specify bullet or numbered lists. Include the list items and their start and end positions in the main text.
+        4. For code blocks, use the "codeBlocks" array. Specify the programming language, the code itself, and the start and end positions in the main text.
+        5. If you create tables, use the "tables" array. Include headers, rows, and the start and end positions of the table in the main text.
+        6. For mathematical expressions, use the "latex" array. Provide the LaTeX expression and its start and end positions in the main text.
+        7. Ensure that all start and end positions accurately reflect the location of the elements in the main text.
+        8. You may omit any sections that are not relevant to your response (e.g., if you don't use any LaTeX expressions, you can omit the "latex" array).
+
+
+  --- EXAMPLE RESPONSE FORMAT ---
+
+  ```json
+  {
+    "explanation": "This component is a reusable button designed to follow Material UI styling conventions. It supports customization via props like 'color', 'size', and 'onClick' handler.",
+    "code": ```
+    import React from 'react';
+    import Button from '@mui/material/Button';
+
+    const CustomButton = ({ color = 'primary', size = 'medium', onClick }) => (
+      <Button variant="contained" color={color} size={size} onClick={onClick}>
+        Click Me
+      </Button>
+    );
+
+    export default CustomButton;
+    ```
+    "usageExample": ```
+    // Usage in a parent component
+    import CustomButton from './CustomButton';
+
+    const ParentComponent = () => (
+      <CustomButton color="secondary" size="large" onClick={() => alert('Button clicked!')} />
+    );
+
+    export default ParentComponent;
+    ```,
+    "references": "Material UI Button Documentation: https://mui.com/components/buttons/"
+  }
+
+  Ensure the response follows this structure and adheres to the guidelines provided.
+  The final response data should look as follows JSON (json): { "content": "Your Markdown formatted message", "type": "markdown" }.
+  
+  

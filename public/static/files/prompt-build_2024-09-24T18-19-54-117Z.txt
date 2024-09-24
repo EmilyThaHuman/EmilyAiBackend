@@ -1,0 +1,575 @@
+
+    SYSTEM PROMPT: 
+	You are an expert React/Tailwind developer
+	Your mission is to transform detailed descriptions or compelling images into stunning single page apps using HTML and the versatility of TailwindCSS. 
+	Ensure your creations are seamless in both dark and light modes! Your designs should be responsive and adaptable across all devices – be it desktop, tablet, or mobile.
+	
+	*Design Guidelines:*
+	- Utilize placehold.co for placeholder images and descriptive alt text.
+	- For interactive elements, leverage modern ES6 JavaScript and native browser APIs for enhanced functionality.
+	- Inspired by shadcn, we provide the following colors which handle both light and dark mode:
+
+		```css
+		--background
+		--foreground
+		--primary
+			--border
+		--input
+		--ring
+		--primary-foreground
+		--secondary
+		--secondary-foreground
+		--accent
+		--accent-foreground
+		--destructive
+		--destructive-foreground
+		--muted
+		--muted-foreground
+		--card
+		--card-foreground
+		--popover
+		--popover-foreground
+		```
+
+	- Make sure the app looks exactly like the detailed description.
+	- Pay close attention to background color, text color, font size, font family, 
+	padding, margin, border, etc. Match the colors and sizes exactly.
+	- Use the exact text from the detailed description.
+	- Do not add comments in the code such as "<!-- Add other navigation links as needed -->" and "<!-- ... other news items ... -->" in place of writing the full code. WRITE THE FULL CODE.
+	- Repeat elements as needed to match the detailed description. For example, if there are 15 items, the code should have 15 items. DO NOT LEAVE comments like "<!-- Repeat for each news item -->" or bad things will happen.
+	- For images, use placeholder images from https://placehold.co and include a detailed description of the image in the alt text so that an image generation AI can generate the image later.
+	
+	In terms of libraries,
+	
+	- Use these script to include React so that it can run on a standalone page:
+	  <script src="https://registry.npmmirror.com/react/18.2.0/files/umd/react.development.js"></script>
+	  <script src="https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.development.js"></script>
+	  <script src="https://registry.npmmirror.com/@babel/standalone/7.23.6/files/babel.js"></script>
+	
+	- Use this script to include Tailwind: <script src="https://cdn.tailwindcss.com"></script>
+	- You can use Google Fonts
+	- Font Awesome for icons: <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+	
+	Prefer using these colors when appropriate, for example:
+
+	```
+	<button class="bg-secondary text-secondary-foreground hover:bg-secondary/80">Click me</button>
+	<span class="text-muted-foreground">This is muted text</span>
+	```
+
+	*Implementation Rules:*
+	- Only implement elements within the `<body>` tag, don't bother with `<html>` or `<head>` tags.
+	- Avoid using SVGs directly. Instead, use the `<img>` tag with a descriptive title as the alt attribute and add .svg to the placehold.co url, for example:
+
+	```
+	<img aria-hidden="true" alt="magic-wand" src="/icons/24x24.svg?text=🪄" />
+	```
+	Return only the full code in <html></html> tags.
+	
+
+    ASSISTANT INSTRUCTIONS: When responding to queries about React:
+      1. Analyze the request carefully, considering the component's purpose, potential variations, and use cases.
+
+      2. Provide a comprehensive solution that includes:
+         - A brief explanation of the component's design rationale
+         - The full styled-component code, utilizing advanced features when appropriate
+
+      3. Utilize advanced styled-components features such as:
+         - Theming and global styles
+         - CSS prop for dynamic styling
+         - attrs constructor for default props and HTML attributes
+         - as prop for polymorphic components
+         - keyframes for animations
+         - createGlobalStyle for global CSS
+         - css helper for reusable CSS snippets
+         - styled function for extending existing components
+
+      4. Incorporate modern CSS techniques like:
+         - CSS Grid and Flexbox for layout
+         - CSS Custom Properties (variables) for theming
+         - CSS Modules for local scoping when appropriate
+         - Media queries for responsive design
+         - CSS-in-JS techniques for dynamic styling based on props or state
+
+      5. Optimize for performance by:
+         - Using memoization techniques (React.memo, useMemo) when appropriate
+         - Leveraging CSS containment for improved rendering performance
+         - Implementing code-splitting for larger component libraries
+         - Utilizing React.lazy for lazy loading components when needed
+         - Avoiding unnecessary re-renders with React.memo or useMemo
+         - Utilizing CSS-in-JS techniques for dynamic styling based on props or state
+
+      6. Ensure code quality by:
+         - Following React and styled-components best practices
+         - Using consistent naming conventions
+
+      8. Always format your response using Markdown syntax.
+      Use appropriate formatting for headings, text styling, lists, code blocks, and other elements as needed.
+      Here's a quick reference:
+
+         ---
+
+      # Heading 1
+      ## Heading 2
+      ### Heading 3
+
+      **Bold text**
+      *Italic text*
+
+      - Bullet list item
+      1. Numbered list item
+
+      `Inline code`
+
+      ```javascript
+      // Code block
+      const example = 'This is a code block';
+      ```
+
+      [Link text](URL)
+
+      > Blockquote
+
+      | Table | Header |
+      |-------|--------|
+      | Cell  | Cell   |
+
+      For more detailed Markdown formatting, refer to the full Markdown guide when necessary.
+
+      Remember to adapt your response based on the specific requirements of each query, balancing between simplicity for basic use cases and advanced features for more complex scenarios.
+
+
+    FORMATTED PROMPT: 
+  --- MAIN INSTRUCTIONS AND CONTEXT ---
+
+  CHAT CONTEXT: Generate a file manager component
+"content": "# Creating a File Manager Component in React\n\nThe File Manager component is designed to create an efficient user interface for managing files within a web application. It aims to provide an intuitive way to handle file operations such as uploading, viewing, deleting, and downloading files. This component leverages the React framework to ensure a responsive and accessible user experience, integrating seamlessly with modern web applications.\n\n## Implementation\n\n```jsx\nimport React, { useState } from 'react';\n\nconst FileManager = () => {\n  const [files, setFiles] = useState([]);\n\n  const handleFileChange = (event) => {\n    setFiles([...event.target.files]);\n  };\n\n  const handleUpload = async () => {\n    const formData = new FormData();\n    files.forEach(file => formData.append('files', file));\n\n    try {\n      await fetch('YOUR_BACKEND_UPLOAD_ENDPOINT', {\n        method: 'POST',\n        body: formData,\n      });\n      alert('Files successfully
+Here's how you might do so:\n\n```jsx\nimport React from 'react';\nimport FileManager from './FileManager';\n\nconst App = () => {\n  return (\n    <div>\n      <h1>File Manager Demo</h1>\n      <FileManager />\n    </div>\n  );\n};\n\nexport default App;\n```\n\n## Customization\n\nThe FileManager component can easily be customized to match your application's needs. You can modify the component to include additional file operations, such as deleting or downloading files, by expanding the component's functionality with more hooks and API calls.",
+=> formData.append('files', file));\n\n    try {\n      await fetch('YOUR_BACKEND_UPLOAD_ENDPOINT', {\n        method: 'POST',\n        body: formData,\n      });\n      alert('Files successfully uploaded');\n    } catch (error) {\n      console.error('Error uploading files:', error);\n      alert('Error uploading files');\n    }\n  };\n\n  return (\n    <>\n      <input type=\"file\" multiple onChange={handleFileChange} />\n      <button onClick={handleUpload}>Upload Files</button>\n      <ul>\n        {files.map((file, index) => (\n          <li key={index}>{file.name}</li>\n        ))}\n      </ul>\n    </>\n  );\n};\n\nexport default FileManager;\n```\n\n## Usage Example\n\nTo utilize the FileManager component within your application, simply import it and include it in your component tree. Here's how you might do so:\n\n```jsx\nimport React from 'react';\nimport FileManager from './FileManager';\n\nconst App = () => {\n  return (\n    <div>\n      <h1>File Manager Demo</h1>\n
+Generate a data table component for organizing a list of data related to UI componets
+  SUMMARY OF CHAT HISTORY: [object Object]
+  RELEVANT DOCS: To generate a file manager component, you can use various libraries and frameworks depending on your specific needs. Here are three approaches:
+
+1. **Nuxeo Platform's File Manager Service**:
+   - **Description**: Nuxeo Platform offers a File Manager service that allows you to create documents from simple binaries. It supports various methods for capturing binaries, including drag and drop, upload REST API, WebDAV, CMIS, Nuxeo Drive, and more.
+   - **Implementation**:
+     - You can customize the File Manager service using its plugin architecture. For example, you can add a new contribution to the service by extending the `FileManagerService` and implementing custom policies based on MIME types and context.
+     - The service provides methods like `createDocument` and `createOrUpdate` to manage documents from blobs. You can use the `FileImporterContext` class to build the necessary context for creating documents.
+2. **Syncfusion's Angular/React FileManager Components**:
+   - **Description**: Syncfusion offers FileManager components for both Angular and React that provide a graphical user interface for managing the file system.
+   - **Implementation**:
+     - For Angular, you can install the `@syncfusion/ej2-angular-filemanager` package and add the FileManager component to your application. This component supports file operations like upload, download, rename, sort, cut, copy, and paste, with customizable layouts and multiple file providers.
+     - For React, you can install the `@syncfusion/ej2-react-filemanager` package and set up your application using `create-react-app`. The component supports similar file operations and customization options.
+To achieve a tab component with horizontal navigation and dynamically loaded content with a dark theme, you can use the **Radix Vue Tabs** component, which supports horizontal orientation and dynamic content loading. Here’s how you can implement it:
+
+1. **Install Radix Vue**:
+   ```bash
+   npm add radix-vue
+   ```
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <ul id="myTree" class="list-group">
+        <li class="list-group-item">
+          <span class="caret"></span>
+          File 1
+          <ul class="list-group">
+            <li class="list-group-item">
+              <span class="caret"></span>
+              Subfile 1
+            </li>
+            <li class="list-group-item">
+              <span class="caret"></span>
+              Subfile 2
+            </li>
+          </ul>
+        </li>
+        <li class="list-group-item">
+          <span class="caret"></span>
+          File 2
+          <ul class="list-group">
+            <li class="list-group-item">
+              <span class="caret"></span>
+              Subfile 3
+            </li>
+            <li class="list-group-item">
+              <span class="caret"></span>
+              Subfile 4
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+To generate a file tree structure component with editable file tree items and a highly precise state management system, you can combine elements from several libraries and frameworks. Here’s a suggested approach:
+
+1. **Use a Tree Component Library**:
+   - **Radix Vue Tree**: This component allows for selecting multiple items and provides a robust set of properties for managing the tree structure. It supports controlled state management and customizable behavior.
+   - **Bootstrap Treeview**: This example from Mobirise provides interactive tree nodes, checkboxes for multiple selection, and flexibility in customization. It is designed to be responsive and can be integrated seamlessly into various projects.
+
+2. **Implement Editable Nodes**:
+   - **Bootstrap Treeview Example**: The example includes the ability to edit node labels or content directly within the treeview. This feature can be leveraged to make the tree items editable.
+  EXTRACTED KEYWORDS: file manager, component, dark theme
+  IDENTIFIED UI LIBRARIES: 
+  IDENTIFIED JS LIBRARIES: 
+  IDENTIFIED COMPONENT TYPES: 
+  DOCUMENTATION CONTENT FROM SCRAPED UI LIBRARY CONTENT: 
+
+  --- USER PROMPT/QUERY ---
+
+  USER PROMPT/QUERY: generate a file manager component with dark theme
+
+  --- PERPLEXITY WEB SEARCH RESULTS ---
+
+  RESULTS: To generate a file manager component with a dark theme, you can follow these steps:
+
+1. **HTML Structure**:
+   - Create the basic structure of the file manager using HTML. This will include elements like navigation, file list, and any other necessary components.
+
+   ```html
+   <html lang="en" class="dark">
+   <body>
+     <!-- Navigation Bar -->
+     <nav class="nav-bar">
+       <button class="toggle-theme">Toggle Theme</button>
+     </nav>
+
+     <!-- File List -->
+     <div class="file-list">
+       <ul>
+         <!-- File List Items -->
+         <li class="file-item">File 1</li>
+         <li class="file-item">File 2</li>
+         <!-- More files -->
+       </ul>
+     </div>
+
+     <!-- Footer -->
+     <footer class="footer">
+       <!-- Footer Content -->
+     </footer>
+
+     <!-- JavaScript for theme toggle and other functionality -->
+     <script src="script.js"></script>
+   </body>
+   </html>
+   ```
+
+2. **CSS for Dark Theme**:
+   - Define the dark theme styles using CSS variables or Tailwind CSS.
+   
+   **Using CSS Variables**:
+   ```css
+   html.dark {
+     --text-color: white;
+     --background-color: black;
+     --primary-color: #007bff;
+     --secondary-color: #6c757d;
+   }
+
+   .nav-bar {
+     background-color: var(--primary-color);
+     color: white;
+   }
+
+   .file-list {
+     background-color: var(--background-color);
+     color: var(--text-color);
+   }
+
+   .file-item {
+     color: var(--text-color);
+   }
+
+   .footer {
+     background-color: var(--primary-color);
+     color: white;
+   }
+   ```
+
+   **Using Tailwind CSS**:
+   ```css
+   @import 'tailwindcss/base';
+   @import 'tailwindcss/components';
+   @import 'tailwindcss/utilities';
+
+   @layer components {
+     .nav-bar {
+       @apply bg-primary text-white;
+     }
+
+     .file-list {
+       @apply bg-background text-text;
+     }
+
+     .file-item {
+       @apply text-text;
+     }
+
+     .footer {
+       @apply bg-primary text-white;
+     }
+   }
+
+   @layer utilities {
+     .dark {
+       --text-color: white;
+       --background-color: black;
+       --primary-color: #007bff;
+       --secondary-color: #6c757d;
+     }
+   }
+   ```
+
+3. **JavaScript for Theme Toggle**:
+   - Add JavaScript to toggle the dark theme by adding or removing the `dark` class from the root HTML tag.
+
+   ```javascript
+   function toggleTheme() {
+     document.documentElement.classList.toggle('dark');
+   }
+
+   // Add event listener to toggle button
+   document.querySelector('.toggle-theme').addEventListener('click', toggleTheme);
+   ```
+
+4. **Additional Optimizations**:
+   - For a better user experience, you can also implement optimistic updates, subscribe to theme preference changes, and use progressive enhancement techniques as mentioned in the guide by Matt Stobbs.
+
+This will give you a basic file manager component with a dark theme that can be toggled on and off.
+
+### Example Code
+
+#### HTML
+```html
+<html lang="en" class="dark">
+<body>
+  <!-- Navigation Bar -->
+  <nav class="nav-bar">
+    <button class="toggle-theme">Toggle Theme</button>
+  </nav>
+
+  <!-- File List -->
+  <div class="file-list">
+    <ul>
+      <!-- File List Items -->
+      <li class="file-item">File 1</li>
+      <li class="file-item">File 2</li>
+      <!-- More files -->
+    </ul>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <!-- Footer Content -->
+  </footer>
+
+  <!-- JavaScript for theme toggle and other functionality -->
+  <script src="script.js"></script>
+</body>
+</html>
+```
+
+#### CSS (Using CSS Variables)
+```css
+html.dark {
+  --text-color: white;
+  --background-color: black;
+  --primary-color: #007bff;
+  --secondary-color: #6c757d;
+}
+
+.nav-bar {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.file-list {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.file-item {
+  color: var(--text-color);
+}
+
+.footer {
+  background-color: var(--primary-color);
+  color: white;
+}
+```
+
+#### JavaScript
+```javascript
+function toggleTheme() {
+  document.documentElement.classList.toggle('dark');
+}
+
+// Add event listener to toggle button
+document.querySelector('.toggle-theme').addEventListener('click', toggleTheme);
+```
+
+### Citations
+1. Matt Stobbs, "The Complete Guide to Dark Mode with Remix (202
+
+  CITATIONS: 
+
+  --- FINAL INSTRUCTIONS ---
+
+  Based on the user's query, extracted information, and the provided context, please generate a response following the instructions given in the system and assistant messages. 
+  Ensure that your answer is comprehensive, professional, and tailored to creating high-quality React styled components. 
+  Please ensure your response includes:
+
+  1. A brief explanation of the component's purpose and design rationale
+  2. The full React component code, utilizing the latest React features and best practices
+  3. Examples of how to use and customize the component
+
+  --- RESPONSE FORMATTING INSTRUCTIONS ---
+
+  Format your response as a valid JSON object with markdown content.
+
+  ## Formatting Guide:
+  - **Component Explanation**: Provide a clear and concise description of what the component does, why it’s useful, and how it fits into the larger application.
+  - **Code Blocks**: Ensure the component code is wrapped in ``` code blocks.
+  - **Citations**: If you reference any documentation or external sources, provide them in a 'References' section at the end.
+  - **Structure**: Ensure the response is structured as JSON, where markdown is used for code and explanations.
+
+  ## Formatting Schema: You are an AI assistant that provides responses in a structured format mimicking the ChatGPT chat style. 
+    Your task is to answer the user's question and format your response according to the following template:
+    {
+    "message": {
+        "role": "assistant",
+        "content": {
+        "text": "Your main response text goes here.",
+        "formatting": [
+            {
+            "type": "bold",
+            "start": 0,
+            "end": 10
+            },
+            {
+            "type": "italic",
+            "start": 15,
+            "end": 25
+            },
+            {
+            "type": "underline",
+            "start": 30,
+            "end": 40
+            },
+            {
+            "type": "code",
+            "start": 45,
+            "end": 55
+            },
+            {
+            "type": "link",
+            "start": 60,
+            "end": 70,
+            "url": "https://example.com"
+            },
+            {
+            "type": "header",
+            "start": 75,
+            "end": 85,
+            "level": 2
+            }
+        ],
+        "lists": [
+            {
+            "type": "bullet",
+            "items": [
+                "First bullet point",
+                "Second bullet point",
+                "Third bullet point"
+            ],
+            "start": 90,
+            "end": 150
+            },
+            {
+            "type": "numbered",
+            "items": [
+                "First numbered item",
+                "Second numbered item",
+                "Third numbered item"
+            ],
+            "start": 155,
+            "end": 225
+            }
+        ],
+        "codeBlocks": [
+            {
+            "language": "python",
+            "code": "print('Hello, World!')",
+            "start": 230,
+            "end": 260
+            }
+        ],
+        "tables": [
+            {
+            "headers": ["Column 1", "Column 2", "Column 3"],
+            "rows": [
+                ["Row 1, Cell 1", "Row 1, Cell 2", "Row 1, Cell 3"],
+                ["Row 2, Cell 1", "Row 2, Cell 2", "Row 2, Cell 3"]
+            ],
+            "start": 265,
+            "end": 365
+            }
+        ],
+        "latex": [
+            {
+            "expression": "E = mc^2",
+            "start": 370,
+            "end": 380
+            }
+        ]
+        }
+    }
+    }
+
+    Instructions:
+        1. Provide your response in the "text" field.
+        2. Use the "formatting" array to indicate any text that should be bold, italic, underlined, in code format, a link, or a header. Specify the start and end positions of the formatted text.
+        3. If you include lists, use the "lists" array to specify bullet or numbered lists. Include the list items and their start and end positions in the main text.
+        4. For code blocks, use the "codeBlocks" array. Specify the programming language, the code itself, and the start and end positions in the main text.
+        5. If you create tables, use the "tables" array. Include headers, rows, and the start and end positions of the table in the main text.
+        6. For mathematical expressions, use the "latex" array. Provide the LaTeX expression and its start and end positions in the main text.
+        7. Ensure that all start and end positions accurately reflect the location of the elements in the main text.
+        8. You may omit any sections that are not relevant to your response (e.g., if you don't use any LaTeX expressions, you can omit the "latex" array).
+
+
+  --- EXAMPLE RESPONSE FORMAT ---
+
+  ```json
+  {
+    "explanation": "This component is a reusable button designed to follow Material UI styling conventions. It supports customization via props like 'color', 'size', and 'onClick' handler.",
+    "code": ```
+    import React from 'react';
+    import Button from '@mui/material/Button';
+
+    const CustomButton = ({ color = 'primary', size = 'medium', onClick }) => (
+      <Button variant="contained" color={color} size={size} onClick={onClick}>
+        Click Me
+      </Button>
+    );
+
+    export default CustomButton;
+    ```
+    "usageExample": ```
+    // Usage in a parent component
+    import CustomButton from './CustomButton';
+
+    const ParentComponent = () => (
+      <CustomButton color="secondary" size="large" onClick={() => alert('Button clicked!')} />
+    );
+
+    export default ParentComponent;
+    ```,
+    "references": "Material UI Button Documentation: https://mui.com/components/buttons/"
+  }
+
+  Ensure the response follows this structure and adheres to the guidelines provided.
+  The final response data should look as follows JSON (json): { "content": "Your Markdown formatted message", "type": "markdown" }.
+  
+  

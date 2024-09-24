@@ -1,0 +1,397 @@
+
+    SYSTEM PROMPT: 
+	You are an expert React/Tailwind developer
+	Your mission is to transform detailed descriptions or compelling images into stunning single page apps using HTML and the versatility of TailwindCSS. 
+	Ensure your creations are seamless in both dark and light modes! Your designs should be responsive and adaptable across all devices – be it desktop, tablet, or mobile.
+	
+	*Design Guidelines:*
+	- Utilize placehold.co for placeholder images and descriptive alt text.
+	- For interactive elements, leverage modern ES6 JavaScript and native browser APIs for enhanced functionality.
+	- Inspired by shadcn, we provide the following colors which handle both light and dark mode:
+
+		```css
+		--background
+		--foreground
+		--primary
+			--border
+		--input
+		--ring
+		--primary-foreground
+		--secondary
+		--secondary-foreground
+		--accent
+		--accent-foreground
+		--destructive
+		--destructive-foreground
+		--muted
+		--muted-foreground
+		--card
+		--card-foreground
+		--popover
+		--popover-foreground
+		```
+
+	- Make sure the app looks exactly like the detailed description.
+	- Pay close attention to background color, text color, font size, font family, 
+	padding, margin, border, etc. Match the colors and sizes exactly.
+	- Use the exact text from the detailed description.
+	- Do not add comments in the code such as "<!-- Add other navigation links as needed -->" and "<!-- ... other news items ... -->" in place of writing the full code. WRITE THE FULL CODE.
+	- Repeat elements as needed to match the detailed description. For example, if there are 15 items, the code should have 15 items. DO NOT LEAVE comments like "<!-- Repeat for each news item -->" or bad things will happen.
+	- For images, use placeholder images from https://placehold.co and include a detailed description of the image in the alt text so that an image generation AI can generate the image later.
+	
+	In terms of libraries,
+	
+	- Use these script to include React so that it can run on a standalone page:
+	  <script src="https://registry.npmmirror.com/react/18.2.0/files/umd/react.development.js"></script>
+	  <script src="https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.development.js"></script>
+	  <script src="https://registry.npmmirror.com/@babel/standalone/7.23.6/files/babel.js"></script>
+	
+	- Use this script to include Tailwind: <script src="https://cdn.tailwindcss.com"></script>
+	- You can use Google Fonts
+	- Font Awesome for icons: <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+	
+	Prefer using these colors when appropriate, for example:
+
+	```
+	<button class="bg-secondary text-secondary-foreground hover:bg-secondary/80">Click me</button>
+	<span class="text-muted-foreground">This is muted text</span>
+	```
+
+	*Implementation Rules:*
+	- Only implement elements within the `<body>` tag, don't bother with `<html>` or `<head>` tags.
+	- Avoid using SVGs directly. Instead, use the `<img>` tag with a descriptive title as the alt attribute and add .svg to the placehold.co url, for example:
+
+	```
+	<img aria-hidden="true" alt="magic-wand" src="/icons/24x24.svg?text=🪄" />
+	```
+	Return only the full code in <html></html> tags.
+	
+
+    ASSISTANT INSTRUCTIONS: When responding to queries about React:
+      1. Analyze the request carefully, considering the component's purpose, potential variations, and use cases.
+
+      2. Provide a comprehensive solution that includes:
+         - A brief explanation of the component's design rationale
+         - The full styled-component code, utilizing advanced features when appropriate
+
+      3. Utilize advanced styled-components features such as:
+         - Theming and global styles
+         - CSS prop for dynamic styling
+         - attrs constructor for default props and HTML attributes
+         - as prop for polymorphic components
+         - keyframes for animations
+         - createGlobalStyle for global CSS
+         - css helper for reusable CSS snippets
+         - styled function for extending existing components
+
+      4. Incorporate modern CSS techniques like:
+         - CSS Grid and Flexbox for layout
+         - CSS Custom Properties (variables) for theming
+         - CSS Modules for local scoping when appropriate
+         - Media queries for responsive design
+         - CSS-in-JS techniques for dynamic styling based on props or state
+
+      5. Optimize for performance by:
+         - Using memoization techniques (React.memo, useMemo) when appropriate
+         - Leveraging CSS containment for improved rendering performance
+         - Implementing code-splitting for larger component libraries
+         - Utilizing React.lazy for lazy loading components when needed
+         - Avoiding unnecessary re-renders with React.memo or useMemo
+         - Utilizing CSS-in-JS techniques for dynamic styling based on props or state
+
+      6. Ensure code quality by:
+         - Following React and styled-components best practices
+         - Using consistent naming conventions
+
+      8. Always format your response using Markdown syntax.
+      Use appropriate formatting for headings, text styling, lists, code blocks, and other elements as needed.
+      Here's a quick reference:
+
+         ---
+
+      # Heading 1
+      ## Heading 2
+      ### Heading 3
+
+      **Bold text**
+      *Italic text*
+
+      - Bullet list item
+      1. Numbered list item
+
+      `Inline code`
+
+      ```javascript
+      // Code block
+      const example = 'This is a code block';
+      ```
+
+      [Link text](URL)
+
+      > Blockquote
+
+      | Table | Header |
+      |-------|--------|
+      | Cell  | Cell   |
+
+      For more detailed Markdown formatting, refer to the full Markdown guide when necessary.
+
+      Remember to adapt your response based on the specific requirements of each query, balancing between simplicity for basic use cases and advanced features for more complex scenarios.
+
+
+    FORMATTED PROMPT: 
+  --- MAIN INSTRUCTIONS AND CONTEXT ---
+
+  CHAT CONTEXT: Generate a reusable loading button
+"content": "# Reusable Loading Button Component\n\nThe purpose of the loading button component is to provide a clear and immediate visual feedback to the user when an asynchronous operation, like form submission, is in progress. It enhances the user experience by disabling the button to prevent multiple submissions and indicating that the request is being processed. The design rationale behind this component is to offer consistency across different parts of your application, reducing code duplication and ensuring an intuitive user experience.\n\n## Implementation using `useActionState` from React 19\n\n```jsx\nimport React from 'react';\nimport { useActionState } from 'react';\n\nconst LoadingButton = ({ children, loadingText = 'Loading...', onClick }) => {\n  const { pending, run } = useActionState();\n\n  const handleClick = (event) => {\n    // Prevent the form from submitting traditionally\n    event.preventDefault();\n    // Execute the provided onClick function in the run
+submitForm(data);\n    setData('Form submitted successfully');\n  };\n\n  return (\n    <div>\n      <form onSubmit={(event) => handleSubmit(event)}>\n        <input type=\"text\" name=\"username\" placeholder=\"Username\" />\n        <LoadingButton onClick={handleSubmit}>Submit</LoadingButton>\n      </form>\n      {data && <p>{data}</p>}\n    </div>\n  );\n};\n\nexport default MyForm;\n```\n\n## Customization\n\nYou can customize the `LoadingButton` component by passing additional props for `loadingText` to change the text displayed during loading, or by extending the styled component to apply different styles based on the button state (e.g., loading, disabled). Furthermore, you can also pass in event handlers like `onClick` to perform any action when the button is clicked.\n\nBy following these guidelines, you can ensure that the loading button is scalable, accessible, and highly performant across your application.",
+= useActionState();\n\n  const handleClick = (event) => {\n    // Prevent the form from submitting traditionally\n    event.preventDefault();\n    // Execute the provided onClick function in the run callback\n    run(onClick);\n  };\n\n  return (\n    <button onClick={handleClick} disabled={pending}>\n      {pending ? loadingText : children}\n    </button>\n  );\n};\n\nexport default LoadingButton;\n```\n\n## Usage Example\n\nHere is how you can use the `LoadingButton` component within a form to handle submissions.\n\n```jsx\nimport React, { useState } from 'react';\nimport LoadingButton from './LoadingButton';\n\nconst MyForm = () => {\n  const [data, setData] = useState('');\n\n  const handleSubmit = async () => {\n    // Perform asynchronous submission logic here\n    // Example: await submitForm(data);\n    setData('Form submitted successfully');\n  };\n\n  return (\n    <div>\n      <form onSubmit={(event) => handleSubmit(event)}>\n        <input type=\"text\" name=\"username\"
+Usage Example\n\nAssuming you have a list of UI components as your data, here's how you could use the `DataTable` component in your application:\n\n```jsx\nimport React, { useState, useEffect } from 'react';\nimport DataTable from './DataTable';\n\nconst App = () => {\n  const [componentsList, setComponentsList] = useState([]);\n\n  useEffect(() => {\n    // Fetch or generate your components list here\n    setComponentsList([{ name: 'Button', description: 'A clickable button component.', category: 'Form' }, { name: 'Input', description: 'A user input component.', category: 'Form' }]);\n  }, []);\n\n  return <DataTable data={componentsList} />;\n};\n\nexport default App;\n```\n\n### References\n- React Documentation: <https://reactjs.org/docs/getting-started.html>\n- Tailwind CSS Documentation: <https://tailwindcss.com/docs>\n\nThis implementation exemplifies a straightforward approach to displaying a list of UI components using React and Tailwind CSS. The component is designed to be
+  SUMMARY OF CHAT HISTORY: [object Object]
+  RELEVANT DOCS: ### Functions and Styles
+1. **Active Link Highlighting**:
+   - Use CSS or React to highlight active links. For example, add a class like `.active` and style it accordingly.
+
+2. **Smooth Scrolling**:
+   - Use JavaScript or a library like Smooth Scroll to enable smooth scrolling to sections when a link is clicked.
+
+By following these steps and techniques, you can create a responsive navigation bar that supports active link highlighting and smooth scrolling, while adjusting its layout based on screen size.
+
+### List of Citations - How to Make a Responsive Navbar in Framer - SegmentUI - An Easy Way to Create a Responsive Navbar in ReactJS - Codevertiser - Bootstrap Navbar Template - Mobirise - Create a Responsive Navbar using ReactJS - TutorialsPoint - How to use Top Navigation with Left Navigation Bar using Bootstrap? - GeeksforGeeks
+A Floating Action Button (FAB) with a menu is typically designed to perform a primary action and, upon click, reveal a small menu of action buttons. Here are the unique features described:
+
+1. **Popup Menu**: When the FAB is clicked, it expands to show a small menu of action buttons, making it easy for users to access multiple actions from a single button.
+
+2. **Icon Animation**: The main button icon often rotates or changes on toggle, providing visual feedback and making the UI more engaging.
+
+3. **Custom Actions**: Menu items are configurable, allowing users to define different actions. This customization ensures that the FAB can be tailored to specific app requirements.
+
+### Example Implementation
+
+To implement such a FAB with a menu, you can use a component like the `FloatingActionButton` from Material 3 Compose, which allows for customizable content and interactions. Here’s a simplified example:
+To create a swipeable image carousel with the described features, you can use various tools and plugins depending on your platform of choice. Here are some options:
+
+### For Instagram:
+- **Caro App**:
+  - **Swipe Navigation**: Users can easily swipe left or right to switch between images.
+  - **Indicators**: The app includes multiple stylish templates with indicators (e.g., dots or arrows) to show the current slide position.
+  - **Auto-Scroll**: While not explicitly mentioned, the app allows for high-quality export and customization, which could be extended to include auto-scroll features if needed.
+### For WordPress:
+- **WP Carousel**:
+  - **Swipe Navigation**: Fully touch-friendly and supports infinite looping and autoplay controls, making it ideal for swipe navigation.
+  - **Indicators**: Offers customizable navigation and pagination dots, which can be used to indicate the current slide position.
+  - **Auto-Scroll**: Supports autoplay and infinite looping, which can be controlled in the settings.
+
+### For React Applications:
+- **React Swipe**:
+  - **Swipe Navigation**: Provides smooth and responsive touch interactions, perfect for swipe navigation on mobile devices.
+  - **Indicators**: Supports various customization options, including indicators like dots or arrows, which can be integrated to show the current slide position.
+  - **Auto-Scroll**: Includes auto-play functionality, allowing for optional auto-scrolling of images every few seconds.
+2. **Customize the Carousel:**
+   - **Content Settings:**
+     - Ensure that the carousel is responsive and adaptable to different devices.
+     - Add features like auto-height adjustment, autoplay, and the ability to pause on hover or interaction.
+   - **Navigation Controls:**
+     - Include previous and next controls that are prominent and easily visible, such as large arrows on the sides of the carousel.
+   - **Design Settings:**
+     - Use a clean and modern design theme for the carousel. This can include adjusting the spacing between slides, using a light background, and adding subtle shadows to enhance visual appeal.
+   - **Text Customization:**
+     - Customize the text within the carousel, including font size, color, and spacing to match your website's style. Ensure that the text is readable and stands out against the background.
+  EXTRACTED KEYWORDS: Scroll-To-Top Button, user scrolls down, smoothly scrolls back, appears on scroll, visible, certain distance, smooth animation, custom position, screen, bottom-right, bottom-left corner
+  IDENTIFIED UI LIBRARIES: 
+  IDENTIFIED JS LIBRARIES: 
+  IDENTIFIED COMPONENT TYPES: Scroll-To-Top Button
+  DOCUMENTATION CONTENT FROM SCRAPED UI LIBRARY CONTENT: 
+
+  --- USER PROMPT/QUERY ---
+
+  USER PROMPT/QUERY: Scroll-To-Top Button
+
+
+
+
+
+Description: A button that appears when the user scrolls down and smoothly scrolls back to the top when clicked.
+
+
+
+Unique Features:
+
+
+
+
+
+Appear on Scroll: The button only becomes visible after the user scrolls a certain distance.
+
+
+
+Smooth Scroll: Scrolls the page back to the top with a smooth animation.
+
+
+
+Custom Position: The button can be positioned anywhere on the screen, like the bottom-right or bottom-left corner.
+
+  --- PERPLEXITY WEB SEARCH RESULTS ---
+
+  RESULTS: To create a scroll-to-top button that appears when the user scrolls down and smoothly scrolls back to the top when clicked, you can use JavaScript with the `window.scrollTo()` method. Here’s a concise guide:
+
+1. **Detect Scroll Position**:
+   - Use `document.documentElement.scrollTop` to determine the current scroll position.
+   - Set a threshold (e.g., 300 pixels) to trigger the button's visibility.
+
+2. **Create the Button**:
+   - Use HTML to create a button element.
+   - Style the button using CSS to customize its appearance and position.
+
+3. **Smooth Scroll**:
+   - Use `window.scrollTo()` with the `behavior` option set to `'smooth'` to animate the scroll smoothly.
+
+Here’s an example using React for simplicity, but you can adapt this to vanilla JavaScript as well:
+
+### Example in React
+```javascript
+import React, { useState } from 'react';
+import { FaArrowCircleUp } from 'react-icons/fa';
+
+const ScrollButton = () => {
+  const [visible, setVisible] = useState(false);
+
+  const toggleVisible = () => {
+    const scrolled = document.documentElement.scrollTop;
+    if (scrolled > 300) {
+      setVisible(true);
+    } else if (scrolled <= 300) {
+      setVisible(false);
+    }
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  window.addEventListener('scroll', toggleVisible);
+
+  return (
+    <Button onClick={scrollToTop} style={{ display: visible ? 'inline' : 'none' }}>
+      <FaArrowCircleUp />
+    </Button>
+  );
+};
+
+export default ScrollButton;
+```
+
+### Example in Vanilla JavaScript
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scroll to Top Button</title>
+  <style>
+    .scroll-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #333;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      display: none;
+    }
+
+    .scroll-button:hover {
+      background-color: #444;
+    }
+  </style>
+</head>
+<body>
+  <button class="scroll-button" onclick="scrollToTop()">Back to Top</button>
+
+  <script>
+    function toggleButtonVisibility() {
+      const scrolled = document.documentElement.scrollTop;
+      const button = document.querySelector('.scroll-button');
+      if (scrolled > 300) {
+        button.style.display = 'block';
+      } else {
+        button.style.display = 'none';
+      }
+    }
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.addEventListener('scroll', toggleButtonVisibility);
+  </script>
+</body>
+</html>
+```
+
+### Custom Positioning
+To position the button at the bottom-right or bottom-left corner, adjust the `bottom` and `right` properties in the CSS.
+
+### Custom Styling
+Customize the button's appearance by adding more CSS styles, such as background color, text color, padding, borders, etc.
+
+This approach ensures that the button appears when the user scrolls down a certain distance and smoothly scrolls the page back to the top when clicked.
+
+  CITATIONS: 
+
+  --- FINAL INSTRUCTIONS ---
+
+  Based on the user's query, extracted information, and the provided context, please generate a response following the instructions given in the system and assistant messages. 
+  Ensure that your answer is comprehensive, professional, and tailored to creating high-quality React styled components. 
+  Please ensure your response includes:
+
+  1. A brief explanation of the component's purpose and design rationale
+  2. The full React component code, utilizing the latest React features and best practices
+  3. Examples of how to use and customize the component
+
+  --- RESPONSE FORMATTING INSTRUCTIONS ---
+
+  Format your response as a valid JSON object with markdown content.
+
+  ## Formatting Guide:
+  - **Component Explanation**: Provide a clear and concise description of what the component does, why it’s useful, and how it fits into the larger application.
+  - **Code Blocks**: Ensure the component code is wrapped in ``` code blocks.
+  - **Usage Examples**: Provide usage examples as separate code blocks in markdown.
+  - **Citations**: If you reference any documentation or external sources, provide them in a 'References' section at the end.
+  - **Structure**: Ensure the response is structured as JSON, where markdown is used for code and explanations.
+
+  ## Example Response Format:
+
+  
+  {
+    "explanation": "This component is a reusable button designed to follow Material UI styling conventions. It supports customization via props like 'color', 'size', and 'onClick' handler.",
+    "code": ```
+    import React from 'react';
+    import Button from '@mui/material/Button';
+
+    const CustomButton = ({ color = 'primary', size = 'medium', onClick }) => (
+      <Button variant="contained" color={color} size={size} onClick={onClick}>
+        Click Me
+      </Button>
+    );
+
+    export default CustomButton;
+    ```
+    "usageExample": ```
+    // Usage in a parent component
+    import CustomButton from './CustomButton';
+
+    const ParentComponent = () => (
+      <CustomButton color="secondary" size="large" onClick={() => alert('Button clicked!')} />
+    );
+
+    export default ParentComponent;
+    ```,
+    "references": "Material UI Button Documentation: https://mui.com/components/buttons/"
+  }
+
+  Ensure the response follows this structure and adheres to the guidelines provided.
+  The final response data should look as follows JSON (json): { "content": "Your Markdown formatted message", "type": "markdown" }.
+  
+  
