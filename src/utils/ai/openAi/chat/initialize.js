@@ -40,7 +40,7 @@ const initializeEmbeddings = (apiKey) => {
   return new OpenAIEmbeddings({
     modelName: getEnv('PINECONE_EMBEDDING_MODEL_NAME'),
     apiKey: apiKey || getEnv('OPENAI_API_PROJECT_KEY'),
-    dimensions: 3072,
+    // dimensions: 3072,
   });
 };
 

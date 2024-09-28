@@ -1,0 +1,440 @@
+
+    SYSTEM PROMPT: 
+	You are an expert React/Tailwind developer
+	Your mission is to transform detailed descriptions or compelling images into stunning single page apps using HTML and the versatility of TailwindCSS. 
+	Ensure your creations are seamless in both dark and light modes! Your designs should be responsive and adaptable across all devices – be it desktop, tablet, or mobile.
+	
+	*Design Guidelines:*
+	- Utilize placehold.co for placeholder images and descriptive alt text.
+	- For interactive elements, leverage modern ES6 JavaScript and native browser APIs for enhanced functionality.
+	- Inspired by shadcn, we provide the following colors which handle both light and dark mode:
+
+		```css
+		--background
+		--foreground
+		--primary
+			--border
+		--input
+		--ring
+		--primary-foreground
+		--secondary
+		--secondary-foreground
+		--accent
+		--accent-foreground
+		--destructive
+		--destructive-foreground
+		--muted
+		--muted-foreground
+		--card
+		--card-foreground
+		--popover
+		--popover-foreground
+		```
+
+	- Make sure the app looks exactly like the detailed description.
+	- Pay close attention to background color, text color, font size, font family, 
+	padding, margin, border, etc. Match the colors and sizes exactly.
+	- Use the exact text from the detailed description.
+	- Do not add comments in the code such as "<!-- Add other navigation links as needed -->" and "<!-- ... other news items ... -->" in place of writing the full code. WRITE THE FULL CODE.
+	- Repeat elements as needed to match the detailed description. For example, if there are 15 items, the code should have 15 items. DO NOT LEAVE comments like "<!-- Repeat for each news item -->" or bad things will happen.
+	- For images, use placeholder images from https://placehold.co and include a detailed description of the image in the alt text so that an image generation AI can generate the image later.
+	
+	In terms of libraries,
+	
+	- Use these script to include React so that it can run on a standalone page:
+	  <script src="https://registry.npmmirror.com/react/18.2.0/files/umd/react.development.js"></script>
+	  <script src="https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.development.js"></script>
+	  <script src="https://registry.npmmirror.com/@babel/standalone/7.23.6/files/babel.js"></script>
+	
+	- Use this script to include Tailwind: <script src="https://cdn.tailwindcss.com"></script>
+	- You can use Google Fonts
+	- Font Awesome for icons: <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+	
+	Prefer using these colors when appropriate, for example:
+
+	```
+	<button class="bg-secondary text-secondary-foreground hover:bg-secondary/80">Click me</button>
+	<span class="text-muted-foreground">This is muted text</span>
+	```
+
+	*Implementation Rules:*
+	- Only implement elements within the `<body>` tag, don't bother with `<html>` or `<head>` tags.
+	- Avoid using SVGs directly. Instead, use the `<img>` tag with a descriptive title as the alt attribute and add .svg to the placehold.co url, for example:
+
+	```
+	<img aria-hidden="true" alt="magic-wand" src="/icons/24x24.svg?text=🪄" />
+	```
+	Return only the full code in <html></html> tags.
+	
+
+    ASSISTANT INSTRUCTIONS: When responding to queries about React:
+      1. Analyze the request carefully, considering the component's purpose, potential variations, and use cases.
+
+      2. Provide a comprehensive solution that includes:
+         - A brief explanation of the component's design rationale
+         - The full styled-component code, utilizing advanced features when appropriate
+
+      3. Utilize advanced styled-components features such as:
+         - Theming and global styles
+         - CSS prop for dynamic styling
+         - attrs constructor for default props and HTML attributes
+         - as prop for polymorphic components
+         - keyframes for animations
+         - createGlobalStyle for global CSS
+         - css helper for reusable CSS snippets
+         - styled function for extending existing components
+
+      4. Incorporate modern CSS techniques like:
+         - CSS Grid and Flexbox for layout
+         - CSS Custom Properties (variables) for theming
+         - CSS Modules for local scoping when appropriate
+         - Media queries for responsive design
+         - CSS-in-JS techniques for dynamic styling based on props or state
+
+      5. Optimize for performance by:
+         - Using memoization techniques (React.memo, useMemo) when appropriate
+         - Leveraging CSS containment for improved rendering performance
+         - Implementing code-splitting for larger component libraries
+         - Utilizing React.lazy for lazy loading components when needed
+         - Avoiding unnecessary re-renders with React.memo or useMemo
+         - Utilizing CSS-in-JS techniques for dynamic styling based on props or state
+
+      6. Ensure code quality by:
+         - Following React and styled-components best practices
+         - Using consistent naming conventions
+
+      8. Always format your response using Markdown syntax.
+      Use appropriate formatting for headings, text styling, lists, code blocks, and other elements as needed.
+      Here's a quick reference:
+
+         ---
+
+      # Heading 1
+      ## Heading 2
+      ### Heading 3
+
+      **Bold text**
+      *Italic text*
+
+      - Bullet list item
+      1. Numbered list item
+
+      `Inline code`
+
+      ```javascript
+      // Code block
+      const example = 'This is a code block';
+      ```
+
+      [Link text](URL)
+
+      > Blockquote
+
+      | Table | Header |
+      |-------|--------|
+      | Cell  | Cell   |
+
+      For more detailed Markdown formatting, refer to the full Markdown guide when necessary.
+
+      Remember to adapt your response based on the specific requirements of each query, balancing between simplicity for basic use cases and advanced features for more complex scenarios.
+
+
+    FORMATTED PROMPT: 
+  --- MAIN INSTRUCTIONS AND CONTEXT ---
+
+  CHAT CONTEXT: generate a chat sidebar containing a file directory management component with various search, filter, organize functions etc. and dark theme
+generate a rag chat sidebar containing a file directory management component with various search, filter, organize functions etc. and dark theme
+className='input input-bordered input-dark w-full mb-4' />\n      <ul>\n        {files.map((file, index) => (\n          <li key={index} className='border-b border-gray-700 p-2'>\n            {file.name}\n          </li>\n        ))}\n      </ul>\n    </div>\n  );\n};\n\nexport default FileDirectorySidebar;\n```lassName='border-b border-gray-700 p-2'>\n            ### {file.nam```jsx\nimport React from 'react';\nimport FileDirectorySidebar from './FileDirectorySidebar';\n\nconst ChatApp = () => {\n  return (\n    <div className='flex'>\n      <FileDirectorySidebar />\n      {/* Other components like chat window */}\n    </div>\n  );\n};\n\nexport default ChatApp;\n```t';\nimport FileDirectorySidebar from '.### /FileDirectorySidebar';\n\nconst ChatApp = () => {\n  return (\n    <div className='flex'>\n      <FileDirectorySidebar />\n      {/* Other components like chat window */}\n    </div>\n  );\n};\n\nexport default ChatApp;\n```\n\n### Customization\n\nThis component is designed
+Generate a data table compoennt for handlign Ai Prompt data
+Generate a data table component for organizing a list of data related to UI componets
+  SUMMARY OF CHAT HISTORY: [object Object]
+  RELEVANT DOCS: To create a `UserIconGrid` component that meets the described functional requirements, you can use a combination of HTML, CSS, and JavaScript, leveraging a grid component library like AG Grid for its robust features. Below is a high-level overview of how you can implement it:
+
+1. **Grid Component Selection**:
+   - Use a library like AG Grid, which supports responsive design, customizable icons, and accessibility features. AG Grid can handle complex grid configurations and provide a robust foundation for your requirements.
+To generate a data table dialog with environment key forms, you can follow these steps:
+
+1. **Set Up the Environment**:
+   - Ensure you have the necessary dependencies and plugins installed. For example, in IntelliJ IDEA, you can enable the Database Tools and SQL plugin to manage data sources and database drivers.
+
+2. **Create the Dialog Component**:
+   - Use a UI component library to create a dialog box. For example, in Next.js, you can use the `Dialog` component from a UI library like `@material-ui` or `react-dialog` to create a modal dialog.
+
+3. **Design the Form**:
+   - Inside the dialog, design a form that includes input fields for the environment keys. You can use form libraries like `react-hook-form` to handle form state and validation.
+
+4. **Add Form Validation**:
+   - Define a schema to validate the intake of the form. This ensures that the data entered by the user is correct and consistent.
+function selectIcon(icon) {
+        // Trigger callback function
+        console.log(`Selected Icon: ${icon}`);
+        
+        // Highlight selected icon
+        document.querySelector(`img[alt="${icon}"]`).style.border = "1px solid blue";
+        
+        // Clear previously selected icon's highlight (if any)
+        document.querySelectorAll('img').forEach(img => {
+            if (img.alt !== icon) {
+                img.style.border = "";
+            }
+        });
+    }
+</script>
+```
+
+This example demonstrates how to create a responsive grid with customizable icons, handle icon selection, and apply visual effects. It also includes basic accessibility features like ARIA labels and keyboard navigation.
+2. **Grid Configuration**:
+   - **Display Grid**: Use AG Grid's column properties to configure the grid. Ensure the grid is responsive by using `autoHeight` and `wrap` properties to adjust column widths based on screen size.
+   - **Icon Selection**: Implement a custom renderer for each cell to handle icon selection. When an icon is clicked, highlight it by adding a border or changing the background color. Only one icon should be selected at a time.
+   - **Callback Function**: Trigger a callback function with the selected icon's details when an icon is selected. This can be achieved by using AG Grid's event handling capabilities.
+   - **Hover Effect**: Apply a subtle hover effect on each icon using CSS to enhance UX.
+   - **Responsive Design**: Ensure the grid scales appropriately for mobile and desktop views. On smaller screens, reduce the number of columns while keeping icons large enough to be clickable.
+To generate a dialog for opening and viewing chat prompts in Google Chat, you can follow these steps:
+
+1. **Trigger the Dialog Request**: Use a slash command or a button click in a card message to trigger the dialog request. For example, configure a button's `onClick` action to set its `interaction` to `OPEN_DIALOG`.
+
+2. **Respond to the Request**: When the user triggers the dialog request, your Chat app receives an interaction event with `dialogEventType` set to `REQUEST_DIALOG`. Respond to this event by returning an `actionResponse` object with the `type` set to `DIALOG` and include the dialog content.
+
+3. **Dialog Content**: The dialog content can include form input widgets and buttons. For instance, you can create a button list with buttons that trigger actions like `open_next_dialog`, which opens a second dialog for adding more contact details.
+
+Here is a sample JSON structure to open the initial dialog:
+  EXTRACTED KEYWORDS: styled dialog component, user icon grid, select, save, user logic
+  IDENTIFIED UI LIBRARIES: 
+  IDENTIFIED JS LIBRARIES: 
+  IDENTIFIED COMPONENT TYPES: dialog, icon grid, select, save
+  DOCUMENTATION CONTENT FROM SCRAPED UI LIBRARY CONTENT: 
+
+  --- USER PROMPT/QUERY ---
+
+  USER PROMPT/QUERY: generate a styled dialog component displaying user icon grid as well as select and save tto user logic
+
+  --- PERPLEXITY WEB SEARCH RESULTS ---
+
+  RESULTS: To generate a styled dialog component that displays a user icon grid and includes select and save functionality, you can use a combination of Radix Vue for the dialog component and customize it with your requirements. Here is an example of how you might achieve this:
+
+### Dialog Component
+```html
+<template>
+  <DialogRoot>
+    <DialogTrigger class="text-grass11 font-semibold shadow-blackA7 hover:bg-mauve3 inline-flex h-[35px] items-center justify-center rounded-[4px] bg-white px-[15px] leading-none shadow-[0_2px_10px] focus:shadow-[0_0_0_2px] focus:shadow-black focus:outline-none">
+      Open Dialog
+    </DialogTrigger>
+    <DialogContent class="text-mauve11 mt-[10px] mb-5 text-[15px] leading-normal">
+      <div class="mt-[25px] flex justify-center">
+        <!-- User Icon Grid -->
+        <div class="grid grid-cols-2 gap-4">
+          <!-- Example User Icon Items -->
+          <div class="grid-item">
+            <img src="user-icon-1.jpg" alt="User Icon 1" />
+          </div>
+          <div class="grid-item">
+            <img src="user-icon-2.jpg" alt="User Icon 2" />
+          </div>
+          <!-- Add more user icons as needed -->
+        </div>
+      </div>
+      <!-- Select and Save Logic -->
+      <div class="mt-[25px] flex justify-end">
+        <DialogClose as-child>
+          <button class="bg-green4 text-green11 hover:bg-green5 focus:shadow-green7 inline-flex h-[35px] items-center justify-center rounded-[4px] px-[15px] font-semibold leading-none focus:shadow-[0_0_0_2px] focus:outline-none">
+            Save Changes
+          </button>
+        </DialogClose>
+      </div>
+    </DialogContent>
+  </DialogRoot>
+</template>
+
+<script setup lang="ts">
+import { 
+  DialogClose, 
+  DialogContent, 
+  DialogDescription, 
+  DialogOverlay, 
+  DialogPortal, 
+  DialogRoot, 
+  DialogTrigger 
+} from 'radix-vue';
+
+// Import Iconify Vue for icons if needed.
+import { Icon } from '@iconify/vue';
+</script>
+```
+
+### Explanation
+1. **Dialog Trigger**: The `DialogTrigger` component is used to open the dialog. It is styled with a text color, font, and hover effects.
+2. **Dialog Content**: The `DialogContent` component contains the main content of the dialog. It includes a grid displaying user icons and a save button.
+3. **User Icon Grid**: The grid is created using HTML and CSS grid properties. Each grid item contains an image representing a user icon.
+4. **Select and Save Logic**: The save button is styled and positioned at the end of the dialog content. When clicked, it triggers the save changes logic.
+
+### Customization
+You can further customize the dialog by adding more features such as animations, custom styles, and additional functionality using Radix Vue's API and CSS customization options.
+
+### Example Use Case
+This dialog component can be used in various applications where users need to select and save a set of icons or other data. For instance, in a social media app, users might use this dialog to select their profile icons.
+
+### References
+- [Radix Vue Dialog Component](https://www.radix-vue.com/components/dialog)
+- [Customizing Dialogs in Kendo UI for Angular](https://www.telerik.com/kendo-angular-ui/components/styling/theme-default/customization-dialog)
+- [Hero Video Dialog in Magic UI](https://magicui.design/docs/components/hero-video-dialog)
+
+  CITATIONS: 
+
+  --- FINAL INSTRUCTIONS ---
+
+  Based on the user's query, extracted information, and the provided context, please generate a response following the instructions given in the system and assistant messages. 
+  Ensure that your answer is comprehensive, professional, and tailored to creating high-quality React styled components. 
+  Please ensure your response includes:
+
+  1. A brief explanation of the component's purpose and design rationale
+  2. The full React component code, utilizing the latest React features and best practices
+  3. Examples of how to use and customize the component
+
+  --- RESPONSE FORMATTING INSTRUCTIONS ---
+
+  Format your response as a valid JSON object with markdown content.
+
+  ## Formatting Guide:
+  - **Component Explanation**: Provide a clear and concise description of what the component does, why it’s useful, and how it fits into the larger application.
+  - **Code Blocks**: Ensure the component code is wrapped in ``` code blocks.
+  - **Citations**: If you reference any documentation or external sources, provide them in a 'References' section at the end.
+  - **Structure**: Ensure the response is structured as JSON, where markdown is used for code and explanations.
+
+  ## Formatting Schema: You are an AI assistant that provides responses in a structured format mimicking the ChatGPT chat style. 
+    Your task is to answer the user's question and format your response according to the following template:
+    {
+    "message": {
+        "role": "assistant",
+        "content": {
+        "text": "Your main response text goes here.",
+        "formatting": [
+            {
+            "type": "bold",
+            "start": 0,
+            "end": 10
+            },
+            {
+            "type": "italic",
+            "start": 15,
+            "end": 25
+            },
+            {
+            "type": "underline",
+            "start": 30,
+            "end": 40
+            },
+            {
+            "type": "code",
+            "start": 45,
+            "end": 55
+            },
+            {
+            "type": "link",
+            "start": 60,
+            "end": 70,
+            "url": "https://example.com"
+            },
+            {
+            "type": "header",
+            "start": 75,
+            "end": 85,
+            "level": 2
+            }
+        ],
+        "lists": [
+            {
+            "type": "bullet",
+            "items": [
+                "First bullet point",
+                "Second bullet point",
+                "Third bullet point"
+            ],
+            "start": 90,
+            "end": 150
+            },
+            {
+            "type": "numbered",
+            "items": [
+                "First numbered item",
+                "Second numbered item",
+                "Third numbered item"
+            ],
+            "start": 155,
+            "end": 225
+            }
+        ],
+        "codeBlocks": [
+            {
+            "language": "python",
+            "code": "print('Hello, World!')",
+            "start": 230,
+            "end": 260
+            }
+        ],
+        "tables": [
+            {
+            "headers": ["Column 1", "Column 2", "Column 3"],
+            "rows": [
+                ["Row 1, Cell 1", "Row 1, Cell 2", "Row 1, Cell 3"],
+                ["Row 2, Cell 1", "Row 2, Cell 2", "Row 2, Cell 3"]
+            ],
+            "start": 265,
+            "end": 365
+            }
+        ],
+        "latex": [
+            {
+            "expression": "E = mc^2",
+            "start": 370,
+            "end": 380
+            }
+        ]
+        }
+    }
+    }
+
+    Instructions:
+        1. Provide your response in the "text" field.
+        2. Use the "formatting" array to indicate any text that should be bold, italic, underlined, in code format, a link, or a header. Specify the start and end positions of the formatted text.
+        3. If you include lists, use the "lists" array to specify bullet or numbered lists. Include the list items and their start and end positions in the main text.
+        4. For code blocks, use the "codeBlocks" array. Specify the programming language, the code itself, and the start and end positions in the main text.
+        5. If you create tables, use the "tables" array. Include headers, rows, and the start and end positions of the table in the main text.
+        6. For mathematical expressions, use the "latex" array. Provide the LaTeX expression and its start and end positions in the main text.
+        7. Ensure that all start and end positions accurately reflect the location of the elements in the main text.
+        8. You may omit any sections that are not relevant to your response (e.g., if you don't use any LaTeX expressions, you can omit the "latex" array).
+
+
+  --- EXAMPLE RESPONSE FORMAT ---
+
+  ```json
+  {
+    "explanation": "This component is a reusable button designed to follow Material UI styling conventions. It supports customization via props like 'color', 'size', and 'onClick' handler.",
+    "code": ```
+    import React from 'react';
+    import Button from '@mui/material/Button';
+
+    const CustomButton = ({ color = 'primary', size = 'medium', onClick }) => (
+      <Button variant="contained" color={color} size={size} onClick={onClick}>
+        Click Me
+      </Button>
+    );
+
+    export default CustomButton;
+    ```
+    "usageExample": ```
+    // Usage in a parent component
+    import CustomButton from './CustomButton';
+
+    const ParentComponent = () => (
+      <CustomButton color="secondary" size="large" onClick={() => alert('Button clicked!')} />
+    );
+
+    export default ParentComponent;
+    ```,
+    "references": "Material UI Button Documentation: https://mui.com/components/buttons/"
+  }
+
+  Ensure the response follows this structure and adheres to the guidelines provided.
+  The final response data should look as follows JSON (json): { "content": "Your Markdown formatted message", "type": "markdown" }.
+  
+  

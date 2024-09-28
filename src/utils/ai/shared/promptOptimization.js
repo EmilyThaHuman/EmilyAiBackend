@@ -328,66 +328,6 @@ async function savePromptBuild(
     logger.error(`Error saving prompt build: ${error}`);
   }
 }
-// function destructureMessage(obj) {
-//   const {
-//     message: {
-//       role,
-//       content: { text, formatting, lists, codeBlocks },
-//     },
-//   } = obj;
-
-//   // Function to apply formatting to text
-//   function applyFormatting(text, formattingRules) {
-//     let formattedText = text;
-//     formattingRules.forEach((rule) => {
-//       const { type, start, end, level } = rule;
-//       const substring = text.substring(start, end);
-//       switch (type) {
-//         case 'bold':
-//           formattedText = formattedText.replace(substring, `**${substring}**`);
-//           break;
-//         case 'header':
-//           // eslint-disable-next-line no-case-declarations
-//           const headerMarks = '#'.repeat(level);
-//           formattedText = formattedText.replace(substring, `${headerMarks} ${substring}`);
-//           break;
-//         // Add more cases for other formatting types if needed
-//       }
-//     });
-//     return formattedText;
-//   }
-
-//   // Function to apply list formatting
-//   function applyLists(text, listRules) {
-//     let formattedText = text;
-//     listRules.forEach((list) => {
-//       const listItems = list.items.map((item) => `- ${item}`).join('\n');
-//       formattedText = formattedText.replace(text.substring(list.start, list.end), listItems);
-//     });
-//     return formattedText;
-//   }
-
-//   // Function to apply code block formatting
-//   function applyCodeBlocks(text, codeBlockRules) {
-//     let formattedText = text;
-//     codeBlockRules.forEach((block) => {
-//       const codeBlock = `\`\`\`${block.language}\n${block.code}\n\`\`\``;
-//       formattedText = formattedText.replace(text.substring(block.start, block.end), codeBlock);
-//     });
-//     return formattedText;
-//   }
-
-//   // Apply all formatting
-//   let formattedText = text;
-//   formattedText = applyFormatting(formattedText, formatting);
-//   formattedText = applyLists(formattedText, lists);
-//   formattedText = applyCodeBlocks(formattedText, codeBlocks);
-
-//   return JSON.stringify({
-//     type: 'markdown',
-//     content: formattedText,
-//   });
-// }
 function parseIfNecessary(obj) {
   if (typeof obj === 'string') {
     try {

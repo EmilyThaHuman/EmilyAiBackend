@@ -25,8 +25,8 @@ router.put('/:sessionId/messages', asyncHandler(saveMessagesToChat));
 router.get(
   '/:sessionId/messages',
   asyncHandler(async (req, res) => {
-    logger.info(`Get messages for session: ${req.params.id}`);
-    const session = await ChatSession.findById(req.params.id).populate('messages');
+    logger.info(`Get messages for session: ${req.params.sessionId}`);
+    const session = await ChatSession.findById(req.params.sessionId).populate('messages');
     // logger.info(`Session: ${session}`);
     logger.info(`Session MESSAGES: ${JSON.stringify(session.messages)}`);
     if (!session) {
