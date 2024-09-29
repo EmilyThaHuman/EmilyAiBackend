@@ -78,7 +78,7 @@ const createFormattedPrompt = (
   CHAT DATA CONTEXT:
     RELEVANT DATA FROM CUSTOM DOCS:
       | ________________________________________ 
-      | Custom UI Library DB: ${context.docsContext}
+      | Custom UI Library DB: ${context.libraryContext}
     RELEVANT DATA FROM SEARCH DOCS:
       | ________________________________________ 
       | Relevant Perplexity Web Search Results: ${context.searchContext}
@@ -145,7 +145,7 @@ const getInitializationData = (body) => ({
   pineconeEnv: process.env.PINECONE_API_KEY,
   pineconeIndex: process.env.PINECONE_INDEX,
   namespace: process.env.PINECONE_NAMESPACE_1,
-  dimensions: parseInt(process.env.PINECONE_EMBEDDING_MODEL_DIMENSION),
+  dimensions: parseInt(process.env.PINECONE_EMBEDDING_MODEL_DIMENSIONS),
   embeddingModel: process.env.PINECONE_EMBEDDING_MODEL_NAME,
   completionModel: process.env.OPENAI_API_CHAT_COMPLETION_MODEL,
 });

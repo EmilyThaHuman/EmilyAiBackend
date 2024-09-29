@@ -1,0 +1,37 @@
+[
+  {
+    "component": "Box",
+    "title": "Untitled",
+    "code": "import Box from '@mui/material/Box';",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Box",
+    "title": "Untitled",
+    "code": "import * as React from 'react'; import Box from '@mui/material/Box'; export default function BoxBasic() { return ( <Box component=\"section\" sx={{ p: 2, border: '1px dashed grey' }}> This Box renders as an HTML section element. </Box> ); }import * as React from 'react'; import Box from '@mui/material/Box'; export default function BoxBasic() { return ( <Box component=\"section\" sx={{ p: 2, border: '1px dashed grey' }}> This Box renders as an HTML section element. </Box> ); }",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Box",
+    "title": "Untitled",
+    "code": "import * as React from 'react'; import Box from '@mui/material/Box'; import { ThemeProvider } from '@mui/material/styles'; export default function BoxSx() { return ( <ThemeProvider theme={{ palette: { primary: { main: '#007FFF', dark: '#0066CC', }, }, }} > <Box sx={{ width: 100, height: 100, borderRadius: 1, bgcolor: 'primary.main', '&:hover': { bgcolor: 'primary.dark', }, }} /> </ThemeProvider> ); }import * as React from 'react'; import Box from '@mui/material/Box'; import { ThemeProvider } from '@mui/material/styles'; export default function BoxSx() { return ( <ThemeProvider theme={{ palette: { primary: { main: '#007FFF', dark: '#0066CC', }, }, }} > <Box sx={{ width: 100, height: 100, borderRadius: 1, bgcolor: 'primary.main', '&:hover': { bgcolor: 'primary.dark', }, }} /> </ThemeProvider> ); }",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Box",
+    "title": "Untitled",
+    "code": "- <Box mt={2} /> + <Box sx={{ mt: 2 }} />",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Box",
+    "title": "Untitled",
+    "code": "<div className=\"MuiBox-root\"> <!-- contents of the Box --> </div>",
+    "language": "jsx",
+    "description": ""
+  }
+]

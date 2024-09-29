@@ -1,0 +1,93 @@
+[
+  {
+    "component": "Progress",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C)<CircularProgress /><CircularProgress />\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Progress",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C)<CircularProgress color=\"secondary\" />\n<CircularProgress color=\"success\" />\n<CircularProgress color=\"inherit\" /><CircularProgress color=\"secondary\" />\n<CircularProgress color=\"success\" />\n<CircularProgress color=\"inherit\" />\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Progress",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C)<CircularProgress size=\"30px\" />\n<CircularProgress size={40} />\n<CircularProgress size=\"3rem\" /><CircularProgress size=\"30px\" />\n<CircularProgress size={40} />\n<CircularProgress size=\"3rem\" />\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Progress",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C)<CircularProgress variant=\"determinate\" value={25} />\n<CircularProgress variant=\"determinate\" value={50} />\n<CircularProgress variant=\"determinate\" value={75} />\n<CircularProgress variant=\"determinate\" value={100} />\n<CircularProgress variant=\"determinate\" value={progress} /><CircularProgress variant=\"determinate\" value={25} />\n<CircularProgress variant=\"determinate\" value={50} />\n<CircularProgress variant=\"determinate\" value={75} />\n<CircularProgress variant=\"determinate\" value={100} />\n<CircularProgress variant=\"determinate\" value={progress} />\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Progress",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C)<CircularProgressWithLabel value={progress} /><CircularProgressWithLabel value={progress} />\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Progress",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C)<LinearProgress /><LinearProgress />\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Progress",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C)<LinearProgress color=\"secondary\" />\n<LinearProgress color=\"success\" />\n<LinearProgress color=\"inherit\" /><LinearProgress color=\"secondary\" />\n<LinearProgress color=\"success\" />\n<LinearProgress color=\"inherit\" />\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Progress",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C)<LinearProgress variant=\"determinate\" value={progress} /><LinearProgress variant=\"determinate\" value={progress} />\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Progress",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C)<LinearProgress variant=\"buffer\" value={progress} valueBuffer={buffer} /><LinearProgress variant=\"buffer\" value={progress} valueBuffer={buffer} />\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Progress",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C)<LinearProgressWithLabel value={progress} /><LinearProgressWithLabel value={progress} />\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Progress",
+    "title": "Untitled",
+    "code": "// MIN = Minimum expected value\n// MAX = Maximum expected value\n// Function to normalise the values (MIN / MAX could be integrated)\nconst normalise = (value) => ((value - MIN) * 100) / (MAX - MIN);\n\n// Example component that utilizes the `normalise` function at the point of render.\nfunction Progress(props) {\n  return (\n    <React.Fragment>\n      <CircularProgress variant=\"determinate\" value={normalise(props.value)} />\n      <LinearProgress variant=\"determinate\" value={normalise(props.value)} />\n    </React.Fragment>\n  );\n}\nCopyCopied(or ⌘C)",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Progress",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C)<CircularProgress disableShrink /><CircularProgress disableShrink />\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Progress",
+    "title": "Untitled",
+    "code": ".MuiLinearProgress-bar {\n  transition: none;\n}\nCopyCopied(or ⌘C)",
+    "language": "jsx",
+    "description": ""
+  }
+]

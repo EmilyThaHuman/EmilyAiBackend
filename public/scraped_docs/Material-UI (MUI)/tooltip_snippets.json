@@ -1,0 +1,100 @@
+[
+  {
+    "component": "Tooltip",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C)<Tooltip title=\"Delete\">\n  <IconButton>\n    <DeleteIcon />\n  </IconButton>\n</Tooltip><Tooltip title=\"Delete\">\n  <IconButton>\n    <DeleteIcon />\n  </IconButton>\n</Tooltip>\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Tooltip",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C)<Tooltip title=\"Add\" arrow>\n  <Button>Arrow</Button>\n</Tooltip><Tooltip title=\"Add\" arrow>\n  <Button>Arrow</Button>\n</Tooltip>\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Tooltip",
+    "title": "Untitled",
+    "code": "const MyComponent = React.forwardRef(function MyComponent(props, ref) {\n  //  Spread the props to the underlying DOM element.\n  return (\n    <div {...props} ref={ref}>\n      Bin\n    </div>\n  );\n});\n\n// ...\n\n<Tooltip title=\"Delete\">\n  <MyComponent />\n</Tooltip>;\nCopyCopied(or ⌘C)",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Tooltip",
+    "title": "Untitled",
+    "code": "class MyComponent extends React.Component {\n  render() {\n    const { innerRef, ...props } = this.props;\n    //  Spread the props to the underlying DOM element.\n    return (\n      <div {...props} ref={innerRef}>\n        Bin\n      </div>\n    );\n  }\n}\n\n// Wrap MyComponent to forward the ref as expected by Tooltip\nconst WrappedMyComponent = React.forwardRef(function WrappedMyComponent(props, ref) {\n  return <MyComponent {...props} innerRef={ref} />;\n});\n\n// ...\n\n<Tooltip title=\"Delete\">\n  <WrappedMyComponent />\n</Tooltip>;\nCopyCopied(or ⌘C)",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Tooltip",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C)<Tooltip open={open} onClose={handleClose} onOpen={handleOpen} title=\"Add\">\n  <Button>Controlled</Button>\n</Tooltip><Tooltip open={open} onClose={handleClose} onOpen={handleOpen} title=\"Add\">\n  <Button>Controlled</Button>\n</Tooltip>\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Tooltip",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C)<Tooltip title={longText}>\n  <Button sx={{ m: 1 }}>Default Width [300px]</Button>\n</Tooltip>\n<CustomWidthTooltip title={longText}>\n  <Button sx={{ m: 1 }}>Custom Width [500px]</Button>\n</CustomWidthTooltip>\n<NoMaxWidthTooltip title={longText}>\n  <Button sx={{ m: 1 }}>No wrapping</Button>\n</NoMaxWidthTooltip><Tooltip title={longText}>\n  <Button sx={{ m: 1 }}>Default Width [300px]</Button>\n</Tooltip>\n<CustomWidthTooltip title={longText}>\n  <Button sx={{ m: 1 }}>Custom Width [500px]</Button>\n</CustomWidthTooltip>\n<NoMaxWidthTooltip title={longText}>\n  <Button sx={{ m: 1 }}>No wrapping</Button>\n</NoMaxWidthTooltip>\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Tooltip",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C)<Tooltip title=\"Add\" disableInteractive>\n  <Button>Not interactive</Button>\n</Tooltip><Tooltip title=\"Add\" disableInteractive>\n  <Button>Not interactive</Button>\n</Tooltip>\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Tooltip",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C)<Tooltip title=\"You don't have permission to do this\">\n  <span>\n    <Button disabled>A Disabled Button</Button>\n  </span>\n</Tooltip><Tooltip title=\"You don't have permission to do this\">\n  <span>\n    <Button disabled>A Disabled Button</Button>\n  </span>\n</Tooltip>\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Tooltip",
+    "title": "Untitled",
+    "code": "<Tooltip title=\"You don't have permission to do this\">\n  <span>\n    <button disabled={disabled} style={disabled ? { pointerEvents: 'none' } : {}}>\n      A disabled button\n    </button>\n  </span>\n</Tooltip>\nCopyCopied(or ⌘C)",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Tooltip",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C)<Tooltip title=\"Add\">\n  <Button>Grow</Button>\n</Tooltip>\n<Tooltip\n  TransitionComponent={Fade}\n  TransitionProps={{ timeout: 600 }}\n  title=\"Add\"\n>\n  <Button>Fade</Button>\n</Tooltip>\n<Tooltip TransitionComponent={Zoom} title=\"Add\">\n  <Button>Zoom</Button>\n</Tooltip><Tooltip title=\"Add\">\n  <Button>Grow</Button>\n</Tooltip>\n<Tooltip\n  TransitionComponent={Fade}\n  TransitionProps={{ timeout: 600 }}\n  title=\"Add\"\n>\n  <Button>Fade</Button>\n</Tooltip>\n<Tooltip TransitionComponent={Zoom} title=\"Add\">\n  <Button>Zoom</Button>\n</Tooltip>\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Tooltip",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C)<Tooltip title=\"You don't have permission to do this\" followCursor>\n  <Box sx={{ bgcolor: 'text.disabled', color: 'background.paper', p: 2 }}>\n    Disabled Action\n  </Box>\n</Tooltip><Tooltip title=\"You don't have permission to do this\" followCursor>\n  <Box sx={{ bgcolor: 'text.disabled', color: 'background.paper', p: 2 }}>\n    Disabled Action\n  </Box>\n</Tooltip>\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Tooltip",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C)<Tooltip title=\"Add\" enterDelay={500} leaveDelay={200}>\n  <Button>[500ms, 200ms]</Button>\n</Tooltip><Tooltip title=\"Add\" enterDelay={500} leaveDelay={200}>\n  <Button>[500ms, 200ms]</Button>\n</Tooltip>\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Tooltip",
+    "title": "Untitled",
+    "code": "<button title=\"some more information\">A button</button>\nCopyCopied(or ⌘C)",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Tooltip",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C)<Tooltip title=\"Delete\">\n  <IconButton>\n    <DeleteIcon />\n  </IconButton>\n</Tooltip>\n<Tooltip describeChild title=\"Does not add if it already exists.\">\n  <Button>Add</Button>\n</Tooltip><Tooltip title=\"Delete\">\n  <IconButton>\n    <DeleteIcon />\n  </IconButton>\n</Tooltip>\n<Tooltip describeChild title=\"Does not add if it already exists.\">\n  <Button>Add</Button>\n</Tooltip>\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  }
+]

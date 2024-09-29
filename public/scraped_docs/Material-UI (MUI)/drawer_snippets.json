@@ -1,0 +1,37 @@
+[
+  {
+    "component": "Drawer",
+    "title": "Untitled",
+    "code": "<Button onClick={toggleDrawer(true)}>Open drawer</Button> <Drawer open={open} onClose={toggleDrawer(false)}> {DrawerList} </Drawer><Button onClick={toggleDrawer(true)}>Open drawer</Button> <Drawer open={open} onClose={toggleDrawer(false)}> {DrawerList} </Drawer>",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Drawer",
+    "title": "Untitled",
+    "code": "{(['left', 'right', 'top', 'bottom'] as const).map((anchor) => ( <React.Fragment key={anchor}> <Button onClick={toggleDrawer(anchor, true)}>{anchor}</Button> <Drawer anchor={anchor} open={state[anchor]} onClose={toggleDrawer(anchor, false)} > {list(anchor)} </Drawer> </React.Fragment> ))}{(['left', 'right', 'top', 'bottom'] as const).map((anchor) => ( <React.Fragment key={anchor}> <Button onClick={toggleDrawer(anchor, true)}>{anchor}</Button> <Drawer anchor={anchor} open={state[anchor]} onClose={toggleDrawer(anchor, false)} > {list(anchor)} </Drawer> </React.Fragment> ))}",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Drawer",
+    "title": "Untitled",
+    "code": "{(['left', 'right', 'top', 'bottom'] as const).map((anchor) => ( <React.Fragment key={anchor}> <Button onClick={toggleDrawer(anchor, true)}>{anchor}</Button> <SwipeableDrawer anchor={anchor} open={state[anchor]} onClose={toggleDrawer(anchor, false)} onOpen={toggleDrawer(anchor, true)} > {list(anchor)} </SwipeableDrawer> </React.Fragment> ))}{(['left', 'right', 'top', 'bottom'] as const).map((anchor) => ( <React.Fragment key={anchor}> <Button onClick={toggleDrawer(anchor, true)}>{anchor}</Button> <SwipeableDrawer anchor={anchor} open={state[anchor]} onClose={toggleDrawer(anchor, false)} onOpen={toggleDrawer(anchor, true)} > {list(anchor)} </SwipeableDrawer> </React.Fragment> ))}",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Drawer",
+    "title": "Untitled",
+    "code": "const iOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent); <SwipeableDrawer disableBackdropTransition={!iOS} disableDiscovery={iOS} />;",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Drawer",
+    "title": "Untitled",
+    "code": "<Drawer variant=\"temporary\" ModalProps={{ keepMounted: false, }} />",
+    "language": "jsx",
+    "description": ""
+  }
+]

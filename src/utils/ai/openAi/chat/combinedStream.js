@@ -204,7 +204,7 @@ const getRelevantContext = async (
     return {
       sessionContext: relevantSessionHistory.map((doc) => doc.pageContent).join('\n'),
       searchContext: relevantSearchResults.map((doc) => doc.pageContent).join('\n'),
-      docsContext: relevantCustomDataDocs.map((doc) => doc.pageContent).join('\n'),
+      libraryContext: relevantCustomDataDocs.map((doc) => doc.pageContent).join('\n'),
     };
   } catch (error) {
     logger.error(`[ERROR][getRelevantContext]: ${error.message}`);
