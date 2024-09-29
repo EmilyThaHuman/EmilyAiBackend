@@ -297,6 +297,16 @@ function detectLicense(content) {
   return 'Unknown';
 }
 
+function detectCodeSnippet(content) {
+  const regex =
+    /^(import\s+.*?;\s*)*\s*export\s+default\s+function\s+\w+\s*\([^)]*\)\s*{[\s\S]*?^}$/gm;
+
+  const matches = content.match(regex);
+
+  return matches ? matches[0] : null;
+}
+
+// Safe Execute
 function safeExecute(func, defaultValue) {
   try {
     return func();
@@ -314,5 +324,6 @@ module.exports = {
   calculateComplexity,
   detectDependencies,
   detectLicense,
+  detectCodeSnippet,
   safeExecute,
 };

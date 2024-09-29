@@ -1,48 +1,80 @@
-const { ESLint } = require('eslint');
 const prettier = require('prettier');
 
-async function lintAndFormatPrompt(prompt) {
-  // Initialize ESLint
-  const eslint = new ESLint({ fix: true });
+/**
+ * Detects whether the code is TypeScript or JavaScript.
+ * @param {string} code - The code to analyze.
+ * @returns {string} - The detected parser type ('typescript' or 'babel').
+ */
+function detectFileType(code) {
+  const tsRegex =
+    /(?:import|export).*from\s+['"].*['"];?|<.*?>|(?:interface|type|namespace|enum|abstract|implements|declare)/;
+  return tsRegex.test(code) ? 'typescript' : 'babel';
+}
 
+/**
+ * Formats the given code using Prettier.
+ * @param {string} code - The code to format.
+ * @param {string} parser - The parser to use ('typescript' or 'babel').
+ * @returns {string} - The formatted code.
+ */
+function formatCode(code, parser) {
   try {
-    // Lint and fix the prompt
-    const results = await eslint.lintText(prompt);
-    const [{ output }] = results;
-
-    // Use output if it exists, otherwise fallback to the original prompt
-    const lintedPrompt = output || prompt;
-
-    // Format with Prettier
-    const formattedPrompt = prettier.format(lintedPrompt, {
-      parser: 'babel',
+    return prettier.format(code, {
+      parser,
+      plugins: [require('prettier-plugin-organize-imports')],
+      semi: true,
       singleQuote: true,
       trailingComma: 'es5',
-      printWidth: 100,
+      printWidth: 80,
+      tabWidth: 2,
+      bracketSpacing: true,
+      jsxBracketSameLine: false,
+      jsxSingleQuote: false,
+      arrowParens: 'avoid',
+      endOfLine: 'auto',
     });
-
-    return formattedPrompt; // Return formatted string
   } catch (error) {
-    console.error('Linting or formatting error:', error);
-    return prompt; // Return the original prompt if any error occurs
+    console.error('Prettier formatting failed:', error);
+    throw error;
   }
 }
 
-function formatCodeSnippet(code, parser = 'babel') {
-  try {
-    return prettier.format(code, { parser, semi: true, singleQuote: true });
-  } catch (error) {
-    console.error('Formatting error:', error);
-    return code; // Return original code if formatting fails
+/**
+ * Adds an extra line after the last import statement.
+ * @param {string} code - The code to modify.
+ * @returns {string} - The modified code.
+ */
+function addExtraLineAfterImports(code) {
+  const lines = code.split('\n');
+  const lastImportIndex = lines.findLastIndex((line) => line.trim().startsWith('import'));
+
+  if (lastImportIndex !== -1) {
+    lines.splice(lastImportIndex + 1, 0, '');
   }
+
+  return lines.join('\n');
 }
 
-module.exports = { formatCodeSnippet, lintAndFormatPrompt };
+/**
+ * Formats the given code.
+ * @param {string} code - The code to format.
+ * @returns {string} - The formatted code.
+ */
+function formatAndCleanCode(code) {
+  if (typeof code !== 'string') {
+    throw new Error('Input is not a string');
+  }
 
-// Usage
-// const formattedCode = formatCodeSnippet(`
-// function MyComponent({prop1,prop2}){
-//   return(<div><h1>{prop1}</h1><p>{prop2}</p></div>)
-// }
-// `);
-// console.log(formattedCode);
+  // Remove duplicate code
+  code = code.replace(/^(import[\s\S]*?export default function [^(]+\(\) {[\s\S]*?})\1$/, '$1');
+
+  const parser = detectFileType(code);
+  let formattedCode = formatCode(code, parser);
+  formattedCode = addExtraLineAfterImports(formattedCode);
+
+  return formattedCode;
+}
+
+module.exports = {
+  formatAndCleanCode,
+};

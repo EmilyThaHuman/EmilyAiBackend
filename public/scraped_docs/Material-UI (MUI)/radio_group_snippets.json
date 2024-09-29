@@ -1,0 +1,98 @@
+[
+  {
+    "component": "Radio Group",
+    "url": "https://mui.com/material-ui/react-radio-button/",
+    "codeType": "JSX Component",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Radio Group",
+    "code": "<FormControl>\n<FormLabel id=\"demo-radio-buttons-group-label\">Gender</FormLabel>\n<RadioGroup\naria-labelledby=\"demo-radio-buttons-group-label\"\ndefaultValue=\"female\"\nname=\"radio-buttons-group\"\n>\n<FormControlLabel value=\"female\" control={<Radio />} label=\"Female\" />\n<FormControlLabel value=\"male\" control={<Radio />} label=\"Male\" />\n<FormControlLabel value=\"other\" control={<Radio />} label=\"Other\" />\n</RadioGroup>\n</FormControl><FormControl>\n<FormLabel id=\"demo-radio-buttons-group-label\">Gender</FormLabel>\n<RadioGroup\naria-labelledby=\"demo-radio-buttons-group-label\"\ndefaultValue=\"female\"\nname=\"radio-buttons-group\"\n>\n<FormControlLabel value=\"female\" control={<Radio />} label=\"Female\" />\n<FormControlLabel value=\"male\" control={<Radio />} label=\"Male\" />\n<FormControlLabel value=\"other\" control={<Radio />} label=\"Other\" />\n</RadioGroup>\n</FormControl>",
+    "language": "jsx",
+    "description": "",
+    "sequence": 1
+  },
+  {
+    "component": "Radio Group",
+    "url": "https://mui.com/material-ui/react-radio-button/",
+    "codeType": "JSX Component",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Radio Group",
+    "code": "<FormControl>\n<FormLabel id=\"demo-controlled-radio-buttons-group\">Gender</FormLabel>\n<RadioGroup\naria-labelledby=\"demo-controlled-radio-buttons-group\"\nname=\"controlled-radio-buttons-group\"\nvalue={value}\nonChange={handleChange}\n>\n<FormControlLabel value=\"female\" control={<Radio />} label=\"Female\" />\n<FormControlLabel value=\"male\" control={<Radio />} label=\"Male\" />\n</RadioGroup>\n</FormControl><FormControl>\n<FormLabel id=\"demo-controlled-radio-buttons-group\">Gender</FormLabel>\n<RadioGroup\naria-labelledby=\"demo-controlled-radio-buttons-group\"\nname=\"controlled-radio-buttons-group\"\nvalue={value}\nonChange={handleChange}\n>\n<FormControlLabel value=\"female\" control={<Radio />} label=\"Female\" />\n<FormControlLabel value=\"male\" control={<Radio />} label=\"Male\" />\n</RadioGroup>\n</FormControl>",
+    "language": "jsx",
+    "description": "",
+    "sequence": 2
+  },
+  {
+    "component": "Radio Group",
+    "url": "https://mui.com/material-ui/react-radio-button/",
+    "codeType": "JSX Component",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Radio Group",
+    "code": "<Radio\nchecked={selectedValue === 'a'}\nonChange={handleChange}\nvalue=\"a\"\nname=\"radio-buttons\"\ninputProps={{ 'aria-label': 'A' }}\n/>\n<Radio\nchecked={selectedValue === 'b'}\nonChange={handleChange}\nvalue=\"b\"\nname=\"radio-buttons\"\ninputProps={{ 'aria-label': 'B' }}\n/><Radio\nchecked={selectedValue === 'a'}\nonChange={handleChange}\nvalue=\"a\"\nname=\"radio-buttons\"\ninputProps={{ 'aria-label': 'A' }}\n/>\n<Radio\nchecked={selectedValue === 'b'}\nonChange={handleChange}\nvalue=\"b\"\nname=\"radio-buttons\"\ninputProps={{ 'aria-label': 'B' }}\n/>",
+    "language": "jsx",
+    "description": "",
+    "sequence": 3
+  },
+  {
+    "component": "Radio Group",
+    "url": "https://mui.com/material-ui/react-radio-button/",
+    "codeType": "JSX Component",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Radio Group",
+    "code": "<Radio {...controlProps('a')} size=\"small\" />\n<Radio {...controlProps('b')} />\n<Radio\n{...controlProps('c')}\nsx={{\n'& .MuiSvgIcon-root': {\nfontSize: 28,\n},\n}}\n/><Radio {...controlProps('a')} size=\"small\" />\n<Radio {...controlProps('b')} />\n<Radio\n{...controlProps('c')}\nsx={{\n'& .MuiSvgIcon-root': {\nfontSize: 28,\n},\n}}\n/>",
+    "language": "jsx",
+    "description": "",
+    "sequence": 4
+  },
+  {
+    "component": "Radio Group",
+    "url": "https://mui.com/material-ui/react-radio-button/",
+    "codeType": "JSX Component",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Radio Group",
+    "code": "<Radio {...controlProps('a')} />\n<Radio {...controlProps('b')} color=\"secondary\" />\n<Radio {...controlProps('c')} color=\"success\" />\n<Radio {...controlProps('d')} color=\"default\" />\n<Radio\n{...controlProps('e')}\nsx={{\ncolor: pink[800],\n'&.Mui-checked': {\ncolor: pink[600],\n},\n}}\n/><Radio {...controlProps('a')} />\n<Radio {...controlProps('b')} color=\"secondary\" />\n<Radio {...controlProps('c')} color=\"success\" />\n<Radio {...controlProps('d')} color=\"default\" />\n<Radio\n{...controlProps('e')}\nsx={{\ncolor: pink[800],\n'&.Mui-checked': {\ncolor: pink[600],\n},\n}}\n/>",
+    "language": "jsx",
+    "description": "",
+    "sequence": 5
+  },
+  {
+    "component": "Radio Group",
+    "url": "https://mui.com/material-ui/react-radio-button/",
+    "codeType": "Import/Export Statement",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Radio Group",
+    "code": "import { useRadioGroup } from '@mui/material/RadioGroup';",
+    "language": "jsx",
+    "description": "",
+    "sequence": 6
+  },
+  {
+    "component": "Radio Group",
+    "url": "https://mui.com/material-ui/react-radio-button/",
+    "codeType": "JSX Component",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Radio Group",
+    "code": "<RadioGroup name=\"use-radio-group\" defaultValue=\"first\">\n<MyFormControlLabel value=\"first\" label=\"First\" control={<Radio />} />\n<MyFormControlLabel value=\"second\" label=\"Second\" control={<Radio />} />\n</RadioGroup><RadioGroup name=\"use-radio-group\" defaultValue=\"first\">\n<MyFormControlLabel value=\"first\" label=\"First\" control={<Radio />} />\n<MyFormControlLabel value=\"second\" label=\"Second\" control={<Radio />} />\n</RadioGroup>",
+    "language": "jsx",
+    "description": "",
+    "sequence": 7
+  },
+  {
+    "component": "Radio Group",
+    "url": "https://mui.com/material-ui/react-radio-button/",
+    "codeType": "JSX Component",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Radio Group",
+    "code": "<Radio\nvalue=\"radioA\"\ninputProps={{\n'aria-label': 'Radio A',\n}}\n/>",
+    "language": "jsx",
+    "description": "",
+    "sequence": 8
+  }
+]

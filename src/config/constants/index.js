@@ -4,4 +4,5 @@ module.exports = {
   ...require('./processing'),
   ...require('./models'),
   ...require('./limits'),
+  ...require('./components'),
 };

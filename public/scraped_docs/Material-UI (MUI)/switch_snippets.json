@@ -1,0 +1,74 @@
+[
+  {
+    "component": "Switch",
+    "url": "https://mui.com/material-ui/react-switch/",
+    "codeType": "JSX Component",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Switch",
+    "code": "<Switch {...label} defaultChecked />\n<Switch {...label} />\n<Switch {...label} disabled defaultChecked />\n<Switch {...label} disabled /><Switch {...label} defaultChecked />\n<Switch {...label} />\n<Switch {...label} disabled defaultChecked />\n<Switch {...label} disabled />",
+    "language": "jsx",
+    "description": "",
+    "sequence": 1
+  },
+  {
+    "component": "Switch",
+    "url": "https://mui.com/material-ui/react-switch/",
+    "codeType": "JSX Component",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Switch",
+    "code": "<FormGroup>\n<FormControlLabel control={<Switch defaultChecked />} label=\"Label\" />\n<FormControlLabel required control={<Switch />} label=\"Required\" />\n<FormControlLabel disabled control={<Switch />} label=\"Disabled\" />\n</FormGroup><FormGroup>\n<FormControlLabel control={<Switch defaultChecked />} label=\"Label\" />\n<FormControlLabel required control={<Switch />} label=\"Required\" />\n<FormControlLabel disabled control={<Switch />} label=\"Disabled\" />\n</FormGroup>",
+    "language": "jsx",
+    "description": "",
+    "sequence": 2
+  },
+  {
+    "component": "Switch",
+    "url": "https://mui.com/material-ui/react-switch/",
+    "codeType": "JSX Component",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Switch",
+    "code": "<Switch {...label} defaultChecked size=\"small\" />\n<Switch {...label} defaultChecked /><Switch {...label} defaultChecked size=\"small\" />\n<Switch {...label} defaultChecked />",
+    "language": "jsx",
+    "description": "",
+    "sequence": 3
+  },
+  {
+    "component": "Switch",
+    "url": "https://mui.com/material-ui/react-switch/",
+    "codeType": "JSX Component",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Switch",
+    "code": "<Switch {...label} defaultChecked />\n<Switch {...label} defaultChecked color=\"secondary\" />\n<Switch {...label} defaultChecked color=\"warning\" />\n<Switch {...label} defaultChecked color=\"default\" />\n<PinkSwitch {...label} defaultChecked /><Switch {...label} defaultChecked />\n<Switch {...label} defaultChecked color=\"secondary\" />\n<Switch {...label} defaultChecked color=\"warning\" />\n<Switch {...label} defaultChecked color=\"default\" />\n<PinkSwitch {...label} defaultChecked />",
+    "language": "jsx",
+    "description": "",
+    "sequence": 4
+  },
+  {
+    "component": "Switch",
+    "url": "https://mui.com/material-ui/react-switch/",
+    "codeType": "JSX Component",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Switch",
+    "code": "<Switch\nchecked={checked}\nonChange={handleChange}\ninputProps={{ 'aria-label': 'controlled' }}\n/><Switch\nchecked={checked}\nonChange={handleChange}\ninputProps={{ 'aria-label': 'controlled' }}\n/>",
+    "language": "jsx",
+    "description": "",
+    "sequence": 5
+  },
+  {
+    "component": "Switch",
+    "url": "https://mui.com/material-ui/react-switch/",
+    "codeType": "JSX Component",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Switch",
+    "code": "<Switch value=\"checkedA\" inputProps={{ 'aria-label': 'Switch A' }} />",
+    "language": "jsx",
+    "description": "",
+    "sequence": 6
+  }
+]

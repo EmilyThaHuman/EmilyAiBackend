@@ -11,4 +11,10 @@ module.exports = {
   ...require('./scrape2'),
   ...require('./text'),
   ...require('./vectorize'),
+  ...require('./scrapeFunctions'),
+  ...require('./loggingFunctions'),
+  ...require('./misc'),
+  ...require('./clean'),
+  ...require('./identifyValue'),
+  ...require('./format'),
 };

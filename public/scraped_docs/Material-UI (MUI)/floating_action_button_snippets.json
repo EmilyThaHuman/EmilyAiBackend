@@ -1,0 +1,38 @@
+[
+  {
+    "component": "Floating Action Button",
+    "url": "https://mui.com/material-ui/react-floating-action-button/",
+    "codeType": "JSX Component",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Floating Action Button",
+    "code": "<Fab color=\"primary\" aria-label=\"add\">\n<AddIcon />\n</Fab>\n<Fab color=\"secondary\" aria-label=\"edit\">\n<EditIcon />\n</Fab>\n<Fab variant=\"extended\">\n<NavigationIcon sx={{ mr: 1 }} />\nNavigate\n</Fab>\n<Fab disabled aria-label=\"like\">\n<FavoriteIcon />\n</Fab><Fab color=\"primary\" aria-label=\"add\">\n<AddIcon />\n</Fab>\n<Fab color=\"secondary\" aria-label=\"edit\">\n<EditIcon />\n</Fab>\n<Fab variant=\"extended\">\n<NavigationIcon sx={{ mr: 1 }} />\nNavigate\n</Fab>\n<Fab disabled aria-label=\"like\">\n<FavoriteIcon />\n</Fab>",
+    "language": "jsx",
+    "description": "",
+    "sequence": 1
+  },
+  {
+    "component": "Floating Action Button",
+    "url": "https://mui.com/material-ui/react-floating-action-button/",
+    "codeType": "JSX Component",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Floating Action Button",
+    "code": "<Fab size=\"small\" color=\"secondary\" aria-label=\"add\">\n<AddIcon />\n</Fab>\n<Fab size=\"medium\" color=\"secondary\" aria-label=\"add\">\n<AddIcon />\n</Fab>\n<Fab color=\"secondary\" aria-label=\"add\">\n<AddIcon />\n</Fab><Fab size=\"small\" color=\"secondary\" aria-label=\"add\">\n<AddIcon />\n</Fab>\n<Fab size=\"medium\" color=\"secondary\" aria-label=\"add\">\n<AddIcon />\n</Fab>\n<Fab color=\"secondary\" aria-label=\"add\">\n<AddIcon />\n</Fab>",
+    "language": "jsx",
+    "description": "",
+    "sequence": 2
+  },
+  {
+    "component": "Floating Action Button",
+    "url": "https://mui.com/material-ui/react-floating-action-button/",
+    "codeType": "JSX Component",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Floating Action Button",
+    "code": "<Fab variant=\"extended\" size=\"small\" color=\"primary\">\n<NavigationIcon sx={{ mr: 1 }} />\nExtended\n</Fab>\n<Fab variant=\"extended\" size=\"medium\" color=\"primary\">\n<NavigationIcon sx={{ mr: 1 }} />\nExtended\n</Fab>\n<Fab variant=\"extended\" color=\"primary\">\n<NavigationIcon sx={{ mr: 1 }} />\nExtended\n</Fab><Fab variant=\"extended\" size=\"small\" color=\"primary\">\n<NavigationIcon sx={{ mr: 1 }} />\nExtended\n</Fab>\n<Fab variant=\"extended\" size=\"medium\" color=\"primary\">\n<NavigationIcon sx={{ mr: 1 }} />\nExtended\n</Fab>\n<Fab variant=\"extended\" color=\"primary\">\n<NavigationIcon sx={{ mr: 1 }} />\nExtended\n</Fab>",
+    "language": "jsx",
+    "description": "",
+    "sequence": 3
+  }
+]

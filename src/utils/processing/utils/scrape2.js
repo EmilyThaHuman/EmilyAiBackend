@@ -1,56 +1,14 @@
 // I need you to generate a function or functions for identifying the type of code isolated within each snippet. These types might include components, props, interfaces, functions, hooks, etc.
+// I need you to optimize my code scraping function by adding a page interaction before scraping any of the data for the code. I need each of the 'Expand Code' buttons on the page to be clicked first, then continue with rest of the logci)
 const fs = require('fs').promises;
 const path = require('path');
 const { logger } = require('@/config/logging');
 const { default: puppeteer } = require('puppeteer');
-// New function to clean code snippets
-const cleanCodeSnippet = (code) => {
-  return code
-    .replace(/^Copy(\(or ⌘C\))?\s*|\s*Copy(Copied)?\(or ⌘C\)\s*$/g, '')
-    .replace(/Press Enter to start editing.*$/, '')
-    .replace(/\/\*\*[\s\S]*?\*\/|\.npm__react-simple-code-editor__[\s\S]*?}\s*}/g, '')
-    .replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '')
-    .replace(/(<PopupState[\s\S]*?<\/PopupState>)[\s\S]*\1/g, '$1')
-    .replace(/^\s*[\r\n]/gm, '')
-    .replace(/^\s+|\s+$/g, '')
-    .replace(/\n{2,}/g, '\n')
-    .replace(/^\s+/gm, '')
-    .replace(/\t/g, '  ')
-    .replace(/\s{2,}/g, ' ')
-    .trim();
-};
-const sanitizeFileName = (fileName) => fileName.toLowerCase().replace(/[^a-z0-9]+/g, '_');
-function identifyCodeType(snippet) {
-  // Remove comments and trim whitespace
-  const cleanedCode = snippet.replace(/\/\/.*|\/\*[\s\S]*?\*\//g, '').trim();
-
-  // Check for different code types
-  if (cleanedCode.startsWith('import ') || cleanedCode.startsWith('export ')) {
-    return 'Import/Export Statement';
-  } else if (cleanedCode.startsWith('interface ')) {
-    return 'Interface';
-  } else if (cleanedCode.startsWith('type ')) {
-    return 'Type Definition';
-  } else if (cleanedCode.match(/^(const|let|var)\s+\w+\s*=\s*\(\s*\)\s*=>/)) {
-    return 'Arrow Function';
-  } else if (cleanedCode.match(/^function\s+\w+\s*\(/)) {
-    return 'Function Declaration';
-  } else if (cleanedCode.match(/^(const|let|var)\s+\w+\s*=\s*function\s*\(/)) {
-    return 'Function Expression';
-  } else if (cleanedCode.match(/^(const|let|var)\s+\w+\s*=\s*use[A-Z]/)) {
-    return 'React Hook';
-  } else if (cleanedCode.match(/^(const|let|var)\s+\w+\s*=\s*\{/)) {
-    return 'Object Declaration';
-  } else if (cleanedCode.match(/^(const|let|var)\s+\w+\s*=\s*\[/)) {
-    return 'Array Declaration';
-  } else if (cleanedCode.match(/^(class|const\s+\w+\s*=\s*class)/)) {
-    return 'Class Declaration';
-  } else if (cleanedCode.match(/^<\w+/)) {
-    return 'JSX Component';
-  }
-
-  return 'Unknown';
-}
+const { cleanCodeSnippetMain } = require('./clean');
+const { identifyCodeType, getDefaultExportFunctionName } = require('./identifyValue');
+const { getLibraryNameAbbreviation } = require('./misc');
+const { sanitizeFileName } = require('./files');
+const { formatAndCleanCode } = require('./format');
 
 const scrapeCode = async (componentUrl, componentLibrary) => {
   const browser = await puppeteer.launch({ headless: 'new' });
@@ -59,18 +17,32 @@ const scrapeCode = async (componentUrl, componentLibrary) => {
 
   try {
     await page.goto(componentUrl, { waitUntil: 'networkidle0' });
+    // await page.waitForSelector('.MuiButton-root.MuiButton-text');
+    logger.info('Buttons loaded successfully.');
+    const buttons = await page.$$('button[data-ga-event-action="expand"]');
+    for (const button of buttons) {
+      const buttonText = await button.evaluate((el) => el.textContent);
+      logger.info(`Button text: ${buttonText}`);
+      await button.click();
+      const updatedButtonText = await button.evaluate((el) => el.textContent);
+      logger.info(`Updated button text: ${updatedButtonText}`);
+    }
 
+    logger.info('All expand code buttons clicked successfully.');
     const { componentName, snippets } = await page.evaluate(() => {
       const componentName = document.querySelector('h1')?.textContent.trim() || 'Unknown';
       const snippetElements = document.querySelectorAll('.MuiCode-root');
 
-      const snippets = Array.from(snippetElements).map((snippet) => {
+      const snippets = Array.from(snippetElements).map((snippet, index) => {
         const parentElement = snippet.closest('.MuiPaper-root');
+        // const code = detectCodeSnippet(snippet.textContent);
+        // logger.info(code);
         return {
           title: parentElement?.querySelector('h2, h3')?.textContent || 'Untitled',
           code: snippet.textContent,
           language: snippet.getAttribute('data-language') || 'jsx',
           description: parentElement?.querySelector('p')?.textContent || '',
+          sequence: index + 1,
         };
       });
 
@@ -83,12 +55,26 @@ const scrapeCode = async (componentUrl, componentLibrary) => {
       const baseDir = path.join(__dirname, '../../../../public/scraped_docs', componentLibrary);
       await fs.mkdir(baseDir, { recursive: true });
 
-      const allSnippets = snippets.map((snippet) => ({
-        component: componentName,
-        ...snippet,
-        code: cleanCodeSnippet(snippet.code), // Clean the code snippet
-        codeType: identifyCodeType(cleanCodeSnippet(snippet.code)), // Add this line
-      }));
+      const allSnippets = snippets.map((snippet) => {
+        const cleanedCode = cleanCodeSnippetMain(snippet.code);
+        const formattedCode = formatAndCleanCode(cleanedCode);
+        const codeType = identifyCodeType(formattedCode);
+        const newTitle = `${getLibraryNameAbbreviation(componentLibrary)}_${componentName}`;
+        const abbreviatedTitle = getLibraryNameAbbreviation(componentLibrary);
+        const functionName = getDefaultExportFunctionName(snippet);
+
+        return {
+          component: componentName,
+          url: componentUrl,
+          codeType: codeType,
+          library: componentLibrary,
+          abbreviation: abbreviatedTitle,
+          ...snippet,
+          title: newTitle,
+          code: formattedCode,
+          functionName: functionName,
+        };
+      });
 
       const fileName = `${sanitizeFileName(componentName)}_snippets.json`;
       const filePath = path.join(baseDir, fileName);
@@ -104,7 +90,7 @@ const scrapeCode = async (componentUrl, componentLibrary) => {
         snippets.map(async (snippet, index) => {
           const snippetFileName = `snippet_${index + 1}.${snippet.language}`;
           const snippetFilePath = path.join(snippetsDir, snippetFileName);
-          await fs.writeFile(snippetFilePath, cleanCodeSnippet(snippet.code));
+          await fs.writeFile(snippetFilePath, cleanCodeSnippetMain(snippet.code));
           logger.info(`Snippet saved to ${snippetFilePath}`);
           createdFiles.push(snippetFilePath);
         })

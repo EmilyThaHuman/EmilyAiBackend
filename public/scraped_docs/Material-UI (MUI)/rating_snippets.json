@@ -1,0 +1,86 @@
+[
+  {
+    "component": "Rating",
+    "url": "https://mui.com/material-ui/react-rating/",
+    "codeType": "JSX Component",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Rating",
+    "code": "<Typography component=\"legend\">Controlled</Typography>\n<Rating\nname=\"simple-controlled\"\nvalue={value}\nonChange={(event, newValue) => {\nsetValue(newValue);\n}}\n/>\n<Typography component=\"legend\">Read only</Typography>\n<Rating name=\"read-only\" value={value} readOnly />\n<Typography component=\"legend\">Disabled</Typography>\n<Rating name=\"disabled\" value={value} disabled />\n<Typography component=\"legend\">No rating given</Typography>\n<Rating name=\"no-value\" value={null} /><Typography component=\"legend\">Controlled</Typography>\n<Rating\nname=\"simple-controlled\"\nvalue={value}\nonChange={(event, newValue) => {\nsetValue(newValue);\n}}\n/>\n<Typography component=\"legend\">Read only</Typography>\n<Rating name=\"read-only\" value={value} readOnly />\n<Typography component=\"legend\">Disabled</Typography>\n<Rating name=\"disabled\" value={value} disabled />\n<Typography component=\"legend\">No rating given</Typography>\n<Rating name=\"no-value\" value={null} />",
+    "language": "jsx",
+    "description": "",
+    "sequence": 1
+  },
+  {
+    "component": "Rating",
+    "url": "https://mui.com/material-ui/react-rating/",
+    "codeType": "JSX Component",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Rating",
+    "code": "<Rating name=\"half-rating\" defaultValue={2.5} precision={0.5} />\n<Rating name=\"half-rating-read\" defaultValue={2.5} precision={0.5} readOnly /><Rating name=\"half-rating\" defaultValue={2.5} precision={0.5} />\n<Rating name=\"half-rating-read\" defaultValue={2.5} precision={0.5} readOnly />",
+    "language": "jsx",
+    "description": "",
+    "sequence": 2
+  },
+  {
+    "component": "Rating",
+    "url": "https://mui.com/material-ui/react-rating/",
+    "codeType": "JSX Component",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Rating",
+    "code": "<Rating\nname=\"hover-feedback\"\nvalue={value}\nprecision={0.5}\ngetLabelText={getLabelText}\nonChange={(event, newValue) => {\nsetValue(newValue);\n}}\nonChangeActive={(event, newHover) => {\nsetHover(newHover);\n}}\nemptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize=\"inherit\" />}\n/>\n{value !== null && (\n<Box sx={{ ml: 2 }}>{labels[hover !== -1 ? hover : value]}</Box>\n)}<Rating\nname=\"hover-feedback\"\nvalue={value}\nprecision={0.5}\ngetLabelText={getLabelText}\nonChange={(event, newValue) => {\nsetValue(newValue);\n}}\nonChangeActive={(event, newHover) => {\nsetHover(newHover);\n}}\nemptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize=\"inherit\" />}\n/>\n{value !== null && (\n<Box sx={{ ml: 2 }}>{labels[hover !== -1 ? hover : value]}</Box>\n)}",
+    "language": "jsx",
+    "description": "",
+    "sequence": 3
+  },
+  {
+    "component": "Rating",
+    "url": "https://mui.com/material-ui/react-rating/",
+    "codeType": "JSX Component",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Rating",
+    "code": "<Rating name=\"size-small\" defaultValue={2} size=\"small\" />\n<Rating name=\"size-medium\" defaultValue={2} />\n<Rating name=\"size-large\" defaultValue={2} size=\"large\" /><Rating name=\"size-small\" defaultValue={2} size=\"small\" />\n<Rating name=\"size-medium\" defaultValue={2} />\n<Rating name=\"size-large\" defaultValue={2} size=\"large\" />",
+    "language": "jsx",
+    "description": "",
+    "sequence": 4
+  },
+  {
+    "component": "Rating",
+    "url": "https://mui.com/material-ui/react-rating/",
+    "codeType": "JSX Component",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Rating",
+    "code": "<Typography component=\"legend\">Custom icon and color</Typography>\n<StyledRating\nname=\"customized-color\"\ndefaultValue={2}\ngetLabelText={(value: number) => `${value} Heart${value !== 1 ? 's' : ''}`}\nprecision={0.5}\nicon={<FavoriteIcon fontSize=\"inherit\" />}\nemptyIcon={<FavoriteBorderIcon fontSize=\"inherit\" />}\n/>\n<Typography component=\"legend\">10 stars</Typography>\n<Rating name=\"customized-10\" defaultValue={2} max={10} /><Typography component=\"legend\">Custom icon and color</Typography>\n<StyledRating\nname=\"customized-color\"\ndefaultValue={2}\ngetLabelText={(value: number) => `${value} Heart${value !== 1 ? 's' : ''}`}\nprecision={0.5}\nicon={<FavoriteIcon fontSize=\"inherit\" />}\nemptyIcon={<FavoriteBorderIcon fontSize=\"inherit\" />}\n/>\n<Typography component=\"legend\">10 stars</Typography>\n<Rating name=\"customized-10\" defaultValue={2} max={10} />",
+    "language": "jsx",
+    "description": "",
+    "sequence": 5
+  },
+  {
+    "component": "Rating",
+    "url": "https://mui.com/material-ui/react-rating/",
+    "codeType": "JSX Component",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Rating",
+    "code": "<StyledRating\nname=\"highlight-selected-only\"\ndefaultValue={2}\nIconContainerComponent={IconContainer}\ngetLabelText={(value: number) => customIcons[value].label}\nhighlightSelectedOnly\n/><StyledRating\nname=\"highlight-selected-only\"\ndefaultValue={2}\nIconContainerComponent={IconContainer}\ngetLabelText={(value: number) => customIcons[value].label}\nhighlightSelectedOnly\n/>",
+    "language": "jsx",
+    "description": "",
+    "sequence": 6
+  },
+  {
+    "component": "Rating",
+    "url": "https://mui.com/material-ui/react-rating/",
+    "codeType": "JSX Component",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Rating",
+    "code": "<Rating\nname=\"text-feedback\"\nvalue={value}\nreadOnly\nprecision={0.5}\nemptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize=\"inherit\" />}\n/>\n<Box sx={{ ml: 2 }}>{labels[value]}</Box><Rating\nname=\"text-feedback\"\nvalue={value}\nreadOnly\nprecision={0.5}\nemptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize=\"inherit\" />}\n/>\n<Box sx={{ ml: 2 }}>{labels[value]}</Box>",
+    "language": "jsx",
+    "description": "",
+    "sequence": 7
+  }
+]
