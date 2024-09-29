@@ -1,0 +1,65 @@
+[
+  {
+    "component": "Snackbar",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C)<Button onClick={handleClick}>Open Snackbar</Button>\n<Snackbar\n  open={open}\n  autoHideDuration={6000}\n  onClose={handleClose}\n  message=\"Note archived\"\n  action={action}\n/><Button onClick={handleClick}>Open Snackbar</Button>\n<Snackbar\n  open={open}\n  autoHideDuration={6000}\n  onClose={handleClose}\n  message=\"Note archived\"\n  action={action}\n/>\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Snackbar",
+    "title": "Untitled",
+    "code": "import Snackbar from '@mui/material/Snackbar';\nCopyCopied(or ⌘C)",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Snackbar",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C){buttons}\n<Snackbar\n  anchorOrigin={{ vertical, horizontal }}\n  open={open}\n  onClose={handleClose}\n  message=\"I love snacks\"\n  key={vertical + horizontal}\n/>{buttons}\n<Snackbar\n  anchorOrigin={{ vertical, horizontal }}\n  open={open}\n  onClose={handleClose}\n  message=\"I love snacks\"\n  key={vertical + horizontal}\n/>\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Snackbar",
+    "title": "Untitled",
+    "code": "import SnackbarContent from '@mui/material/SnackbarContent';\nCopyCopied(or ⌘C)",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Snackbar",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C)<Button onClick={handleClick}>Open Snackbar</Button>\n<Snackbar\n  open={open}\n  autoHideDuration={5000}\n  onClose={handleClose}\n  message=\"This Snackbar will be dismissed in 5 seconds.\"\n/><Button onClick={handleClick}>Open Snackbar</Button>\n<Snackbar\n  open={open}\n  autoHideDuration={5000}\n  onClose={handleClose}\n  message=\"This Snackbar will be dismissed in 5 seconds.\"\n/>\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Snackbar",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C)<Button onClick={handleClick(GrowTransition)}>Grow Transition</Button>\n<Button onClick={handleClick(Fade)}>Fade Transition</Button>\n<Button onClick={handleClick(SlideTransition)}>Slide Transition</Button>\n<Snackbar\n  open={state.open}\n  onClose={handleClose}\n  TransitionComponent={state.Transition}\n  message=\"I love snacks\"\n  key={state.Transition.name}\n  autoHideDuration={1200}\n/><Button onClick={handleClick(GrowTransition)}>Grow Transition</Button>\n<Button onClick={handleClick(Fade)}>Fade Transition</Button>\n<Button onClick={handleClick(SlideTransition)}>Slide Transition</Button>\n<Snackbar\n  open={state.open}\n  onClose={handleClose}\n  TransitionComponent={state.Transition}\n  message=\"I love snacks\"\n  key={state.Transition.name}\n  autoHideDuration={1200}\n/>\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Snackbar",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C)<Button onClick={handleClick}>Open Snackbar</Button>\n<Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>\n  <Alert\n    onClose={handleClose}\n    severity=\"success\"\n    variant=\"filled\"\n    sx={{ width: '100%' }}\n  >\n    This is a success Alert inside a Snackbar!\n  </Alert>\n</Snackbar><Button onClick={handleClick}>Open Snackbar</Button>\n<Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>\n  <Alert\n    onClose={handleClose}\n    severity=\"success\"\n    variant=\"filled\"\n    sx={{ width: '100%' }}\n  >\n    This is a success Alert inside a Snackbar!\n  </Alert>\n</Snackbar>\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Snackbar",
+    "title": "Untitled",
+    "code": "export default function MyComponent() {\n  const [open, setOpen] = React.useState(true);\n\n  return (\n    <React.Fragment>\n      <Snackbar\n        open={open}\n        onClose={(event, reason) => {\n          // `reason === 'escapeKeyDown'` if `Escape` was pressed\n          setOpen(false);\n          // call `event.preventDefault` to only close one Snackbar at a time.\n        }}\n      />\n      <Snackbar open={open} onClose={() => setOpen(false)} />\n    </React.Fragment>\n  );\n}\nCopyCopied(or ⌘C)",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Snackbar",
+    "title": "Untitled",
+    "code": "<div role=\"presentation\" class=\"MuiSnackbar-root\">\n  <div class=\"MuiPaper-root MuiSnackbarContent-root\" role=\"alert\">\n    <div class=\"MuiSnackbarContent-message\">\n      <!-- Snackbar content goes here -->\n    </div>\n  </div>\n</div>\nCopyCopied(or ⌘C)",
+    "language": "jsx",
+    "description": ""
+  }
+]

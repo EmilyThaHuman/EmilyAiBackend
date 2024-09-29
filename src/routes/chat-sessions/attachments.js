@@ -46,6 +46,7 @@ const { asyncHandler } = require('@/utils/api');
 const { logger } = require('@/config/logging');
 const { getDB, handleFileUpload } = require('@/db');
 const { default: mongoose } = require('mongoose');
+const { upsertDocs } = require('@/utils/ai/pinecone');
 // const { upload } = require('@/middlewares/upload');
 
 const router = express.Router();
@@ -68,6 +69,7 @@ router.put('/:id', asyncHandler(updateFile));
 
 // File upload routes
 router.post('/upload', handleFileUpload);
+router.post('/upsert-docs', upsertDocs);
 router.get('/', async (req, res) => {
   try {
     const db = await getDB();

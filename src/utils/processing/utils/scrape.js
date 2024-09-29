@@ -12,10 +12,14 @@ const scrapeContent = async (url) => {
     throw error;
   }
 };
+
+// eslint-disable-next-line no-unused-vars
 async function factCheckAgainstDocs(generatedAnswer, library = 'react') {
   const docsUrl = `https://reactjs.org/docs/getting-started.html`; // Example URL
   const response = await axios.get(docsUrl);
   const $ = cheerio.load(response.data);
+  // eslint-disable-next-line no-unused-vars
+  const snippets = [];
 
   const docContent = $('main').text();
   const statements = generatedAnswer.split('.');

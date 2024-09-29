@@ -10,15 +10,14 @@ const { PineconeStore } = require('@langchain/pinecone');
 const { createPineconeIndex } = require('../pinecone');
 const { Pinecone } = require('@pinecone-database/pinecone');
 const { getEnv } = require('@/utils/api');
-const fs = require('fs').promises;
-const path = require('path');
+// const fs = require('fs').promises;
+// const path = require('path');
 const { logger } = require('@/config/logging');
 // const doctrine = require('doctrine');
 // const jsdoc2md = require('jsdoc-to-markdown');
 const cheerio = require('cheerio');
 const axios = require('axios');
 const { SystemMessage, HumanMessage } = require('@langchain/core/messages');
-const { cleanJSONString } = require('@/utils/processing');
 
 const uiLibraries = [
   { name: 'React', sitemap: 'https://reactjs.org/sitemap.xml' },
@@ -160,57 +159,132 @@ const extractKeywords = async (text) => {
 const identifyLibrariesAndComponents = async (query) => {
   try {
     const systemMessage = new SystemMessage(
-      'You are a helpful assistant that identifies UI libraries, JS libraries, and component types mentioned in a query.'
+      'You are an AI assistant that identifies UI libraries, JS libraries, and component types mentioned in a query. Respond only with the requested JSON format, nothing else.'
     );
     const humanMessage = new HumanMessage(
       `Analyze the following query and identify any mentioned UI libraries, JS libraries, and component types:
-        Query: ${query}
-        Provide the results in the following JSON format:
-        {
-          "uiLibraries": ["library1", "library2"],
-          "jsLibraries": ["library1", "library2"],
-          "componentTypes": ["component1", "component2"]
-        }`
+      Query: ${query}
+      
+      Respond ONLY with a JSON object in this exact format:
+      {
+        "uiLibraries": ["library1", "library2"],
+        "jsLibraries": ["library1", "library2"],
+        "componentTypes": ["component1", "component2"]
+      }
+      
+      Rules:
+      1. Include "React" in both uiLibraries and jsLibraries by default.
+      2. If no specific component types are mentioned, include "Component" as a default.
+      3. Ensure all arrays are present, even if empty.
+      4. Do not include any explanations or additional text outside the JSON object.`
     );
 
     const response = await chatOpenAI.invoke([systemMessage, humanMessage]);
     logger.info(`Identified libraries and components: ${response.content}`);
-    const parsedResponse = JSON.parse(cleanJSONString(response.content));
-    return {
-      uiLibraries: parsedResponse.uiLibraries,
-      jsLibraries: parsedResponse.jsLibraries,
-      componentTypes: parsedResponse.componentTypes,
+
+    let parsedResponse;
+    try {
+      // Extract JSON object from the response if necessary
+      const jsonMatch = response.content.match(/\{[\s\S]*\}/);
+      const jsonString = jsonMatch ? jsonMatch : response.content;
+      parsedResponse = JSON.parse(jsonString);
+    } catch (parseError) {
+      logger.error(`Error parsing JSON response: ${parseError}`);
+      throw new Error('Invalid JSON response');
+    }
+
+    // Ensure all expected properties exist and follow the rules
+    const result = {
+      uiLibraries: Array.isArray(parsedResponse.uiLibraries)
+        ? [...new Set(['React', ...parsedResponse.uiLibraries])]
+        : ['React'],
+      jsLibraries: Array.isArray(parsedResponse.jsLibraries)
+        ? [...new Set(['React', ...parsedResponse.jsLibraries])]
+        : ['React'],
+      componentTypes:
+        Array.isArray(parsedResponse.componentTypes) && parsedResponse.componentTypes.length > 0
+          ? parsedResponse.componentTypes
+          : ['Component'],
     };
+
+    return result;
   } catch (error) {
     logger.error(`Error identifying libraries and components: ${error}`);
-    return { uiLibraries: [], jsLibraries: [], componentTypes: [] };
+    // Return default values in case of any error
+    return {
+      uiLibraries: ['React'],
+      jsLibraries: ['React'],
+      componentTypes: ['App'],
+    };
   }
 };
 
-// Function to get the documentation URL for a specific library and component
+/**
+ * Retrieves the documentation URL for a specific component type within a given UI library.
+ *
+ * @async
+ * @function getDocumentationUrl
+ * @param {string} library - The name of the UI library.
+ * @param {string} componentType - The type of component to search for.
+ * @returns {Promise<string|null>} A promise that resolves to the documentation URL if found, or null if not found.
+ * @throws {Error} If there's an error during the process, it will be logged and the function will return undefined.
+ *
+ * @description
+ * This function performs the following steps:
+ * 1. Searches for a matching library in the `uiLibraries` array.
+ * 2. If found, retrieves the sitemap URL for that library.
+ * 3. Fetches the sitemap XML using axios.
+ * 4. Parses the XML using cheerio.
+ * 5. Searches for URLs in the sitemap that include the given component type.
+ * 6. Returns the first matching URL, or null if no match is found.
+ *
+ * @example
+ * // Usage
+ * const url = await getDocumentationUrl('react-bootstrap', 'button');
+ * if (url) {
+ *   console.log(`Documentation URL: ${url}`);
+ * } else {
+ *   console.log('Documentation not found');
+ * }
+ *
+ * @requires axios
+ * @requires cheerio
+ * @requires logger - A custom logging utility
+ * @requires uiLibraries - An array of UI library objects with 'name' and 'sitemap' properties
+ */
 const getDocumentationUrl = async (library, componentType) => {
   try {
+    if (!library || !componentType) return null;
+    // 1. Use Array.find() with case-insensitive comparison
     const matchingLibrary = uiLibraries.find(
       (lib) => lib.name.toLowerCase() === library.toLowerCase()
     );
     if (!matchingLibrary) return null;
 
-    const sitemapUrl = matchingLibrary.sitemap;
-    const response = await axios.get(sitemapUrl);
+    // 2. Destructure the sitemap property
+    const { sitemap: sitemapUrl } = matchingLibrary;
+
+    // 3. Use axios.get() with a timeout
+    const response = await axios.get(sitemapUrl, { timeout: 5000 });
+
+    // 4. Use a more efficient parsing method
     const $ = cheerio.load(response.data, { xmlMode: true });
 
-    const relevantUrls = $('url')
-      .map((_, el) => {
-        const url = $(el).find('loc').text();
-        if (url.toLowerCase().includes(componentType.toLowerCase())) {
-          return url;
-        }
-      })
-      .get();
+    // 5. Optimize URL search
+    const lowercaseComponentType = componentType.toLowerCase();
+    const relevantUrl = $('url loc')
+      .filter((_, el) => $(el).text().toLowerCase().includes(lowercaseComponentType))
+      .first()
+      .text();
 
-    return relevantUrls[0] || null;
+    return relevantUrl || null;
   } catch (error) {
-    logger.error(`Error getting documentation URL: ${error}`);
+    // 6. Improve error logging
+    logger.error('Error getting documentation URL:', {
+      library,
+      componentType,
+      error: error.message,
+    });
     return null;
   }
 };
@@ -296,38 +370,6 @@ const generateOptimizationPrompt = async (query, results) => {
   });
 };
 
-async function savePromptBuild(
-  systemContent,
-  assistantInstructions,
-  formattedPrompt,
-  // eslint-disable-next-line no-unused-vars
-  fileName = 'prompt_build.txt'
-) {
-  const newFileName = `prompt-build_${new Date().toISOString().replace(/[:.]/g, '-')}.txt`;
-  const promptBuildFile = path.join(
-    __dirname,
-    '..',
-    '..',
-    '..',
-    '..',
-    '/public/static/files',
-    newFileName
-  );
-  const promptBuild = `
-    SYSTEM PROMPT: ${systemContent}
-
-    ASSISTANT INSTRUCTIONS: ${assistantInstructions}
-
-    FORMATTED PROMPT: ${formattedPrompt}
-  `;
-
-  try {
-    await fs.writeFile(promptBuildFile, promptBuild);
-    logger.info(`Prompt build saved to ${promptBuildFile}`);
-  } catch (error) {
-    logger.error(`Error saving prompt build: ${error}`);
-  }
-}
 function parseIfNecessary(obj) {
   if (typeof obj === 'string') {
     try {
@@ -454,56 +496,18 @@ function formatResponse(obj) {
     throw new Error('Invalid object format');
   }
 
-  const {
-    message: { role, content },
-  } = parsedObj;
+  const { content } = parsedObj;
 
   // Get the fully formatted content
-  const formattedText = formatResponseForDocument(content);
+  // const formattedText = formatResponseForDocument(content);
 
   // Return the structured message as markdown
   return JSON.stringify({
-    role, // Optionally include the role
     type: 'markdown',
-    content: formattedText,
+    content: content,
   });
 }
 
-async function saveChatCompletion(
-  systemContent,
-  assistantInstructions,
-  formattedPrompt,
-  fullResponse, // Contains the message content that needs to be formatted
-  // eslint-disable-next-line no-unused-vars
-  fileName = 'chat_completion.txt'
-) {
-  const newFileName = `chat-completion_${new Date().toISOString().replace(/[:.]/g, '-')}.txt`;
-  const chatCompletionFile = path.join(
-    __dirname,
-    '..',
-    '..',
-    '..',
-    '..',
-    '/public/static/files',
-    newFileName
-  );
-
-  try {
-    // Parse and apply the formatting logic on `fullResponse` using the `formatResponse` function
-    let formattedContent = formatResponse(fullResponse);
-
-    // Construct the content to save, including system content, assistant instructions, and the prompt
-    const chatCompletionContent = `
-      CHAT COMPLETION RESPONSE: ${formattedContent}
-    `;
-
-    // Write the formatted chat completion to the specified file
-    await fs.writeFile(chatCompletionFile, chatCompletionContent);
-    logger.info(`Chat completion saved to ${chatCompletionFile}`);
-  } catch (error) {
-    logger.error(`Error saving chat completion: ${error}`);
-  }
-}
 // function generateDocumentation(code) {
 //   const jsdocComments = extractJSDocComments(code);
 //   const parsedComments = jsdocComments.map(comment => doctrine.parse(comment, { unwrap: true }));
@@ -569,7 +573,6 @@ module.exports = {
   generateResponse,
   summarizeText,
   extractKeywords,
-  savePromptBuild,
   // generateDocumentation,
   // extractJSDocComments,
   // getCustomTemplate,
@@ -577,7 +580,6 @@ module.exports = {
   getDocumentationUrl,
   scrapeDocumentation,
   processQuery,
-  saveChatCompletion,
   formatResponse,
   formatResponseForDocument,
 };

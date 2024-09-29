@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // const { ToolMessage, SystemMessage, HumanMessage } = require('@langchain/core/messages');
 const { assistantPrompts } = require('./static/assistant');
 const { systemPrompts } = require('./static/system');
@@ -5,11 +6,17 @@ const { systemPrompts } = require('./static/system');
 const { toolPrompts } = require('../functions');
 const { instructionsPrompts } = require('./static');
 
+function convertMapToArray(systemPrompts) {
+  return Object.keys(systemPrompts);
+}
+
 const getPromptByName = (type, name) => {
   if (type === 'system') {
     systemPrompts[name];
   }
-  if (type === 'user') { /* empty */ }
+  if (type === 'user') {
+    /* empty */
+  }
   if (type === 'assistant') {
     assistantPrompts[name];
   }
@@ -24,14 +31,24 @@ const createPrompt = (type, name) => {
     content: prompt,
   };
 };
-const getMainSystemMessageContent = () => {
-  return systemPrompts['REACT_TAILWIND_SYSTEM_PROMPT_TEXT'];
+const getMainSystemMessageContent = (params) => {
+  const defaultPrompt = 'REACT_TAILWIND_SYSTEM_PROMPT_TEXT';
+  const promptList = convertMapToArray(systemPrompts);
+  if (params) {
+    return systemPrompts[params];
+  }
+  return systemPrompts[defaultPrompt];
 };
-const getMainAssistantMessageInstructions = () => {
-  return assistantPrompts['REACT_GUIDE'];
+const getMainAssistantMessageInstructions = (params) => {
+  const defaultPrompt = 'JS_COMPONENT_ASSISTANT';
+  const promptList = convertMapToArray(assistantPrompts);
+  if (params) {
+    return assistantPrompts[params];
+  }
+  return assistantPrompts[defaultPrompt];
 };
 const getFormattingInstructions = () => {
-  return instructionsPrompts['RESPONSE_FORMAT_MD'];
+  return instructionsPrompts['ORIGINAL_RESPONSE_FORMAT'];
 };
 const getMainToolMessageContent = () => createPrompt('tool', 'SUMMARIZE_MESSAGES');
 

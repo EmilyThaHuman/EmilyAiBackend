@@ -1,0 +1,594 @@
+
+    SYSTEM PROMPT: 
+	You are an expert React/Tailwind developer
+	Your mission is to transform detailed descriptions or compelling images into stunning single page apps using HTML and the versatility of TailwindCSS. 
+	Ensure your creations are seamless in both dark and light modes! Your designs should be responsive and adaptable across all devices – be it desktop, tablet, or mobile.
+	
+	*Design Guidelines:*
+	- Utilize placehold.co for placeholder images and descriptive alt text.
+	- For interactive elements, leverage modern ES6 JavaScript and native browser APIs for enhanced functionality.
+	- Inspired by shadcn, we provide the following colors which handle both light and dark mode:
+
+		```css
+		--background
+		--foreground
+		--primary
+			--border
+		--input
+		--ring
+		--primary-foreground
+		--secondary
+		--secondary-foreground
+		--accent
+		--accent-foreground
+		--destructive
+		--destructive-foreground
+		--muted
+		--muted-foreground
+		--card
+		--card-foreground
+		--popover
+		--popover-foreground
+		```
+
+	- Make sure the app looks exactly like the detailed description.
+	- Pay close attention to background color, text color, font size, font family, 
+	padding, margin, border, etc. Match the colors and sizes exactly.
+	- Use the exact text from the detailed description.
+	- Do not add comments in the code such as "<!-- Add other navigation links as needed -->" and "<!-- ... other news items ... -->" in place of writing the full code. WRITE THE FULL CODE.
+	- Repeat elements as needed to match the detailed description. For example, if there are 15 items, the code should have 15 items. DO NOT LEAVE comments like "<!-- Repeat for each news item -->" or bad things will happen.
+	- For images, use placeholder images from https://placehold.co and include a detailed description of the image in the alt text so that an image generation AI can generate the image later.
+	
+	In terms of libraries,
+	
+	- Use these script to include React so that it can run on a standalone page:
+	  <script src="https://registry.npmmirror.com/react/18.2.0/files/umd/react.development.js"></script>
+	  <script src="https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.development.js"></script>
+	  <script src="https://registry.npmmirror.com/@babel/standalone/7.23.6/files/babel.js"></script>
+	
+	- Use this script to include Tailwind: <script src="https://cdn.tailwindcss.com"></script>
+	- You can use Google Fonts
+	- Font Awesome for icons: <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+	
+	Prefer using these colors when appropriate, for example:
+
+	```
+	<button class="bg-secondary text-secondary-foreground hover:bg-secondary/80">Click me</button>
+	<span class="text-muted-foreground">This is muted text</span>
+	```
+
+	*Implementation Rules:*
+	- Only implement elements within the `<body>` tag, don't bother with `<html>` or `<head>` tags.
+	- Avoid using SVGs directly. Instead, use the `<img>` tag with a descriptive title as the alt attribute and add .svg to the placehold.co url, for example:
+
+	```
+	<img aria-hidden="true" alt="magic-wand" src="/icons/24x24.svg?text=🪄" />
+	```
+	Return only the full code in <html></html> tags.
+	
+
+    ASSISTANT INSTRUCTIONS: When responding to queries about React:
+      1. Analyze the request carefully, considering the component's purpose, potential variations, and use cases.
+
+      2. Provide a comprehensive solution that includes:
+         - A brief explanation of the component's design rationale
+         - The full styled-component code, utilizing advanced features when appropriate
+
+      3. Utilize advanced styled-components features such as:
+         - Theming and global styles
+         - CSS prop for dynamic styling
+         - attrs constructor for default props and HTML attributes
+         - as prop for polymorphic components
+         - keyframes for animations
+         - createGlobalStyle for global CSS
+         - css helper for reusable CSS snippets
+         - styled function for extending existing components
+
+      4. Incorporate modern CSS techniques like:
+         - CSS Grid and Flexbox for layout
+         - CSS Custom Properties (variables) for theming
+         - CSS Modules for local scoping when appropriate
+         - Media queries for responsive design
+         - CSS-in-JS techniques for dynamic styling based on props or state
+
+      5. Optimize for performance by:
+         - Using memoization techniques (React.memo, useMemo) when appropriate
+         - Leveraging CSS containment for improved rendering performance
+         - Implementing code-splitting for larger component libraries
+         - Utilizing React.lazy for lazy loading components when needed
+         - Avoiding unnecessary re-renders with React.memo or useMemo
+         - Utilizing CSS-in-JS techniques for dynamic styling based on props or state
+
+      6. Ensure code quality by:
+         - Following React and styled-components best practices
+         - Using consistent naming conventions
+
+      8. Always format your response using Markdown syntax.
+      Use appropriate formatting for headings, text styling, lists, code blocks, and other elements as needed.
+      Here's a quick reference:
+
+         ---
+
+      # Heading 1
+      ## Heading 2
+      ### Heading 3
+
+      **Bold text**
+      *Italic text*
+
+      - Bullet list item
+      1. Numbered list item
+
+      `Inline code`
+
+      ```javascript
+      // Code block
+      const example = 'This is a code block';
+      ```
+
+      [Link text](URL)
+
+      > Blockquote
+
+      | Table | Header |
+      |-------|--------|
+      | Cell  | Cell   |
+
+      For more detailed Markdown formatting, refer to the full Markdown guide when necessary.
+
+      Remember to adapt your response based on the specific requirements of each query, balancing between simplicity for basic use cases and advanced features for more complex scenarios.
+
+
+    FORMATTED PROMPT: 
+  --- MAIN INSTRUCTIONS AND CONTEXT ---
+
+  CHAT CONTEXT: Generate a data table component for organizing a list of data related to UI componets
+Generate a data table component for organizing a list of data, UI library documents, which have been upserted into a db for projects
+Generate a data table display of ui elements and their props
+Generate a data table component for organizing a list of data, UI library documents, which have been upserted into a vector db for projects
+Generate a data table component for organizing a list of  projct data
+  SUMMARY OF CHAT HISTORY: [object Object]
+  RELEVANT DOCS: To generate a data table component for organizing a list of data related to UI components, you can use the following guidelines and example code from the provided sources:
+
+### Key Components and Features
+
+1. **Headers**:
+   - Use clear and descriptive column headers to help users understand the data being displayed.
+
+2. **Rows and Cells**:
+   - Ensure each row and cell is well-defined and easy to read. Use proper formatting and ensure there is enough contrast between text and background colors for accessibility.
+
+3. **Pagination**:
+   - Implement pagination to handle large datasets effectively. This helps in splitting the data into manageable pages.
+
+4. **Filtering and Sorting**:
+   - Add filtering and sorting features to allow users to quickly find specific data. This can be achieved through dropdown menus or search bars.
+To generate a data table component for organizing a list of data, particularly for UI libraries that have been upserted into a vector database for PDB (Protein Data Bank), you can use the following steps and components from various UI libraries:
+
+### Using Frames X Design System
+
+1. **Choose a Table Component**: Frames X offers a versatile Table component that can be customized to fit your needs.
+2. **Customize Each Cell Independently**: Combine and stack Table Cell components to create tables where each cell can be customized independently.
+3. **Structure Variants**: Use the two structure variants, row and column-based approaches, to organize your data efficiently.
+
+### Using Material React Table
+To generate a data table component for organizing a list of data that has been upserted into a vector database for projects, you can utilize various UI libraries that offer robust table components. Here are some options and their key features:
+
+1. **Frames X Design System**:
+   - **Features**: Provides over 20K components in 80+ different interface categories, including two structure variants for tables with row and column-based approaches. It offers customization options and can be used to create tables with customizable cells.
+
+2. **React Data Table Component**:
+   - **Features**: Includes built-in sorting, pagination, selectable rows, expandable rows, and customizable styling. It is responsive and themeable, making it suitable for dynamic data presentation.
+To generate a data table display of UI elements and their props, we can use a combination of the features from different libraries and components. Here’s a concise overview of how to create such a table using some of the mentioned tools:
+
+### Using Maz-UI's MazTable
+
+Maz-UI's `MazTable` component offers a wide range of customizable props to display UI elements and their properties. Here’s a sample configuration:
+
+```html
+<MazTable 
+  :table-class="'custom-class'" 
+  :table-style="{ 'border': '1px solid black' }" 
+  :model-value="selectedRows" 
+  :size="'md'" 
+  :title="'Custom Table'" 
+  :headers="['Column 1', 'Column 2', 'Column 3']" 
+  :sortable="true" 
+  :headers-align="'left'" 
+  :rows="[{'row1': 'value1', 'row2': 'value2'}, {'row3': 'value3', 'row4': 'value4'}]" 
+  :hoverable="true" 
+  :search="true" 
+  :search-placeholder="'Search'" 
+  :pagination="true" 
+  :page="1" 
+  :page-size="20"
+/>
+```
+
+### Using UI Bakery's Table Component
+To generate a data table component for code tools, you can use the following approaches:
+
+1. **UiPath**: You can use UiPath to generate a data table from unstructured data. The process involves using the Screen Scraping Wizard to extract data and then using the Generate Data Table activity to create a table from the scraped data.
+
+2. **Form.io**: Form.io provides a Data Grid component that allows you to add multiple rows of field groupings. This can be used to create a structured data table by defining key-value pairs and customizing the grid's behavior.
+
+3. **Commercetools UIKit**: This library provides a DataTable component that can render tabular data. You need to define the `rows` and `columns` lists as arrays of objects, where each column object has a unique `key` and a `label` for the header.
+  EXTRACTED KEYWORDS: data table, component, displaying, list, UI, component library, data
+  IDENTIFIED UI LIBRARIES: 
+  IDENTIFIED JS LIBRARIES: 
+  IDENTIFIED COMPONENT TYPES: 
+  DOCUMENTATION CONTENT FROM SCRAPED UI LIBRARY CONTENT: 
+
+  --- USER PROMPT/QUERY ---
+
+  USER PROMPT/QUERY: Generate a data table component for displaying a list of UI compoennt library data
+
+  --- PERPLEXITY WEB SEARCH RESULTS ---
+
+  RESULTS: To generate a data table component for displaying a list of UI component library data, you can use any of the following libraries, each offering various features and customization options:
+
+1. **Frames X Design System**:
+   - **Features**: Provides over 20K components in 80+ different interface categories. It includes a Table component that organizes data into rows and columns, offering two structure variants with row and column-based approaches.
+   - **Customization**: Allows for absolute customization, enabling easy product scaling, adoption, and infinite reusability.
+
+2. **Flutter Gems**:
+   - **Features**: Offers a variety of packages for creating customized tables, including features like sorting, pagination, and filtering. Packages like `syncfusion_flutter_datagrid` and `material_table_view` are particularly useful.
+   - **Customization**: Provides multiple options for customization, including different types of columns, selections, and column sizing.
+
+3. **Mantine DataTable**:
+   - **Features**: A lightweight, dependency-free table component that is dark-theme aware. It supports asynchronous data loading, pagination, column sorting, custom cell data rendering, and row expansion.
+   - **Customization**: Fully customizable, allowing you to adapt the look and feel of the table and its components.
+
+4. **Material React Table**:
+   - **Features**: A lightweight headless UI library that combines TanStack Table's extensive API with Material UI's pre-built components. It supports pre-built or fully custom tables.
+   - **Customization**: Allows for both pre-built and custom table creation, with all internal components exportable for further customization.
+
+5. **UI Bakery**:
+   - **Features**: Supports various data types for columns, including string, number, currency, and more. It also allows for dynamic column configuration and filtering.
+   - **Customization**: Dynamic columns can be specified using an array of objects or strings, defining properties like data property to display and type.
+
+### Example Implementation
+
+For a basic implementation using Frames X, you can create a table by combining and stacking Table Cell components in a frame, customizing each cell independently. Here’s a simplified example:
+
+```javascript
+// Frames X Example
+
+import { Table, TableCell } from 'framesx-design-system';
+
+const data = [
+  { id: 1, name: 'John Doe', age: 30 },
+  { id: 2, name: 'Jane Doe', age: 25 }
+];
+
+const columns = [
+  { accessor: 'id', title: 'ID' },
+  { accessor: 'name', title: 'Name' },
+  { accessor: 'age', title: 'Age' }
+];
+
+return (
+  <Table
+    rows={data}
+    columns={columns}
+  >
+    {({ row }) => (
+      <TableRow>
+        {columns.map((column) => (
+          <TableCell key={column.accessor}>{row[column.accessor]}</TableCell>
+        ))}
+      </TableRow>
+    )}
+  </Table>
+);
+```
+
+For a more advanced implementation using Mantine DataTable, you can customize the table with asynchronous data loading and pagination:
+
+```javascript
+// Mantine DataTable Example
+
+import { DataTable } from 'mantine-datatable';
+
+const data = [
+  { id: 1, name: 'John Doe', age: 30 },
+  { id: 2, name: 'Jane Doe', age: 25 }
+];
+
+const columns = [
+  { accessor: 'id', title: '#' },
+  { accessor: 'name', title: 'Name' },
+  { accessor: 'age', title: 'Age' }
+];
+
+return (
+  <DataTable
+    withTableBorder
+    withColumnBorders
+    striped
+    highlightOnHover
+    records={data}
+    columns={columns}
+  />
+);
+```
+
+### Customization Options
+
+Each library offers extensive customization options, including:
+
+- **Frames X**: Absolute customization for seamless product scaling and adoption.
+- **Flutter Gems**: Various packages offer customization features like sorting, pagination, and filtering.
+- **Mantine DataTable**: Fully customizable with asynchronous data loading, pagination, and more.
+- **Material React Table**: Pre-built or fully custom tables with exportable components.
+- **UI Bakery**: Dynamic column configuration and filtering options.
+
+### Conclusion
+
+The choice of library depends on the specific requirements of your project, including the need for customization, the type of data being displayed, and the desired features. Each library provides robust tools for creating and customizing data tables effectively.
+
+  CITATIONS: 
+
+  --- FINAL INSTRUCTIONS ---
+
+  Based on the user's query, extracted information, and the provided context, please generate a response following the instructions given in the system and assistant messages. 
+  Ensure that your answer is comprehensive, professional, and tailored to creating high-quality React styled components. 
+  Please ensure your response includes:
+
+  1. A brief explanation of the component's purpose and design rationale
+  2. The full React component code, utilizing the latest React features and best practices
+  3. Examples of how to use and customize the component
+
+  --- RESPONSE FORMATTING INSTRUCTIONS ---
+
+  Format your response as a valid JSON object with markdown content.
+
+  ## CONTENT REQUIREMENTS:
+  - **Component Explanation**: Provide a clear and concise description of what the component does, why it’s useful, and how it fits into the larger application.
+  - **Code Blocks**: Ensure the component code is wrapped in ``` code blocks.
+  - **Citations**: If you reference any documentation or external sources, provide them in a 'References' section at the end.
+  - **Structure**: Ensure the response is structured as JSON, where markdown is used for code and explanations.
+
+  ## FORMATTING GUIDE: Use the following guide to format messages using Markdown syntax. 
+	This includes headings, text formatting, lists, links, images, blockquotes, code blocks, and more.
+	Ensure to apply the appropriate syntax for the desired formatting.
+	Please return final response JSON (json): { "content": "Your Markdown formatted message", "type": "markdown" }.
+	Markdown Guide
+
+	Headings:
+
+	# (H1)
+
+	Example: # Heading 1 renders as:
+
+	Heading 1
+	## (H2)
+
+	Example: ## Heading 2 renders as:
+
+	Heading 2
+	### (H3)
+
+	Example: ### Heading 3 renders as:
+
+	Heading 3
+	#### (H4)
+
+	Example: #### Heading 4 renders as:
+
+	Heading 4
+	##### (H5)
+
+	Example: ##### Heading 5 renders as:
+
+	Heading 5
+	###### (H6)
+
+	Example: ###### Heading 6 renders as:
+
+	Heading 6
+	Text Formatting:
+
+	**bold** or __bold__
+
+	Example: **Bold Text** renders as: Bold Text
+
+	*italic* or _italic_
+
+	Example: *Italic Text* renders as: Italic Text
+
+	***bold and italic***
+
+	Example: ***Bold and Italic Text*** renders as: Bold and Italic Text
+
+	~~strikethrough~~
+
+	Example: ~~Strikethrough Text~~ renders as: Strikethrough Text
+
+	`inline code`
+
+	Example: `Inline Code` renders as: Inline Code
+
+	Lists:
+
+	Numbered: Start with 1., 2., etc.
+
+	Example:
+
+	1. Item A
+	2. Item B
+	Renders as:
+
+	1. Item A
+	2. Item B
+
+	Bullet: Start with -, *, or +
+
+	Example:
+
+	- Item A
+	* Item B
+	+ Item C
+	Renders as:
+
+	- Item A
+	- Item B
+	- Item C
+
+	(It's also possible to indent numbered Lists & bulleted Lists!)
+
+	- Task lists: Start with [ ] (unchecked) or [x] (checked)
+
+	Example:
+	- [ ] Unchecked Task
+	- [x] Checked Task
+
+	Renders as:
+	- [ ] Unchecked Task
+	- [x] Checked Task
+
+	Links and Images:
+	- Hyperlink: [link text](URL)
+	- Example: [Google](https://www.google.com) renders as: Google
+	- Image: ![alt text](URL)
+	- Example: ![Placeholder Image](https://via.placeholder.com/150) renders as (using a placeholder image): Placeholder Image
+
+	Blockquotes:
+	- Start with >
+	- Example: > Blockquote Renders as:
+
+	> Blockquote
+
+	> Multiple lines
+	>
+	> Blockquote
+	> Main Quote
+	>
+	> > Indented Quote
+	> >
+	> > More of the Indented Quote
+	(it's also possible to indent these blockquotes!)
+
+	Code Blocks:
+	- Enclose with triple backticks or indent with 4 spaces.
+	- Example: ``` Code Block ``` Renders as:
+
+	```
+	Code Block
+	```
+
+	Horizontal Rule:
+	- Use ---, ___, or ***
+	- Example: --- renders as: ---
+
+	Escape Special Characters:
+	Use a backslash  before the character.
+	- Example: # Not a Heading renders as: # Not a Heading
+
+	Tables:
+	- Example: | Header 1 | Header 2 |
+	|----------|----------|
+	| Cell 1 | Cell 2 |
+	Renders as:
+	| Header 1 | Header 2 |
+	|----------|----------|
+	| Cell 1 | Cell 2 |
+
+	Superscript: ^ (works on some platforms like Reddit)
+	- Example: E = mc^2 might render as (E = mc²) on supported platforms.
+
+	Subscript: ~ (in specific platforms)
+	- Example: H~2~O might render as (H₂O) on supported platforms.
+
+	Table of Contents: [TOC] (in specific platforms/extensions).
+
+	Footnotes: [^1] and [^1]: (in some Markdown parsers).
+
+	Definition Lists (in specific platforms):
+	- Example: Term : Definition
+
+	Abbreviations (in specific platforms):
+	- Example: *[HTML]: Hyper Text Markup Language
+
+	Highlight: ==highlighted text== (in platforms like StackEdit).
+
+	Custom Containers (in platforms like VuePress):
+	- Example: ::: warning *Here be dragons* :::
+
+	Emoji: :emoji_name: (in platforms like GitHub).
+	- Example: :smile: might render as 🙂 on supported platforms.
+
+	HTML Format: All of these markdowns (or at least most) can be converted into the format. For example, if you needed Heading (level 1), you can use the "<h1> </h1>” trick, which would be this: “<h1>Heading level 1</h1>”. This conversion applies to most markdowns used in website design and construction.
+
+	Special Characters: Of course, there's a whole set of Characters which can be used in formatting, like [brackets], {curly brackets}, ackslashes, <angle brackets>, and so much more!
+
+	Mermaid Diagrams:
+	- Mermaid diagrams can be used to create flowcharts, sequence diagrams, class diagrams, and more using the mermaid syntax.
+	- To include a Mermaid diagram, use the following format:
+	```mermaid
+	diagram_type
+	diagram_code
+	```
+	- Example: To create a flowchart, you can use:
+	```mermaid
+	graph TD;
+		A-->B;
+		A-->C;
+		B-->D;
+		C-->D;
+	```
+	This will render a simple flowchart with nodes A, B, C, and D.
+
+	Citations:
+  - When including information from external sources, use inline citations in the format [@AuthorYear].
+  - At the end of the response, include a "References" section with full citation details.
+  - Format each reference as follows:
+    [@AuthorYear]: Author, A. (Year). Title of the work. Source. URL
+
+  Example:
+  This is a sentence with a citation [@Smith2023].
+
+  References:
+  [@Smith2023]: Smith, J. (2023). Example Article. Journal of Examples. https://example.com/article
+
+  Please return final response JSON (json): { "content": "Your Markdown formatted message with citations", "type": "markdown", "references": ["Array of reference strings"] }.
+
+		Now, with all the markdowns I've provided, use these to create a [Type of Content Here]; maintaining the markdowns provided.
+		**Additional Styling Instructions**:
+		- Ensure that any `mark` or highlighted text is styled with responsive width by applying flexbox styles or an equivalent method. This will allow the text to be responsive when resizing the window. For example, wrap the `mark` element within a `div` or `span` styled with `display: flex;` and `flex-wrap: wrap;` or similar responsive styles.
+
+
+  --- EXAMPLE RESPONSE FORMAT ---
+
+  ```json
+  {
+    "explanation": "This component is a reusable button designed to follow Material UI styling conventions. It supports customization via props like 'color', 'size', and 'onClick' handler.",
+    "code": ```
+    import React from 'react';
+    import Button from '@mui/material/Button';
+
+    const CustomButton = ({ color = 'primary', size = 'medium', onClick }) => (
+      <Button variant="contained" color={color} size={size} onClick={onClick}>
+        Click Me
+      </Button>
+    );
+
+    export default CustomButton;
+    ```
+    "usageExample": ```
+    // Usage in a parent component
+    import CustomButton from './CustomButton';
+
+    const ParentComponent = () => (
+      <CustomButton color="secondary" size="large" onClick={() => alert('Button clicked!')} />
+    );
+
+    export default ParentComponent;
+    ```,
+    "references": "Material UI Button Documentation: https://mui.com/components/buttons/"
+  }
+
+  Ensure the response follows this structure and adheres to the guidelines provided.
+  The final response data should look as follows JSON (json): { "content": "Your Markdown formatted message", "type": "markdown" }.
+  
+  

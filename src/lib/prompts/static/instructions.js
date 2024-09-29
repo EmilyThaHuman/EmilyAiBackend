@@ -102,11 +102,145 @@ const instructionsPrompts = {
         7. Ensure that all start and end positions accurately reflect the location of the elements in the main text.
         8. You may omit any sections that are not relevant to your response (e.g., if you don't use any LaTeX expressions, you can omit the "latex" array).
 `,
+  ORIGINAL_RESPONSE_FORMAT: `
+--- BEGINNING OF RESPONSE FORMATTING INSTRUCTIONS ---
+
+## FORMATTING GUIDE
+Use this guide to format messages using Markdown syntax. Return final response as JSON:
+{ "content": "Your Markdown formatted message", "type": "markdown", "references": ["Array of reference strings"] }
+
+## MARKDOWN ELEMENTS GUIDE: 
+Use the following guide to format messages using Markdown syntax. This includes headings, text formatting, lists, links, images, blockquotes, code blocks, and more. Ensure to apply the appropriate syntax for the desired formatting.
+
+### Headings
+
+# H1
+## H2
+### H3
+#### H4
+##### H5
+###### H6
+
+### Text Formatting
+
+- **Bold**: **bold** or '__bold__'
+- *Italic*: *italic* or '_italic_'
+- ***Bold and Italic***: '***bold and italic***'
+- ~~Strikethrough~~: '~~strikethrough~~'
+- Inline Code: 'inline code'
+- Blockquote: '> Blockquote'
+
+### Lists
+
+1. Numbered List
+   1. Indented Item
+
+- Bullet List
+  - Indented Item
+
+- [ ] Unchecked Task
+- [x] Checked Task
+
+### Links and Images
+
+- [Hyperlink](https://example.com): '[link text](URL)'
+- ![Image](https://via.placeholder.com/150): '![alt text](URL)'
+
+### Blockquotes
+
+> Blockquote
+> > Nested Quote
+
+### Code Blocks
+
+\`\`\`language 
+const myVariable = 'Hello, World!';
+console.log(myVariable);
+\`\`\`
+
+### Horizontal Rule
+---
+
+### Escape Special Characters
+Use a single backslash '\\' before the character to escape it.
+- Example (two are used for purposes of escaping it for this template): \\# Not a Heading
+
+### Tables
+
+| Header 1 | Header 2 |
+|----------|----------|
+| Cell 1 | Cell 2 |
+
+### Special Elements:
+- Superscript: E = mc^2
+- Subscript: H~2~O
+- Table of Contents: [TOC]
+- Footnotes: [^1] and [^1]:
+- Definition Lists: Term : Definition
+- Abbreviations: *[HTML]: Hyper Text Markup Language
+- Highlight: ==highlighted text==
+- Custom Containers: ::: warning *Here be dragons* :::
+- Emoji: :emoji_name:
+
+### HTML Format
+All of these markdowns (or at least most) can be converted into the format. For example, if you needed Heading (level 1), you can use the "<h1> </h1>” trick, which would be this: "<h1>Heading level 1</h1>". This works for most Markdown parsers.
+
+### Mermaid Diagram
+You can use Mermaid to create diagrams. For example:
+\`\`\`mermaid
+ diagram_type
+ diagram_code
+\`\`\`
+For instance, this is a Mermaid diagram:
+\`\`\`mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+    subgraph "My Subgraph"
+        A-->B;
+        C-->D;
+\`\`\`
+
+### Citations
+ Inline: [@AuthorYear]
+ References section:
+ [@AuthorYear]: Author, A. (Year). Title. Source. URL
+
+### Escape Characters
+You can escape special characters with a backslash \\. For example, \\* will result in a literal asterisk (*), not a bullet list.
+
+## Additional Styling Instructions
+- Ensure that any \`mark\` or highlighted text is styled with responsive width by applying flexbox styles or an equivalent method. This will allow the text to be responsive when resizing the window. For example, wrap the \`mark\` element within a \`div\` or \`span\` styled with \`display: flex;\` and \`flex-wrap: wrap;\` or similar responsive styles.
+
+## Response Format
+Return the final response as json:
+
+{
+  "content": "Your Markdown formatted message with citations",
+  "type": "markdown",
+  "references": ["Array of reference strings"]
+}
+
+## Example Response
+Below is an example (sample uses escape characters for formatting, but ensure to use the appropriate Markdown syntax for your use case):
+
+\`\`\`json
+{
+"content": "# Custom Button Component\n\n## Explanation\nThis component is a reusable button designed to follow Material UI styling conventions. It supports customization via props like 'color', 'size', and 'onClick' handler.\n\n## Code\n\`\`\`jsx\nimport React from 'react';\nimport Button from '@mui/material/Button';\n\nconst CustomButton = ({ color = 'primary', size = 'medium', onClick }) => (\n  <Button variant="contained" color={color} size={size} onClick={onClick}>\n    Click Me\n  </Button>\n);\n\nexport default CustomButton;\n\`\`\`\n\n## Usage Example\n\`\`\`jsx\n// Usage in a parent component\nimport CustomButton from './CustomButton';\n\nconst ParentComponent = () => (\n  <CustomButton color="secondary" size="large" onClick={() => alert('Button clicked!')} />\n);\n\nexport default ParentComponent;\n\`\`\`\n\n## References\n[@MaterialUI2023]: Material UI. (2023). Button API. Material UI Documentation. https://mui.com/components/buttons/",
+"type": "markdown",
+"references": ["[@MaterialUI2023]: Material UI. (2023). Button API. Material UI Documentation. https://mui.com/components/buttons/"]
+}
+\`\`\`
+--- END OF RESPONSE FORMATTING INSTRUCTIONS ---
+`,
 };
 
 const instructions = {
   responseMarkdown: instructionsPrompts.RESPONSE_FORMAT_MD,
 };
+
 module.exports = {
   instructionsPrompts,
   instructionMap: instructions,

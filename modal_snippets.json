@@ -1,0 +1,37 @@
+[
+  {
+    "component": "Modal",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C)<Button onClick={handleOpen}>Open modal</Button>\n<Modal\n  open={open}\n  onClose={handleClose}\n  aria-labelledby=\"modal-modal-title\"\n  aria-describedby=\"modal-modal-description\"\n>\n  <Box sx={style}>\n    <Typography id=\"modal-modal-title\" variant=\"h6\" component=\"h2\">\n      Text in a modal\n    </Typography>\n    <Typography id=\"modal-modal-description\" sx={{ mt: 2 }}>\n      Duis mollis, est non commodo luctus, nisi erat porttitor ligula.\n    </Typography>\n  </Box>\n</Modal><Button onClick={handleOpen}>Open modal</Button>\n<Modal\n  open={open}\n  onClose={handleClose}\n  aria-labelledby=\"modal-modal-title\"\n  aria-describedby=\"modal-modal-description\"\n>\n  <Box sx={style}>\n    <Typography id=\"modal-modal-title\" variant=\"h6\" component=\"h2\">\n      Text in a modal\n    </Typography>\n    <Typography id=\"modal-modal-description\" sx={{ mt: 2 }}>\n      Duis mollis, est non commodo luctus, nisi erat porttitor ligula.\n    </Typography>\n  </Box>\n</Modal>\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Modal",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C)<Button onClick={handleOpen}>Open modal</Button>\n<Modal\n  open={open}\n  onClose={handleClose}\n  aria-labelledby=\"parent-modal-title\"\n  aria-describedby=\"parent-modal-description\"\n>\n  <Box sx={{ ...style, width: 400 }}>\n    <h2 id=\"parent-modal-title\">Text in a modal</h2>\n    <p id=\"parent-modal-description\">\n      Duis mollis, est non commodo luctus, nisi erat porttitor ligula.\n    </p>\n    <ChildModal />\n  </Box>\n</Modal><Button onClick={handleOpen}>Open modal</Button>\n<Modal\n  open={open}\n  onClose={handleClose}\n  aria-labelledby=\"parent-modal-title\"\n  aria-describedby=\"parent-modal-description\"\n>\n  <Box sx={{ ...style, width: 400 }}>\n    <h2 id=\"parent-modal-title\">Text in a modal</h2>\n    <p id=\"parent-modal-description\">\n      Duis mollis, est non commodo luctus, nisi erat porttitor ligula.\n    </p>\n    <ChildModal />\n  </Box>\n</Modal>\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Modal",
+    "title": "Untitled",
+    "code": "<Modal keepMounted />\nCopyCopied(or ⌘C)",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Modal",
+    "title": "Untitled",
+    "code": "<Modal disableEnforceFocus />\nCopyCopied(or ⌘C)",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Modal",
+    "title": "Untitled",
+    "code": "<Modal aria-labelledby=\"modal-title\" aria-describedby=\"modal-description\">\n  <h2 id=\"modal-title\">My Title</h2>\n  <p id=\"modal-description\">My Description</p>\n</Modal>\nCopyCopied(or ⌘C)",
+    "language": "jsx",
+    "description": ""
+  }
+]

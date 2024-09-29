@@ -1,3 +1,9 @@
+/**
+ * --------------------------------------------
+ * [middlewares/morganMiddleware.js] | route logger
+ * --------------------------------------------
+ */
+
 const morgan = require('morgan');
 require('colors');
 

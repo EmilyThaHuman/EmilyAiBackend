@@ -1,3 +1,9 @@
+/**
+ * --------------------------------------------
+ * [middlewares/index.js] | main middlewares file
+ * --------------------------------------------
+ */
+
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -11,7 +17,6 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const { User } = require('../models');
 const MongoStore = require('connect-mongo');
-const { logger } = require('@/config/logging');
 const config = require('@/config');
 
 const middlewares = (app) => {

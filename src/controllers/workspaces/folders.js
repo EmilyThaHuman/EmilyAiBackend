@@ -62,18 +62,6 @@ const getWorkspaceFoldersByWorkspaceId = async (req, res) => {
   }
 };
 
-const getWorkspaceFolderByFolderId = async (req, res) => {
-  try {
-    const workspaceFolder = await WorkspaceFolder.findById(req.params.id);
-    if (!workspaceFolder) {
-      return res.status(404).json({ message: 'Chat folder not found' });
-    }
-    res.status(200).json(workspaceFolder);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching chat folder', error: error.message });
-  }
-};
-
 const getFolderItemsByFolderId = async (req, res) => {
   try {
     const folder = await WorkspaceFolder.findById(req.params.id).populate('items');
@@ -147,7 +135,6 @@ const deleteFolder = async (req, res) => {
 
 module.exports = {
   getWorkspaceFoldersByWorkspaceId,
-  getWorkspaceFolderByFolderId,
   getFolderItemsByFolderId,
   getFolderItemByItemId,
   createFolder,

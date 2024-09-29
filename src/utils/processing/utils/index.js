@@ -8,6 +8,7 @@ module.exports = {
   ...require('./main'),
   ...require('./pdf'),
   ...require('./scrape'),
+  ...require('./scrape2'),
   ...require('./text'),
   ...require('./vectorize'),
 };

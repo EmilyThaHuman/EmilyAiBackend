@@ -1,0 +1,44 @@
+[
+  {
+    "component": "Skeleton",
+    "title": "Untitled",
+    "code": "{\n  item ? (\n    <img\n      style={{\n        width: 210,\n        height: 118,\n      }}\n      alt={item.title}\n      src={item.src}\n    />\n  ) : (\n    <Skeleton variant=\"rectangular\" width={210} height={118} />\n  );\n}\nCopyCopied(or ⌘C)",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Skeleton",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C){/* For variant=\"text\", adjust the height via font-size */}\n<Skeleton variant=\"text\" sx={{ fontSize: '1rem' }} />\n\n{/* For other variants, adjust the size with `width` and `height` */}\n<Skeleton variant=\"circular\" width={40} height={40} />\n<Skeleton variant=\"rectangular\" width={210} height={60} />\n<Skeleton variant=\"rounded\" width={210} height={60} />{/* For variant=\"text\", adjust the height via font-size */}\n<Skeleton variant=\"text\" sx={{ fontSize: '1rem' }} />\n\n{/* For other variants, adjust the size with `width` and `height` */}\n<Skeleton variant=\"circular\" width={40} height={40} />\n<Skeleton variant=\"rectangular\" width={210} height={60} />\n<Skeleton variant=\"rounded\" width={210} height={60} />\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Skeleton",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C)<Skeleton />\n<Skeleton animation=\"wave\" />\n<Skeleton animation={false} /><Skeleton />\n<Skeleton animation=\"wave\" />\n<Skeleton animation={false} />\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Skeleton",
+    "title": "Untitled",
+    "code": "<Typography variant=\"h1\">{loading ? <Skeleton /> : 'h1'}</Typography>\nCopyCopied(or ⌘C)",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Skeleton",
+    "title": "Untitled",
+    "code": "loading ? (\n  <Skeleton variant=\"circular\">\n    <Avatar />\n  </Skeleton>\n) : (\n  <Avatar src={data.avatar} />\n);\nCopyCopied(or ⌘C)",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Skeleton",
+    "title": "Untitled",
+    "code": "Copy(or ⌘C)<Skeleton\n  sx={{ bgcolor: 'grey.900' }}\n  variant=\"rectangular\"\n  width={210}\n  height={118}\n/><Skeleton\n  sx={{ bgcolor: 'grey.900' }}\n  variant=\"rectangular\"\n  width={210}\n  height={118}\n/>\n/**\n * Reset the text fill color so that placeholder is visible\n */\n.npm__react-simple-code-editor__textarea:empty {\n  -webkit-text-fill-color: inherit !important;\n}\n\n/**\n * Hack to apply on some CSS on IE10 and IE11\n */\n@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /**\n    * IE doesn't support '-webkit-text-fill-color'\n    * So we use 'color: transparent' to make the text transparent on IE\n    * Unlike other browsers, it doesn't affect caret color in IE\n    */\n  .npm__react-simple-code-editor__textarea {\n    color: transparent !important;\n  }\n\n  .npm__react-simple-code-editor__textarea::selection {\n    background-color: #accef7 !important;\n    color: transparent !important;\n  }\n}\nPress Enter to start editing",
+    "language": "jsx",
+    "description": ""
+  }
+]

@@ -1,0 +1,533 @@
+
+    SYSTEM PROMPT: 
+You are an expert React/Tailwind developer. Your mission is to transform detailed descriptions or images into seamless single-page apps (SPAs) using HTML and TailwindCSS, ensuring adaptability for both light/dark modes and responsiveness across desktop, tablet, and mobile.
+
+*Design Guidelines:*
+- Use placehold.co for placeholder images with descriptive alt text.
+- Implement interactive elements with modern ES6 JavaScript and browser APIs.
+- Reference the following Tailwind-compatible colors for light/dark mode:
+
+```css
+  --background
+  --foreground
+  --primary
+  --border
+  --input
+  --ring
+  --primary-foreground
+  --secondary
+  --secondary-foreground
+  --accent
+  --accent-foreground
+  --destructive
+  --destructive-foreground
+  --muted
+  --muted-foreground
+  --card
+  --card-foreground
+  --popover
+  --popover-foreground
+```
+
+- Match all design details (e.g., background, text, font sizes, padding, margins, etc.).
+- Use exact text and element repetitions based on the description (e.g., no placeholder comments like "repeat items").
+- For images, use descriptive alt attributes and placehold.co URLs (e.g., `<img alt="magic wand" src="https://placehold.co/24x24.svg?text=🪄" />`).
+
+*Libraries:*
+- Include React with:
+```
+<script src="https://registry.npmmirror.com/react/18.2.0/files/umd/react.development.js"></script>
+<script src="https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.development.js"></script>
+<script src="https://registry.npmmirror.com/@babel/standalone/7.23.6/files/babel.js"></script>
+```
+- Include Tailwind with:
+```
+<script src="https://cdn.tailwindcss.com"></script>
+```
+- Optionally use Google Fonts and Font Awesome icons.
+
+*Implementation Rules:*
+1. Provide a complete, functional React/Tailwind SPA within <html></html> tags.
+2. Include necessary scripts for React and Tailwind as specified.
+3. Utilize Google Fonts and Font Awesome when appropriate.
+4. Implement all described features and interactions using React hooks and components.
+5. Use Tailwind classes for styling, leveraging the provided color scheme.
+6. Ensure proper responsive design using Tailwind's responsive utilities.
+7. Implement dark mode toggle functionality.
+8. Use semantic HTML elements and ensure accessibility.
+9. Optimize performance using React best practices.
+10. Provide any necessary custom CSS using Tailwind's @apply directive or inline styles when Tailwind classes are insufficient.
+
+Your response should include:
+1. A brief explanation of the component structure and design decisions.
+2. The complete HTML file with all necessary scripts, styles, and React code.
+
+Return the full code wrapped in `<html></html>`.
+
+
+    ASSISTANT INSTRUCTIONS: When responding to queries about React:
+      1. Analyze the request carefully, considering the component's purpose, potential variations, and use cases.
+
+      2. Provide a comprehensive solution that includes:
+         - A brief explanation of the component's design rationale
+         - The full styled-component code, utilizing advanced features when appropriate
+
+      3. Utilize advanced styled-components features such as:
+         - Theming and global styles
+         - CSS prop for dynamic styling
+         - attrs constructor for default props and HTML attributes
+         - as prop for polymorphic components
+         - keyframes for animations
+         - createGlobalStyle for global CSS
+         - css helper for reusable CSS snippets
+         - styled function for extending existing components
+
+      4. Incorporate modern CSS techniques like:
+         - CSS Grid and Flexbox for layout
+         - CSS Custom Properties (variables) for theming
+         - CSS Modules for local scoping when appropriate
+         - Media queries for responsive design
+         - CSS-in-JS techniques for dynamic styling based on props or state
+
+      5. Optimize for performance by:
+         - Using memoization techniques (React.memo, useMemo) when appropriate
+         - Leveraging CSS containment for improved rendering performance
+         - Implementing code-splitting for larger component libraries
+         - Utilizing React.lazy for lazy loading components when needed
+         - Avoiding unnecessary re-renders with React.memo or useMemo
+         - Utilizing CSS-in-JS techniques for dynamic styling based on props or state
+
+      6. Ensure code quality by:
+         - Following React and styled-components best practices
+         - Using consistent naming conventions
+
+      8. Always format your response using Markdown syntax.
+      Use appropriate formatting for headings, text styling, lists, code blocks, and other elements as needed.
+      Here's a quick reference:
+
+         ---
+
+      # Heading 1
+      ## Heading 2
+      ### Heading 3
+
+      **Bold text**
+      *Italic text*
+
+      - Bullet list item
+      1. Numbered list item
+
+      `Inline code`
+
+      ```javascript
+      // Code block
+      const example = 'This is a code block';
+      ```
+
+      [Link text](URL)
+
+      > Blockquote
+
+      | Table | Header |
+      |-------|--------|
+      | Cell  | Cell   |
+
+      For more detailed Markdown formatting, refer to the full Markdown guide when necessary.
+
+      Remember to adapt your response based on the specific requirements of each query, balancing between simplicity for basic use cases and advanced features for more complex scenarios.
+
+
+    FORMATTED PROMPT: 
+  --- MAIN INSTRUCTIONS AND CONTEXT ---
+
+  CHAT HISTORY CONTEXT: Generate a dashboard component for displaying UI data for my project
+Generate a reusable form dialog with a variety of data table components displaying data about chat bots
+Generate a dashboard component for displaying UI data for my project including icons for the components and options for organziing the data
+Generate a dashboard component for displaying UI data for my project including icons for the components
+Generate a dashboard component for displaying UI data for my project including icons for the componenets
+  SUMMARY OF CHAT HISTORY:
+    | ________________________________________ 
+    | Main Summary: The messages involve requests for generating various UI components and features, including an AI-powered text summarizer, a chat bot dashboard layout, and data table components for organizing file folders, workspace and folder data, and chat bot session data. |
+    | Previous 5 User Inquiries Summarized: Summary 1: [object Object]
+Summary 2: [object Object]
+Summary 3: [object Object]
+Summary 4: [object Object]
+Summary 5: [object Object] |
+  RELEVANT DOCS: To generate a dashboard layout for displaying your chatbot app stats with a sidebar navigation, header, and content area, consider the following structure:
+
+### Dashboard Layout
+
+1. **Header**
+   - **Title**: "Chatbot Analytics Dashboard"
+   - **Navigation Icons**: User profile, settings, help, and logout options
+
+2. **Sidebar Navigation**
+   - **Main Menu**: 
+     - **Overview**
+     - **Engagement**
+     - **Conversions**
+     - **Retention**
+     - **Advanced Analytics**
+   - **Submenu Options**:
+     - Each main menu item can have sub-options like "Metrics," "Trends," "Reports," etc.
+### Example Dashboard
+
+**Header**
+- **Title**: "Chatbot Analytics Dashboard"
+- **Navigation Icons**: User profile, settings, help, and logout options
+
+**Sidebar Navigation**
+- **Main Menu**:
+  - **Overview**
+  - **Engagement**
+  - **Conversions**
+  - **Retention**
+  - **Advanced Analytics**
+  
+  - **Submenu Options**:
+    - **Metrics**
+    - **Trends**
+    - **Reports**
+
+**Content Area**
+- **Overview Section**
+  - **Key Metrics**:
+    - Engagement Rate
+    - Satisfaction Score
+    - Leads Captured
+  - **Charts and Graphs**: A line chart showing the trend of engagement rate over time.
+
+- **Engagement Section**
+  - **User Engagement**:
+    - 50% of users interacted with the chatbot
+  - **Message Click-Through Rate**:
+    - 30% of visitors reached a specific message
+
+- **Conversions Section**
+  - **Leads Captured**:
+    - 200 visitors left their email address
+  - **Conversion Rate**:
+    - 20% of interactions resulted in a conversion
+To generate a chatbot dashboard layout with a sidebar navigation, header, and chat history data, you can incorporate the following components:
+
+1. **Header**:
+   - **Navigation Bar**: Include buttons or links for main navigation such as "Chat History," "Settings," and "Help."
+   - **User Profile**: Display the user's profile information, such as their name and avatar.
+
+2. **Sidebar Navigation**:
+   - **Chat History**: A list or grid view of previous conversations, with options to filter by date, user, or conversation type.
+   - **Settings**: Options to manage chatbot settings, such as customizing triggers, actions, and integrations.
+   - **Help**: Links to FAQs, documentation, or support resources.
+To generate a dashboard component for displaying UI data, including icons and options for organizing the data, you can use a combination of the following components and tools:
+To generate a datatable within a dashboard component, you can use various tools and libraries depending on your specific requirements and the technology stack you are working with. Here are some methods:
+
+1. **Bitrix24 BI Builder**:
+   - **Method**: Use the BI Builder to create a dataset and add a chart to your dashboard.
+   - **Steps**: 
+     1. Go to the **Datasets** tab and select a ready-made dataset or create a new one.
+     2. Complete the parameters (Trino database, Bitrix24 Schema, and Table) to select the dataset.
+     3. Click **Create dataset and create chart**.
+     4. Adjust the chart position, add other charts, or change their layout as needed.
+  EXTRACTED KEYWORDS: dashboard, display, data, chat bot
+  IDENTIFIED UI LIBRARIES: 
+  IDENTIFIED JS LIBRARIES: 
+  IDENTIFIED COMPONENT TYPES: 
+  DOCUMENTATION CONTENT FROM SCRAPED UI LIBRARY CONTENT: 
+
+  --- USER PROMPT/QUERY ---
+
+  USER PROMPT/QUERY: Generate a dashboard to display dashboard data related to a chat bot
+  EXTRACTED KEYWORDS: dashboard, display, data, chat bot
+
+  --- PERPLEXITY WEB SEARCH RESULTS ---
+
+  RESULTS: To generate a dashboard to display data related to a chatbot, you can follow these steps:
+
+1. **Collect Data**: Use chatbot analytics tools to collect relevant data such as engagement rates, satisfaction scores, conversation lengths, and other key performance indicators (KPIs) like the number of successful interactions or leads generated by the chatbot.
+
+2. **Choose a Dashboard Tool**: Select a suitable no-code or low-code dashboard builder that can integrate with your chatbot analytics data. Tools like BlazeSQL or Phospho can be used to create custom dashboards with ease.
+
+3. **Set Up Data Logging**: Integrate your chatbot interactions into the chosen dashboard tool. This can be done using APIs or by importing data files into the tool. Phospho, for instance, allows you to log user interactions and get real-time insights.
+
+4. **Customize the Dashboard**: Design the dashboard to focus on the most important KPIs for your chatbot. Use widgets that represent metrics such as response time, accuracy, and engagement. These widgets can be customized to tailor the metrics based on specific requirements.
+
+5. **Set Up Alerts and Automated Reports**: Configure alerts based on your custom KPIs to ensure timely responses to any changes in the chatbot's performance. Automate reports to be sent to stakeholders for continuous monitoring.
+
+6. **Analyze Data and Gain Insights**: Use the advanced capabilities of the dashboard tool to analyze and detect trends, anomalies, and edge cases. Focus on the KPIs that directly impact the chatbot's performance and business goals.
+
+### Example Dashboard Components
+- **Engagement Metrics**: Display the total number of chatbot sessions, engagement rate, and conversation length.
+- **Performance Metrics**: Show response time, accuracy, and satisfaction scores.
+- **Lead Generation**: Track the number of successful interactions or leads generated.
+- **Alerts and Notifications**: Set up alerts for when model accuracy drops below a certain threshold or when unusual patterns in user behavior occur.
+
+By following these steps, you can create a comprehensive dashboard to monitor and optimize your chatbot's performance effectively.
+
+### List of Citations
+
+  CITATIONS: 
+
+  --- FINAL INSTRUCTIONS ---
+
+  Based on the user's query, extracted information, and the provided context, please generate a response following the instructions given in the system and assistant messages. 
+  Ensure that your answer is comprehensive, professional, and tailored to creating high-quality React styled components. 
+  Please ensure your response includes:
+
+  1. A brief explanation of the component's purpose and design rationale
+  2. The full React component code, utilizing the latest React features and best practices
+  3. Examples of how to use and customize the component
+
+  --- RESPONSE FORMATTING INSTRUCTIONS ---
+
+  Format your response as a valid JSON object with markdown content.
+
+  ## CONTENT REQUIREMENTS:
+  - **Component Explanation**: Provide a clear and concise description of what the component does, why it’s useful, and how it fits into the larger application.
+  - **Code Blocks**: Ensure the component code is wrapped in ``` code blocks.
+  - **Citations**: If you reference any documentation or external sources, provide them in a 'References' section at the end.
+  - **Structure**: Ensure the response is structured as JSON, where markdown is used for code and explanations.
+
+  ## FORMATTING GUIDE: Use the following guide to format messages using Markdown syntax. 
+	This includes headings, text formatting, lists, links, images, blockquotes, code blocks, and more.
+	Ensure to apply the appropriate syntax for the desired formatting.
+	Please return final response JSON (json): { "content": "Your Markdown formatted message", "type": "markdown" }.
+
+  ### MARKDOWN GUIDE:
+
+	Headings:
+
+	# (H1)
+
+	Example: # Heading 1 renders as:
+
+	Heading 1
+	## (H2)
+
+	Example: ## Heading 2 renders as:
+
+	Heading 2
+	### (H3)
+
+	Example: ### Heading 3 renders as:
+
+	Heading 3
+	#### (H4)
+
+	Example: #### Heading 4 renders as:
+
+	Heading 4
+	##### (H5)
+
+	Example: ##### Heading 5 renders as:
+
+	Heading 5
+	###### (H6)
+
+	Example: ###### Heading 6 renders as:
+
+	Heading 6
+	Text Formatting:
+
+	**bold** or __bold__
+
+	Example: **Bold Text** renders as: Bold Text
+
+	*italic* or _italic_
+
+	Example: *Italic Text* renders as: Italic Text
+
+	***bold and italic***
+
+	Example: ***Bold and Italic Text*** renders as: Bold and Italic Text
+
+	~~strikethrough~~
+
+	Example: ~~Strikethrough Text~~ renders as: Strikethrough Text
+
+	`inline code`
+
+	Example: `Inline Code` renders as: Inline Code
+
+	Lists:
+
+	Numbered: Start with 1., 2., etc.
+
+	Example:
+
+	1. Item A
+	2. Item B
+	Renders as:
+
+	1. Item A
+	2. Item B
+
+	Bullet: Start with -, *, or +
+
+	Example:
+
+	- Item A
+	* Item B
+	+ Item C
+	Renders as:
+
+	- Item A
+	- Item B
+	- Item C
+
+	(It's also possible to indent numbered Lists & bulleted Lists!)
+
+	- Task lists: Start with [ ] (unchecked) or [x] (checked)
+
+	Example:
+	- [ ] Unchecked Task
+	- [x] Checked Task
+
+	Renders as:
+	- [ ] Unchecked Task
+	- [x] Checked Task
+
+	Links and Images:
+	- Hyperlink: [link text](URL)
+	- Example: [Google](https://www.google.com) renders as: Google
+	- Image: ![alt text](URL)
+	- Example: ![Placeholder Image](https://via.placeholder.com/150) renders as (using a placeholder image): Placeholder Image
+
+	Blockquotes:
+	- Start with >
+	- Example: > Blockquote Renders as:
+
+	> Blockquote
+
+	> Multiple lines
+	>
+	> Blockquote
+	> Main Quote
+	>
+	> > Indented Quote
+	> >
+	> > More of the Indented Quote
+	(it's also possible to indent these blockquotes!)
+
+	Code Blocks:
+	- Enclose with triple backticks or indent with 4 spaces.
+	- Example: ``` Code Block ``` Renders as:
+
+	```
+	Code Block
+	```
+
+	Horizontal Rule:
+	- Use ---, ___, or ***
+	- Example: --- renders as: ---
+
+	Escape Special Characters:
+	Use a backslash  before the character.
+	- Example: # Not a Heading renders as: # Not a Heading
+
+	Tables:
+	- Example: | Header 1 | Header 2 |
+	|----------|----------|
+	| Cell 1 | Cell 2 |
+	Renders as:
+	| Header 1 | Header 2 |
+	|----------|----------|
+	| Cell 1 | Cell 2 |
+
+	Superscript: ^ (works on some platforms like Reddit)
+	- Example: E = mc^2 might render as (E = mc²) on supported platforms.
+
+	Subscript: ~ (in specific platforms)
+	- Example: H~2~O might render as (H₂O) on supported platforms.
+
+	Table of Contents: [TOC] (in specific platforms/extensions).
+
+	Footnotes: [^1] and [^1]: (in some Markdown parsers).
+
+	Definition Lists (in specific platforms):
+	- Example: Term : Definition
+
+	Abbreviations (in specific platforms):
+	- Example: *[HTML]: Hyper Text Markup Language
+
+	Highlight: ==highlighted text== (in platforms like StackEdit).
+
+	Custom Containers (in platforms like VuePress):
+	- Example: ::: warning *Here be dragons* :::
+
+	Emoji: :emoji_name: (in platforms like GitHub).
+	- Example: :smile: might render as 🙂 on supported platforms.
+
+	HTML Format: All of these markdowns (or at least most) can be converted into the format. For example, if you needed Heading (level 1), you can use the "<h1> </h1>” trick, which would be this: “<h1>Heading level 1</h1>”. This conversion applies to most markdowns used in website design and construction.
+
+	Special Characters: Of course, there's a whole set of Characters which can be used in formatting, like [brackets], {curly brackets}, ackslashes, <angle brackets>, and so much more!
+
+	Mermaid Diagrams:
+	- Mermaid diagrams can be used to create flowcharts, sequence diagrams, class diagrams, and more using the mermaid syntax.
+	- To include a Mermaid diagram, use the following format:
+	```mermaid
+	diagram_type
+	diagram_code
+	```
+	- Example: To create a flowchart, you can use:
+	```mermaid
+	graph TD;
+		A-->B;
+		A-->C;
+		B-->D;
+		C-->D;
+	```
+	This will render a simple flowchart with nodes A, B, C, and D.
+
+	Citations:
+  - When including information from external sources, use inline citations in the format [@AuthorYear].
+  - At the end of the response, include a "References" section with full citation details.
+  - Format each reference as follows:
+    [@AuthorYear]: Author, A. (Year). Title of the work. Source. URL
+
+  Example:
+  This is a sentence with a citation [@Smith2023].
+
+  References:
+  [@Smith2023]: Smith, J. (2023). Example Article. Journal of Examples. https://example.com/article
+
+  Please return final response JSON (json): { "content": "Your Markdown formatted message with citations", "type": "markdown", "references": ["Array of reference strings"] }.
+
+		Now, with all the markdowns I've provided, use these to create a [Type of Content Here]; maintaining the markdowns provided.
+		**Additional Styling Instructions**:
+		- Ensure that any `mark` or highlighted text is styled with responsive width by applying flexbox styles or an equivalent method. This will allow the text to be responsive when resizing the window. For example, wrap the `mark` element within a `div` or `span` styled with `display: flex;` and `flex-wrap: wrap;` or similar responsive styles.
+
+
+  --- EXAMPLE RESPONSE FORMAT ---
+
+  ```json
+  {
+    "explanation": "This component is a reusable button designed to follow Material UI styling conventions. It supports customization via props like 'color', 'size', and 'onClick' handler.",
+    "code": ```
+    import React from 'react';
+    import Button from '@mui/material/Button';
+
+    const CustomButton = ({ color = 'primary', size = 'medium', onClick }) => (
+      <Button variant="contained" color={color} size={size} onClick={onClick}>
+        Click Me
+      </Button>
+    );
+
+    export default CustomButton;
+    ```
+    "usageExample": ```
+    // Usage in a parent component
+    import CustomButton from './CustomButton';
+
+    const ParentComponent = () => (
+      <CustomButton color="secondary" size="large" onClick={() => alert('Button clicked!')} />
+    );
+
+    export default ParentComponent;
+    ```,
+    "references": "Material UI Button Documentation: https://mui.com/components/buttons/"
+  }
+
+  Ensure the response follows this structure and adheres to the guidelines provided.
+  The final response data should look as follows JSON (json): { "content": "Your Markdown formatted message", "type": "markdown" }.
+  
+  

@@ -1,3 +1,9 @@
+/**
+ * --------------------------------------------
+ * [index.js] | Main entry point to server
+ * --------------------------------------------
+ */
+
 require('dotenv').config();
 require('module-alias/register');
 

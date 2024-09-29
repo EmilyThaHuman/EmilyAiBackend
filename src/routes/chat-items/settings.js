@@ -10,21 +10,8 @@ const {
 const path = require('path');
 const { logger } = require('@/config/logging');
 const fs = require('fs').promises;
-// const authenticate = require('@/middlewares/authenticate.js');
-// const {
-// ChatPresetController,
-// ChatToolController,
-// ChatModelController,
-// ChatPromptController,
-// ChatCollectionController,
-// } = require('../../config/env/controllers/chat-items/settings.js');
-
 const router = express.Router();
 
-// Apply authentication middleware to all routes
-// router.use(authenticate);
-
-// Chat Preset routes
 router.get('/presets', asyncHandler(ChatPresetController.getAll));
 router.get('/presets/:id', asyncHandler(ChatPresetController.getById));
 router.post('/presets', asyncHandler(ChatPresetController.create));
@@ -65,8 +52,6 @@ router.get('/tools', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-// router.get('/tools', asyncHandler(ChatToolController.getAll));
-// router.get('/tools/:id', asyncHandler(ChatToolController.getById));
 router.post('/tools', asyncHandler(ChatToolController.create));
 router.put('/tools/:id', asyncHandler(ChatToolController.update));
 router.delete('/tools/:id', asyncHandler(ChatToolController.delete));
@@ -79,8 +64,6 @@ router.put('/models/:id', asyncHandler(ChatModelController.update));
 router.delete('/models/:id', asyncHandler(ChatModelController.delete));
 
 // Chat Prompt routes
-// router.get('/prompts', asyncHandler(ChatPromptController.getAll));
-// router.get('/prompts/:id', asyncHandler(ChatPromptController.getById));
 router.get('/prompts', async (req, res) => {
   try {
     const { name } = req.query;
@@ -117,20 +100,6 @@ router.get('/prompts', async (req, res) => {
 router.post('/prompts', asyncHandler(ChatPromptController.create));
 router.put('/prompts/:id', asyncHandler(ChatPromptController.update));
 router.delete('/prompts/:id', asyncHandler(ChatPromptController.delete));
-
-// router.get('/prompts', async (req, res) => {
-//   try {
-//     const { name } = req.query;
-//     const prompt = await Prompt.findOne({ name: name });
-//     if (!prompt) {
-//       return res.status(404).json({ message: 'Prompt not found' });
-//     }
-//     res.json(prompt);
-//   } catch (error) {
-//     console.error('Error fetching prompt:', error);
-//     res.status(500).json({ message: 'Error fetching prompt', error: error.message });
-//   }
-// });
 
 // Chat Collection routes
 router.get('/collections', asyncHandler(ChatCollectionController.getAll));
