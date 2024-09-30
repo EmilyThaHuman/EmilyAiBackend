@@ -7,7 +7,7 @@ const {
   AssistantFile,
   ChatFile,
   MessageFileItem,
-  Message: ChatMessage,
+  ChatMessage,
   ChatSession,
 } = require('@/models');
 const { getDB, getBucket } = require('@/db');

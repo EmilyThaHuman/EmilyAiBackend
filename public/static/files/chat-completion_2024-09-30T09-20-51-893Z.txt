@@ -1,0 +1,69 @@
+
+    --- CHAT COMPLETION RESPONSE ---
+    <h1>LoadingSpinnerWithProgressIndicatorAndTheming Component</h1>
+
+<h2>Component Purpose and Design Rationale</h2>
+
+<p>The `LoadingSpinnerWithProgressIndicatorAndTheming` component is designed to visually represent the loading progress of an asynchronous operation, such as data fetching or file uploading. It combines a spinner and an optional progress bar to give users immediate feedback on the operation's status. The component supports theming options, allowing developers to customize colors and sizes to match their application's design language. Smooth animations enhance the user experience by providing a dynamic visual cue, while responsiveness ensures compatibility across various screen resolutions.</p>
+
+<h2>Component Code</h2>
+
+```jsx
+import React from 'react';
+
+<p>const LoadingSpinnerWithProgressIndicatorAndTheming = ({ isLoading, progress, theme }) => {</p>
+<p>  const { baseColor, highlightColor, size } = theme;</p>
+
+<p>  return (</p>
+<p>    <div className={`flex flex-col items-center justify-center ${isLoading ? 'block' : 'hidden'}`}> </p>
+<p>      <div className={`animate-spin rounded-full border-t-4 border-${baseColor} h-${size} w-${size}`}></div></p>
+<p>      {progress && (</p>
+<p>        <div className='w-full bg-gray-200 rounded-full dark:bg-gray-700 mt-4'></p>
+<p>          <div className={`bg-${highlightColor} text-xs font-medium text-black-100 text-center p-0.5 leading-none rounded-full`} style={{ width: `${progress}%` }}> {progress}% </div></p>
+<p>        </div></p>
+<p>      )}</p>
+<p>    </div></p>
+<p>  );</p>
+<p>};</p>
+
+<p>export default LoadingSpinnerWithProgressIndicatorAndTheming;</p>
+<p>```</p>
+
+<h2>Usage Example</h2>
+
+```jsx
+// In your component
+import React, { useState, useEffect } from 'react';
+import LoadingSpinnerWithProgressIndicatorAndTheming from './LoadingSpinnerWithProgressIndicatorAndTheming';
+
+<p>const App = () => {</p>
+<p>  const [isLoading, setIsLoading] = useState(true);</p>
+<p>  const [progress, setProgress] = useState(0);</p>
+<p>  const theme = { baseColor: 'blue-500', highlightColor: 'blue-700', size: '12' };</p>
+
+<p>  useEffect(() => {</p>
+<p>    const interval = setInterval(() => {</p>
+<p>      setProgress((oldProgress) => {</p>
+<p>        if (oldProgress === 100) {</p>
+<p>          clearInterval(interval);</p>
+<p>          setIsLoading(false);</p>
+<p>          return 100;</p>
+<p>        }</p>
+<p>        return Math.min(oldProgress + 10, 100);</p>
+<p>      });</p>
+<p>    }, 1000);</p>
+
+<p>    return () => clearInterval(interval);</p>
+<p>  }, []);</p>
+
+<p>  return (</p>
+<p>    <LoadingSpinnerWithProgressIndicatorAndTheming isLoading={isLoading} progress={progress} theme={theme} /></p>
+<p>  );</p>
+<p>};</p>
+
+<p>export default App;</p>
+<p>```</p>
+
+<p>This example demonstrates how to use the `LoadingSpinnerWithProgressIndicatorAndTheming` component within an application. It showcases setting up a simple loading state with progress that increments over time, and applying a custom theme for the spinner and progress bar.</p>
+    --------------------------------
+  

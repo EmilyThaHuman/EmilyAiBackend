@@ -1,4 +1,4 @@
-const { Assistant, File, Message } = require('@/models');
+const { Assistant, File, ChatMessage } = require('@/models');
 
 const createLocalAssistant = async (config) => {
   const newAssistant = await new Assistant(config).save();
@@ -11,7 +11,7 @@ const createLocalFile = async (config) => {
   return newFile;
 };
 const createLocalMessage = async (config) => {
-  const newMessage = await new Message(config).save();
+  const newMessage = await new ChatMessage(config).save();
   console.log(newMessage);
   return newMessage;
 };

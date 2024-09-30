@@ -5,7 +5,7 @@ const { createSchema, createModel } = require('../utils/schema');
 // =============================
 // [MESSAGES] content, role, files, sessionId
 // =============================
-const messageSchema = createSchema({
+const chatMessageSchema = createSchema({
   // -- RELATIONSHIPS
   userId: { type: Schema.Types.ObjectId, ref: 'User' },
   sessionId: { type: Schema.Types.ObjectId, ref: 'ChatSession' },
@@ -14,6 +14,7 @@ const messageSchema = createSchema({
 
   // -- REQUIRED FIELDS
   content: { type: String, required: false, maxlength: 1000000 },
+  code: { type: String, required: false, maxlength: 1000000 },
   imagePaths: [{ type: String }],
   model: { type: String },
   role: {
@@ -54,22 +55,62 @@ const messageSchema = createSchema({
   //   },
   // },
 });
-messageSchema.index({ sessionId: 1, createdAt: 1 });
-// Pre-save middleware
-messageSchema.pre('save', async function (next) {
-  logger.info('Chat Message pre-save hook');
+chatMessageSchema.index({ sessionId: 1, createdAt: 1 });
+
+chatMessageSchema.pre('save', async function (next) {
   if (this.isNew) {
     const existingMessage = await this.constructor.findOne({ content: this.content });
     if (existingMessage) {
-      const error = new Error('A message with this content already exists');
-      return next(error);
+      return next(new Error('A message with this content already exists'));
     }
+    this.tokens = this.content.split(' ').length; // Simplified token calculation
   }
-  this.updatedAt = Date.now();
-
   next();
 });
-messageSchema.pre('findOneAndUpdate', async function (next) {
+chatMessageSchema.statics.createMessage = async function (messageData) {
+  const message = new this(messageData);
+  await message.save();
+  return message;
+};
+chatMessageSchema.statics.getMessagesBySession = async function (sessionId, limit = 50, skip = 0) {
+  return this.find({ sessionId }).sort({ createdAt: -1 }).skip(skip).limit(limit).populate('files');
+};
+chatMessageSchema.methods.updateContent = async function (newContent) {
+  this.content = newContent;
+  this.updatedAt = Date.now();
+  return this.save();
+};
+chatMessageSchema.methods.generateSummary = async function () {
+  // Implement logic to generate summary, possibly using an AI service
+  // This is a placeholder implementation
+  this.summary = this.content.substring(0, 100) + '...';
+  return this.save();
+};
+chatMessageSchema.methods.calculateTokens = function () {
+  this.tokens = this.content.split(' ').length;
+  return this.save();
+};
+
+chatMessageSchema.pre('save', async function (next) {
+  if (this.isNew) {
+    const existingMessage = await this.constructor.findOne({ content: this.content });
+    if (existingMessage) {
+      return next(new Error('A message with this content already exists'));
+    }
+
+    await mongoose
+      .model('ChatSession')
+      .findByIdAndUpdate(
+        this.sessionId,
+        { $push: { messages: this._id } },
+        { new: true, useFindAndModify: false }
+      );
+  }
+  this.updatedAt = Date.now();
+  next();
+});
+
+chatMessageSchema.pre('findOneAndUpdate', async function (next) {
   const update = this.getUpdate();
   if (update.content) {
     const existingMessage = await this.model.findOne({
@@ -77,12 +118,12 @@ messageSchema.pre('findOneAndUpdate', async function (next) {
       _id: { $ne: this.getQuery()._id },
     });
     if (existingMessage) {
-      const error = new Error('A message with this content already exists');
-      return next(error);
+      return next(new Error('A message with this content already exists'));
     }
   }
   next();
 });
+// I need you to fix and optimize my Rag Chat Bot App's History/Session/Message saving logic. The way I want it to would is after a messagge gets added and saved, that message should have its _id value pushed into chatSession.messages which is an array of refIds each of which connects to a saved message. Below is my custom chatsession model for reference:
 // =============================
 // [CHAT SESSIONS]
 // =============================
@@ -112,6 +153,7 @@ const chatSessionSchema = createSchema({
       ref: 'ChatMessage',
     },
   ],
+  history: [{ type: Schema.Types.ObjectId, ref: 'Message' }],
   files: [{ type: Schema.Types.ObjectId, ref: 'File' }],
 
   // -- EXPERIMENTAL FIELDS --
@@ -224,14 +266,46 @@ const chatSessionSchema = createSchema({
   },
   activeSessionId: { type: String, required: false },
 });
+chatSessionSchema.index({ userId: 1, workspaceId: 1 });
 
-chatSessionSchema.index({ userId: 1 });
-chatSessionSchema.index({ workspaceId: 1 });
-
+chatSessionSchema.statics.createSession = async function (sessionData) {
+  const session = new this(sessionData);
+  await session.save();
+  return session;
+};
+// [ChatHistory][Function 1] Add ChatMessage
+chatSessionSchema.methods.addMessage = async function (messageData) {
+  const newMessage = await ChatMessage.create({ ...messageData, sessionId: this._id });
+  this.messages.push(newMessage._id);
+  this.stats.messageCount += 1;
+  await this.save();
+  return newMessage;
+};
+chatSessionSchema.methods.getHistory = function (limit = 50, skip = 0) {
+  return ChatMessage.find({ sessionId: this._id })
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit)
+    .populate('files');
+};
+chatSessionSchema.methods.updateSettings = async function (newSettings) {
+  this.settings = { ...this.settings, ...newSettings };
+  return this.save();
+};
+chatSessionSchema.methods.calculateTokenUsage = async function () {
+  const messages = await this.model('ChatMessage').find({ sessionId: this._id });
+  this.stats.tokenUsage = messages.reduce((sum, message) => sum + (message.tokens || 0), 0);
+  return this.save();
+};
+chatSessionSchema.methods.addFile = async function (fileId) {
+  if (!this.files.includes(fileId)) {
+    this.files.push(fileId);
+    return this.save();
+  }
+  return this;
+};
 chatSessionSchema.pre('save', async function (next) {
-  logger.info('ChatSession pre-save hook');
   this.updatedAt = Date.now();
-
   if (this.isNew) {
     let uniqueName = this.name;
     let counter = 1;
@@ -245,12 +319,10 @@ chatSessionSchema.pre('save', async function (next) {
           workspaceId: this.workspaceId,
           name: uniqueName,
         });
-
         if (!existingSession) {
           this.name = uniqueName;
           break;
         }
-
         uniqueName = `${originalName} (${counter})`;
         counter++;
       } catch (error) {
@@ -258,7 +330,6 @@ chatSessionSchema.pre('save', async function (next) {
       }
     }
   }
-
   next();
 });
 // =============================
@@ -352,12 +423,15 @@ const Tool = createModel('Tool', toolSchema);
 const AssistantTool = createModel('AssistantTool', assistantToolSchema);
 const ChatSession = createModel('ChatSession', chatSessionSchema);
 const Assistant = createModel('Assistant', assistantSchema);
-const Message = createModel('ChatMessage', messageSchema);
+const ChatMessage = createModel('ChatMessage', chatMessageSchema);
+const ChatHistory = createModel('Message', chatMessageSchema);
 
 module.exports = {
+  ChatSession,
+  ChatMessage,
+  ChatHistory,
+  Assistant,
   Tool,
   AssistantTool,
-  ChatSession,
-  Assistant,
-  Message,
+  // BaseMessage,
 };

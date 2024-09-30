@@ -5,4 +5,5 @@ module.exports = {
   ...require('./models'),
   ...require('./limits'),
   ...require('./components'),
+  ...require('./scrape'),
 };

@@ -2,7 +2,6 @@ const fs = require('fs').promises;
 const path = require('path');
 const { PineconeStore } = require('@langchain/pinecone');
 const { OpenAIEmbeddings } = require('@langchain/openai');
-const { RecursiveCharacterTextSplitter } = require('langchain/text_splitter');
 const { getPineconeClient } = require('./get');
 const { scrapeCode } = require('@/utils/processing/utils');
 const { logger } = require('@/config/logging');
@@ -19,6 +18,7 @@ const {
   detectFunctionality,
   safeExecute,
 } = require('./utils');
+const { RecursiveCharacterTextSplitter } = require('langchain/text_splitter');
 
 const CHUNK_SIZE = 1000;
 const CHUNK_OVERLAP = 200;
@@ -84,11 +84,11 @@ const upsertDocs = async (req, res) => {
     res.status(200).send(`Successfully upserted ${totalDocs} documents from ${url}`);
   } catch (error) {
     logger.error(`Error upserting documentation: ${error}`, error);
-    res.status(500).send('Error upserting documentation: ' + error.message);
+    res.status(500).send('An error occurred while processing your request.');
   }
 };
-function createFileDocument(filePath, userId, workspaceId, folderId) {
-  const fileStats = fs.stat(filePath);
+const createFileDocument = async (filePath, userId, workspaceId, folderId) => {
+  const fileStats = await fs.stat(filePath);
   const fileName = path.basename(filePath);
   const fileType = path.extname(fileName).slice(1);
 
@@ -108,30 +108,33 @@ function createFileDocument(filePath, userId, workspaceId, folderId) {
       lastModified: fileStats.mtime,
     },
   };
-}
-async function processFilesInParallel(files, vstore, library, url, description) {
-  let processedDocs = 0;
-
+};
+const processFilesInParallel = async (files, vstore, library, url, description) => {
+  const results = [];
   for (let i = 0; i < files.length; i += CONCURRENCY) {
     const batch = files.slice(i, i + CONCURRENCY);
-    const results = await Promise.all(
+    const batchResults = await Promise.all(
       batch.map((file) => processFile(file, vstore, library, url, description))
     );
-    processedDocs += results.reduce((sum, count) => sum + count, 0);
+    results.push(...batchResults);
   }
-
-  return processedDocs;
-}
+  return results.reduce((sum, count) => sum + count, 0);
+};
 
 async function processFile(filePath, vstore, library, url, description) {
-  const { content, fileName } = await readFileContent(filePath);
-  const docs = await createDocuments(content, fileName, library);
+  try {
+    const { content, fileName } = await readFileContent(filePath);
+    const docs = await createDocuments(content, fileName, library);
 
-  logger.info(`Processing ${docs.length} chunks from ${fileName}...`);
+    logger.info(`Processing ${docs.length} chunks from ${fileName}...`);
 
-  await upsertDocuments(vstore, docs, fileName, content, url, description, library);
+    await upsertDocuments(vstore, docs, fileName, content, url, description, library);
 
-  return docs.length;
+    return docs.length;
+  } catch (error) {
+    logger.error(`Error processing file ${filePath}: ${error.message}`);
+    return 0;
+  }
 }
 
 async function readFileContent(filePath) {
@@ -173,12 +176,20 @@ async function upsertDocuments(vstore, docs, fileName, content, url, description
       logger.warn(`No valid documents to upsert for ${fileName}`);
       return;
     }
+
     logger.info(`Upserting ${upsertBatch.length} documents...`);
+    logger.debug(`Upsert batch: ${JSON.stringify(upsertBatch)}`);
+
+    if (!vstore || typeof vstore.addDocuments !== 'function') {
+      throw new Error('Invalid vstore object');
+    }
+
     await vstore.addDocuments(upsertBatch);
     logger.info(`Upserted ${docs.length} chunks from ${fileName}`);
     logger.info(`Metadata: ${JSON.stringify(metadata)}`);
   } catch (error) {
     logger.error(`Error upserting documents for ${fileName}: ${error.message}`);
+    logger.error(`Error stack: ${error.stack}`);
   }
 }
 

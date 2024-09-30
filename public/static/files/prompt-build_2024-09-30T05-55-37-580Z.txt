@@ -1,0 +1,780 @@
+
+    --- CHAT COMPLETION RESPONSE ---
+      --- SYSTEM / ASSISTANT PROMPTS ---
+      | SYSTEM: [
+You are an expert React/Tailwind developer. Your mission is to transform detailed descriptions or images into seamless single-page apps (SPAs) using HTML and TailwindCSS, ensuring adaptability for both light/dark modes and responsiveness across desktop, tablet, and mobile.
+
+*Design Guidelines:*
+- Use placehold.co for placeholder images with descriptive alt text.
+- Implement interactive elements with modern ES6 JavaScript and browser APIs.
+- Reference the following Tailwind-compatible colors for light/dark mode:
+
+```css
+  --background
+  --foreground
+  --primary
+  --border
+  --input
+  --ring
+  --primary-foreground
+  --secondary
+  --secondary-foreground
+  --accent
+  --accent-foreground
+  --destructive
+  --destructive-foreground
+  --muted
+  --muted-foreground
+  --card
+  --card-foreground
+  --popover
+  --popover-foreground
+```
+
+- Match all design details (e.g., background, text, font sizes, padding, margins, etc.).
+- Use exact text and element repetitions based on the description (e.g., no placeholder comments like "repeat items").
+- For images, use descriptive alt attributes and placehold.co URLs (e.g., `<img alt="magic wand" src="https://placehold.co/24x24.svg?text=🪄" />`).
+
+*Libraries:*
+- Include React with:
+```
+<script src="https://registry.npmmirror.com/react/18.2.0/files/umd/react.development.js"></script>
+<script src="https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.development.js"></script>
+<script src="https://registry.npmmirror.com/@babel/standalone/7.23.6/files/babel.js"></script>
+```
+- Include Tailwind with:
+```
+<script src="https://cdn.tailwindcss.com"></script>
+```
+- Optionally use Google Fonts and Font Awesome icons.
+
+*Implementation Rules:*
+1. Provide a complete, functional React/Tailwind SPA within <html></html> tags.
+2. Include necessary scripts for React and Tailwind as specified.
+3. Utilize Google Fonts and Font Awesome when appropriate.
+4. Implement all described features and interactions using React hooks and components.
+5. Use Tailwind classes for styling, leveraging the provided color scheme.
+6. Ensure proper responsive design using Tailwind's responsive utilities.
+7. Implement dark mode toggle functionality.
+8. Use semantic HTML elements and ensure accessibility.
+9. Optimize performance using React best practices.
+10. Provide any necessary custom CSS using Tailwind's @apply directive or inline styles when Tailwind classes are insufficient.
+
+Your response should include:
+1. A brief explanation of the component structure and design decisions.
+2. The complete HTML file with all necessary scripts, styles, and React code.
+
+Return the full code wrapped in `<html></html>`.
+]
+      | ASSISTANT: [
+  ## Assistant Name
+   CodeGenius
+  ## Assistant Job Description
+   **summary:** Code Generation Assistant for React Development
+   **role:** You are an expert React developer with expertise in JavaScript, React, UI/UX, an extensive array of libraries, and frameworks. Specifically, you are a specialized code generation assistant focused on creating sophisticated JavaScript, JSX, and TSX code samples. Your expertise lies in producing components and code snippets with advanced styling and capabilities.
+  ## Assistant Skills
+   - **Programming Languages:** JavaScript, TypeScript
+   - **Frameworks and Libraries:** React, React Native, Node.js, Express, MongoDB, TailwindCSS
+   - **Tools and Technologies:** Git, Visual Studio Code, Webpack, Babel, ESLint, Prettier, Jest, React Testing Library, Cypress, Storybook, Netlify, Vercel, AWS, Azure, Google Cloud, Firebase, and more.
+  ## Assistant Task
+   **summary:** Generate a [COMPONENT_TYPE] component with the following specifications:
+   **details:**
+      1. Language: [JS/JSX/TSX]
+      2. Framework: [React/Next.js/Vue/Angular/etc.]
+      3. Styling: [CSS-in-JS/Styled-Components/Tailwind/SASS/etc.]
+      4. Key Features:
+         - [Feature 1]
+         - [Feature 2]
+         - [Feature 3]
+      5. Advanced Capabilities:
+         - [Capability 1]
+         - [Capability 2]
+   ## Response Requirements
+      1. Provide a complete, working code sample.
+      2. Include advanced styling techniques relevant to the chosen styling method.
+      3. Follow best practices and current industry standards.
+   ## Response Structure
+   Structure your response as follows:
+      1. **Component Explanation**: Provide a clear and concise description of what the component does, why it’s useful, and how it fits into the larger application (2-3 sentences).
+      2. **Code Snippet**: Include a comprehensive code snippet demonstrating the component's functionality, including any necessary imports, props, and state management. This snippet should be well-documented and easy to understand. Ensure the component code is wrapped in ``` code blocks.
+      3. **Citations**: If you reference any documentation or external sources, provide them in a 'References' section at the end.
+   ## Additional Information
+   - The code should be highly modular and reusable.
+   - Utilize advanced styling techniques like CSS-in-JS, Styled Components, or TailwindCSS.
+   - Implement error handling and edge cases to ensure robustness.
+   - Include TypeScript types/interfaces when using TypeScript.
+   - Provide comprehensive usage examples and documentation.
+   - Follow best practices and industry standards for code quality and maintainability.
+   - Implement performance optimizations where applicable.
+   - Wrap all code sections in triple backticks with the appropriate language tag (e.g., ```tsx, ```javascript).
+
+   Remember to adapt your response based on the specific requirements of each query, balancing between simplicity for basic use cases and advanced features for more complex scenarios.
+
+   ## Example Code From Response
+   ```jsx
+   import React from 'react';
+   import PropTypes from 'prop-types';
+   import styles from './MyComponent.module.css';
+   import { useMyHook } from '../hooks/myHook';
+   import { MyContext } from '../context/myContext';
+   import MyIcon from '../icons/MyIcon';
+
+   const MyComponent = ({ prop1, prop2 }) => {
+     const { state, dispatch } = useMyHook();
+     const { data } = useContext(MyContext);
+
+     return (
+       <div className={styles.myComponent}>
+         <MyIcon />
+         <h1>{data.title}</h1>
+         <p>{data.description}</p>
+         {/* Render additional components or content based on props and state */}
+       </div>
+     );
+   };
+   MyComponent.propTypes = {
+     prop1: PropTypes.string.isRequired,
+     prop2: PropTypes.number,
+   };
+
+   export default MyComponent;
+   ```
+  ]
+      ----------------------------------
+      --- USER FORMATTED PROMPT ---
+      | FORMATTED PROMPT: 
+  --- SECTION ONE: MAIN INSTRUCTIONS AND CONTEXT ---
+
+  CHAT HISTORY CONTEXT:
+    USER PROMPT HISTORY:
+      | ________________________________________ 
+      | User Prompts: Generate a reusable icon button component with extensive customizable options
+"content": "# Reusable Icon Button Component with Customizable Options\n\nThe `IconButton` component is designed to provide a highly customizable button experience, focusing on icons. This enables developers to seamlessly integrate it into various parts of an application, such as toolbars, forms, and dialog actions. The component's design prioritizes flexibility in appearance and function, accommodating different states (e.g., loading, disabled) and styles.\n\n## Component Code\n\n```jsx\nimport React from 'react';\nimport styled, { css } from 'styled-components';\nimport { FaSearch } from 'react-icons/fa'; // Example using react-icons\n\nconst buttonStyles = css`\n  background: transparent;\n  border: none;\n  cursor: pointer;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  padding: 8px;\n  border-radius: 50%;\n  transition: background-color 0.3s ease;\n\n  &:hover {\n    background-color: rgba(0, 0, 0, 0.1);\n  }\n\n  &:disabled {\n    cursor:
+"content": "# Dashboard Component for Displaying UI Data\n\nThis React component is designed to display UI data for projects, integrating seamlessly with icons and providing a modern, responsive user experience. Tailored for project management and analytics, it combines interactive elements like charts, calendars, and chat boxes. TailwindCSS ensures a highly customizable and adaptable interface, making it perfect for developers seeking a flexible, efficient way to display complex information.\n\n## Component Code\n\n```javascript\nimport React from 'react';\nimport { Calendar, Chart, ChatBox, Dropdown, DataStats } from 'tailgrids-react';\n\nfunction ProjectDashboard() {\n  return (\n    <div className='flex flex-col h-screen'>\n      <div className='flex flex-row justify-between p-4'>\n        <Calendar />\n        <Chart type='bar' data={projectProgressData} />\n        <ChatBox />\n      </div>\n      <div className='flex flex-row justify-between p-4'>\n        <Dropdown
+w-full mb-4' />\n      <ul>\n        {files.map((file, index) => (\n          <li key={index} className='border-b border-gray-700 p-2'>\n            {file.name}\n          </li>\n        ))}\n      </ul>\n    </div>\n  );\n};\n\nexport default FileDirectorySidebar;\n```   <input t`ype='search' pl**# aceholder='Sea- Search and Filter: Extend the search functionality to use dynamic queries for real-time filtering. This can significantly enhance user experience by providing immediate search results based on input.\n- Theming: Customize the theme colors and components according to the application's dark/light mode. Tailwind CSS offers easy theme management that can be utilized for this purpose.\n- Interactive Elements: Incorporate interactive elements such as dra```jsx\nimport React from 'react';\nimport FileDirectorySidebar from './FileDirectorySidebar';\n\nconst ChatApp = () => {\n  return (\n    <div className='flex'>\n      <FileDirectorySidebar />\n      {/* Place for other
+{"role":"assistant","type":"markdown","content":"To create an advanced styled dialog component in React, leveraging TailwindCSS for styling and incorporating the latest React features and best practices, we will desi### gn a user-friendly dialog that offers a seamless experience for selecting and saving a user icon**. This component fosters a more interactive and customizable user interface within applications. \n\n### Component Purpose and Design Rationale\nThe UserIconDialog component enhances user interaction by providi**ng a ### visually appealing and easy-to-use interface for selecting a user icon. TailwindCSS ensures responsive and adaptive styling, making the dialog aesthetically pleasing across all devices. The component is designe```jsx\nimport React, { useState } from 'react';\nimport { Dialog } from '@headlessui/react';\n\nconst UserIconDialog = () => {\n  const [isOpen, setIsOpen] = useState(false);\n  const [selectedIcon, setSelectedIcon] = useState('');\n\n  const
+    SUMMARY OF CHAT HISTORY:
+      | ________________________________________ 
+      | Main Summary: The chat messages include user requests for generating React components for a file upload progress tracker, a chat prompt response quality rating system, and a data table component for organizing UI library documents in a vector database. Assistant responses provided detailed explanations, code samples, and usage examples for the first two requests. |
+      | Previous 5 User Inquiries Summarized: [Summary 1][id 66fa10728e8ae6b09f1d7b551]: Detailed explanation and code for a React component to visually track file upload progress, including a usage example.
+[Summary 2][id 66fa10548e8ae6b09f1d7b4e1]: User request to generate a file upload progress tracking component.
+[Summary 3][id 66fa0d00b869e1ec40a49e041]: Detailed explanation and code for a React component to rate chat prompt responses, along with a usage example.
+[Summary 4][id 66fa0cddb869e1ec40a49dfd1]: User request to generate a chat prompt response quality rating component.
+[Summary 5][id 66f03c3c2a7bc27b85b47d801]: System-generated task to create a data table component for organizing UI library documents in a vector database. 
+      |
+  CHAT DATA CONTEXT:
+    RELEVANT DATA FROM CUSTOM DOCS:
+      | ________________________________________ 
+      | Custom UI Library DB: 5. **Add Transitions**:
+   - Add "on click" connections to the menu icons for both closed and open variants.
+
+6. **Clean Up & Add to Page**:
+   - Add the component to your page, set the width to 100%, and position as fixed. Adjust the mobile logo variant to just the icon for cleaner design.
+
+### Using ReactJS
+1. **Create Responsive Navbar Component**:
+   - Use a `useMediaQuery` hook to make the navbar responsive. This hook allows you to conditionally render components based on screen sizes.
+
+2. **Mobile Screen Design**:
+   - On mobile screens, use a hamburger icon that toggles the nav links. Implement a state and toggle function to manage this behavior.
+
+3. **CSS for Responsive Navbar**:
+   - Use CSS to change the display property based on screen width. For example, set `display: none` or `block` at desired widths to make the navbar responsive.
+To create a responsive navigation bar with dropdown menus, a logo, and profile/auth UI, you can follow these steps:
+
+1. **Design Strategy**:
+   - Define the hierarchy of pages and identify the most important ones. Limit the top-level navigation to 4-7 items to keep it simple.
+
+2. **Responsive Navbar**:
+   - Use a framework like Bootstrap, which provides a responsive navbar template that can be customized for different devices. This ensures seamless navigation across devices and screen sizes.
+
+3. **Dropdown Menus**:
+   - Implement dropdown menus using Bootstrap's dropdown component. This allows for organized and structured navigation options. For example, you can use the `nav-item dropdown` class and `dropdown-menu` class to create dropdowns.
+
+4. **Logo and Profile/Auth UI**:
+   - Include the logo in the navbar and add a profile/auth UI component. This can be done by adding a `navbar-brand` for the logo and a custom link or button for the profile/auth UI.
+3. **CSS for Responsive Navbar**:
+   - Use CSS to change the display property based on screen width. For example, set `display: none` or `block` at desired widths to make the navbar responsive.
+
+### Using Bootstrap
+1. **Bootstrap Navbar Template**:
+   - Use Bootstrap's navbar template, which is designed to be fully responsive. This ensures seamless navigation across devices and screen sizes.
+   
+2. **Customize Navbar**:
+   - Use Bootstrap's classes and components to customize the navbar. For example, add a max-width to the container to ensure navbar elements do not exceed a certain size.
+   
+3. **Hamburger Button**:
+   - Use the `navbar-toggler` button to toggle the navbar on smaller screens. This button includes a `navbar-toggler-icon` that changes the navbar's layout when clicked.
+
+### Functions and Styles
+1. **Active Link Highlighting**:
+   - Use CSS or React to highlight active links. For example, add a class like `.active` and style it accordingly.
+5. **Mobile Variants**:
+   - Ensure the navbar is responsive by creating mobile variants. This involves vertically stacking the navbar on mobile devices and ensuring that the logo and hamburger menu are properly aligned.
+
+6. **Customization**:
+   - Customize the navbar using Bootstrap's classes and components to achieve the desired appearance and functionality. This includes customizing colors, adding search bars, and integrating other features as needed.
+
+### Example Implementation
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Navbar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+To create a responsive navigation bar that adjusts based on screen size, you can use the following steps and techniques:
+
+### Using Framer
+1. **Create Basic Components**:
+   - Create a logo and hamburger menu components that will reside inside the navbar.
+
+2. **Create Navbar Base**:
+   - Design the navbar as a fixed-height, horizontally stacked container with three parts. This will be the base for both desktop and mobile views.
+
+3. **Add Content Inside Skeleton**:
+   - Ensure the logo container includes both the logo and the hamburger menu. This is crucial for making the navbar responsive.
+
+4. **Create Mobile Variants**:
+   - Create mobile variants for both closed and open states. Vertically stack the parent container, set all children layers to fill width and height, and adjust spacing for the logo container.
+
+5. **Add Transitions**:
+   - Add "on click" connections to the menu icons for both closed and open variants.
+    RELEVANT DATA FROM SEARCH DOCS:
+      | ________________________________________ 
+      | Relevant Perplexity Web Search Results: To create a `ResponsiveNavbarWithDropdownsAndSearch` component that automatically adjusts to various screen sizes, includes multi-level dropdown menus with smooth transition animations, and integrates a search bar with autocomplete functionality, you can combine elements from different frameworks and libraries. Here’s a detailed approach:
+
+### 1. **Base Component Structure**
+Use a framework like React to create the base structure of the navbar. This will help in managing the component's state and handling interactions.
+
+```jsx
+import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import { ReactComponent as Hamburger } from '../../assets/icons/hamburger.svg';
+import { ReactComponent as Brand } from '../../assets/icons/logo.svg';
+
+const Navbar = () => {
+  const [showNavbar, setShowNavbar] = useState(false);
+  const handleShowNavbar = () => {
+    setShowNavbar(!showNavbar);
+  };
+.navbar .search-bar {
+  margin-left: 1rem;
+}
+
+/* Add custom styles for active links and hover effects */
+.navbar .active {
+  background-color: #444;
+}
+
+/* Add custom styles for dropdown menus */
+.dropdown-menu li:hover {
+  background-color: #444;
+}
+```
+
+### 3. **Responsive Design**
+Ensure the navbar is responsive by using media queries or CSS frameworks like Bootstrap or Tailwind CSS.
+
+```css
+/* Using Tailwind CSS */
+@media (max-width: 768px) {
+  .navbar .menu-icon {
+    display: block;
+  }
+  .navbar .menu-links {
+    display: none;
+  }
+  .navbar .menu-links.open {
+    display: block;
+  }
+}
+
+/* Using Bootstrap */
+@media (max-width: 768px) {
+  .navbar .menu-icon {
+    display: block;
+  }
+  .navbar .menu-links {
+    display: none;
+  }
+  .navbar .menu-links.open {
+    display: block;
+  }
+}
+```
+
+### 4. **Smooth Transition Animations**
+Add smooth transition animations using CSS transitions or keyframe animations.
+{/* Add more dropdowns here */}
+          </ul>
+        </div>
+        {/* Search Bar */}
+        <div className="search-bar">
+          <input type="search" placeholder="Search..." />
+          {/* Autocomplete functionality can be added using libraries like React Autosuggest */}
+          {/* Example using React Autosuggest */}
+          {/* import { Autosuggest } from 'react-autosuggest'; */}
+          {/* <Autosuggest {...props} /> */}
+        </div>
+      </div>
+    </nav>
+  );
+};
+export default Navbar;
+```
+
+### 2. **Styling and Customization**
+Use CSS and CSS-in-JS solutions like Tailwind CSS or styled components to customize the navbar's appearance, including background colors, fonts, and active link states.
+
+```css
+.navbar {
+  background-color: #333;
+  padding: 1rem;
+}
+
+.navbar .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar .logo {
+  margin-right: 1rem;
+}
+
+.navbar .menu-icon {
+  cursor: pointer;
+}
+
+.navbar .menu-links {
+  display: none;
+  position: absolute;
+  background-color: #333;
+  padding: 1rem;
+}
+
+.navbar .menu-links.open {
+  display: block;
+}
+
+.navbar .dropdown-menu {
+  display: none;
+  position: absolute;
+  background-color: #333;
+  padding: 1rem;
+}
+
+.navbar .dropdown-menu li {
+  margin-bottom: 0.5rem;
+}
+
+.navbar .search-bar {
+  margin-left: 1rem;
+}
+
+/* Add custom styles for active links and hover effects */
+.navbar .active {
+  background-color: #444;
+}
+return (
+    <nav className="navbar">
+      <div className="container">
+        <div className="logo">
+          <Brand />
+        </div>
+        <div className="menu-icon" onClick={handleShowNavbar}>
+          <Hamburger />
+        </div>
+        <div className={`menu-links ${showNavbar ? 'open' : ''}`}>
+          {/* Main Navigation Links */}
+          <ul>
+            <li><NavLink to="/home">Home</NavLink></li>
+            <li><NavLink to="/about">About</NavLink></li>
+            {/* Add more links here */}
+          </ul>
+          {/* Dropdown Menu */}
+          <ul className="dropdown-menu">
+            <li><NavLink to="/dropdown1">Dropdown 1</NavLink></li>
+            <li><NavLink to="/dropdown2">Dropdown 2</NavLink></li>
+            {/* Add more dropdowns here */}
+          </ul>
+        </div>
+        {/* Search Bar */}
+        <div className="search-bar">
+          <input type="search" placeholder="Search..." />
+      | Raw Perplexity Search Results Data: 
+      | -- Results: To create a `ResponsiveNavbarWithDropdownsAndSearch` component that automatically adjusts to various screen sizes, includes multi-level dropdown menus with smooth transition animations, and integrates a search bar with autocomplete functionality, you can combine elements from different frameworks and libraries. Here’s a detailed approach:
+
+### 1. **Base Component Structure**
+Use a framework like React to create the base structure of the navbar. This will help in managing the component's state and handling interactions.
+
+```jsx
+import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import { ReactComponent as Hamburger } from '../../assets/icons/hamburger.svg';
+import { ReactComponent as Brand } from '../../assets/icons/logo.svg';
+
+const Navbar = () => {
+  const [showNavbar, setShowNavbar] = useState(false);
+  const handleShowNavbar = () => {
+    setShowNavbar(!showNavbar);
+  };
+
+  return (
+    <nav className="navbar">
+      <div className="container">
+        <div className="logo">
+          <Brand />
+        </div>
+        <div className="menu-icon" onClick={handleShowNavbar}>
+          <Hamburger />
+        </div>
+        <div className={`menu-links ${showNavbar ? 'open' : ''}`}>
+          {/* Main Navigation Links */}
+          <ul>
+            <li><NavLink to="/home">Home</NavLink></li>
+            <li><NavLink to="/about">About</NavLink></li>
+            {/* Add more links here */}
+          </ul>
+          {/* Dropdown Menu */}
+          <ul className="dropdown-menu">
+            <li><NavLink to="/dropdown1">Dropdown 1</NavLink></li>
+            <li><NavLink to="/dropdown2">Dropdown 2</NavLink></li>
+            {/* Add more dropdowns here */}
+          </ul>
+        </div>
+        {/* Search Bar */}
+        <div className="search-bar">
+          <input type="search" placeholder="Search..." />
+          {/* Autocomplete functionality can be added using libraries like React Autosuggest */}
+          {/* Example using React Autosuggest */}
+          {/* import { Autosuggest } from 'react-autosuggest'; */}
+          {/* <Autosuggest {...props} /> */}
+        </div>
+      </div>
+    </nav>
+  );
+};
+
+export default Navbar;
+```
+
+### 2. **Styling and Customization**
+Use CSS and CSS-in-JS solutions like Tailwind CSS or styled components to customize the navbar's appearance, including background colors, fonts, and active link states.
+
+```css
+.navbar {
+  background-color: #333;
+  padding: 1rem;
+}
+
+.navbar .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar .logo {
+  margin-right: 1rem;
+}
+
+.navbar .menu-icon {
+  cursor: pointer;
+}
+
+.navbar .menu-links {
+  display: none;
+  position: absolute;
+  background-color: #333;
+  padding: 1rem;
+}
+
+.navbar .menu-links.open {
+  display: block;
+}
+
+.navbar .dropdown-menu {
+  display: none;
+  position: absolute;
+  background-color: #333;
+  padding: 1rem;
+}
+
+.navbar .dropdown-menu li {
+  margin-bottom: 0.5rem;
+}
+
+.navbar .search-bar {
+  margin-left: 1rem;
+}
+
+/* Add custom styles for active links and hover effects */
+.navbar .active {
+  background-color: #444;
+}
+
+/* Add custom styles for dropdown menus */
+.dropdown-menu li:hover {
+  background-color: #444;
+}
+```
+
+### 3. **Responsive Design**
+Ensure the navbar is responsive by using media queries or CSS frameworks like Bootstrap or Tailwind CSS.
+
+```css
+/* Using Tailwind CSS */
+@media (max-width: 768px) {
+  .navbar .menu-icon {
+    display: block;
+  }
+  .navbar .menu-links {
+    display: none;
+  }
+  .navbar .menu-links.open {
+    display: block;
+  }
+}
+
+/* Using Bootstrap */
+@media (max-width: 768px) {
+  .navbar .menu-icon {
+    display: block;
+  }
+  .navbar .menu-links {
+    display: none;
+  }
+  .navbar .menu-links.open {
+    display: block;
+  }
+}
+```
+
+### 4. **Smooth Transition Animations**
+Add smooth transition animations using CSS transitions or keyframe animations.
+
+```css
+/* Using CSS transitions */
+.navbar .menu-links {
+  transition: all 0.3s ease-in-out;
+}
+
+.navbar .dropdown-menu {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Using CSS keyframe animations */
+@keyframes slideIn {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.navbar .menu-links {
+  animation: slideIn 0.3s ease-in-out
+      | -- References: 
+    ADDITIONAL DATA:
+      | ________________________________________ 
+      | Keywords: ResponsiveNavbarWithDropdownsAndSearch, automatically adjusts, screen sizes, multi-level dropdown menus, smooth transition animations, search bar, autocomplete functionality, styling customization, background colors, fonts, active link states
+      | UI Libraries: React
+      | JS Libraries: React
+      | Component Types: ResponsiveNavbarWithDropdownsAndSearch
+      | Documentation Content: 
+
+  --- SECTION TWO: USER PROMPT/QUERY ---
+
+  USER PROMPT/QUERY: Create a ResponsiveNavbarWithDropdownsAndSearch component that automatically adjusts to various screen sizes, includes multi-level dropdown menus with smooth transition animations, and integrates a search bar with autocomplete functionality. Ensure the component supports extensive styling customization for background colors, fonts, and active link states.
+  EXTRACTED KEYWORDS: ResponsiveNavbarWithDropdownsAndSearch, automatically adjusts, screen sizes, multi-level dropdown menus, smooth transition animations, search bar, autocomplete functionality, styling customization, background colors, fonts, active link states
+
+  --- SECTION THREE: FINAL INSTRUCTIONS ---
+
+  Based on the user's query, extracted information, and the provided context, please generate a response following the instructions given in the system and assistant messages. 
+  Ensure that your answer is comprehensive, professional, and tailored to creating high-quality React styled components. 
+  Please ensure your response includes:
+
+  1. A brief explanation of the component's purpose and design rationale
+  2. The full React component code, utilizing the latest React features and best practices
+  3. Examples of how to use and customize the component
+
+  --- SECTION FOUR: RESPONSE FORMATTING INSTRUCTIONS ---
+  
+--- BEGINNING OF RESPONSE FORMATTING INSTRUCTIONS ---
+
+## FORMATTING GUIDE
+Use this guide to format messages using Markdown syntax. Return final response as JSON:
+{ "content": "Your Markdown formatted message", "type": "markdown", "references": ["Array of reference strings"] }
+
+## MARKDOWN ELEMENTS GUIDE: 
+Use the following guide to format messages using Markdown syntax. This includes headings, text formatting, lists, links, images, blockquotes, code blocks, and more. Ensure to apply the appropriate syntax for the desired formatting.
+
+### Headings
+
+# H1
+## H2
+### H3
+#### H4
+##### H5
+###### H6
+
+### Text Formatting
+
+- **Bold**: **bold** or '__bold__'
+- *Italic*: *italic* or '_italic_'
+- ***Bold and Italic***: '***bold and italic***'
+- ~~Strikethrough~~: '~~strikethrough~~'
+- Inline Code: 'inline code'
+- Blockquote: '> Blockquote'
+
+### Lists
+
+1. Numbered List
+   1. Indented Item
+
+- Bullet List
+  - Indented Item
+
+- [ ] Unchecked Task
+- [x] Checked Task
+
+### Links and Images
+
+- [Hyperlink](https://example.com): '[link text](URL)'
+- ![Image](https://via.placeholder.com/150): '![alt text](URL)'
+
+### Blockquotes
+
+> Blockquote
+> > Nested Quote
+
+### Code Blocks
+
+```language 
+const myVariable = 'Hello, World!';
+console.log(myVariable);
+```
+
+### Horizontal Rule
+---
+
+### Escape Special Characters
+Use a single backslash '\' before the character to escape it.
+- Example (two are used for purposes of escaping it for this template): \# Not a Heading
+
+### Tables
+
+| Header 1 | Header 2 |
+|----------|----------|
+| Cell 1 | Cell 2 |
+
+### Special Elements:
+- Superscript: E = mc^2
+- Subscript: H~2~O
+- Table of Contents: [TOC]
+- Footnotes: [^1] and [^1]:
+- Definition Lists: Term : Definition
+- Abbreviations: *[HTML]: Hyper Text Markup Language
+- Highlight: ==highlighted text==
+- Custom Containers: ::: warning *Here be dragons* :::
+- Emoji: :emoji_name:
+
+### HTML Format
+All of these markdowns (or at least most) can be converted into the format. For example, if you needed Heading (level 1), you can use the "<h1> </h1>” trick, which would be this: "<h1>Heading level 1</h1>". This works for most Markdown parsers.
+
+### Mermaid Diagram
+You can use Mermaid to create diagrams. For example:
+```mermaid
+ diagram_type
+ diagram_code
+```
+For instance, this is a Mermaid diagram:
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+    subgraph "My Subgraph"
+        A-->B;
+        C-->D;
+```
+
+### Citations
+ Inline: [@AuthorYear]
+ References section:
+ [@AuthorYear]: Author, A. (Year). Title. Source. URL
+
+### Escape Characters
+You can escape special characters with a backslash \. For example, \* will result in a literal asterisk (*), not a bullet list.
+
+## Additional Styling Instructions
+- Ensure that any `mark` or highlighted text is styled with responsive width by applying flexbox styles or an equivalent method. This will allow the text to be responsive when resizing the window. For example, wrap the `mark` element within a `div` or `span` styled with `display: flex;` and `flex-wrap: wrap;` or similar responsive styles.
+
+## Response Format
+Return the final response as json:
+
+{
+  "content": "Your Markdown formatted message with citations",
+  "type": "markdown",
+  "references": ["Array of reference strings"]
+}
+
+## Example Response
+Below is an example (sample uses escape characters for formatting, but ensure to use the appropriate Markdown syntax for your use case):
+
+```json
+{
+"content": "# Custom Button Component
+
+## Explanation
+This component is a reusable button designed to follow Material UI styling conventions. It supports customization via props like 'color', 'size', and 'onClick' handler.
+
+## Code
+```jsx
+import React from 'react';
+import Button from '@mui/material/Button';
+
+const CustomButton = ({ color = 'primary', size = 'medium', onClick }) => (
+  <Button variant="contained" color={color} size={size} onClick={onClick}>
+    Click Me
+  </Button>
+);
+
+export default CustomButton;
+```
+
+## Usage Example
+```jsx
+// Usage in a parent component
+import CustomButton from './CustomButton';
+
+const ParentComponent = () => (
+  <CustomButton color="secondary" size="large" onClick={() => alert('Button clicked!')} />
+);
+
+export default ParentComponent;
+```
+
+## References
+[@MaterialUI2023]: Material UI. (2023). Button API. Material UI Documentation. https://mui.com/components/buttons/",
+"type": "markdown",
+"references": ["[@MaterialUI2023]: Material UI. (2023). Button API. Material UI Documentation. https://mui.com/components/buttons/"]
+}
+```
+--- END OF RESPONSE FORMATTING INSTRUCTIONS ---
+
+
+  --- END OF SECTIONS ---
+  
+      -----------------------------
+    --------------------------------
+  

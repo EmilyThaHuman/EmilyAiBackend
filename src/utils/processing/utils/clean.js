@@ -1,3 +1,5 @@
+const { logger } = require('@/config/logging');
+
 function cleanWhitespace(code) {
   return code.trim();
 }
@@ -71,98 +73,62 @@ function cleanCodeSnippetGeneral(snippet) {
     code,
   };
 }
+/**
+ * Cleans and formats a code snippet by removing unnecessary elements and standardizing whitespace.
+ *
+ * @param {*} code - The code snippet to clean. Should be a string, but will be converted if not.
+ * @returns {string} The cleaned and formatted code snippet.
+ *
+ * @description
+ * This function performs the following operations:
+ * 1. Converts non-string input to string.
+ * 2. Removes "Copy" and "Copy(or ⌘C)" text from the beginning and end.
+ * 3. Removes "Press Enter to start editing" and subsequent text.
+ * 4. Removes JSDoc comments and specific React component styles.
+ * 5. Removes all comments (both multi-line and single-line).
+ * 6. Removes duplicate PopupState components.
+ * 7. Removes duplicate code snippets (specific to these examples).
+ * 8. Removes leading and trailing whitespace from each line.
+ * 9. Reduces multiple consecutive newlines to a single newline.
+ * 10. Removes leading spaces from each line.
+ * 11. Replaces tabs with two spaces.
+ * 12. Reduces multiple consecutive spaces to a single space.
+ * 13. Trims leading and trailing whitespace from the entire string.
+ */
 const cleanCodeSnippetMain = (code) => {
-  return code
-    .replace(/^Copy(\(or ⌘C\))?\s*|\s*Copy(Copied)?\(or ⌘C\)\s*$/g, '')
-    .replace(/Press Enter to start editing.*$/, '')
-    .replace(/\/\*\*[\s\S]*?\*\/|\.npm__react-simple-code-editor__[\s\S]*?}\s*}/g, '')
-    .replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '')
-    .replace(/(<PopupState[\s\S]*?<\/PopupState>)[\s\S]*\1/g, '$1')
-    .replace(/^\s*[\r\n]/gm, '')
-    .replace(/^\s+|\s+$/g, '')
-    .replace(/\n{2,}/g, '\n')
-    .replace(/^\s+/gm, '')
-    .replace(/\t/g, '  ')
-    .replace(/\s{2,}/g, ' ')
-    .trim();
+  // Convert non-string input to string
+  if (typeof code !== 'string') {
+    logger.warn('Input to cleanCodeSnippetMain is not a string. Converting to string.');
+    code = String(code);
+  }
+  return (
+    code
+      // Remove "Copy" text
+      .replace(/^Copy(\(or ⌘C\))?\s*|\s*Copy(Copied)?\(or ⌘C\)\s*$/g, '')
+      // Remove "Press Enter to start editing" text
+      .replace(/Press Enter to start editing.*$/, '')
+      // Remove JSDoc comments and specific React component styles
+      .replace(/\/\*\*[\s\S]*?\*\/|\.npm__react-simple-code-editor__[\s\S]*?}\s*}/g, '')
+      // Remove all comments
+      .replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '')
+      // Remove duplicate PopupState components
+      .replace(/(<PopupState[\s\S]*?<\/PopupState>)[\s\S]*\1/g, '$1')
+      // Remove empty lines
+      .replace(/^\s*[\r\n]/gm, '')
+      // Remove leading and trailing whitespace from each line
+      .replace(/^\s+|\s+$/g, '')
+      // Reduce multiple newlines to a single newline
+      .replace(/\n{2,}/g, '\n')
+      // Remove leading spaces from each line
+      .replace(/^\s+/gm, '')
+      // Replace tabs with two spaces
+      .replace(/\t/g, '  ')
+      // Reduce multiple spaces to a single space
+      .replace(/\s{2,}/g, ' ')
+      // Trim leading and trailing whitespace from the entire string
+      .trim()
+  );
 };
-function formatReactCode(code) {
-  // Remove duplicate code if present
-  code = code.replace(/^(import[\s\S]*?export default function [^(]+\(\) {[\s\S]*?})\1$/, '$1');
-
-  // Split the code into lines
-  let lines = code.trim().split('\n');
-
-  // Initialize variables
-  let formattedLines = [];
-  let indentLevel = 0;
-  const indentSize = 2;
-
-  // Helper function to add indentation
-  const indent = (level) => ' '.repeat(level * indentSize);
-
-  // Process each line
-  lines.forEach((line, index) => {
-    line = line.trim();
-
-    // Decrease indent for closing brackets and tags
-    if (
-      line.startsWith('}') ||
-      line.startsWith(')') ||
-      line.startsWith('/>') ||
-      line === '</div>'
-    ) {
-      indentLevel--;
-    }
-
-    // Special case for self-closing tags
-    if (line.endsWith('/>') && !line.startsWith('<')) {
-      indentLevel--;
-    }
-
-    // Add the line with proper indentation
-    formattedLines.push(indent(indentLevel) + line);
-
-    // Increase indent for opening brackets and tags
-    if (line.endsWith('{') || line.endsWith('(') || line.endsWith('>') || line === '<div>') {
-      indentLevel++;
-    }
-
-    // Special case for props spanning multiple lines
-    if (
-      line.includes('=') &&
-      !line.includes('=>') &&
-      !line.endsWith('"') &&
-      !line.endsWith("'") &&
-      !line.endsWith('/>')
-    ) {
-      indentLevel++;
-    }
-
-    // Decrease indent after the last prop
-    if (line.endsWith('"') || line.endsWith("'")) {
-      if (
-        lines[index + 1] &&
-        (lines[index + 1].trim().startsWith('/>') || lines[index + 1].trim().startsWith('>'))
-      ) {
-        indentLevel--;
-      }
-    }
-  });
-
-  // Reconstruct the formatted code
-  const imports = code.match(/^import[\s\S]*?(?=export)/);
-  const functionMatch = code.match(/export default function (\w+)/);
-  const functionName = functionMatch ? functionMatch[1] : 'Component';
-
-  const formattedCode = `${imports ? imports[0].trim() : ''}
-
-export default function ${functionName}() {
-${formattedLines.join('\n')}
-}`.trim();
-
-  return formattedCode;
-}
 
 module.exports = {
   cleanWhitespace,
@@ -173,5 +139,4 @@ module.exports = {
   removeHtmlTags,
   cleanCodeSnippetGeneral,
   cleanCodeSnippetMain,
-  formatReactCode,
 };

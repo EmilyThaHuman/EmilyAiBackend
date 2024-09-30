@@ -7,7 +7,7 @@ const { logger } = require('@/config/logging');
 const { getEnv } = require('@/utils/api');
 // eslint-disable-next-line no-unused-vars
 const { File } = require('@/models');
-const { GridFSBucket } = require('mongodb');
+const { GridFSBucket, MongoClient } = require('mongodb');
 
 let bucket;
 let connectionPool;
@@ -280,6 +280,28 @@ const getDB = async () => {
   }
   return mongoose.connection;
 };
+let client;
+
+/**
+ * Gets the MongoDB client, connecting if necessary.
+ * @async
+ * @function getMongoClient
+ * @returns {MongoClient} MongoDB client
+ */
+const getMongoClient = async () => {
+  if (!client) {
+    try {
+      const connectionString = getEnv('MONGODB_URI');
+      client = new MongoClient(connectionString);
+      await client.connect();
+      logger.info('MongoDB client connected successfully');
+    } catch (error) {
+      logger.error(`Error connecting to MongoDB: ${error.message}`);
+      throw error;
+    }
+  }
+  return client;
+};
 const getBucket = () => {
   if (!bucket) {
     throw new Error(
@@ -344,6 +366,7 @@ module.exports = {
   connectDB,
   getDB,
   getBucket,
+  getMongoClient,
   disconnectDB,
   upload,
   handleUploadError,

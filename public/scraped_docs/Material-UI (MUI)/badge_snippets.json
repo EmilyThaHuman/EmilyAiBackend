@@ -1,0 +1,122 @@
+[
+  {
+    "component": "Badge",
+    "url": "https://mui.com/material-ui/react-badge/",
+    "codeType": "Import Statement",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Badge",
+    "code": "import * as React from 'react';\nimport Badge from '@mui/material/Badge';\nimport MailIcon from '@mui/icons-material/Mail';\nexport default function SimpleBadge() {\nreturn (\n<Badge badgeContent={4} color=\"primary\">\n<MailIcon color=\"action\" />\n</Badge>\n);\n}import * as React from 'react';\nimport Badge from '@mui/material/Badge';\nimport MailIcon from '@mui/icons-material/Mail';\nexport default function SimpleBadge() {\nreturn (\n<Badge badgeContent={4} color=\"primary\">\n<MailIcon color=\"action\" />\n</Badge>\n);\n}",
+    "language": "jsx",
+    "description": "",
+    "sequence": 1
+  },
+  {
+    "component": "Badge",
+    "url": "https://mui.com/material-ui/react-badge/",
+    "codeType": "Import Statement",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Badge",
+    "code": "import * as React from 'react';\nimport Badge from '@mui/material/Badge';\nimport Stack from '@mui/material/Stack';\nimport MailIcon from '@mui/icons-material/Mail';\nexport default function ColorBadge() {\nreturn (\n<Stack spacing={2} direction=\"row\">\n<Badge badgeContent={4} color=\"secondary\">\n<MailIcon color=\"action\" />\n</Badge>\n<Badge badgeContent={4} color=\"success\">\n<MailIcon color=\"action\" />\n</Badge>\n</Stack>\n);\n}import * as React from 'react';\nimport Badge from '@mui/material/Badge';\nimport Stack from '@mui/material/Stack';\nimport MailIcon from '@mui/icons-material/Mail';\nexport default function ColorBadge() {\nreturn (\n<Stack spacing={2} direction=\"row\">\n<Badge badgeContent={4} color=\"secondary\">\n<MailIcon color=\"action\" />\n</Badge>\n<Badge badgeContent={4} color=\"success\">\n<MailIcon color=\"action\" />\n</Badge>\n</Stack>\n);\n}",
+    "language": "jsx",
+    "description": "",
+    "sequence": 2
+  },
+  {
+    "component": "Badge",
+    "url": "https://mui.com/material-ui/react-badge/",
+    "codeType": "Import Statement",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Badge",
+    "code": "import * as React from 'react';\nimport Badge, { BadgeProps } from '@mui/material/Badge';\nimport { styled } from '@mui/material/styles';\nimport IconButton from '@mui/material/IconButton';\nimport ShoppingCartIcon from '@mui/icons-material/ShoppingCart';\nconst StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({\n'& .MuiBadge-badge': {\nright: -3,\ntop: 13,\nborder: `2px solid ${theme.palette.background.paper}`,\npadding: '0 4px',\n},\n}));\nexport default function CustomizedBadges() {\nreturn (\n<IconButton aria-label=\"cart\">\n<StyledBadge badgeContent={4} color=\"secondary\">\n<ShoppingCartIcon />\n</StyledBadge>\n</IconButton>\n);\n}import * as React from 'react';\nimport Badge, { BadgeProps } from '@mui/material/Badge';\nimport { styled } from '@mui/material/styles';\nimport IconButton from '@mui/material/IconButton';\nimport ShoppingCartIcon from '@mui/icons-material/ShoppingCart';\nconst StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({\n'& .MuiBadge-badge': {\nright: -3,\ntop: 13,\nborder: `2px solid ${theme.palette.background.paper}`,\npadding: '0 4px',\n},\n}));\nexport default function CustomizedBadges() {\nreturn (\n<IconButton aria-label=\"cart\">\n<StyledBadge badgeContent={4} color=\"secondary\">\n<ShoppingCartIcon />\n</StyledBadge>\n</IconButton>\n);\n}",
+    "language": "jsx",
+    "description": "",
+    "sequence": 3
+  },
+  {
+    "component": "Badge",
+    "url": "https://mui.com/material-ui/react-badge/",
+    "codeType": "Import Statement",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Badge",
+    "code": "import * as React from 'react';\nimport Box from '@mui/material/Box';\nimport Badge from '@mui/material/Badge';\nimport ButtonGroup from '@mui/material/ButtonGroup';\nimport Button from '@mui/material/Button';\nimport AddIcon from '@mui/icons-material/Add';\nimport RemoveIcon from '@mui/icons-material/Remove';\nimport MailIcon from '@mui/icons-material/Mail';\nimport Switch from '@mui/material/Switch';\nimport FormControlLabel from '@mui/material/FormControlLabel';\nexport default function BadgeVisibility() {\nconst [count, setCount] = React.useState(1);\nconst [invisible, setInvisible] = React.useState(false);\nconst handleBadgeVisibility = () => {\nsetInvisible(!invisible);\n};\nreturn (\n<Box\nsx={{\ncolor: 'action.active',\ndisplay: 'flex',\nflexDirection: 'column',\n'& > *': {\nmarginBottom: 2,\n},\n'& .MuiBadge-root': {\nmarginRight: 4,\n},\n}}\n>\n<div>\n<Badge color=\"secondary\" badgeContent={count}>\n<MailIcon />\n</Badge>\n<ButtonGroup>\n<Button\naria-label=\"reduce\"\nonClick={() => {\nsetCount(Math.max(count - 1, 0));\n}}\n>\n<RemoveIcon fontSize=\"small\" />\n</Button>\n<Button\naria-label=\"increase\"\nonClick={() => {\nsetCount(count + 1);\n}}\n>\n<AddIcon fontSize=\"small\" />\n</Button>\n</ButtonGroup>\n</div>\n<div>\n<Badge color=\"secondary\" variant=\"dot\" invisible={invisible}>\n<MailIcon />\n</Badge>\n<FormControlLabel\nsx={{ color: 'text.primary' }}\ncontrol={<Switch checked={!invisible} onChange={handleBadgeVisibility} />}\nlabel=\"Show Badge\"\n/>\n</div>\n</Box>\n);\n}import * as React from 'react';\nimport Box from '@mui/material/Box';\nimport Badge from '@mui/material/Badge';\nimport ButtonGroup from '@mui/material/ButtonGroup';\nimport Button from '@mui/material/Button';\nimport AddIcon from '@mui/icons-material/Add';\nimport RemoveIcon from '@mui/icons-material/Remove';\nimport MailIcon from '@mui/icons-material/Mail';\nimport Switch from '@mui/material/Switch';\nimport FormControlLabel from '@mui/material/FormControlLabel';\nexport default function BadgeVisibility() {\nconst [count, setCount] = React.useState(1);\nconst [invisible, setInvisible] = React.useState(false);\nconst handleBadgeVisibility = () => {\nsetInvisible(!invisible);\n};\nreturn (\n<Box\nsx={{\ncolor: 'action.active',\ndisplay: 'flex',\nflexDirection: 'column',\n'& > *': {\nmarginBottom: 2,\n},\n'& .MuiBadge-root': {\nmarginRight: 4,\n},\n}}\n>\n<div>\n<Badge color=\"secondary\" badgeContent={count}>\n<MailIcon />\n</Badge>\n<ButtonGroup>\n<Button\naria-label=\"reduce\"\nonClick={() => {\nsetCount(Math.max(count - 1, 0));\n}}\n>\n<RemoveIcon fontSize=\"small\" />\n</Button>\n<Button\naria-label=\"increase\"\nonClick={() => {\nsetCount(count + 1);\n}}\n>\n<AddIcon fontSize=\"small\" />\n</Button>\n</ButtonGroup>\n</div>\n<div>\n<Badge color=\"secondary\" variant=\"dot\" invisible={invisible}>\n<MailIcon />\n</Badge>\n<FormControlLabel\nsx={{ color: 'text.primary' }}\ncontrol={<Switch checked={!invisible} onChange={handleBadgeVisibility} />}\nlabel=\"Show Badge\"\n/>\n</div>\n</Box>\n);\n}",
+    "language": "jsx",
+    "description": "",
+    "sequence": 4
+  },
+  {
+    "component": "Badge",
+    "url": "https://mui.com/material-ui/react-badge/",
+    "codeType": "Import Statement",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Badge",
+    "code": "import * as React from 'react';\nimport Stack from '@mui/material/Stack';\nimport Badge from '@mui/material/Badge';\nimport MailIcon from '@mui/icons-material/Mail';\nexport default function ShowZeroBadge() {\nreturn (\n<Stack spacing={4} direction=\"row\" sx={{ color: 'action.active' }}>\n<Badge color=\"secondary\" badgeContent={0}>\n<MailIcon />\n</Badge>\n<Badge color=\"secondary\" badgeContent={0} showZero>\n<MailIcon />\n</Badge>\n</Stack>\n);\n}import * as React from 'react';\nimport Stack from '@mui/material/Stack';\nimport Badge from '@mui/material/Badge';\nimport MailIcon from '@mui/icons-material/Mail';\nexport default function ShowZeroBadge() {\nreturn (\n<Stack spacing={4} direction=\"row\" sx={{ color: 'action.active' }}>\n<Badge color=\"secondary\" badgeContent={0}>\n<MailIcon />\n</Badge>\n<Badge color=\"secondary\" badgeContent={0} showZero>\n<MailIcon />\n</Badge>\n</Stack>\n);\n}",
+    "language": "jsx",
+    "description": "",
+    "sequence": 5
+  },
+  {
+    "component": "Badge",
+    "url": "https://mui.com/material-ui/react-badge/",
+    "codeType": "Import Statement",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Badge",
+    "code": "import * as React from 'react';\nimport Stack from '@mui/material/Stack';\nimport Badge from '@mui/material/Badge';\nimport MailIcon from '@mui/icons-material/Mail';\nexport default function BadgeMax() {\nreturn (\n<Stack spacing={4} direction=\"row\" sx={{ color: 'action.active' }}>\n<Badge color=\"secondary\" badgeContent={99}>\n<MailIcon />\n</Badge>\n<Badge color=\"secondary\" badgeContent={100}>\n<MailIcon />\n</Badge>\n<Badge color=\"secondary\" badgeContent={1000} max={999}>\n<MailIcon />\n</Badge>\n</Stack>\n);\n}import * as React from 'react';\nimport Stack from '@mui/material/Stack';\nimport Badge from '@mui/material/Badge';\nimport MailIcon from '@mui/icons-material/Mail';\nexport default function BadgeMax() {\nreturn (\n<Stack spacing={4} direction=\"row\" sx={{ color: 'action.active' }}>\n<Badge color=\"secondary\" badgeContent={99}>\n<MailIcon />\n</Badge>\n<Badge color=\"secondary\" badgeContent={100}>\n<MailIcon />\n</Badge>\n<Badge color=\"secondary\" badgeContent={1000} max={999}>\n<MailIcon />\n</Badge>\n</Stack>\n);\n}",
+    "language": "jsx",
+    "description": "",
+    "sequence": 6
+  },
+  {
+    "component": "Badge",
+    "url": "https://mui.com/material-ui/react-badge/",
+    "codeType": "Import Statement",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Badge",
+    "code": "import * as React from 'react';\nimport Box from '@mui/material/Box';\nimport Badge from '@mui/material/Badge';\nimport MailIcon from '@mui/icons-material/Mail';\nexport default function DotBadge() {\nreturn (\n<Box sx={{ color: 'action.active' }}>\n<Badge color=\"secondary\" variant=\"dot\">\n<MailIcon />\n</Badge>\n</Box>\n);\n}import * as React from 'react';\nimport Box from '@mui/material/Box';\nimport Badge from '@mui/material/Badge';\nimport MailIcon from '@mui/icons-material/Mail';\nexport default function DotBadge() {\nreturn (\n<Box sx={{ color: 'action.active' }}>\n<Badge color=\"secondary\" variant=\"dot\">\n<MailIcon />\n</Badge>\n</Box>\n);\n}",
+    "language": "jsx",
+    "description": "",
+    "sequence": 7
+  },
+  {
+    "component": "Badge",
+    "url": "https://mui.com/material-ui/react-badge/",
+    "codeType": "Import Statement",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Badge",
+    "code": "import * as React from 'react';\nimport Box from '@mui/material/Box';\nimport Stack from '@mui/material/Stack';\nimport Badge from '@mui/material/Badge';\nconst shapeStyles = { bgcolor: 'primary.main', width: 40, height: 40 };\nconst shapeCircleStyles = { borderRadius: '50%' };\nconst rectangle = <Box component=\"span\" sx={shapeStyles} />;\nconst circle = (\n<Box component=\"span\" sx={{ ...shapeStyles, ...shapeCircleStyles }} />\n);\nexport default function BadgeOverlap() {\nreturn (\n<Stack spacing={3} direction=\"row\">\n<Badge color=\"secondary\" badgeContent=\" \">\n{rectangle}\n</Badge>\n<Badge color=\"secondary\" badgeContent=\" \" variant=\"dot\">\n{rectangle}\n</Badge>\n<Badge color=\"secondary\" overlap=\"circular\" badgeContent=\" \">\n{circle}\n</Badge>\n<Badge color=\"secondary\" overlap=\"circular\" badgeContent=\" \" variant=\"dot\">\n{circle}\n</Badge>\n</Stack>\n);\n}import * as React from 'react';\nimport Box from '@mui/material/Box';\nimport Stack from '@mui/material/Stack';\nimport Badge from '@mui/material/Badge';\nconst shapeStyles = { bgcolor: 'primary.main', width: 40, height: 40 };\nconst shapeCircleStyles = { borderRadius: '50%' };\nconst rectangle = <Box component=\"span\" sx={shapeStyles} />;\nconst circle = (\n<Box component=\"span\" sx={{ ...shapeStyles, ...shapeCircleStyles }} />\n);\nexport default function BadgeOverlap() {\nreturn (\n<Stack spacing={3} direction=\"row\">\n<Badge color=\"secondary\" badgeContent=\" \">\n{rectangle}\n</Badge>\n<Badge color=\"secondary\" badgeContent=\" \" variant=\"dot\">\n{rectangle}\n</Badge>\n<Badge color=\"secondary\" overlap=\"circular\" badgeContent=\" \">\n{circle}\n</Badge>\n<Badge color=\"secondary\" overlap=\"circular\" badgeContent=\" \" variant=\"dot\">\n{circle}\n</Badge>\n</Stack>\n);\n}",
+    "language": "jsx",
+    "description": "",
+    "sequence": 8
+  },
+  {
+    "component": "Badge",
+    "url": "https://mui.com/material-ui/react-badge/",
+    "codeType": "Unknown",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Badge",
+    "code": "<Badge\nanchorOrigin={{\nvertical: 'top',\nhorizontal: 'right',\n}}\n>",
+    "language": "jsx",
+    "description": "",
+    "sequence": 9
+  },
+  {
+    "component": "Badge",
+    "url": "https://mui.com/material-ui/react-badge/",
+    "codeType": "Import Statement",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Badge",
+    "code": "import * as React from 'react';\nimport IconButton from '@mui/material/IconButton';\nimport Badge from '@mui/material/Badge';\nimport MailIcon from '@mui/icons-material/Mail';\nfunction notificationsLabel(count: number) {\nif (count === 0) {\nreturn 'no notifications';\n}\nif (count > 99) {\nreturn 'more than 99 notifications';\n}\nreturn `${count} notifications`;\n}\nexport default function AccessibleBadges() {\nreturn (\n<IconButton aria-label={notificationsLabel(100)}>\n<Badge badgeContent={100} color=\"secondary\">\n<MailIcon />\n</Badge>\n</IconButton>\n);\n}import * as React from 'react';\nimport IconButton from '@mui/material/IconButton';\nimport Badge from '@mui/material/Badge';\nimport MailIcon from '@mui/icons-material/Mail';\nfunction notificationsLabel(count: number) {\nif (count === 0) {\nreturn 'no notifications';\n}\nif (count > 99) {\nreturn 'more than 99 notifications';\n}\nreturn `${count} notifications`;\n}\nexport default function AccessibleBadges() {\nreturn (\n<IconButton aria-label={notificationsLabel(100)}>\n<Badge badgeContent={100} color=\"secondary\">\n<MailIcon />\n</Badge>\n</IconButton>\n);\n}",
+    "language": "jsx",
+    "description": "",
+    "sequence": 10
+  }
+]

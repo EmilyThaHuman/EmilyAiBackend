@@ -2,32 +2,28 @@
 /* eslint-disable no-unused-vars */
 const fs = require('fs');
 const path = require('path');
+const { PineconeStore } = require('@langchain/pinecone');
+const { logger } = require('@/config/logging');
 const {
   initializeOpenAI,
   initializePinecone,
   initializeEmbeddings,
-  handleSummarization,
   initializeChatSession,
 } = require('./initialize');
-const { PineconeStore } = require('@langchain/pinecone');
-const { RecursiveCharacterTextSplitter } = require('langchain/text_splitter');
 const { createPineconeIndex } = require('@/utils/ai/pinecone/create.js');
-const { logger } = require('@/config/logging');
 const {
   getMainSystemMessageContent,
   getMainAssistantMessageInstructions,
   getFormattingInstructions,
 } = require('@/lib/prompts/createPrompt');
-const { performPerplexityCompletion } = require('./context');
+const { performPerplexityCompletion, handleSummarization, extractKeywords } = require('./context');
 const { checkApiKey } = require('@/utils/auth');
+const { getEnv, handleChatError } = require('@/utils/api');
 const {
-  extractKeywords,
   identifyLibrariesAndComponents,
   getDocumentationUrl,
   scrapeDocumentation,
 } = require('../../shared');
-const { getEnv, handleChatError } = require('@/utils/api');
-const { initializeHistory, addMessage, retrieveHistory } = require('./history');
 const {
   prepareDocuments,
   formatDocumentation,
@@ -46,6 +42,7 @@ const {
   handleFileStreaming,
   extractContent,
 } = require('./chat_helpers');
+const { addMessageToSession, getSessionHistory } = require('./chat_history');
 
 const combinedChatStream = async (req, res) => {
   const initializationData = getInitializationData(req.body);
@@ -81,16 +78,31 @@ const combinedChatStream = async (req, res) => {
       initializationData
     );
     // 6 - Retrieve or initialize chat history
-    const chatHistory = initializeHistory(chatSession);
+    // const chatHistory = initializeHistory(chatSession);
     // 7 - Retrieve messages from history
-    const messages = await retrieveHistory(chatSession);
+    const messages = await getSessionHistory(chatSession._id);
+    // const messages = await retrieveHistory(chatSession);
     // 8 - Generate summary of history
     const summary = await handleSummarization(messages, chatOpenAI, initializationData.sessionId);
     // 9 - Add user message to session
-    const userMessageDoc = await addMessage(chatSession, {
+    // const userMessageDoc = await addMessage(chatSession, {
+    //   userId: initializationData.userId,
+    //   workspaceId: initializationData.workspaceId,
+    //   sessionId: chatSession._id,
+    //   role: 'user',
+    //   content: initializationData.prompt,
+    //   metadata: {
+    //     createdAt: Date.now(),
+    //     updatedAt: Date.now(),
+    //     sessionId: chatSession._id,
+    //   },
+    // });
+    const userMessageDoc = await addMessageToSession(chatSession, {
+      userId: initializationData.userId,
+      workspaceId: initializationData.workspaceId,
+      sessionId: chatSession._id,
       role: 'user',
       content: initializationData.prompt,
-      userId: initializationData.userId,
       metadata: {
         createdAt: Date.now(),
         updatedAt: Date.now(),
@@ -139,7 +151,6 @@ const combinedChatStream = async (req, res) => {
     );
     let result;
     try {
-      logChatData('formattedPrompt', formattedPrompt);
       result = await chatOpenAI.completionWithRetry({
         model: getEnv('OPENAI_API_CHAT_COMPLETION_MODEL'),
         messages: [
@@ -150,9 +161,7 @@ const combinedChatStream = async (req, res) => {
         stream: true,
         response_format: { type: 'json_object' },
         temperature: 0.2,
-        // maxTokens: 2000,
       });
-      logChatData('result', result);
     } catch (error) {
       logger.error(`[ERROR][completionWithRetry]: ${error.message}`);
       throw error;
@@ -164,7 +173,7 @@ const combinedChatStream = async (req, res) => {
       userMessageDoc,
       sessionContextStore,
       initializationData,
-      chatHistory
+      messages
     );
   } catch (error) {
     handleChatError(res, error);
@@ -254,7 +263,6 @@ const getDocumentationContent = async (uiLibraries, componentTypes) => {
     throw error;
   }
 };
-
 const handleStreamingResponse = async (
   res,
   result,
@@ -262,7 +270,7 @@ const handleStreamingResponse = async (
   userMessageDoc,
   sessionContextStore,
   initializationData,
-  chatHistory
+  messages
 ) => {
   const responseChunks = [];
 
@@ -280,7 +288,7 @@ const handleStreamingResponse = async (
 
     return fullResponse;
   } catch (error) {
-    const chatData = { chatSession, userMessageDoc, chatHistory };
+    const chatData = { chatSession, userMessageDoc, messages };
     logChatDataError('handleStreamingResponse', chatData, error);
     // logger.error(`[ERROR][handleStreamingResponse]: ${error.message}`);
     throw error;
@@ -297,7 +305,6 @@ const processChatCompletion = async (
   initializationData
 ) => {
   try {
-    logChatData('fullResponse', fullResponse);
     await saveChatCompletion(initializationData, chatSession, fullResponse);
     const docs = prepareDocuments(initializationData, chatSession, fullResponse);
     const splitDocs = await textSplitter.splitDocuments(docs);
@@ -325,17 +332,18 @@ async function saveChatCompletion(initializationData, chatSession, fullResponse)
 
   try {
     const content = extractContent(fullResponse);
-    logChatData('content', content);
     let formattedContent = formatDocumentation(content);
-    logChatData('formattedContent', formattedContent);
     const chatCompletionContent = formatChatCompletionContent(formattedContent);
     await writeToFile(filePath, chatCompletionContent);
 
     try {
-      const assistantMessageDoc = await addMessage(chatSession, {
+      const assistantMessageDoc = await addMessageToSession(chatSession, {
         role: 'assistant',
-        content: formattedContent,
+        content: content,
+        code: formattedContent,
         userId: initializationData.userId,
+        workspaceId: initializationData.workspaceId,
+        sessionId: chatSession._id,
         metadata: {
           createdAt: Date.now(),
           updatedAt: Date.now(),
@@ -343,6 +351,7 @@ async function saveChatCompletion(initializationData, chatSession, fullResponse)
         },
       });
       logChatData('assistantMessageDoc', assistantMessageDoc);
+      await chatSession.calculateTokenUsage();
     } catch (error) {
       logger.error(`Error saving assistant message: ${error}`);
       throw error;

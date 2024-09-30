@@ -1,4 +1,7 @@
+const { logger } = require('@/config/logging');
 const prettier = require('prettier');
+const removeDuplicate = (code) =>
+  (code = code.replace(/^(import[\s\S]*?export default function [^(]+\(\) {[\s\S]*?})\1$/, '$1'));
 
 /**
  * Detects whether the code is TypeScript or JavaScript.
@@ -6,9 +9,17 @@ const prettier = require('prettier');
  * @returns {string} - The detected parser type ('typescript' or 'babel').
  */
 function detectFileType(code) {
-  const tsRegex =
-    /(?:import|export).*from\s+['"].*['"];?|<.*?>|(?:interface|type|namespace|enum|abstract|implements|declare)/;
-  return tsRegex.test(code) ? 'typescript' : 'babel';
+  try {
+    if (typeof code !== 'string') {
+      throw new TypeError(`Input code must be a string, received ${typeof code}`);
+    }
+    const tsxRegex = /(?:import|export).*from\s+['"].*['"];?|<.*?>/;
+    const tsKeywords = /(?:interface|type|namespace|enum|abstract|implements|declare)/;
+    return tsxRegex.test(code) || tsKeywords.test(code) ? 'typescript' : 'babel';
+  } catch (error) {
+    logger.error('An error occurred while detecting file type:', error);
+    throw error;
+  }
 }
 
 /**
@@ -17,10 +28,13 @@ function detectFileType(code) {
  * @param {string} parser - The parser to use ('typescript' or 'babel').
  * @returns {string} - The formatted code.
  */
-function formatCode(code, parser) {
+async function formatCode(code, parser) {
   try {
-    return prettier.format(code, {
-      parser,
+    if (typeof code !== 'string') {
+      throw new TypeError(`Input code must be a string, received ${typeof code}`);
+    }
+    return await prettier.format(code, {
+      parser: parser,
       plugins: [require('prettier-plugin-organize-imports')],
       semi: true,
       singleQuote: true,
@@ -34,8 +48,9 @@ function formatCode(code, parser) {
       endOfLine: 'auto',
     });
   } catch (error) {
-    console.error('Prettier formatting failed:', error);
-    throw error;
+    logger.error('Prettier formatting failed:', error);
+    // throw error;
+    return code;
   }
 }
 
@@ -45,14 +60,23 @@ function formatCode(code, parser) {
  * @returns {string} - The modified code.
  */
 function addExtraLineAfterImports(code) {
-  const lines = code.split('\n');
-  const lastImportIndex = lines.findLastIndex((line) => line.trim().startsWith('import'));
+  try {
+    if (typeof code !== 'string') {
+      throw new TypeError(`Input code must be a string, received ${typeof code}`);
+    }
+    code = String(code);
+    const lines = code.split('\n');
+    const lastImportIndex = lines.findLastIndex((line) => line.trim().startsWith('import'));
 
-  if (lastImportIndex !== -1) {
-    lines.splice(lastImportIndex + 1, 0, '');
+    if (lastImportIndex !== -1) {
+      lines.splice(lastImportIndex + 1, 0, '');
+    }
+
+    return lines.join('\n');
+  } catch (error) {
+    logger.error('An error occurred while adding an extra line after imports:', error);
+    throw error;
   }
-
-  return lines.join('\n');
 }
 
 /**
@@ -60,19 +84,20 @@ function addExtraLineAfterImports(code) {
  * @param {string} code - The code to format.
  * @returns {string} - The formatted code.
  */
-function formatAndCleanCode(code) {
-  if (typeof code !== 'string') {
-    throw new Error('Input is not a string');
+async function formatAndCleanCode(code) {
+  try {
+    if (typeof code !== 'string') {
+      logger.warn('Non-string code passed to formatAndCleanCode. Converting to string.');
+      code = String(code);
+    }
+    const parser = detectFileType(code);
+    let formattedCode = await formatCode(removeDuplicate(code), parser);
+    formattedCode = addExtraLineAfterImports(formattedCode);
+    return formattedCode;
+  } catch (error) {
+    logger.error('An error occurred while formatting and cleaning the code:', error);
+    throw error;
   }
-
-  // Remove duplicate code
-  code = code.replace(/^(import[\s\S]*?export default function [^(]+\(\) {[\s\S]*?})\1$/, '$1');
-
-  const parser = detectFileType(code);
-  let formattedCode = formatCode(code, parser);
-  formattedCode = addExtraLineAfterImports(formattedCode);
-
-  return formattedCode;
 }
 
 module.exports = {

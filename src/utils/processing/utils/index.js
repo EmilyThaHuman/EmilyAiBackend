@@ -7,7 +7,7 @@ module.exports = {
   ...require('./parse'),
   ...require('./main'),
   ...require('./pdf'),
-  ...require('./scrape'),
+  ...require('../../CLEANUP/scrape'),
   ...require('./scrape2'),
   ...require('./text'),
   ...require('./vectorize'),

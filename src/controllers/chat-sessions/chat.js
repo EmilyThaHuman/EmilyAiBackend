@@ -1,8 +1,9 @@
 const { default: OpenAI } = require('openai');
-const { ChatSession, Message, User, Workspace } = require('@/models');
+const { ChatSession, ChatMessage, User, Workspace } = require('@/models');
 const { logger } = require('@/config/logging');
-const { saveMessagesToSession } = require('@/utils/ai/openAi/chat/initialize');
 const { getMainSystemMessageContent } = require('@/lib/prompts/createPrompt');
+const { addMessageToSession } = require('@/utils/ai/openAi/chat/chat_history');
+const { logChatData } = require('@/utils/ai/openAi/chat/chat_helpers');
 
 const handleDatabaseOperation = async (
   operation,
@@ -102,7 +103,7 @@ const createSession = async (req, res) => {
       { ...systemMessage, userId, sessionId: savedSession._id, sequenceNumber: 0 },
       { ...userMessage, userId, sessionId: savedSession._id, sequenceNumber: 1 },
       { ...assistantMessage, userId, sessionId: savedSession._id, sequenceNumber: 2 },
-    ].map((data) => new Message(data));
+    ].map((data) => new ChatMessage(data));
 
     await Promise.all(messagesToSave.map((message) => message.save()));
     savedSession.messages = messagesToSave.map((message) => message._id);
@@ -143,8 +144,45 @@ const saveMessagesToChat = async (req, res) => {
       return res.status(400).json({ error: 'Messages must be an array' });
     }
 
-    await saveMessagesToSession(req.params.id, messages);
-    res.status(200).json({ message: 'Messages saved successfully', messages });
+    const chatSession = await ChatSession.findById(req.params.id);
+    if (!chatSession) {
+      return res.status(404).json({ error: 'Chat session not found' });
+    }
+
+    const addedMessages = [];
+
+    await Promise.all(
+      messages.map(async (message) => {
+        // Check if the message already exists in the chatSession
+        const messageExists = chatSession.messages.some(
+          (existingMessage) =>
+            existingMessage.content === message.content && existingMessage.role === message.role
+        );
+
+        if (!messageExists) {
+          const messageDoc = await addMessageToSession(chatSession, {
+            userId: message.userId || req.body.userId,
+            workspaceId: message.workspaceId || req.body.workspaceId,
+            sessionId: chatSession._id,
+            role: message.role || 'user',
+            content: message.content || req.body.prompt,
+            metadata: {
+              createdAt: Date.now(),
+              updatedAt: Date.now(),
+              sessionId: chatSession._id,
+            },
+          });
+          logChatData('messageDoc', messageDoc);
+          addedMessages.push(messageDoc);
+        }
+      })
+    );
+
+    res.status(200).json({
+      message: 'Messages processed successfully',
+      addedMessages,
+      skippedMessages: messages.length - addedMessages.length,
+    });
   } catch (error) {
     logger.error('Error saving messages:', error.message);
     res.status(500).json({ error: error.message });

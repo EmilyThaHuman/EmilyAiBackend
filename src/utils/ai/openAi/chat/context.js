@@ -1,98 +1,29 @@
 const { logger } = require('@/config/logging');
 const { getEnv } = require('@/utils/api');
 const { default: axios } = require('axios');
-const { getDefaultOpenaiClient } = require('../get');
-// const fs = require('fs');
-// const sharp = require('sharp');
+const { logChatDataError } = require('./chat_helpers');
+const { PromptTemplate } = require('@langchain/core/prompts');
+const { ChatOpenAI } = require('@langchain/openai');
+const { SystemMessage, HumanMessage } = require('@langchain/core/messages');
 
-const analyzeTextWithGPT = async (text) => {
-  try {
-    const openai = await getDefaultOpenaiClient();
-    const response = await openai.Completion.create({
-      model: getEnv('OPENAI_API_CHAT_COMPLETION_MODEL'),
-      prompt: `You are a PI, Extract relevant information about the following content:\n\n${text}`,
-      max_tokens: 200, // Adjust as needed
-    });
-    return response.choices[0].text.trim();
-  } catch (error) {
-    logger.error('Error analyzing text with GPT:', error);
-    return `Could not analyze content.`;
-  }
-};
-const analyzeImage = async (imageUrl) => {
-  try {
-    const openai = await getDefaultOpenaiClient();
+const chatOpenAI = new ChatOpenAI({
+  model: getEnv('OPENAI_API_CHAT_COMPLETION_MODEL'),
+  temperature: 0.2,
+  maxTokens: 500,
+  apiKey: process.env.OPENAI_API_PROJECT_KEY,
+});
 
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4-vision-preview', // Ensure this is the correct model name
-      messages: [
-        {
-          role: 'user',
-          content: [
-            { type: 'text', text: 'What’s in this image?' },
-            {
-              type: 'image_url',
-              image_url: {
-                url: imageUrl, // URL of the image to analyze
-                detail: 'low', // Adjust the detail level as needed
-              },
-            },
-          ],
-        },
-      ],
-    });
+const extractKeywords = async (text) => {
+  const systemMessage = new SystemMessage(
+    'You are a helpful assistant that extracts main keywords from given text.'
+  );
+  const humanMessage = new HumanMessage(
+    `Extract the main keywords from the following text:\n\n${text}\n\nProvide the keywords as a comma-separated list.`
+  );
 
-    return response.choices[0].message.content; // Adjust according to the actual structure of the response
-  } catch (error) {
-    logger.error('Error analyzing image with GPT-4 Vision:', error);
-    return `Could not analyze image: ${error.message}`;
-  }
-};
-const fetchSearchResults = async (query) => {
-  let data = JSON.stringify({
-    q: query,
-  });
-  const config = {
-    method: 'post',
-    url: 'https://google.serper.dev/search',
-    headers: {
-      'X-API-KEY': process.env.GOOGLE_SERPER_API_KEY,
-      'Content-Type': 'application/json',
-    },
-    data: data,
-  };
-
-  try {
-    const response = await axios(config);
-    const results = response.data;
-    // Filter for LinkedIn URLs
-    const frameworkDocs = {
-      MUI: 'https://mui.com/components/',
-      CHAKRA_UI: 'https://chakra-ui.com/docs/getting-started',
-      REACT_BOOTSTRAP: 'https://react-bootstrap.github.io/',
-      TAILWIND: 'https://tailwindcss.com/docs',
-      RADIX_UI: 'https://www.radix-ui.com/primitives/docs',
-      SHADCN: 'https://ui.shadcn.com/docs',
-    };
-    const uiLinksArray = Object.keys(frameworkDocs).map((key) => ({
-      framework: key,
-      url: frameworkDocs[key],
-    }));
-    const chatCodeContextSearch = results.organic.filter((res) =>
-      res.link.includes.oneOf(uiLinksArray.map((ui) => ui.url))
-    );
-    for (const result of chatCodeContextSearch) {
-      // const scrapedData = await scrapeLinkedIn(result.link);
-      const scrapedData = {
-        scrapedContent: 'Not available', // Placeholder value
-      };
-      result['scrapedContent'] = scrapedData;
-    }
-    return results;
-  } catch (error) {
-    logger.error(`Error: ${error}`);
-    throw error;
-  }
+  const response = await chatOpenAI.invoke([systemMessage, humanMessage]);
+  logger.info(`Extracted keywords: ${response.content}`);
+  return response.content.split(',').map((keyword) => keyword.trim());
 };
 const summarizeMessages = async (messages, chatOpenAI) => {
   const summarizeFunction = {
@@ -162,56 +93,20 @@ const extractSummaries = (summaryResponse) => {
     individualSummariesArray,
   };
 };
-async function performWebSearch(query, numResults) {
-  if (!query || typeof query !== 'string') {
-    throw new Error('Invalid query: Query must be a non-empty string');
-  }
-
-  if (!numResults || typeof numResults !== 'number' || numResults <= 0) {
-    throw new Error('Invalid numResults: Must be a positive number');
-  }
-
-  const apiKey = getEnv('PERPLEXITY_API_KEY');
-  if (!apiKey) {
-    throw new Error('PERPLEXITY_API_KEY is not set in the environment');
-  }
-
+const handleSummarization = async (messages, chatOpenAI, sessionId) => {
   try {
-    const response = await axios.get('https://api.perplexity.ai/search', {
-      params: { q: query, num: numResults },
-      headers: {
-        Authorization: apiKey,
-        'Content-Type': 'application/json',
-      },
-      timeout: 10000, // 10 seconds timeout
-    });
-
-    if (!response.data || !Array.isArray(response.data.results)) {
-      throw new Error('Invalid response format from Perplexity API');
-    }
-
-    return response.data.results.map((result) => ({
-      pageContent: result.snippet || '',
-      metadata: { url: result.url || '' },
-    }));
+    const summary = await summarizeMessages(messages.slice(-5), chatOpenAI);
+    const { overallSummaryString, individualSummariesArray } = extractSummaries(summary);
+    logger.info(`Overall Summary: ${overallSummaryString}`);
+    logger.info(`Individual Summaries: ${JSON.stringify(individualSummariesArray)}`);
+    return summary;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      if (error.response) {
-        console.error(`Perplexity API error: ${error.response.status} - ${error.response.data}`);
-        throw new Error(`Perplexity API error: ${error.response.status}`);
-      } else if (error.request) {
-        console.error('No response received from Perplexity API');
-        throw new Error('No response received from Perplexity API');
-      } else {
-        console.error('Error setting up the request:', error.message);
-        throw new Error('Error setting up the request to Perplexity API');
-      }
-    } else {
-      console.error('Unexpected error during web search:', error);
-      throw new Error('Unexpected error during web search');
-    }
+    const chatData = { sessionId, messages };
+    logChatDataError(`handleSummarization`, chatData, error);
+    throw error;
   }
-}
+};
+
 /**
  * Performs a perplexity completion using the Perplexity AI API.
  *
@@ -296,99 +191,35 @@ async function performPerplexityCompletion(prompt, perplexityApiKey) {
     }
   }
 }
+const generateOptimizedPrompt = async (input) => {
+  const template = `
+    Given the user input: {input}
 
-/**
- * Formats the response content with citations.
- *
- * @param {string} content - The content to format.
- * @param {Array<Object>} citations - The array of citations.
- * @param {string} citations[].text - The text to replace with citation key.
- * @param {Object} citations[].metadata - The metadata of the citation.
- * @param {string} citations[].metadata.title - The title of the citation.
- * @param {string} citations[].metadata.url - The URL of the citation.
- * @returns {Object} - The formatted response content and metadata.
- * @returns {string} .pageContent - The formatted content in markdown format.
- * @returns {Object} .metadata - The metadata of the formatted content.
- * @returns {string} .metadata.type - The type of the formatted content (always "markdown").
- * @returns {Array<string>} .metadata.references - The array of citation references in the format "[@RefN]: Title. URL".
- */
-// function formatResponseWithCitations(content, citations) {
-//   let markdownContent = content;
-//   const references = [];
+    Generate an optimized prompt that:
+    1. Clarifies any ambiguities in the input
+    2. Adds relevant context or background information
+    3. Specifies the desired output format or structure
+    4. Encourages a comprehensive and detailed response
+    5. Includes any necessary constraints or guidelines
 
-//   citations.forEach((citation, index) => {
-//     const citationKey = `[@Ref${index + 1}]`;
-//     markdownContent = markdownContent.replace(citation.text, `${citation.text} ${citationKey}`);
-//     references.push(`${citationKey}: ${citation.metadata.title}. ${citation.metadata.url}`);
-//   });
+    Optimized prompt:
+  `;
 
-//   if (references.length > 0) {
-//     markdownContent += '\n\n## References\n' + references.join('\n');
-//   }
+  const promptTemplate = new PromptTemplate({
+    template: template,
+    inputVariables: ['input'],
+  });
 
-//   return { pageContent: markdownContent, metadata: { type: 'markdown', references } };
-// }
-
-/**
- * Error handling function for the Perplexity API request.
- *
- * @param {Error} error - The error thrown during the request.
- * @throws {Error} - Throws a new error with a detailed message.
- */
-function handleError(error) {
-  if (axios.isAxiosError(error)) {
-    if (error.response) {
-      console.error(
-        `Perplexity API error: ${error.response.status} - ${JSON.stringify(error.response.data)}`
-      );
-      throw new Error(`Perplexity API error: ${error.response.status}`);
-    } else if (error.request) {
-      console.error('No response received from Perplexity API');
-      throw new Error('No response received from Perplexity API');
-    } else {
-      console.error('Error setting up the request:', error.message);
-      throw new Error('Error setting up the request to Perplexity API');
-    }
-  } else {
-    console.error('Unexpected error during Perplexity completion:', error);
-    throw new Error('Unexpected error during Perplexity completion');
-  }
-}
+  const chain = new ChatOpenAI({ prompt: promptTemplate });
+  const result = await chain.invoke({ input });
+  return result.text;
+};
 
 module.exports = {
   summarizeMessages,
-  analyzeTextWithGPT,
-  analyzeImage,
-  fetchSearchResults,
   extractSummaries,
-  performWebSearch,
+  handleSummarization,
   performPerplexityCompletion,
-  handleError,
-  // analyzeTextWithGPT,
-  // analyzeImage,
-  // fetchSearchResults,
-  // extractSummaries,
+  generateOptimizedPrompt,
+  extractKeywords,
 };
-// const template = new ChatPromptTemplate([
-//   { role: 'system', content: 'You are a helpful assistant that summarizes chat messages.' },
-//   {
-//     role: 'user',
-//     content: `Summarize these messages. Provide an overall summary and a summary for each message with its corresponding ID: ${JSON.stringify(messages)}`,
-//   },
-// ]);
-// const input = [
-//   SystemMessage( 'You are a helpful assistant that summarizes chat messages.' ),
-//   HumanMessage( `Summarize these messages. Provide an overall summary and a summary for each message with its corresponding ID: ${JSON.stringify(messages)}` ),
-// ];
-// const response = await chatOpenAI.completionWithRetry({
-//   model: 'gpt-4-1106-preview',
-// messages: [
-//   { role: 'system', content: 'You are a helpful assistant that summarizes chat messages.' },
-//   {
-//     role: 'user',
-//     content: `Summarize these messages. Provide an overall summary and a summary for each message with its corresponding ID: ${JSON.stringify(messages)}`,
-//   },
-// ],
-//   functions: [summarizeFunction],
-//   function_call: { name: 'summarize_messages' },
-// });
