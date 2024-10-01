@@ -145,7 +145,6 @@
   "_moduleAliases": {
     "@/root": ".",
     "@/public": "./public",
-    "@/": "src",
     "@/test": "src/__test__",
     "@/config": "src/config",
     "@/controllers": "src/controllers",

@@ -15,38 +15,25 @@ let connection;
  * Connect to MongoDB and initialize GridFS bucket.
  * @async
  * @function connectDB
+ * @returns {Promise<mongoose.Connection>} The MongoDB connection
  */
 const connectDB = async () => {
   try {
     if (!connection) {
-      const connectionString = getEnv('MONGODB_URI');
-      logger.info(`[1] MongoDb Connection String Valid --> ${connectionString}`);
-      // const connection = await mongoose.connect(connectionString);
-      // logger.info(`[2] MongoDb Connection Secured --> ${connection}`);
+      const connectionString = getEnv('MONGODB_URI') || 'mongodb://localhost:27017/localhost';
+      logger.info(`[1] Attempting to connect to MongoDB: ${connectionString}`);
 
-      // connectionPool =
-      //   (await mongoose.createConnection(connectionString).asPromise()) || connectionPool;
-      // logger.info(
-      //   `[2] MongoDb Connection Secured --> ${connectionPool.connection.db.databaseName}`
-      // );
-      // await mongoose.connect(connectionString, {
-      //   useNewUrlParser: true,
-      //   useUnifiedTopology: true,
-      //   poolSize: 10, // Adjust based on your needs
-      // });
-      // const db = mongoose.connection.db;
-      // logger.info(`[3] MongoDb Accessed --> ${connectionPool.connection.db}`);
-      connection = await mongoose.connect(
-        getEnv('MONGODB_URI') || 'mongodb://localhost:27017/localhost',
-        {
-          useNewUrlParser: true,
-          useUnifiedTopology: true,
-        }
-      );
-      bucket = new GridFSBucket(connection.db, { bucketName: 'uploads' });
-      logger.info(`[4] GridFS bucket initialized successfully Connection Valid --> ${storage}`);
+      connection = await mongoose.connect(connectionString, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      });
+
+      logger.info(`[2] MongoDB connection established successfully`);
+
+      bucket = new GridFSBucket(connection.connection.db, { bucketName: 'uploads' });
+      logger.info(`[3] GridFS bucket initialized successfully`);
     }
-    return connection.db;
+    return connection;
   } catch (error) {
     logger.error(`MongoDB connection failed: ${error.message}`);
     throw error;

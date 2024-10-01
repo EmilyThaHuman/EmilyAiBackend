@@ -31,20 +31,16 @@
   },
   "settings": {
     "import/resolver": {
+      "node": {
+        "paths": ["src"],
+        "extensions": [".js", ".jsx", ".ts", ".tsx", ".json"]
+      },
       "alias": {
         "map": [
-          ["@/", "./src"],
-          ["@/config", "./src/config"],
-          ["@/controllers", "./src/controllers"],
-          ["@/models", "./src/models"],
-          ["@/db", "./src/db"],
-          ["@/lib", "./src/lib"],
-          ["@/routes", "./src/routes"],
-          ["@/middleware", "./src/middleware"],
-          ["@/utils", "./src/utils"],
-          ["@/services", "./src/services"]
+          ["@", "./src"],
+          ["@/config", "./src/config"]
         ],
-        "extensions": [".js", ".json"]
+        "extensions": [".js", ".jsx", ".ts", ".tsx", ".json"]
       }
     }
   }
