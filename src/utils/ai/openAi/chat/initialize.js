@@ -82,7 +82,7 @@ const initializeChatSession = async (sessionId, workspaceId, userId, prompt, ses
     return chatSession;
   } catch (error) {
     const chatData = { sessionId, userId, prompt };
-    logChatDataError(`initializeChatSession`, chatData, error);
+    logChatDataError('initializeChatSession', chatData, error);
     throw error;
   }
 };

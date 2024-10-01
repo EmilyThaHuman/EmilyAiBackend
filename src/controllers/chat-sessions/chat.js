@@ -1,7 +1,6 @@
-const { default: OpenAI } = require('openai');
-const { ChatSession, ChatMessage, User, Workspace } = require('@/models');
+/* eslint-disable no-unused-vars */
+const { ChatSession } = require('@/models');
 const { logger } = require('@/config/logging');
-const { getMainSystemMessageContent } = require('@/lib/prompts/createPrompt');
 const { addMessageToSession } = require('@/utils/ai/openAi/chat/chat_history');
 const { logChatData } = require('@/utils/ai/openAi/chat/chat_helpers');
 
@@ -32,97 +31,50 @@ const getSessionById = (req, res) => {
   );
 };
 
-const extractIdeasFromMessage = (message) => {
-  try {
-    const parsedMessage = JSON.parse(message);
-    if (parsedMessage && parsedMessage.content) {
-      return parsedMessage.content
-        .split('\n')
-        .filter((line) => line.trim().match(/^(\d+\.|-)\s*(.+)/))
-        .map((line) => line.trim().replace(/^(\d+\.|-)\s*/, ''));
-    }
-  } catch (error) {
-    return message
-      .split('\n')
-      .filter((line) => line.trim().match(/^(\d+\.|-)\s*(.+)/))
-      .map((line) => line.trim().replace(/^(\d+\.|-)\s*/, ''));
-  }
-  return [];
-};
-
 const createSession = async (req, res) => {
   try {
     const { name, topic, prompt, userId, workspaceId, model, settings, apiKey } = req.body;
-    const openai = new OpenAI({ apiKey: apiKey || process.env.OPENAI_API_PROJECT_KEY });
-    const userPrompt =
-      prompt ||
-      `Generate a list of helpful prompting ideas based on the topic: ${topic || 'New Chat Session'}`;
-    const systemMessageContent = getMainSystemMessageContent();
-    const systemMessage = { role: 'system', content: systemMessageContent };
-    const userMessage = { role: 'user', content: userPrompt };
 
-    const openaiResponse = await openai.chat.completions.create({
-      model: settings.model || 'gpt-3.5-turbo',
-      messages: [systemMessage, userMessage],
-      max_tokens: settings.maxTokens || 500,
-      temperature: settings.temperature || 0.7,
-      response_format: { type: 'json_object' },
-    });
+    // Validate required fields
+    if (!userId || !workspaceId) {
+      return res.status(400).json({
+        success: false,
+        message: 'userId and workspaceId are required',
+      });
+    }
 
-    const initialMessage = openaiResponse.choices[0].message.content.trim();
-    const ideas = extractIdeasFromMessage(initialMessage);
-    const assistantMessage = { role: 'assistant', content: initialMessage };
-
-    const newSessionData = {
-      name: name || 'New Chat Session',
-      topic: topic || 'New Chat Session',
-      prompt: userPrompt,
+    // Prepare the session data
+    const sessionData = {
       userId,
       workspaceId,
-      summary: '',
-      messages: [],
-      ideas,
-      model: model || 'gpt-3.5-turbo',
-      active: true,
-      settings: {
-        contextCount: settings.contextCount || 15,
-        maxTokens: settings.maxTokens || 500,
-        temperature: settings.temperature || 0.7,
-        model: settings.model || 'gpt-3.5-turbo',
-        topP: settings.topP || 1,
-        n: settings.n || 1,
-        debug: settings.debug || false,
-        summarizeMode: settings.summarizeMode || false,
-      },
+      topic: topic || 'No Topic',
+      name: name || 'Default Chat Session',
+      settings: settings || {},
     };
 
-    const newSession = new ChatSession(newSessionData);
-    const savedSession = await newSession.save();
+    // Use the static method to create a new session
+    const newSession = await ChatSession.createSession(sessionData);
 
-    const messagesToSave = [
-      { ...systemMessage, userId, sessionId: savedSession._id, sequenceNumber: 0 },
-      { ...userMessage, userId, sessionId: savedSession._id, sequenceNumber: 1 },
-      { ...assistantMessage, userId, sessionId: savedSession._id, sequenceNumber: 2 },
-    ].map((data) => new ChatMessage(data));
+    // Initialize the session with a system message if needed
+    if (newSession.messages.length === 0) {
+      await newSession.addMessage({
+        role: 'system',
+        content: 'Welcome to the new chat session!',
+      });
+    }
 
-    await Promise.all(messagesToSave.map((message) => message.save()));
-    savedSession.messages = messagesToSave.map((message) => message._id);
-    await savedSession.save();
-
-    const activeWorkspace = await Workspace.findById(workspaceId);
-    activeWorkspace.chatSessions.push(savedSession._id);
-    await activeWorkspace.save();
-
-    const user = await User.findById(userId);
-    user.chatSessions.push(savedSession._id);
-    await user.save();
-
-    const populatedSession = await savedSession.populate('messages');
-    logger.info(`populatedSession: ${JSON.stringify(populatedSession, null, 2)}`);
-    res.status(201).json(populatedSession);
+    res.status(201).json({
+      success: true,
+      message: 'Chat session created successfully',
+      session: newSession,
+    });
   } catch (error) {
-    logger.error(`Error creating session: ${error.message}`);
-    res.status(400).json({ message: 'Error creating session', error: error.message });
+    console.error('Error creating chat session:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to create chat session',
+      error: error.message,
+    });
   }
 };
 
@@ -136,7 +88,6 @@ const deleteSession = (req, res) =>
   handleDatabaseOperation(() => ChatSession.findByIdAndDelete(req.params.id), res, 200, {
     message: 'Session deleted successfully',
   });
-
 const saveMessagesToChat = async (req, res) => {
   try {
     const { messages } = req.body;
@@ -188,7 +139,24 @@ const saveMessagesToChat = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
+const getMessagesFromChat = async (req, res) => {
+  try {
+    logger.info(`Get messages for session: ${req.params.sessionId}`);
+    const session = await ChatSession.findById(req.params.sessionId).populate('messages');
+    // logger.info(`Session: ${session}`);
+    logger.info(`Session MESSAGES: ${JSON.stringify(session.messages)}`);
+    if (!session) {
+      return res.status(404).json({ error: 'Session not found' });
+    }
+    res.status(200).json({
+      message: 'Messages retrieved successfully',
+      messages: session.messages,
+    });
+  } catch (error) {
+    logger.error('Error retrieving messages:', error.message);
+    res.status(500).json({ error: error.message });
+  }
+};
 // const chatStream = async (req, res) => {
 //   logger.info(`REQUEST BODY: ${JSON.stringify(req.body)}`);
 //   const { clientApiKey, userId, workspaceId, sessionId, prompt, role, regenerate, count } =
@@ -244,5 +212,6 @@ module.exports = {
   updateSession,
   deleteSession,
   saveMessagesToChat,
+  getMessagesFromChat,
   // chatStream,
 };

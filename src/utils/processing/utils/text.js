@@ -1,7 +1,7 @@
 // String Manipulation, Parsing, and Extraction Utilities
 const axios = require('axios');
 const cheerio = require('cheerio');
-const { logger } = require('@/config/logging');
+const { logger } = require('@/config/logging/logger');
 
 function replaceUnsupportedCharacters(text) {
   const replacements = {

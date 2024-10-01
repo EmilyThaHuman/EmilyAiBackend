@@ -37,7 +37,7 @@ const run = async () => {
     // Add messages to chat history
     await chatHistory.addUserMessage('Hi there!');
     await chatHistory.addAIChatMessage('Hello! How can I assist you today?');
-    await chatHistory.addUserMessage("What's the capital of France?");
+    await chatHistory.addUserMessage('What\'s the capital of France?');
     await chatHistory.addAIChatMessage('The capital of France is Paris.');
 
     // Retrieve chat messages

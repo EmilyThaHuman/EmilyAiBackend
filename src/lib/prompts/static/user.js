@@ -1,5 +1,5 @@
 const userPrompts = {
-  UI_ANALYSIS_FROM_IMAGE: `Generate a prompt for a component generator UI which gives a precisely accurate analysis of the the component in the image and providers all details necessary for replicating the exact same component`,
+  UI_ANALYSIS_FROM_IMAGE: 'Generate a prompt for a component generator UI which gives a precisely accurate analysis of the the component in the image and providers all details necessary for replicating the exact same component',
 };
 const initialUserPrompts = [
   {
@@ -15,7 +15,7 @@ const initialUserPrompts = [
   {
     name: 'State Management for Form Inputs',
     content:
-      "What's the best way to manage state for multiple form inputs in a React component using hooks?",
+      'What\'s the best way to manage state for multiple form inputs in a React component using hooks?',
     role: 'user',
     type: 'state-management',
     sharing: 'public',
@@ -35,7 +35,7 @@ const initialUserPrompts = [
   {
     name: 'Dark Mode Integration',
     content:
-      "How can I implement a dark mode toggle in a React app using Material-UI's theme provider?",
+      'How can I implement a dark mode toggle in a React app using Material-UI\'s theme provider?',
     role: 'user',
     type: 'theme-integration',
     sharing: 'public',

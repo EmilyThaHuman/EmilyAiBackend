@@ -22,7 +22,7 @@ describe('connectDB', () => {
 
     // Assertions to verify correct logging
     expect(mongoose.connect).toHaveBeenCalled();
-    expect(logger.info).toHaveBeenCalledWith(`MongoDB connected successfully: localhost`);
+    expect(logger.info).toHaveBeenCalledWith('MongoDB connected successfully: localhost');
   });
 
   it('should handle connection failure and log the error', async () => {

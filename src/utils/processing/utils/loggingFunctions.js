@@ -25,6 +25,13 @@ function logArrayAsTable(array) {
   });
 }
 
+function recordTokenUsage({ promptTokens, completionTokens, totalTokens }) {
+  logger.info('Prompt tokens:', promptTokens);
+  logger.info('Completion tokens:', completionTokens);
+  logger.info('Total tokens:', totalTokens);
+}
+
 module.exports = {
   logArrayAsTable,
+  recordTokenUsage,
 };

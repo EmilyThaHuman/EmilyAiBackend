@@ -1,19 +1,51 @@
 {
   "env": {
-    "browser": true,
-    "es2021": true,
-    "node": true
+    "node": true,
+    "es2022": true
   },
-  "extends": "eslint:recommended",
+  "extends": ["eslint:recommended", "plugin:node/recommended"],
   "parserOptions": {
-    "ecmaVersion": 12,
+    "ecmaVersion": 2022,
     "sourceType": "module"
   },
   "rules": {
-    "padding-line-between-statements": [
+    "indent": ["error", 2],
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"],
+    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+    "no-console": "warn",
+    "node/no-unsupported-features/es-syntax": [
       "error",
-      { "blankLine": "always", "prev": "import", "next": "*" },
-      { "blankLine": "any", "prev": "import", "next": "import" }
-    ]
+      { "version": ">=14.0.0", "ignores": ["modules"] }
+    ],
+    "node/no-missing-import": "off",
+    "node/file-extension-in-import": ["error", "always", { ".js": "never" }],
+    "node/prefer-global/buffer": ["error", "always"],
+    "node/prefer-global/console": ["error", "always"],
+    "node/prefer-global/process": ["error", "always"],
+    "node/prefer-global/url-search-params": ["error", "always"],
+    "node/prefer-global/url": ["error", "always"],
+    "node/prefer-promises/dns": "error",
+    "node/prefer-promises/fs": "error"
+  },
+  "settings": {
+    "import/resolver": {
+      "alias": {
+        "map": [
+          ["@/", "./src"],
+          ["@/config", "./src/config"],
+          ["@/controllers", "./src/controllers"],
+          ["@/models", "./src/models"],
+          ["@/db", "./src/db"],
+          ["@/lib", "./src/lib"],
+          ["@/routes", "./src/routes"],
+          ["@/middleware", "./src/middleware"],
+          ["@/utils", "./src/utils"],
+          ["@/services", "./src/services"]
+        ],
+        "extensions": [".js", ".json"]
+      }
+    }
   }
 }

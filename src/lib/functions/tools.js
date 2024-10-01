@@ -75,7 +75,7 @@ const analyzeImage = {
   type: 'function',
   function: {
     name: 'analyzeImage',
-    description: "Analyze the content of an image using OpenAI's Vision API",
+    description: 'Analyze the content of an image using OpenAI\'s Vision API',
     parameters: {
       type: 'object',
       properties: {

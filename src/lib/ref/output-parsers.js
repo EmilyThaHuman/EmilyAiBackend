@@ -21,7 +21,7 @@ const stringOutputParser = async () => {
 
 const commaSeparatedListOutputParser = async () => {
   const prompt = ChatPromptTemplate.fromTemplate(
-    "Provide six movies, separated by commas, for the genre: {genre}. Make it comma separated. And don't add numbered list"
+    'Provide six movies, separated by commas, for the genre: {genre}. Make it comma separated. And don\'t add numbered list'
   );
   const parser = new CommaSeparatedListOutputParser();
 

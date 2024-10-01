@@ -5,7 +5,7 @@ const cheerio = require('cheerio');
 
 // eslint-disable-next-line no-unused-vars
 async function factCheckAgainstDocs(generatedAnswer, library = 'react') {
-  const docsUrl = `https://reactjs.org/docs/getting-started.html`; // Example URL
+  const docsUrl = 'https://reactjs.org/docs/getting-started.html'; // Example URL
   const response = await axios.get(docsUrl);
   const $ = cheerio.load(response.data);
   // eslint-disable-next-line no-unused-vars

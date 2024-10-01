@@ -5,12 +5,11 @@ const path = require('path');
 const fs = require('fs');
 const { logger } = require('@/config/logging');
 const { getEnv } = require('@/utils/api');
-// eslint-disable-next-line no-unused-vars
 const { File } = require('@/models');
 const { GridFSBucket, MongoClient } = require('mongodb');
 
 let bucket;
-let connectionPool;
+let connection;
 
 /**
  * Connect to MongoDB and initialize GridFS bucket.
@@ -19,22 +18,35 @@ let connectionPool;
  */
 const connectDB = async () => {
   try {
-    if (!connectionPool) {
+    if (!connection) {
       const connectionString = getEnv('MONGODB_URI');
       logger.info(`[1] MongoDb Connection String Valid --> ${connectionString}`);
-      const connection = await mongoose.connect(connectionString);
-      logger.info(`[2] MongoDb Connection Secured --> ${connection}`);
-      connectionPool = await mongoose.connect(connectionString, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        poolSize: 10, // Adjust based on your needs
-      });
+      // const connection = await mongoose.connect(connectionString);
+      // logger.info(`[2] MongoDb Connection Secured --> ${connection}`);
+
+      // connectionPool =
+      //   (await mongoose.createConnection(connectionString).asPromise()) || connectionPool;
+      // logger.info(
+      //   `[2] MongoDb Connection Secured --> ${connectionPool.connection.db.databaseName}`
+      // );
+      // await mongoose.connect(connectionString, {
+      //   useNewUrlParser: true,
+      //   useUnifiedTopology: true,
+      //   poolSize: 10, // Adjust based on your needs
+      // });
       // const db = mongoose.connection.db;
-      logger.info(`[3] MongoDb Accessed --> ${connectionPool.connection.db}`);
-      bucket = new GridFSBucket(connectionPool.connection.db, { bucketName: 'uploads' });
+      // logger.info(`[3] MongoDb Accessed --> ${connectionPool.connection.db}`);
+      connection = await mongoose.connect(
+        getEnv('MONGODB_URI') || 'mongodb://localhost:27017/localhost',
+        {
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+        }
+      );
+      bucket = new GridFSBucket(connection.db, { bucketName: 'uploads' });
       logger.info(`[4] GridFS bucket initialized successfully Connection Valid --> ${storage}`);
     }
-    return connectionPool.connection.db;
+    return connection.db;
   } catch (error) {
     logger.error(`MongoDB connection failed: ${error.message}`);
     throw error;
@@ -228,27 +240,7 @@ const fileFilter = (req, file, cb) => {
     cb(new Error('Invalid file type. Only txt, pdf, doc, and docx are allowed.'));
   }
 };
-// const handleFileUpload = (req, res) => {
-//   upload.single('file')(req, res, (err) => {
-//     if (err) {
-//       logger.error(`File upload error: ${err.message}`);
-//       return res.status(500).json({ error: 'File upload failed' });
-//     }
 
-//     if (!req.file) {
-//       return res.status(400).json({ error: 'No file uploaded' });
-//     }
-
-//     const fileData = {
-//       id: req.file.id,
-//       filename: req.file.filename,
-//       metadata: req.file.metadata,
-//     };
-
-//     logger.info(`File uploaded successfully: ${JSON.stringify(fileData)}`);
-//     res.status(200).json({ message: 'File uploaded successfully', file: fileData });
-//   });
-// };
 /**
  * Handles errors during file upload.
  * @function handleUploadError

@@ -68,9 +68,9 @@ async function reviseComponent(prompt, code) {
         role: 'system',
         content: [
           'You are an AI programming assistant.',
-          "Follow the user's requirements carefully & to the letter.",
-          "You're working on a react component using typescript and tailwind.",
-          "Don't introduce any new components or files.",
+          'Follow the user\'s requirements carefully & to the letter.',
+          'You\'re working on a react component using typescript and tailwind.',
+          'Don\'t introduce any new components or files.',
           'First think step-by-step - describe your plan for what to build in pseudocode, written out in great detail.',
           'You must format every code change with an *edit block* like this:',
           '```',
@@ -136,7 +136,7 @@ async function generateNewComponent(prompt) {
         role: 'system',
         content: [
           'You are a helpful assistant.',
-          "You're tasked with writing a react component using typescript and tailwind for a website.",
+          'You\'re tasked with writing a react component using typescript and tailwind for a website.',
           'Only import React as a dependency.',
           'Be concise and only reply with code.',
         ].join('\n'),
@@ -144,11 +144,11 @@ async function generateNewComponent(prompt) {
       {
         role: 'user',
         content: [
-          `- Component Name: Section`,
+          '- Component Name: Section',
           `- Component Description: ${prompt}\n`,
-          `- Do not use libraries or imports other than React.`,
-          `- Do not have any dynamic data. Use placeholders as data. Do not use props.`,
-          `- Write only a single component.`,
+          '- Do not use libraries or imports other than React.',
+          '- Do not have any dynamic data. Use placeholders as data. Do not use props.',
+          '- Write only a single component.',
         ].join('\n'),
       },
     ],

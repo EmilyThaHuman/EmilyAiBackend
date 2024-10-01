@@ -43,6 +43,7 @@ const {
   extractContent,
 } = require('./chat_helpers');
 const { addMessageToSession, getSessionHistory } = require('./chat_history');
+const { recordTokenUsage } = require('@/utils/processing/utils/loggingFunctions');
 
 const combinedChatStream = async (req, res) => {
   const initializationData = getInitializationData(req.body);
@@ -283,6 +284,7 @@ const handleStreamingResponse = async (
     }
 
     const fullResponse = responseChunks.join('');
+    recordTokenUsage(await fullResponse.usage);
 
     await processChatCompletion(chatSession, fullResponse, sessionContextStore, initializationData);
 
@@ -362,86 +364,3 @@ async function saveChatCompletion(initializationData, chatSession, fullResponse)
 }
 
 module.exports = { combinedChatStream };
-// async function savePromptBuild(systemContent, assistantInstructions, formattedPrompt) {
-//   const newFileName = `prompt-build_${new Date().toISOString().replace(/[:.]/g, '-')}.txt`;
-//   const promptBuildFile = path.join(
-//     __dirname,
-//     '..',
-//     '..',
-//     '..',
-//     '..',
-//     '/public/static/files',
-//     newFileName
-//   );
-//   const promptBuild = `
-//     --- CHAT COMPLETION RESPONSE ---
-//       --- SYSTEM / ASSISTANT PROMPTS ---
-//       | SYSTEM: [${systemContent}]
-//       | ASSISTANT: [${assistantInstructions}]
-//       ----------------------------------
-//       --- USER FORMATTED PROMPT ---
-//       | FORMATTED PROMPT: ${formattedPrompt}
-//       -----------------------------
-//     --------------------------------
-//   `;
-
-//   try {
-//     await fs.writeFile(promptBuildFile, promptBuild);
-//     logger.info(`Prompt build saved to ${promptBuildFile}`);
-//   } catch (error) {
-//     logger.error(`Error saving prompt build: ${error}`);
-//   }
-// }
-// async function saveChatCompletion(
-//   initializationData,
-//   chatSession,
-//   fullResponse // Contains the message content that needs to be formatted
-// ) {
-//   const newFileName = `chat-completion_${new Date().toISOString().replace(/[:.]/g, '-')}.txt`;
-//   const chatCompletionFile = path.join(
-//     __dirname,
-//     '..',
-//     '..',
-//     '..',
-//     '..',
-//     '/public/static/files',
-//     newFileName
-//   );
-
-//   try {
-//     let formattedContent = formatDocumentation(fullResponse);
-
-//     const chatCompletionContent = `
-//       --- CHAT COMPLETION RESPONSE ---
-//       ${formattedContent}
-//       --------------------------------
-//     `;
-//     try {
-//       // Write the formatted chat completion to the specified file
-//       await fs.writeFile(chatCompletionFile, chatCompletionContent);
-//       logger.info(`Chat completion saved to ${chatCompletionFile}`);
-//     } catch (error) {
-//       logger.error(`Error saving chat completion to ${chatCompletionFile}`);
-//       throw error;
-//     }
-
-//     try {
-//       const assistantMessageDoc = await addMessage(chatSession, {
-//         role: 'assistant',
-//         content: formattedContent,
-//         userId: initializationData.userId,
-//         metadata: {
-//           createdAt: Date.now(),
-//           updatedAt: Date.now(),
-//           sessionId: chatSession._id,
-//         },
-//       });
-//       logChatData('assistantMessageDoc', assistantMessageDoc);
-//     } catch (error) {
-//       logger.error(`Error saving assistant message: ${error}`);
-//       throw error;
-//     }
-//   } catch (error) {
-//     logger.error(`Error saving chat completion: ${error}`);
-//   }
-// }

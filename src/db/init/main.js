@@ -128,7 +128,7 @@ const createChatSession = async (user, workspace, assistant, folder) => {
     assistantId: assistant._id,
     folderId: folder._id,
     model: 'gpt-4-turbo-preview',
-    prompt: "Let's start our first conversation.",
+    prompt: 'Let\'s start our first conversation.',
     active: true,
     activeSessionId: null,
     settings: {

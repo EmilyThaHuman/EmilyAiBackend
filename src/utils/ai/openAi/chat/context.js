@@ -102,7 +102,7 @@ const handleSummarization = async (messages, chatOpenAI, sessionId) => {
     return summary;
   } catch (error) {
     const chatData = { sessionId, messages };
-    logChatDataError(`handleSummarization`, chatData, error);
+    logChatDataError('handleSummarization', chatData, error);
     throw error;
   }
 };

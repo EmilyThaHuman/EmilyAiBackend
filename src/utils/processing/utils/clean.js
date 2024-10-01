@@ -23,7 +23,7 @@ function unescapeHtml(code) {
     '&lt;': '<',
     '&gt;': '>',
     '&quot;': '"',
-    '&#39;': "'",
+    '&#39;': '\'',
   };
   return code.replace(/&amp;|&lt;|&gt;|&quot;|&#39;/g, (match) => entities[match]);
 }

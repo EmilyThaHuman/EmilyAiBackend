@@ -3,7 +3,8 @@
  */
 const path = require('path');
 const dotenv = require('dotenv');
-
+const { CHAT_SETTING_LIMITS } = require('./constants');
+const { getEnv } = require('@/utils/api');
 // Load environment variables from .env file
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
@@ -32,8 +33,6 @@ const test = {
     ],
   },
 };
-const { CHAT_SETTING_LIMITS } = require('./constants');
-const { getEnv } = require('@/utils/api');
 
 const defaults = {
   root: path.normalize(__dirname + '/..'),
@@ -126,8 +125,8 @@ const defaults = {
     helmet: {
       contentSecurityPolicy: {
         directives: {
-          defaultSrc: ["'self'"],
-          styleSrc: ["'self'", 'https://fonts.googleapis.com'],
+          defaultSrc: ['\'self\''],
+          styleSrc: ['\'self\'', 'https://fonts.googleapis.com'],
         },
       },
     },

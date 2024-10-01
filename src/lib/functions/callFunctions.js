@@ -17,7 +17,7 @@ const analyzeTextWithGPT = async (text) => {
     return response.choices[0].text.trim();
   } catch (error) {
     logger.error('Error analyzing text with GPT:', error);
-    return `Could not analyze content.`;
+    return 'Could not analyze content.';
   }
 };
 const analyzeImage = async (imageUrl) => {

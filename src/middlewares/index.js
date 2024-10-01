@@ -18,6 +18,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const { User } = require('../models');
 const MongoStore = require('connect-mongo');
 const config = require('@/config');
+// const config = require('@/config');
 
 const middlewares = (app) => {
   // Set up Helmet for enhanced security, including Content Security Policy (CSP)

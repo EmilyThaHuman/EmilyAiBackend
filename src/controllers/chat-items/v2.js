@@ -49,42 +49,42 @@ const processFile = async (job) => {
 
   try {
     switch (mimetype) {
-      case 'application/pdf':
-        const pdfBuffer = await fs.promises.readFile(filepath);
-        const pdfData = await pdf(pdfBuffer);
-        content = pdfData.text;
-        break;
-      case 'text/csv':
-        const records = [];
-        const parser = parse({
-          delimiter: ',',
-          columns: true,
-          skip_empty_lines: true,
-        });
+    case 'application/pdf':
+      const pdfBuffer = await fs.promises.readFile(filepath);
+      const pdfData = await pdf(pdfBuffer);
+      content = pdfData.text;
+      break;
+    case 'text/csv':
+      const records = [];
+      const parser = parse({
+        delimiter: ',',
+        columns: true,
+        skip_empty_lines: true,
+      });
 
-        // Dynamically load the Pipeline from @xenova/transformers
-        const { Pipeline } = await loadTransformers();
+      // Dynamically load the Pipeline from @xenova/transformers
+      const { Pipeline } = await loadTransformers();
 
-        await pipeline(createReadStream(filepath), parser, async function* (source) {
-          for await (const record of source) {
-            records.push(record);
-          }
-        });
-        content = JSON.stringify(records);
-        break;
-      case 'text/plain':
-        content = await fs.promises.readFile(filepath, 'utf-8');
-        break;
-      case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-        const workbook = xlsx.readFile(filepath);
-        const sheetName = workbook.SheetNames[0];
-        const sheet = workbook.Sheets[sheetName];
-        content = JSON.stringify(xlsx.utils.sheet_to_json(sheet));
-        break;
-      case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-        const result = await mammoth.extractRawText({ path: filepath });
-        content = result.value;
-        break;
+      await pipeline(createReadStream(filepath), parser, async function* (source) {
+        for await (const record of source) {
+          records.push(record);
+        }
+      });
+      content = JSON.stringify(records);
+      break;
+    case 'text/plain':
+      content = await fs.promises.readFile(filepath, 'utf-8');
+      break;
+    case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+      const workbook = xlsx.readFile(filepath);
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      content = JSON.stringify(xlsx.utils.sheet_to_json(sheet));
+      break;
+    case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+      const result = await mammoth.extractRawText({ path: filepath });
+      content = result.value;
+      break;
     }
 
     await populateVectorStore(content);

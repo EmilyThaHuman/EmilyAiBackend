@@ -15,7 +15,54 @@ const {
 
 const router = express.Router();
 
+// --- Workspace service ---
 router.get('/', asyncHandler(getAllWorkspaces));
+router.post('/create', asyncHandler(createWorkspace));
+router.get('/:workspaceId', asyncHandler(getWorkspaceById));
+router.put('/:workspaceId', asyncHandler(updateWorkspace));
+router.delete('/:workspaceId', asyncHandler(deleteWorkspace));
+// --- Folders service ---
+router.post('/:workspaceId/folders', async (req, res) => {
+  try {
+    const { workspaceId } = req.params;
+    const { userId, folderData } = req.body;
+
+    if (!userId || !workspaceId || !folderData.space) {
+      return res.status(400).json({ message: 'Missing required fields' });
+    }
+
+    const savedWorkspaceFolder = await createWorkspaceFolder(
+      userId,
+      workspaceId,
+      folderData.space,
+      folderData
+    );
+
+    res.status(201).json({
+      message: 'Workspace folder created successfully',
+      folder: savedWorkspaceFolder,
+    });
+  } catch (error) {
+    res.status(400).json({ message: 'Error creating workspace folder', error: error.message });
+  }
+});
+router.get('/:workspaceId/folders/:folderId', async (req, res) => {
+  try {
+    const { workspaceId, folderId } = req.params;
+    // const { space } = req.query;
+    const result = await fetchWorkspaceAndFolders(workspaceId, folderId);
+
+    res.json({
+      message: `Workspace and folder fetched successfully, workspaceId: ${workspaceId}, folderId: ${folderId}, result: ${JSON.stringify(result)}`,
+      workspace: result.workspace,
+      folder: result.folder,
+      //...result,
+    });
+  } catch (error) {
+    console.error(`Error in /folders/:space route: ${error.message}`);
+    res.status(500).json({ error: 'Error fetching folders', message: error.message });
+  }
+});
 router.get('/:workspaceId/folders/space/:space', async (req, res) => {
   try {
     const { workspaceId, space } = req.params;
@@ -34,23 +81,6 @@ router.get('/:workspaceId/folders/space/:space', async (req, res) => {
       workspace: result.workspace,
       folders: result.folders,
       // ...result,
-    });
-  } catch (error) {
-    console.error(`Error in /folders/:space route: ${error.message}`);
-    res.status(500).json({ error: 'Error fetching folders', message: error.message });
-  }
-});
-router.get('/:workspaceId/folders/:folderId', async (req, res) => {
-  try {
-    const { workspaceId, folderId } = req.params;
-    // const { space } = req.query;
-    const result = await fetchWorkspaceAndFolders(workspaceId, folderId);
-
-    res.json({
-      message: `Workspace and folder fetched successfully, workspaceId: ${workspaceId}, folderId: ${folderId}, result: ${JSON.stringify(result)}`,
-      workspace: result.workspace,
-      folder: result.folder,
-      //...result,
     });
   } catch (error) {
     console.error(`Error in /folders/:space route: ${error.message}`);
@@ -92,6 +122,7 @@ router.get('/:workspaceId/folders/:folderId/items/:itemId', async (req, res) => 
     res.status(500).json({ error: 'Error fetching folders', message: error.message });
   }
 });
+// --- ChatSessions service ---
 router.get('/:workspaceId/chatSessions', async (req, res) => {
   try {
     const { workspaceId } = req.params;
@@ -143,34 +174,7 @@ router.post('/:workspaceId/chatSessions', async (req, res) => {
       .json({ error: 'Error creating or fetching chat session', message: error.message });
   }
 });
-router.post('/:workspaceId/folders', async (req, res) => {
-  try {
-    const { workspaceId } = req.params;
-    const { userId, folderData } = req.body;
 
-    if (!userId || !workspaceId || !folderData.space) {
-      return res.status(400).json({ message: 'Missing required fields' });
-    }
-
-    const savedWorkspaceFolder = await createWorkspaceFolder(
-      userId,
-      workspaceId,
-      folderData.space,
-      folderData
-    );
-
-    res.status(201).json({
-      message: 'Workspace folder created successfully',
-      folder: savedWorkspaceFolder,
-    });
-  } catch (error) {
-    res.status(400).json({ message: 'Error creating workspace folder', error: error.message });
-  }
-});
 // router.get('/folders/:space', asyncHandler(getAllWorkspaces));
-router.get('/:id', asyncHandler(getWorkspaceById));
-router.post('/create', asyncHandler(createWorkspace));
-router.put('/:id', asyncHandler(updateWorkspace));
-router.delete('/:id', asyncHandler(deleteWorkspace));
 
 module.exports = router;
