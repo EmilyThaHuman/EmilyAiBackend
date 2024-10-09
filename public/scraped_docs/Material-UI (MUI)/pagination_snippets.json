@@ -1,0 +1,79 @@
+[
+  {
+    "component": "Pagination",
+    "title": "Untitled",
+    "code": "<Pagination count={10} /> <Pagination count={10} color=\"primary\" /> <Pagination count={10} color=\"secondary\" /> <Pagination count={10} disabled /><Pagination count={10} /> <Pagination count={10} color=\"primary\" /> <Pagination count={10} color=\"secondary\" /> <Pagination count={10} disabled />",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Pagination",
+    "title": "Untitled",
+    "code": "<Pagination count={10} variant=\"outlined\" /> <Pagination count={10} variant=\"outlined\" color=\"primary\" /> <Pagination count={10} variant=\"outlined\" color=\"secondary\" /> <Pagination count={10} variant=\"outlined\" disabled /><Pagination count={10} variant=\"outlined\" /> <Pagination count={10} variant=\"outlined\" color=\"primary\" /> <Pagination count={10} variant=\"outlined\" color=\"secondary\" /> <Pagination count={10} variant=\"outlined\" disabled />",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Pagination",
+    "title": "Untitled",
+    "code": "<Pagination count={10} shape=\"rounded\" /> <Pagination count={10} variant=\"outlined\" shape=\"rounded\" /><Pagination count={10} shape=\"rounded\" /> <Pagination count={10} variant=\"outlined\" shape=\"rounded\" />",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Pagination",
+    "title": "Untitled",
+    "code": "<Pagination count={10} size=\"small\" /> <Pagination count={10} /> <Pagination count={10} size=\"large\" /><Pagination count={10} size=\"small\" /> <Pagination count={10} /> <Pagination count={10} size=\"large\" />",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Pagination",
+    "title": "Untitled",
+    "code": "<Pagination count={10} showFirstButton showLastButton /> <Pagination count={10} hidePrevButton hideNextButton /><Pagination count={10} showFirstButton showLastButton /> <Pagination count={10} hidePrevButton hideNextButton />",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Pagination",
+    "title": "Untitled",
+    "code": "<Pagination count={10} renderItem={(item) => ( <PaginationItem slots={{ previous: ArrowBackIcon, next: ArrowForwardIcon }} {...item} /> )} /><Pagination count={10} renderItem={(item) => ( <PaginationItem slots={{ previous: ArrowBackIcon, next: ArrowForwardIcon }} {...item} /> )} />",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Pagination",
+    "title": "Untitled",
+    "code": "<Pagination count={11} defaultPage={6} siblingCount={0} /> <Pagination count={11} defaultPage={6} /> {} <Pagination count={11} defaultPage={6} siblingCount={0} boundaryCount={2} /> <Pagination count={11} defaultPage={6} boundaryCount={2} /><Pagination count={11} defaultPage={6} siblingCount={0} /> <Pagination count={11} defaultPage={6} /> {} <Pagination count={11} defaultPage={6} siblingCount={0} boundaryCount={2} /> <Pagination count={11} defaultPage={6} boundaryCount={2} />",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Pagination",
+    "title": "Untitled",
+    "code": "<Typography>Page: {page}</Typography> <Pagination count={10} page={page} onChange={handleChange} /><Typography>Page: {page}</Typography> <Pagination count={10} page={page} onChange={handleChange} />",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Pagination",
+    "title": "Untitled",
+    "code": "<MemoryRouter initialEntries={['/inbox']} initialIndex={0}> <Routes> <Route path=\"*\" element={<Content />} /> </Routes> </MemoryRouter><MemoryRouter initialEntries={['/inbox']} initialIndex={0}> <Routes> <Route path=\"*\" element={<Content />} /> </Routes> </MemoryRouter>",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Pagination",
+    "title": "Untitled",
+    "code": "import usePagination from '@mui/material/usePagination';",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Pagination",
+    "title": "Untitled",
+    "code": "<TablePagination component=\"div\" count={100} page={page} onPageChange={handleChangePage} rowsPerPage={rowsPerPage} onRowsPerPageChange={handleChangeRowsPerPage} /><TablePagination component=\"div\" count={100} page={page} onPageChange={handleChangePage} rowsPerPage={rowsPerPage} onRowsPerPageChange={handleChangeRowsPerPage} />",
+    "language": "jsx",
+    "description": ""
+  }
+]

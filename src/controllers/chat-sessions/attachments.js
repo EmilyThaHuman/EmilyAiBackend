@@ -7,7 +7,7 @@ const {
   AssistantFile,
   ChatFile,
   MessageFileItem,
-  Message: ChatMessage,
+  ChatMessage,
   ChatSession,
 } = require('@/models');
 const { getDB, getBucket } = require('@/db');
@@ -411,7 +411,7 @@ const deleteMessagesIncludingAndAfter = (req, res) => {
   }, res);
 };
 const getListFiles = (req, res) => {
-  const directoryPath = path.join(__dirname, '@/public/static');
+  const directoryPath = path.join(__dirname, '../../../public/static');
   fs.readdir(directoryPath, (err, files) => {
     if (err) {
       console.error('Unable to scan files:', err);

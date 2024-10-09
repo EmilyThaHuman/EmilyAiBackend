@@ -8,7 +8,7 @@ const getOpenAIClient = async (clientKey, ClientClass, config) => {
   try {
     if (!clients[clientKey]) {
       clients[clientKey] = new ClientClass(config);
-      logger.info(`${clientKey} client initialized successfully`);
+      logger.info(`[OPENAI] ${clientKey} client initialized successfully`);
     }
     return clients[clientKey];
   } catch (error) {

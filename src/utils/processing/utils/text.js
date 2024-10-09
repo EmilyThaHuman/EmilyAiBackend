@@ -1,4 +1,8 @@
 // String Manipulation, Parsing, and Extraction Utilities
+const axios = require('axios');
+const cheerio = require('cheerio');
+const { logger } = require('@/config/logging');
+
 function replaceUnsupportedCharacters(text) {
   const replacements = {
     '●': '*',
@@ -30,10 +34,6 @@ const extractFirstCodeBlock = (input) => {
   }
   throw new Error('No code block found in input');
 };
-
-const axios = require('axios');
-const cheerio = require('cheerio');
-const { logger } = require('@/config/logging/index');
 
 async function extractTextFromUrl(url) {
   try {

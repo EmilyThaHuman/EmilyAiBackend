@@ -5,17 +5,22 @@
  */
 
 const multer = require('multer');
+const { logger } = require('../config/logging'); // Assuming you have a logging module
+const CustomError = require('@/config/constants/errors/CustomError');
 
 const formatErrorResponse = (err, includeDetails = false) => {
   const response = {
-    message: includeDetails ? err.message : 'An error occurred',
+    success: false,
+    message: err.feedback || 'An error occurred',
     status: err.name,
-    statusCode: err.statusCode || 500,
+    statusCode: err.status || 500,
   };
 
   if (includeDetails) {
+    response.error = err.message;
     response.stack = err.stack;
     response.functionName = err.stack.split('\n')[1]?.trim()?.split(' ')[1];
+    response.cause = err.cause;
   }
 
   return response;
@@ -26,25 +31,38 @@ const errorHandler = (err, req, res, next) => {
     return next();
   }
 
-  // Log the error (consider using a proper logging library in production)
-  console.error(err);
+  const isProduction = process.env.NODE_ENV === 'production';
+  let statusCode = err.status || 500; // Default to 500 Internal Server Error
 
+  // Log the error using your logging module
+  logger.error(`Error: ${err.name}, Message: ${err.message}, Status: ${statusCode}`);
+
+  // Handle specific known errors
   if (err instanceof multer.MulterError) {
-    return res.status(400).json({ error: err.message });
+    statusCode = 400;
+    res.status(statusCode).json({ success: false, message: err.message });
+    return;
   }
 
   if (err.name === 'ValidationError') {
-    return res.status(400).json({ error: err.message });
+    statusCode = 400;
+    res.status(statusCode).json({ success: false, message: err.message });
+    return;
   }
 
   if (err.name === 'UnauthorizedError') {
-    return res.status(401).json({ error: 'Unauthorized' });
+    statusCode = 401;
+    res.status(statusCode).json({ success: false, message: 'Unauthorized' });
+    return;
   }
 
-  const statusCode = res.statusCode !== 200 ? res.statusCode : 500;
+  // For instances of CustomError, use the status and feedback
+  if (err instanceof CustomError) {
+    statusCode = err.status || statusCode;
+  }
+
   res.status(statusCode);
 
-  const isProduction = process.env.NODE_ENV === 'production';
   const errorResponse = formatErrorResponse(err, !isProduction);
 
   res.json(errorResponse);

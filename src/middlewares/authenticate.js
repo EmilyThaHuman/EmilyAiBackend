@@ -1,4 +1,4 @@
-const AuthorizationError = require('@/config/constants/errors/AuthorizationError');
+const { AuthorizationError } = require('@/config/constants/errors');
 const { logger } = require('@/config/logging');
 const { User } = require('@/models');
 const jwt = require('jsonwebtoken');
@@ -7,7 +7,9 @@ const jwt = require('jsonwebtoken');
 const ACCESS_TOKEN = {
   secret: process.env.AUTH_ACCESS_TOKEN_SECRET,
 };
-
+const REFRESH_TOKEN = {
+  secret: process.env.AUTH_REFRESH_TOKEN_SECRET,
+};
 const authenticate = async (req, res, next) => {
   try {
     const authHeader = req.header('Authorization');

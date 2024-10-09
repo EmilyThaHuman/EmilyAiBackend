@@ -564,72 +564,72 @@
 //     await vectorQueryStore.addDocuments(splitInteractionDocs);
 
 //     res.write(`data: ${JSON.stringify({ content: fullResponse })}\n\n`);
-    // const promptTemplate = new PromptTemplate({
-    //   template: 'Chat Context: {context}\n\nSummary of previous messages: {summary}\n\nUser: {prompt}\nAI:',
-    //   inputVariables: ['context', 'summary', 'prompt'],
-    // });
-    // const formattedPrompt = await promptTemplate.format({ context, summary, prompt, dbSearchResults });
-    // // Stream response handler
-    // let result;
-    // try {
-    //   // Chat OpenAI completion
-    //   const systemContent = getMainSystemMessageContent();
-    //   const assistantInstructions = getMainAssistantMessageInstructions();
-    //   result = await chatOpenAI.completionWithRetry({
-    //     model: completionModel,
-    //     messages: [
-    //       // ...messages,
-    //       {
-    //         role: 'system',
-    //         content: systemContent,
-    //       },
-    //       { role: 'assistant', content: assistantInstructions },
-    //       { role: 'user', content: formattedPrompt },
-    //       // response.choices[0].message,
-    //       // function_call_result_message,
-    //     ],
-    //     stream: true,
-    //     stream_options: {
-    //       include_usage: true,
-    //     },
-    //     response_format: { type: 'json_object' },
-    //   });
-    // } catch (error) {
-    //   logger.error('Error in chatOpenAI.completionWithRetry:', error);
-    //   throw error;
-    // }
-    // for await (const chunk of result) {
-    //   // res.flushHeaders();
-    //   const chunkContent = await responseHandler.handleChunk(chunk);
-    //   // logger.info(`chunkContent: ${JSON.stringify(chunkContent)}`, chunkContent);
-    //   res.write(`data: ${JSON.stringify({ content: chunkContent })}\n\n`);
+// const promptTemplate = new PromptTemplate({
+//   template: 'Chat Context: {context}\n\nSummary of previous messages: {summary}\n\nUser: {prompt}\nAI:',
+//   inputVariables: ['context', 'summary', 'prompt'],
+// });
+// const formattedPrompt = await promptTemplate.format({ context, summary, prompt, dbSearchResults });
+// // Stream response handler
+// let result;
+// try {
+//   // Chat OpenAI completion
+//   const systemContent = getMainSystemMessageContent();
+//   const assistantInstructions = getMainAssistantMessageInstructions();
+//   result = await chatOpenAI.completionWithRetry({
+//     model: completionModel,
+//     messages: [
+//       // ...messages,
+//       {
+//         role: 'system',
+//         content: systemContent,
+//       },
+//       { role: 'assistant', content: assistantInstructions },
+//       { role: 'user', content: formattedPrompt },
+//       // response.choices[0].message,
+//       // function_call_result_message,
+//     ],
+//     stream: true,
+//     stream_options: {
+//       include_usage: true,
+//     },
+//     response_format: { type: 'json_object' },
+//   });
+// } catch (error) {
+//   logger.error('Error in chatOpenAI.completionWithRetry:', error);
+//   throw error;
+// }
+// for await (const chunk of result) {
+//   // res.flushHeaders();
+//   const chunkContent = await responseHandler.handleChunk(chunk);
+//   // logger.info(`chunkContent: ${JSON.stringify(chunkContent)}`, chunkContent);
+//   res.write(`data: ${JSON.stringify({ content: chunkContent })}\n\n`);
 
-    //   if (responseHandler.isResponseComplete()) {
-    //     const fullResponse = responseHandler.getFullResponse();
+//   if (responseHandler.isResponseComplete()) {
+//     const fullResponse = responseHandler.getFullResponse();
 
-    //     const assistantMessageId = await createMessage(
-    //       chatSession._id,
-    //       'assistant',
-    //       fullResponse,
-    //       userId,
-    //       chatSession.messages.length + 1
-    //     );
-    //     chatSession.messages.push(assistantMessageId);
-    //     await chatSession.save();
+//     const assistantMessageId = await createMessage(
+//       chatSession._id,
+//       'assistant',
+//       fullResponse,
+//       userId,
+//       chatSession.messages.length + 1
+//     );
+//     chatSession.messages.push(assistantMessageId);
+//     await chatSession.save();
 
-    //     // Add the interaction to the vector store
-    //     const docs = [
-    //       { pageContent: prompt, metadata: { chatId: chatSession._id.toString(), role: 'user' } },
-    //       { pageContent: fullResponse, metadata: { chatId: chatSession._id.toString(), role: 'assistant' } },
-    //     ];
-    //     const textSplitter = new RecursiveCharacterTextSplitter({
-    //       chunkSize: 1000,
-    //       chunkOverlap: 200,
-    //     });
-    //     const splitDocs = await textSplitter.splitDocuments(docs);
-    //     await vectorQueryStore.addDocuments(splitDocs);
-    //   }
-    // }
+//     // Add the interaction to the vector store
+//     const docs = [
+//       { pageContent: prompt, metadata: { chatId: chatSession._id.toString(), role: 'user' } },
+//       { pageContent: fullResponse, metadata: { chatId: chatSession._id.toString(), role: 'assistant' } },
+//     ];
+//     const textSplitter = new RecursiveCharacterTextSplitter({
+//       chunkSize: 1000,
+//       chunkOverlap: 200,
+//     });
+//     const splitDocs = await textSplitter.splitDocuments(docs);
+//     await vectorQueryStore.addDocuments(splitDocs);
+//   }
+// }
 //   } catch (error) {
 //     logger.error('Error in streamWithCompletion:', error);
 //     throw error;

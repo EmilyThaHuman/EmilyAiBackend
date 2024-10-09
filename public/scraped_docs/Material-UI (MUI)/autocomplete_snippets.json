@@ -1,0 +1,128 @@
+[
+  {
+    "component": "Autocomplete",
+    "title": "Untitled",
+    "code": "<Autocomplete\ndisablePortal\noptions={top100Films}\nsx={{ width: 300 }}\nrenderInput={(params) => <TextField {...params} label=\"Movie\" />}\n/><Autocomplete\ndisablePortal\noptions={top100Films}\nsx={{ width: 300 }}\nrenderInput={(params) => <TextField {...params} label=\"Movie\" />}\n/>",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Autocomplete",
+    "title": "Untitled",
+    "code": "interface AutocompleteOption {\nlabel: string;\n}\ntype AutocompleteOption = string;",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Autocomplete",
+    "title": "Untitled",
+    "code": "const options = [\n{ label: 'The Godfather', id: 1 },\n{ label: 'Pulp Fiction', id: 2 },\n];\nconst options = ['The Godfather', 'Pulp Fiction'];",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Autocomplete",
+    "title": "Untitled",
+    "code": "return <Autocomplete multiple value={allValues.filter((v) => v.selected)} />;\nconst selectedValues = React.useMemo(\n() => allValues.filter((v) => v.selected),\n[allValues],\n);\nreturn <Autocomplete multiple value={selectedValues} />;",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Autocomplete",
+    "title": "Untitled",
+    "code": "<Autocomplete\noptions={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}\ngroupBy={(option) => option.firstLetter}\ngetOptionLabel={(option) => option.title}\nsx={{ width: 300 }}\nrenderInput={(params) => <TextField {...params} label=\"With categories\" />}\n/><Autocomplete\noptions={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}\ngroupBy={(option) => option.firstLetter}\ngetOptionLabel={(option) => option.title}\nsx={{ width: 300 }}\nrenderInput={(params) => <TextField {...params} label=\"With categories\" />}\n/>",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Autocomplete",
+    "title": "Untitled",
+    "code": "<Autocomplete\noptions={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}\ngroupBy={(option) => option.firstLetter}\ngetOptionLabel={(option) => option.title}\nsx={{ width: 300 }}\nrenderInput={(params) => <TextField {...params} label=\"With categories\" />}\nrenderGroup={(params) => (\n<li key={params.key}>\n<GroupHeader>{params.group}</GroupHeader>\n<GroupItems>{params.children}</GroupItems>\n</li>\n)}\n/><Autocomplete\noptions={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}\ngroupBy={(option) => option.firstLetter}\ngetOptionLabel={(option) => option.title}\nsx={{ width: 300 }}\nrenderInput={(params) => <TextField {...params} label=\"With categories\" />}\nrenderGroup={(params) => (\n<li key={params.key}>\n<GroupHeader>{params.group}</GroupHeader>\n<GroupItems>{params.children}</GroupItems>\n</li>\n)}\n/>",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Autocomplete",
+    "title": "Untitled",
+    "code": "<Autocomplete\noptions={timeSlots}\ngetOptionDisabled={(option) =>\noption === timeSlots[0] || option === timeSlots[2]\n}\nsx={{ width: 300 }}\nrenderInput={(params) => <TextField {...params} label=\"Disabled options\" />}\n/><Autocomplete\noptions={timeSlots}\ngetOptionDisabled={(option) =>\noption === timeSlots[0] || option === timeSlots[2]\n}\nsx={{ width: 300 }}\nrenderInput={(params) => <TextField {...params} label=\"Disabled options\" />}\n/>",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Autocomplete",
+    "title": "Untitled",
+    "code": "import { useAutocomplete } from '@mui/base/useAutocomplete';",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Autocomplete",
+    "title": "Untitled",
+    "code": "import useAutocomplete from '@mui/material/useAutocomplete';",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Autocomplete",
+    "title": "Untitled",
+    "code": "<Autocomplete filterOptions={(x) => x} />",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Autocomplete",
+    "title": "Untitled",
+    "code": "<Autocomplete\nmultiple\nlimitTags={2}\nid=\"multiple-limit-tags\"\noptions={top100Films}\ngetOptionLabel={(option) => option.title}\ndefaultValue={[top100Films[13], top100Films[12], top100Films[11]]}\nrenderInput={(params) => (\n<TextField {...params} label=\"limitTags\" placeholder=\"Favorites\" />\n)}\nsx={{ width: '500px' }}\n/><Autocomplete\nmultiple\nlimitTags={2}\nid=\"multiple-limit-tags\"\noptions={top100Films}\ngetOptionLabel={(option) => option.title}\ndefaultValue={[top100Films[13], top100Films[12], top100Films[11]]}\nrenderInput={(params) => (\n<TextField {...params} label=\"limitTags\" placeholder=\"Favorites\" />\n)}\nsx={{ width: '500px' }}\n/>",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Autocomplete",
+    "title": "Untitled",
+    "code": "<ThemeProvider theme={customTheme(outerTheme)}>\n<Stack spacing={5} sx={{ width: 300 }}>\n<MovieSelect />\n<CountrySelect />\n</Stack>\n</ThemeProvider><ThemeProvider theme={customTheme(outerTheme)}>\n<Stack spacing={5} sx={{ width: 300 }}>\n<MovieSelect />\n<CountrySelect />\n</Stack>\n</ThemeProvider>",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Autocomplete",
+    "title": "Untitled",
+    "code": "import { createFilterOptions } from '@mui/material/Autocomplete';",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Autocomplete",
+    "title": "Untitled",
+    "code": "const filterOptions = createFilterOptions({\nmatchFrom: 'start',\nstringify: (option) => option.title,\n});\n<Autocomplete filterOptions={filterOptions} />;",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Autocomplete",
+    "title": "Untitled",
+    "code": "import { matchSorter } from 'match-sorter';\nconst filterOptions = (options, { inputValue }) => matchSorter(options, inputValue);\n<Autocomplete filterOptions={filterOptions} />;",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Autocomplete",
+    "title": "Untitled",
+    "code": "<Autocomplete\nsx={{ width: 300 }}\ndisableListWrap\noptions={OPTIONS}\ngroupBy={(option) => option[0].toUpperCase()}\nrenderInput={(params) => <TextField {...params} label=\"10,000 options\" />}\nrenderOption={(props, option, state) =>\n[props, option, state.index] as React.ReactNode\n}\nrenderGroup={(params) => params as any}\nslots={{\npopper: StyledPopper,\nlistbox: ListboxComponent,\n}}\n/><Autocomplete\nsx={{ width: 300 }}\ndisableListWrap\noptions={OPTIONS}\ngroupBy={(option) => option[0].toUpperCase()}\nrenderInput={(params) => <TextField {...params} label=\"10,000 options\" />}\nrenderOption={(props, option, state) =>\n[props, option, state.index] as React.ReactNode\n}\nrenderGroup={(params) => params as any}\nslots={{\npopper: StyledPopper,\nlistbox: ListboxComponent,\n}}\n/>",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Autocomplete",
+    "title": "Untitled",
+    "code": "<Autocomplete\nonKeyDown={(event) => {\nif (event.key === 'Enter') {\nevent.defaultMuiPrevented = true;\n}\n}}\n/>",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Autocomplete",
+    "title": "Untitled",
+    "code": "<TextField\n{...params}\ninputProps={{\n...params.inputProps,\nautoComplete: 'new-password',\n}}\n/>",
+    "language": "jsx",
+    "description": ""
+  }
+]

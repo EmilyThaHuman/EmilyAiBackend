@@ -1,0 +1,82 @@
+
+    --- CHAT COMPLETION RESPONSE ---
+    <h1>Rating Component for Chat Prompt Response Quality</h1>
+
+<h2>Component Explanation</h2>
+<p>This component is designed to rate the quality of chat prompt responses based on predefined criteria such as instruction following, groundedness, conciseness, fluency, and coherence. It allows users to assign a rating and provides an interface for detailed feedback. The rationale behind this design is to facilitate a structured and consistent evaluation process, enhancing the feedback loop for improving chat prompt designs.</p>
+
+<h2>Code</h2>
+<p>```jsx</p>
+<p>import React, { useState } from 'react';</p>
+
+<p>const RatingComponent = ({ onSubmit }) => {</p>
+<p>  const [rating, setRating] = useState(0);</p>
+<p>  const [comment, setComment] = useState('');</p>
+
+<p>  const handleSubmit = (e) => {</p>
+<p>    e.preventDefault();</p>
+<p>    onSubmit({ rating, comment });</p>
+<p>  };</p>
+
+<p>  return (</p>
+<p>    <form onSubmit={handleSubmit} className="space-y-4"></p>
+<p>      <div></p>
+<p>        <label htmlFor="rating" className="block mb-2 text-sm font-medium">Rating (1-5):</label></p>
+<p>        <input</p>
+<p>          id="rating"</p>
+<p>          type="number"</p>
+<p>          value={rating}</p>
+<p>          onChange={(e) => setRating(e.target.value)}</p>
+<p>          className="input input-bordered w-full max-w-xs"</p>
+<p>          min="1"</p>
+<p>          max="5"</p>
+<p>          required</p>
+<p>        /></p>
+<p>      </div></p>
+<p>      <div></p>
+<p>        <label htmlFor="comment" className="block mb-2 text-sm font-medium">Comment:</label></p>
+<p>        <textarea</p>
+<p>          id="comment"</p>
+<p>          rows="4"</p>
+<p>          value={comment}</p>
+<p>          onChange={(e) => setComment(e.target.value)}</p>
+<p>          className="textarea textarea-bordered w-full"</p>
+<p>          placeholder="Enter your feedback..."</p>
+<p>          required</p>
+<p>        ></textarea></p>
+<p>      </div></p>
+<p>      <button type="submit" className="btn btn-primary">Submit Rating</button></p>
+<p>    </form></p>
+<p>  );</p>
+<p>};</p>
+
+<p>export default RatingComponent;</p>
+<p>```</p>
+
+<h2>Usage Example</h2>
+<p>```jsx</p>
+<p>// Usage in a parent component</p>
+<p>import React from 'react';</p>
+<p>import RatingComponent from './RatingComponent';</p>
+
+<p>const App = () => {</p>
+<p>  const handleRatingSubmit = (data) => {</p>
+<p>    console.log('Rating Data:', data);</p>
+<p>  };</p>
+
+<p>  return (</p>
+<p>    <div className="p-4"></p>
+<p>      <h2 className="text-lg font-semibold mb-4">Rate Chat Prompt Response</h2></p>
+<p>      <RatingComponent onSubmit={handleRatingSubmit} /></p>
+<p>    </div></p>
+<p>  );</p>
+<p>};</p>
+
+<p>export default App;</p>
+<p>```</p>
+
+<h2>References</h2>
+<p>- React Documentation: https://reactjs.org/docs/hooks-intro.html</p>
+<p>- Tailwind CSS Documentation: https://tailwindcss.com/docs</p>
+    --------------------------------
+  

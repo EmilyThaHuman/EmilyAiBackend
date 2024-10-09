@@ -1,9 +1,9 @@
 const { OpenAIEmbeddings, ChatOpenAI } = require('@langchain/openai');
 const { getEnv } = require('../../api/env.js');
 const { default: OpenAI } = require('openai');
-const supportedMimeTypes = require('@/utils/processing/types/main.js');
 const { logger } = require('@/config/logging/logger.js');
 const { byteToImageURL } = require('@/utils/processing/utils/files.js');
+const { SUPPORTED_MIME_TYPES } = require('@/config/constants/files.js');
 require('dotenv').config();
 
 const getOpenaiClient = () => {
@@ -71,7 +71,7 @@ const messagesToOpenAIMessages = (messages, chatFiles) => {
   }));
 
   const parts = chatFiles.map((file) => {
-    if (supportedMimeTypes.has(file.mimeType)) {
+    if (SUPPORTED_MIME_TYPES.has(file.mimeType)) {
       return {
         type: 'image_url',
         image_url: {

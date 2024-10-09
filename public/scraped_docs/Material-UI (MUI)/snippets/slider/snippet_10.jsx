@@ -1,0 +1,11 @@
+<Slider
+aria-label="Temperature"
+defaultValue={30}
+getAriaValueText={valuetext}
+color="secondary"
+/><Slider
+aria-label="Temperature"
+defaultValue={30}
+getAriaValueText={valuetext}
+color="secondary"
+/>

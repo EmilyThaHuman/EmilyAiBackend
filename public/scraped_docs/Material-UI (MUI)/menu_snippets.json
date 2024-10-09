@@ -1,0 +1,9 @@
+[
+  {
+    "component": "Menu",
+    "title": "Untitled",
+    "code": "<PopupState variant=\"popover\" popupId=\"demo-popup-menu\">\n{(popupState) => (\n<React.Fragment>\n<Button variant=\"contained\" {...bindTrigger(popupState)}>\nDashboard\n</Button>\n<Menu {...bindMenu(popupState)}>\n<MenuItem onClick={popupState.close}>Profile</MenuItem>\n<MenuItem onClick={popupState.close}>My account</MenuItem>\n<MenuItem onClick={popupState.close}>Logout</MenuItem>\n</Menu>\n</React.Fragment>\n)}\n</PopupState><PopupState variant=\"popover\" popupId=\"demo-popup-menu\">\n{(popupState) => (\n<React.Fragment>\n<Button variant=\"contained\" {...bindTrigger(popupState)}>\nDashboard\n</Button>\n<Menu {...bindMenu(popupState)}>\n<MenuItem onClick={popupState.close}>Profile</MenuItem>\n<MenuItem onClick={popupState.close}>My account</MenuItem>\n<MenuItem onClick={popupState.close}>Logout</MenuItem>\n</Menu>\n</React.Fragment>\n)}\n</PopupState>",
+    "language": "jsx",
+    "description": ""
+  }
+]

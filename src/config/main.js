@@ -3,18 +3,19 @@
  */
 const path = require('path');
 const dotenv = require('dotenv');
-
+const { CHAT_SETTING_LIMITS } = require('./constants');
+const { getEnv } = require('@/utils/api');
 // Load environment variables from .env file
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
 const development = {
-  db: process.env.MONGODB_URI || getEnv('MONGODB_URI'),
+  db: getEnv('MONGODB_URI'),
 };
 const production = {
-  db: process.env.MONGODB_URI || getEnv('MONGODB_URI'),
+  db: getEnv('MONGODB_URI'),
 };
 const test = {
-  db: process.env.MONGODB_URI || 'mongodb://localhost/my_app_test',
+  db: getEnv('MONGODB_URI'),
   facebook: {
     clientID: 'APP_ID',
     clientSecret: 'SECRET',
@@ -32,8 +33,6 @@ const test = {
     ],
   },
 };
-const { CHAT_SETTING_LIMITS } = require('./constants');
-const { getEnv } = require('@/utils/api');
 
 const defaults = {
   root: path.normalize(__dirname + '/..'),
@@ -101,7 +100,7 @@ const defaults = {
     settings: CHAT_SETTING_LIMITS,
   },
   database: {
-    uri: process.env.MONGODB_URI || 'mongodb://localhost:27017/your_database',
+    uri: getEnv('MONGODB_URI'),
     options: {
       useCreateIndex: true,
       useFindAndModify: false,
@@ -177,13 +176,6 @@ const config = {
   production: Object.assign({}, production, defaults),
 }[process.env.NODE_ENV || 'development'];
 
-// Lazy-load clients and services
-config.getOpenAIClient = () => require('./services/openai').getClient();
-config.getOpenAILangChainClient = () => require('./services/openai').getLangChainClient();
-config.getPineconeClient = () => require('./services/pinecone').getClient();
-config.getLogger = () => require('./logging');
-config.getDatabase = () => require('./database');
-config.getEmbedding = () => require('./services/embedding').getEmbedding();
-config.getGridFS = () => require('./services/gridfs').getGridFS();
+config.getOpenAIClient = () => require('./services/openai').getLangChainClient();
 
 module.exports = config;

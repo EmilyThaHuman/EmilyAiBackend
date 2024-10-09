@@ -1,0 +1,30 @@
+[
+  {
+    "component": "Breadcrumbs",
+    "title": "Untitled",
+    "code": "<Breadcrumbs aria-label=\"breadcrumb\"> <Link underline=\"hover\" color=\"inherit\" href=\"/\"> MUI </Link> <Link underline=\"hover\" color=\"inherit\" href=\"/material-ui/getting-started/installation/\" > Core </Link> <Typography sx={{ color: 'text.primary' }}>Breadcrumbs</Typography> </Breadcrumbs><Breadcrumbs aria-label=\"breadcrumb\"> <Link underline=\"hover\" color=\"inherit\" href=\"/\"> MUI </Link> <Link underline=\"hover\" color=\"inherit\" href=\"/material-ui/getting-started/installation/\" > Core </Link> <Typography sx={{ color: 'text.primary' }}>Breadcrumbs</Typography> </Breadcrumbs>",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Breadcrumbs",
+    "title": "Untitled",
+    "code": "<Breadcrumbs separator=\"›\" aria-label=\"breadcrumb\"> {breadcrumbs} </Breadcrumbs> <Breadcrumbs separator=\"-\" aria-label=\"breadcrumb\"> {breadcrumbs} </Breadcrumbs> <Breadcrumbs separator={<NavigateNextIcon fontSize=\"small\" />} aria-label=\"breadcrumb\" > {breadcrumbs} </Breadcrumbs><Breadcrumbs separator=\"›\" aria-label=\"breadcrumb\"> {breadcrumbs} </Breadcrumbs> <Breadcrumbs separator=\"-\" aria-label=\"breadcrumb\"> {breadcrumbs} </Breadcrumbs> <Breadcrumbs separator={<NavigateNextIcon fontSize=\"small\" />} aria-label=\"breadcrumb\" > {breadcrumbs} </Breadcrumbs>",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Breadcrumbs",
+    "title": "Untitled",
+    "code": "<Breadcrumbs maxItems={2} aria-label=\"breadcrumb\"> <Link underline=\"hover\" color=\"inherit\" href=\"#\"> Home </Link> <Link underline=\"hover\" color=\"inherit\" href=\"#\"> Catalog </Link> <Link underline=\"hover\" color=\"inherit\" href=\"#\"> Accessories </Link> <Link underline=\"hover\" color=\"inherit\" href=\"#\"> New Collection </Link> <Typography sx={{ color: 'text.primary' }}>Belts</Typography> </Breadcrumbs><Breadcrumbs maxItems={2} aria-label=\"breadcrumb\"> <Link underline=\"hover\" color=\"inherit\" href=\"#\"> Home </Link> <Link underline=\"hover\" color=\"inherit\" href=\"#\"> Catalog </Link> <Link underline=\"hover\" color=\"inherit\" href=\"#\"> Accessories </Link> <Link underline=\"hover\" color=\"inherit\" href=\"#\"> New Collection </Link> <Typography sx={{ color: 'text.primary' }}>Belts</Typography> </Breadcrumbs>",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Breadcrumbs",
+    "title": "Untitled",
+    "code": "<Breadcrumbs aria-label=\"breadcrumb\"> <StyledBreadcrumb component=\"a\" href=\"#\" label=\"Home\" icon={<HomeIcon fontSize=\"small\" />} /> <StyledBreadcrumb component=\"a\" href=\"#\" label=\"Catalog\" /> <StyledBreadcrumb label=\"Accessories\" deleteIcon={<ExpandMoreIcon />} onDelete={handleClick} /> </Breadcrumbs><Breadcrumbs aria-label=\"breadcrumb\"> <StyledBreadcrumb component=\"a\" href=\"#\" label=\"Home\" icon={<HomeIcon fontSize=\"small\" />} /> <StyledBreadcrumb component=\"a\" href=\"#\" label=\"Catalog\" /> <StyledBreadcrumb label=\"Accessories\" deleteIcon={<ExpandMoreIcon />} onDelete={handleClick} /> </Breadcrumbs>",
+    "language": "jsx",
+    "description": ""
+  }
+]

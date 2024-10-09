@@ -1,6 +1,13 @@
+const tiktoken = require('tiktoken');
+
 function newTextBuffer(n, prefix, suffix) {
   const builders = Array(n).fill('');
-  return new TextBuffer({ builders, prefix, suffix });
+  // return new TextBuffer({ builders, prefix, suffix });
+  return {
+    builders,
+    prefix,
+    suffix,
+  };
 }
 
 function appendByIndex(tb, index, text) {
@@ -25,9 +32,6 @@ function tbToString(tb, separator) {
   }
   return result;
 }
-
-const tiktoken = require('tiktoken');
-const { TextBuffer } = require('@/models');
 
 async function getTokenCount(content) {
   const encoding = 'cl100k_base';

@@ -1,85 +1,21 @@
-// utils/openAIUtils.js
-// import { OpenAI } from 'langchain/llms/openai';
-// import { PromptTemplate } from 'langchain/prompts';
-// import { LLMChain } from 'langchain/chains';
-// import { initializeVectorStore } from './vectorStore.js';
-
 const { ChatOpenAI, OpenAIEmbeddings } = require('@langchain/openai');
-const { PromptTemplate } = require('@langchain/core/prompts');
 const { PineconeStore } = require('@langchain/pinecone');
 const { createPineconeIndex } = require('../pinecone');
 const { Pinecone } = require('@pinecone-database/pinecone');
 const { getEnv } = require('@/utils/api');
-// const fs = require('fs').promises;
-// const path = require('path');
 const { logger } = require('@/config/logging');
-// const doctrine = require('doctrine');
-// const jsdoc2md = require('jsdoc-to-markdown');
 const cheerio = require('cheerio');
 const axios = require('axios');
 const { SystemMessage, HumanMessage } = require('@langchain/core/messages');
-
-const uiLibraries = [
-  { name: 'React', sitemap: 'https://reactjs.org/sitemap.xml' },
-  { name: 'Vue', sitemap: 'https://vuejs.org/sitemap.xml' },
-  { name: 'Angular', sitemap: 'https://angular.io/generated/sitemap.xml' },
-  { name: 'Svelte', sitemap: 'https://svelte.dev/sitemap.xml' },
-  { name: 'Tailwind CSS', sitemap: 'https://tailwindcss.com/sitemap.xml' },
-  { name: 'Material-UI', sitemap: 'https://mui.com/sitemap.xml' },
-  { name: 'Radix UI', sitemap: 'https://www.radix-ui.com/sitemap.xml' },
-  { name: 'Chakra UI', sitemap: 'https://chakra-ui.com/sitemap.xml' },
-  { name: 'Ant Design', sitemap: 'https://ant.design/sitemap.xml' },
-  { name: 'Bootstrap', sitemap: 'https://getbootstrap.com/sitemap.xml' },
-  { name: 'Semantic UI', sitemap: 'https://semantic-ui.com/sitemap.xml' },
-  { name: 'Bulma', sitemap: 'https://bulma.io/sitemap.xml' },
-  { name: 'Foundation', sitemap: 'https://get.foundation/sitemap.xml' },
-];
+const { UI_LIBRARIES } = require('@/config/constants');
+const { PromptTemplate } = require('@langchain/core/prompts');
 
 const chatOpenAI = new ChatOpenAI({
   model: getEnv('OPENAI_API_CHAT_COMPLETION_MODEL'),
-  temperature: 0.7,
+  temperature: 0.2,
   maxTokens: 500,
-  apiKey: process.env.OPENAI_API_PROJECT_KEY, // Ensure your API key is set in the environment variables
+  apiKey: process.env.OPENAI_API_PROJECT_KEY,
 });
-// async function generateAndLintCode(prompt) {
-//   const generatedCode = await generateCodeFromPrompt(prompt);
-
-//   const eslint = new ESLint({ fix: true });
-//   const results = await eslint.lintText(generatedCode);
-//   const lintedCode = results[0].output || generatedCode;
-
-//   const formattedCode = prettier.format(lintedCode, {
-//     parser: 'babel',
-//     semi: true,
-//     singleQuote: true,
-//     trailingComma: 'es5',
-//   });
-
-//   return formattedCode;
-// }
-const generateOptimizedPrompt = async (input) => {
-  const template = `
-    Given the user input: {input}
-
-    Generate an optimized prompt that:
-    1. Clarifies any ambiguities in the input
-    2. Adds relevant context or background information
-    3. Specifies the desired output format or structure
-    4. Encourages a comprehensive and detailed response
-    5. Includes any necessary constraints or guidelines
-
-    Optimized prompt:
-  `;
-
-  const promptTemplate = new PromptTemplate({
-    template: template,
-    inputVariables: ['input'],
-  });
-
-  const chain = new ChatOpenAI({ prompt: promptTemplate });
-  const result = await chain.call({ input });
-  return result.text;
-};
 const performSemanticSearch = async (query, k = 3) => {
   const pinecone = new Pinecone({
     apiKey: process.env.PINECONE_API_KEY,
@@ -141,21 +77,6 @@ const summarizeText = async (text) => {
   return result.text;
 };
 
-// Function to extract keywords from the user query
-const extractKeywords = async (text) => {
-  const systemMessage = new SystemMessage(
-    'You are a helpful assistant that extracts main keywords from given text.'
-  );
-  const humanMessage = new HumanMessage(
-    `Extract the main keywords from the following text:\n\n${text}\n\nProvide the keywords as a comma-separated list.`
-  );
-
-  const response = await chatOpenAI.invoke([systemMessage, humanMessage]);
-  logger.info(`Extracted keywords: ${response.content}`);
-  return response.content.split(',').map((keyword) => keyword.trim());
-};
-
-// Function to identify mentioned libraries and component types
 const identifyLibrariesAndComponents = async (query) => {
   try {
     const systemMessage = new SystemMessage(
@@ -256,7 +177,7 @@ const getDocumentationUrl = async (library, componentType) => {
   try {
     if (!library || !componentType) return null;
     // 1. Use Array.find() with case-insensitive comparison
-    const matchingLibrary = uiLibraries.find(
+    const matchingLibrary = UI_LIBRARIES.find(
       (lib) => lib.name.toLowerCase() === library.toLowerCase()
     );
     if (!matchingLibrary) return null;
@@ -289,7 +210,6 @@ const getDocumentationUrl = async (library, componentType) => {
   }
 };
 
-// Function to scrape documentation content
 const scrapeDocumentation = async (url) => {
   const response = await axios.get(url);
   const $ = cheerio.load(response.data);
@@ -299,48 +219,6 @@ const scrapeDocumentation = async (url) => {
   return content;
 };
 
-// Main function to process the user query and retrieve relevant documentation
-const processQuery = async (query) => {
-  const keywords = await extractKeywords(query);
-  const { uiLibraries, jsLibraries, componentTypes } = await identifyLibrariesAndComponents(query);
-
-  let documentationContent = [];
-
-  if (uiLibraries.length > 0 && componentTypes.length > 0) {
-    for (const library of uiLibraries) {
-      for (const componentType of componentTypes) {
-        const docUrl = await getDocumentationUrl(library, componentType);
-        if (docUrl) {
-          const content = await scrapeDocumentation(docUrl);
-          documentationContent.push({ library, componentType, content });
-        }
-      }
-    }
-  } else if (componentTypes.length > 0) {
-    // If no specific library is mentioned, scrape three random libraries
-    const randomLibraries = uiLibraries.sort(() => 0.5 - Math.random()).slice(0, 3);
-
-    for (const library of randomLibraries) {
-      for (const componentType of componentTypes) {
-        const docUrl = await getDocumentationUrl(library.name, componentType);
-        if (docUrl) {
-          const content = await scrapeDocumentation(docUrl);
-          documentationContent.push({ library: library.name, componentType, content });
-        }
-      }
-    }
-  }
-
-  return {
-    keywords,
-    uiLibraries,
-    jsLibraries,
-    componentTypes,
-    documentationContent,
-  };
-};
-
-// Function to generate the optimization prompt
 const generateOptimizationPrompt = async (query, results) => {
   const template = `
     You are an expert in React and the following libraries: {libraries}.
@@ -382,132 +260,16 @@ function parseIfNecessary(obj) {
   return obj; // Return as is if it's already an object
 }
 
-function formatResponseForDocument(content) {
-  const { text, formatting = [], lists = [], codeBlocks = [], latex = [] } = content;
-  let formattedText = text;
-
-  // Utility function to apply formatting rules
-  function applyFormatting(text, formattingRules) {
-    if (!Array.isArray(formattingRules)) return text;
-    formattingRules.sort((a, b) => b.start - a.start); // Sort descending
-
-    formattingRules.forEach((rule) => {
-      const { type, start, end, level, url } = rule;
-      const substring = text.slice(start, end);
-      let replacement = substring;
-
-      switch (type) {
-        case 'bold':
-          replacement = `**${substring}**`;
-          break;
-        case 'italic':
-          replacement = `*${substring}*`;
-          break;
-        case 'underline':
-          replacement = `__${substring}__`;
-          break;
-        case 'code':
-          replacement = `\`${substring}\``;
-          break;
-        case 'link':
-          replacement = `[${substring}](${url})`;
-          break;
-        case 'header':
-          replacement = `${'#'.repeat(level || 1)} ${substring}`;
-          break;
-        case 'strikethrough':
-          replacement = `~~${substring}~~`;
-          break;
-        default:
-          break;
-      }
-      text = text.slice(0, start) + replacement + text.slice(end);
-    });
-    return text;
-  }
-
-  // Apply list formatting and convert it to a table-like format if necessary
-  function applyLists(text, listRules) {
-    if (!Array.isArray(listRules)) return text;
-    listRules.sort((a, b) => b.start - a.start);
-
-    listRules.forEach((list) => {
-      const listItems = list.items.map((item) => `- ${item}`).join('\n');
-      text = text.slice(0, list.start) + listItems + text.slice(list.end);
-    });
-    return text;
-  }
-
-  // Apply code block formatting
-  function applyCodeBlocks(text, codeBlockRules) {
-    if (!Array.isArray(codeBlockRules)) return text;
-    codeBlockRules.sort((a, b) => b.start - a.start);
-
-    codeBlockRules.forEach((block) => {
-      const codeBlock = `\`\`\`${block.language || ''}\n${block.code || text.slice(block.start, block.end)}\n\`\`\``;
-      text = text.slice(0, block.start) + codeBlock + text.slice(block.end);
-    });
-    return text;
-  }
-
-  // Apply LaTeX formatting
-  function applyLatex(text, latexRules) {
-    if (!Array.isArray(latexRules)) return text;
-    latexRules.sort((a, b) => b.start - a.start);
-
-    latexRules.forEach((expression) => {
-      const latexContent = text.slice(expression.start, expression.end);
-      const formattedLatex = `$$${latexContent}$$`;
-      text = text.slice(0, expression.start) + formattedLatex + text.slice(expression.end);
-    });
-    return text;
-  }
-
-  // Function to create a table from data if necessary
-  function createTableFromContent(content) {
-    // Example of assuming content is in a specific format
-    const tableHeader = '| Column 1 | Column 2 | Column 3 |\n| --- | --- | --- |\n'; // Example header
-    const tableRows = content
-      .map((row) => `| ${row.col1} | ${row.col2} | ${row.col3} |`)
-      .join('\n');
-    return tableHeader + tableRows;
-  }
-
-  // Apply all formatting progressively
-  formattedText = applyFormatting(formattedText, formatting);
-  formattedText = applyLists(formattedText, lists);
-  formattedText = applyCodeBlocks(formattedText, codeBlocks);
-  formattedText = applyLatex(formattedText, latex);
-
-  // Check if a table needs to be generated from the content
-  if (Array.isArray(content.tableData)) {
-    // Assuming content.tableData holds tabular data
-    formattedText += createTableFromContent(content.tableData);
-  }
-
-  return formattedText;
-}
-
-function formatResponse(obj) {
-  // Parse the object if it's a string
-  const parsedObj = parseIfNecessary(obj);
-
-  if (!parsedObj) {
-    throw new Error('Invalid object format');
-  }
-
-  const { content } = parsedObj;
-
-  // Get the fully formatted content
-  // const formattedText = formatResponseForDocument(content);
-
-  // Return the structured message as markdown
-  return JSON.stringify({
-    type: 'markdown',
-    content: content,
-  });
-}
-
+module.exports = {
+  generateOptimizationPrompt,
+  performSemanticSearch,
+  generateResponse,
+  summarizeText,
+  identifyLibrariesAndComponents,
+  getDocumentationUrl,
+  scrapeDocumentation,
+  parseIfNecessary,
+};
 // function generateDocumentation(code) {
 //   const jsdocComments = extractJSDocComments(code);
 //   const parsedComments = jsdocComments.map(comment => doctrine.parse(comment, { unwrap: true }));
@@ -566,23 +328,6 @@ function formatResponse(obj) {
 // {{/each}}
 //   `;
 // }
-module.exports = {
-  generateOptimizedPrompt,
-  generateOptimizationPrompt,
-  performSemanticSearch,
-  generateResponse,
-  summarizeText,
-  extractKeywords,
-  // generateDocumentation,
-  // extractJSDocComments,
-  // getCustomTemplate,
-  identifyLibrariesAndComponents,
-  getDocumentationUrl,
-  scrapeDocumentation,
-  processQuery,
-  formatResponse,
-  formatResponseForDocument,
-};
 // Main execution function
 // const executeRagChain = async (userQuery) => {
 //   const results = await processQuery(userQuery);

@@ -1,0 +1,100 @@
+[
+  {
+    "component": "Stack",
+    "title": "Untitled",
+    "code": "import Stack from '@mui/material/Stack';",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Stack",
+    "title": "Untitled",
+    "code": "<Stack spacing={2}>\n<Item>Item 1</Item>\n<Item>Item 2</Item>\n<Item>Item 3</Item>\n</Stack><Stack spacing={2}>\n<Item>Item 1</Item>\n<Item>Item 2</Item>\n<Item>Item 3</Item>\n</Stack>",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Stack",
+    "title": "Untitled",
+    "code": "<Stack direction=\"row\" spacing={2}>\n<Item>Item 1</Item>\n<Item>Item 2</Item>\n<Item>Item 3</Item>\n</Stack><Stack direction=\"row\" spacing={2}>\n<Item>Item 1</Item>\n<Item>Item 2</Item>\n<Item>Item 3</Item>\n</Stack>",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Stack",
+    "title": "Untitled",
+    "code": "<Stack\ndirection=\"row\"\ndivider={<Divider orientation=\"vertical\" flexItem />}\nspacing={2}\n>\n<Item>Item 1</Item>\n<Item>Item 2</Item>\n<Item>Item 3</Item>\n</Stack><Stack\ndirection=\"row\"\ndivider={<Divider orientation=\"vertical\" flexItem />}\nspacing={2}\n>\n<Item>Item 1</Item>\n<Item>Item 2</Item>\n<Item>Item 3</Item>\n</Stack>",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Stack",
+    "title": "Untitled",
+    "code": "<Stack\ndirection={{ xs: 'column', sm: 'row' }}\nspacing={{ xs: 1, sm: 2, md: 4 }}\n>\n<Item>Item 1</Item>\n<Item>Item 2</Item>\n<Item>Item 3</Item>\n</Stack><Stack\ndirection={{ xs: 'column', sm: 'row' }}\nspacing={{ xs: 1, sm: 2, md: 4 }}\n>\n<Item>Item 1</Item>\n<Item>Item 2</Item>\n<Item>Item 3</Item>\n</Stack>",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Stack",
+    "title": "Untitled",
+    "code": "<Stack\nspacing={{ xs: 1, sm: 2 }}\ndirection=\"row\"\nuseFlexGap\nsx={{ flexWrap: 'wrap' }}\n>\n<Item>Item 1</Item>\n<Item>Item 2</Item>\n<Item>Long content</Item>\n</Stack><Stack\nspacing={{ xs: 1, sm: 2 }}\ndirection=\"row\"\nuseFlexGap\nsx={{ flexWrap: 'wrap' }}\n>\n<Item>Item 1</Item>\n<Item>Item 2</Item>\n<Item>Long content</Item>\n</Stack>",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Stack",
+    "title": "Untitled",
+    "code": "import { ThemeProvider, createTheme } from '@mui/material/styles';\nimport Stack from '@mui/material/Stack';\nconst theme = createTheme({\ncomponents: {\nMuiStack: {\ndefaultProps: {\nuseFlexGap: true,\n},\n},\n},\n});\nfunction App() {\nreturn (\n<ThemeProvider theme={theme}>\n<Stack>…</Stack> {}\n</ThemeProvider>\n);\n}",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Stack",
+    "title": "Untitled",
+    "code": "<Stack\ndirection=\"row\"\nspacing={2}\nsx={{\njustifyContent: \"center\",\nalignItems: \"center\",\n}}\n>",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Stack",
+    "title": "Untitled",
+    "code": "- <Stack mt={2} />\n+ <Stack sx={{ mt: 2 }} />",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Stack",
+    "title": "Untitled",
+    "code": "<Stack>\n<Button sx={{ marginTop: '30px' }}>...</Button>\n</Stack>",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Stack",
+    "title": "Untitled",
+    "code": "<Stack direction=\"row\">\n<Typography noWrap>",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Stack",
+    "title": "Untitled",
+    "code": "<Stack direction=\"row\" sx={{ minWidth: 0 }}>\n<Typography noWrap>",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Stack",
+    "title": "Untitled",
+    "code": "<Item sx={{ my: 1, mx: 'auto', p: 2 }}>\n<Stack spacing={2} direction=\"row\" sx={{ alignItems: 'center' }}>\n<Avatar>W</Avatar>\n<Typography noWrap>{message}</Typography>\n</Stack>\n</Item>\n<Item sx={{ my: 1, mx: 'auto', p: 2 }}>\n<Stack spacing={2} direction=\"row\" sx={{ alignItems: 'center' }}>\n<Stack>\n<Avatar>W</Avatar>\n</Stack>\n<Stack sx={{ minWidth: 0 }}>\n<Typography noWrap>{message}</Typography>\n</Stack>\n</Stack>\n</Item><Item sx={{ my: 1, mx: 'auto', p: 2 }}>\n<Stack spacing={2} direction=\"row\" sx={{ alignItems: 'center' }}>\n<Avatar>W</Avatar>\n<Typography noWrap>{message}</Typography>\n</Stack>\n</Item>\n<Item sx={{ my: 1, mx: 'auto', p: 2 }}>\n<Stack spacing={2} direction=\"row\" sx={{ alignItems: 'center' }}>\n<Stack>\n<Avatar>W</Avatar>\n</Stack>\n<Stack sx={{ minWidth: 0 }}>\n<Typography noWrap>{message}</Typography>\n</Stack>\n</Stack>\n</Item>",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Stack",
+    "title": "Untitled",
+    "code": "<div class=\"MuiStack-root\">\n<!-- Stack contents -->\n</div>",
+    "language": "jsx",
+    "description": ""
+  }
+]

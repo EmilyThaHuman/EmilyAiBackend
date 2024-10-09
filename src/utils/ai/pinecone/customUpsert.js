@@ -1,203 +1,380 @@
-const fs = require('fs');
+const fs = require('fs').promises;
 const path = require('path');
 const { PineconeStore } = require('@langchain/pinecone');
 const { OpenAIEmbeddings } = require('@langchain/openai');
-const { RecursiveCharacterTextSplitter } = require('langchain/text_splitter');
 const { getPineconeClient } = require('./get');
 const { scrapeCode } = require('@/utils/processing/utils');
 const { logger } = require('@/config/logging');
 const { File } = require('@/models');
 const { getEnv } = require('@/utils/api');
+const { createPineconeIndex } = require('./create');
+const {
+  detectLanguage,
+  detectComponentType,
+  detectLibraryVersion,
+  calculateComplexity,
+  detectDependencies,
+  detectLicense,
+  detectFunctionality,
+  safeExecute,
+} = require('./utils');
+const { RecursiveCharacterTextSplitter } = require('langchain/text_splitter');
+
+const CHUNK_SIZE = 1000;
+const CHUNK_OVERLAP = 200;
+const CONCURRENCY = 5;
+
+const textSplitter = new RecursiveCharacterTextSplitter({
+  chunkSize: CHUNK_SIZE,
+  chunkOverlap: CHUNK_OVERLAP,
+  lengthFunction: (text) => text.length,
+  separators: ['\n\n', '\n', '. ', ', ', ' ', ''],
+});
 
 const upsertDocs = async (req, res) => {
-  // eslint-disable-next-line no-unused-vars
-  const { url, library, description, folderId, workspaceId } = req.body;
+  const { url, library, description, userId, folderId, workspaceId } = req.body;
 
   try {
-    // Validate input
-    if (!url || !library) {
-      throw new Error('URL and library are required fields.');
+    if (!userId || !url || !library) {
+      throw new Error('User ID, URL, and library are required fields.');
     }
 
     logger.info(`BODY: ${JSON.stringify(req.body)}`);
 
-    // Scrape content
-    let scrapedFiles;
-    try {
-      scrapedFiles = await scrapeCode(url, library);
-    } catch (error) {
-      throw new Error('Failed to scrape content: ' + error.message);
-    }
-    // let content;
-    // try {
-    //   content = await scrapeContent(url);
-    // } catch (error) {
-    //   throw new Error('Failed to scrape content: ' + error.message);
-    // }
+    const scrapedFiles = await scrapeCode(url, library);
 
-    // Define file path and name
-    // const fileName = `${library}_scraped_${Date.now()}.txt`;
-    // const filePath = path.join(__dirname, '../../../../public/uploads', fileName);
+    // Optimization 1: Use a single connection for all MongoDB operations
+    await File.bulkWrite(
+      scrapedFiles.map((filePath) => ({
+        insertOne: {
+          document: createFileDocument(filePath, userId, workspaceId, folderId),
+        },
+      }))
+    );
+    // const session = await File.startSession();
+    // await session.withTransaction(async () => {
+    //   await Promise.all(
+    //     scrapedFiles.map((file) => saveFileInfo(file, userId, workspaceId, folderId))
+    //   );
+    // });
+    // session.endSession();
 
-    // // Write the scraped content to a file
-    // try {
-    //   fs.writeFileSync(filePath, content, 'utf8');
-    //   logger.info(`Content saved to ${filePath}`);
-    // } catch (error) {
-    //   throw new Error('Failed to write file: ' + error.message);
-    // }
-    for (const filePath of scrapedFiles) {
-      // Get file stats
-      let fileStats;
-      try {
-        fileStats = fs.statSync(filePath);
-      } catch (error) {
-        throw new Error('Failed to get file stats: ' + error.message);
-      }
-      const fileName = path.basename(filePath);
-      const fileType = path.extname(fileName).slice(1);
+    const embedder = new OpenAIEmbeddings({
+      modelName: getEnv('PINECONE_EMBEDDING_MODEL_NAME'),
+      apiKey: getEnv('OPENAI_API_PROJECT_KEY'),
+      dimensions: getEnv('PINECONE_EMBEDDING_MODEL_DIMENSIONS'),
+    });
 
-      // Save file information to MongoDB
-      try {
-        const newFile = new File({
-          userId: req.userId,
-          workspaceId: workspaceId,
-          folderId: folderId,
-          name: fileName,
-          size: fileStats.size,
-          originalFileType: fileType,
-          filePath: filePath,
-          type: fileType,
-          metadata: {
-            fileSize: fileStats.size,
-            fileType: fileType,
-            lastModified: fileStats.mtime,
-          },
-        });
-        logger.info('Creating new file entry in MongoDB...');
-        await newFile.save();
-        logger.info(`File information saved to MongoDB for ${fileName}`);
-      } catch (error) {
-        throw new Error('Failed to save file information to MongoDB: ' + error.message);
-      }
-    }
-    // Initialize OpenAI embeddings
-    let embedder;
-    try {
-      embedder = new OpenAIEmbeddings({
-        modelName: 'text-embedding-3-small',
-        apiKey: process.env.OPENAI_API_PROJECT_KEY,
-        dimensions: 512,
-      });
-    } catch (error) {
-      throw new Error('Failed to initialize OpenAI embeddings: ' + error.message);
-    }
+    const pinecone = await getPineconeClient();
+    const pineconeIndex = await createPineconeIndex(pinecone, getEnv('PINECONE_INDEX'));
 
-    // Get Pinecone client and index
-    let pinecone, pineconeIndex;
-    try {
-      pinecone = await getPineconeClient();
-      pineconeIndex = await pinecone.Index(process.env.PINECONE_INDEX);
-    } catch (error) {
-      throw new Error('Failed to get Pinecone client or index: ' + error.message);
-    }
-    // let pinecone;
-    // try {
-    //   pinecone = await getPineconeClient();
-    // } catch (error) {
-    //   throw new Error('Failed to get Pinecone client: ' + error.message);
-    // }
+    const vstore = await PineconeStore.fromExistingIndex(embedder, {
+      pineconeIndex,
+      namespace: getEnv('PINECONE_NAMESPACE_3'),
+      textKey: 'text',
+    });
 
-    // // Get Pinecone index
-    // let pineconeIndex;
-    // try {
-    //   pineconeIndex = await pinecone.Index(process.env.PINECONE_INDEX);
-    // } catch (error) {
-    //   throw new Error('Failed to get Pinecone index: ' + error.message);
-    // }
+    // let totalDocs = 0;
 
-    // Create Pinecone store
-    let vstore;
-    try {
-      vstore = await PineconeStore.fromExistingIndex(embedder, {
-        pineconeIndex,
-        namespace: getEnv('PINECONE_NAMESPACE_1'),
-        textKey: 'text',
-      });
-    } catch (error) {
-      logger.error(`Error creating Pinecone store: ${error}`, error);
-      throw new Error('Failed to create Pinecone store: ' + error.message);
-    }
+    const totalDocs = await processFilesInParallel(scrapedFiles, vstore, library, url, description);
 
-    // Split text into documents
-    // Process and upsert documents
-    let totalDocs = 0;
-    for (const filePath of scrapedFiles) {
-      const content = fs.readFileSync(filePath, 'utf8');
-      const fileName = path.basename(filePath);
-
-      // Split text into documents
-      let docs;
-      try {
-        const textSplitter = new RecursiveCharacterTextSplitter({
-          chunkSize: 1000,
-          chunkOverlap: 200,
-        });
-        docs = await textSplitter.createDocuments(
-          [content],
-          [{ source: `${library}/${fileName}` }]
-        );
-      } catch (error) {
-        logger.error(`Error splitting text into documents for ${fileName}: ${error}`, error);
-        throw new Error(`Failed to split text into documents for ${fileName}: ${error.message}`);
-      }
-
-      // Upsert documents into Pinecone
-      try {
-        logger.info(`Upserting ${docs.length} chunks from ${fileName}...`);
-        await vstore.addDocuments(docs);
-        totalDocs += docs.length;
-      } catch (error) {
-        logger.error(`Error upserting documents into Pinecone for ${fileName}: ${error}`, error);
-        throw new Error(
-          `Failed to upsert documents into Pinecone for ${fileName}: ${error.message}`
-        );
-      }
-    }
-
-    // let docs;
-    // try {
-    //   const textSplitter = new RecursiveCharacterTextSplitter({
-    //     chunkSize: 1000,
-    //     chunkOverlap: 200,
-    //   });
-    //   docs = await textSplitter.createDocuments([content], [{ source: library }]);
-    // } catch (error) {
-    //   throw new Error('Failed to split text into documents: ' + error.message);
-    // }
-
-    // // Upsert documents into Pinecone
-    // try {
-    //   logger.info(`Upserting ${docs.length} chunks from ${url}...`);
-    //   await vstore.addDocuments(docs);
-    // } catch (error) {
-    //   throw new Error('Failed to upsert documents into Pinecone: ' + error.message);
-    // }
-
-    // Check index
-    try {
-      const stats = await pineconeIndex.describeIndexStats();
-      logger.info(stats);
-    } catch (error) {
-      logger.error(`Error checking Pinecone index: ${error}`, error);
-      throw new Error('Failed to check Pinecone index: ' + error.message);
-    }
+    const stats = await pineconeIndex.describeIndexStats();
+    logger.info(`Pinecone index stats: ${JSON.stringify(stats)}`);
 
     res.status(200).send(`Successfully upserted ${totalDocs} documents from ${url}`);
   } catch (error) {
     logger.error(`Error upserting documentation: ${error}`, error);
-    res.status(500).send('Error upserting documentation: ' + error.message);
+    res.status(500).send('An error occurred while processing your request.');
   }
 };
+const createFileDocument = async (filePath, userId, workspaceId, folderId) => {
+  const fileStats = await fs.stat(filePath);
+  const fileName = path.basename(filePath);
+  const fileType = path.extname(fileName).slice(1);
 
+  return {
+    userId,
+    workspaceId,
+    folderId,
+    name: fileName,
+    size: fileStats.size,
+    originalFileType: fileType,
+    filePath,
+    type: fileType,
+    space: 'files',
+    metadata: {
+      fileSize: fileStats.size,
+      fileType,
+      lastModified: fileStats.mtime,
+    },
+  };
+};
+const processFilesInParallel = async (files, vstore, library, url, description) => {
+  const results = [];
+  for (let i = 0; i < files.length; i += CONCURRENCY) {
+    const batch = files.slice(i, i + CONCURRENCY);
+    const batchResults = await Promise.all(
+      batch.map((file) => processFile(file, vstore, library, url, description))
+    );
+    results.push(...batchResults);
+  }
+  return results.reduce((sum, count) => sum + count, 0);
+};
+
+async function processFile(filePath, vstore, library, url, description) {
+  try {
+    const { content, fileName } = await readFileContent(filePath);
+    const docs = await createDocuments(content, fileName, library);
+
+    logger.info(`Processing ${docs.length} chunks from ${fileName}...`);
+
+    await upsertDocuments(vstore, docs, fileName, content, url, description, library);
+
+    return docs.length;
+  } catch (error) {
+    logger.error(`Error processing file ${filePath}: ${error.message}`);
+    return 0;
+  }
+}
+
+async function readFileContent(filePath) {
+  const content = await fs.readFile(filePath, 'utf8');
+  if (!content) {
+    throw new Error(`File ${filePath} is empty or could not be read`);
+  }
+  const fileName = path.basename(filePath);
+  return { content, fileName };
+}
+
+async function createDocuments(content, fileName, library) {
+  try {
+    return await textSplitter.createDocuments([content], [{ source: `${library}/${fileName}` }]);
+  } catch (error) {
+    logger.error(`Error creating documents for ${fileName}: ${error.message}`);
+    return [];
+  }
+}
+
+async function upsertDocuments(vstore, docs, fileName, content, url, description, library) {
+  try {
+    const metadata = createMetadata(content, fileName, url, description, library);
+    const upsertBatch = docs
+      .map((doc, index) => {
+        if (!doc.pageContent) {
+          logger.warn(`Document ${index} in ${fileName} has no pageContent`);
+          return null;
+        }
+        return {
+          id: `${fileName}_${index}`,
+          values: doc.pageContent,
+          metadata: { ...metadata, ...doc.metadata },
+        };
+      })
+      .filter(Boolean); // Remove any null entries
+
+    if (upsertBatch.length === 0) {
+      logger.warn(`No valid documents to upsert for ${fileName}`);
+      return;
+    }
+
+    logger.info(`Upserting ${upsertBatch.length} documents...`);
+    logger.debug(`Upsert batch: ${JSON.stringify(upsertBatch)}`);
+
+    if (!vstore || typeof vstore.addDocuments !== 'function') {
+      throw new Error('Invalid vstore object');
+    }
+
+    await vstore.addDocuments(upsertBatch);
+    logger.info(`Upserted ${docs.length} chunks from ${fileName}`);
+    logger.info(`Metadata: ${JSON.stringify(metadata)}`);
+  } catch (error) {
+    logger.error(`Error upserting documents for ${fileName}: ${error.message}`);
+    logger.error(`Error stack: ${error.stack}`);
+  }
+}
+
+function createMetadata(content, fileName, url, description, library) {
+  return {
+    language: safeExecute(() => detectLanguage(fileName), 'Unknown'),
+    framework: library,
+    componentType: safeExecute(() => detectComponentType(content), 'Unknown'),
+    functionality: safeExecute(() => detectFunctionality(content), ['General']),
+    libraryVersion: safeExecute(() => detectLibraryVersion(content), 'Unknown'),
+    releaseDate: new Date().toISOString(),
+    complexity: safeExecute(() => calculateComplexity(content), 'Unknown'),
+    linesOfCode: content.split('\n').length,
+    dependencies: safeExecute(() => detectDependencies(content), []),
+    useCase: description || 'Not specified',
+    performance: 'Not specified',
+    author: 'Unknown',
+    sourceUrl: url,
+    license: safeExecute(() => detectLicense(content), 'Unknown'),
+  };
+}
 module.exports = { upsertDocs };
+
+// const fs = require('fs').promises;
+// const path = require('path');
+// const { PineconeStore } = require('@langchain/pinecone');
+// const { OpenAIEmbeddings } = require('@langchain/openai');
+// const { RecursiveCharacterTextSplitter } = require('langchain/text_splitter');
+// const { getPineconeClient } = require('./get');
+// const { scrapeCode } = require('@/utils/processing/utils');
+// const { logger } = require('@/config/logging');
+// const { File } = require('@/models');
+// const { getEnv } = require('@/utils/api');
+// const { createPineconeIndex } = require('./create');
+// const {
+//   detectLanguage,
+//   detectComponentType,
+//   detectLibraryVersion,
+//   calculateComplexity,
+//   detectDependencies,
+//   detectLicense,
+//   detectFunctionality,
+//   safeExecute,
+// } = require('./utils');
+
+// const upsertDocs = async (req, res) => {
+//   const { url, library, description, userId, folderId, workspaceId } = req.body;
+
+//   try {
+//     // Input validation
+//     if (!userId) throw new Error('User ID is required.');
+//     if (!url || !library) throw new Error('URL and library are required fields.');
+
+//     logger.info(`BODY: ${JSON.stringify(req.body)}`);
+
+//     const scrapedFiles = await scrapeCode(url, library);
+
+//     // Save file information to MongoDB
+//     await Promise.all(scrapedFiles.map(saveFileInfo));
+//     // Optimization 1: Use a single connection for all MongoDB operations
+//     // const session = await File.startSession();
+//     // await session.withTransaction(async () => {
+//     //   await Promise.all(
+//     //     scrapedFiles.map((file) => saveFileInfo(file, userId, workspaceId, folderId))
+//     //   );
+//     // });
+//     // session.endSession();
+//     const embedder = new OpenAIEmbeddings({
+//       modelName: getEnv('PINECONE_EMBEDDING_MODEL_NAME'),
+//       apiKey: getEnv('OPENAI_API_PROJECT_KEY'),
+//       dimensions: getEnv('PINECONE_EMBEDDING_DIMENSIONS'),
+//     });
+
+//     const pinecone = await getPineconeClient();
+//     const pineconeIndex = await createPineconeIndex(pinecone, getEnv('PINECONE_INDEX'));
+
+//     const vstore = await PineconeStore.fromExistingIndex(embedder, {
+//       pineconeIndex,
+//       namespace: getEnv('PINECONE_NAMESPACE_3'),
+//       textKey: 'text',
+//     });
+
+//     const textSplitter = new RecursiveCharacterTextSplitter({
+//       chunkSize: 1000,
+//       chunkOverlap: 200,
+//       lengthFunction: (text) => text.length,
+//       separators: ['\n\n', '\n', '. ', ', ', ' ', ''],
+//     });
+
+//     let totalDocs = 0;
+//     const batchSize = 100;
+
+//     // Process and upsert documents
+//     await Promise.all(
+//       scrapedFiles.map(async (filePath) => {
+//         const { content, fileName } = await readFileContent(filePath);
+//         const docs = await createDocuments(content, fileName, library, textSplitter);
+
+//         logger.info(`Upserting ${docs.length} chunks from ${fileName}...`);
+
+//         await upsertDocuments(vstore, docs, fileName, content, url, description);
+
+//         totalDocs += docs.length;
+//       })
+//     );
+
+//     const stats = await pineconeIndex.describeIndexStats();
+//     logger.info(`Pinecone index stats: ${JSON.stringify(stats)}`);
+
+//     res.status(200).send(`Successfully upserted ${totalDocs} documents from ${url}`);
+//   } catch (error) {
+//     logger.error(`Error upserting documentation: ${error}`, error);
+//     res.status(500).send('Error upserting documentation: ' + error.message);
+//   }
+
+//   async function saveFileInfo(filePath) {
+//     const fileStats = await fs.stat(filePath);
+//     const fileName = path.basename(filePath);
+//     const fileType = path.extname(fileName).slice(1);
+
+//     const newFile = new File({
+//       userId,
+//       workspaceId,
+//       folderId,
+//       name: fileName,
+//       size: fileStats.size,
+//       originalFileType: fileType,
+//       filePath,
+//       type: fileType,
+//       space: 'files',
+//       metadata: {
+//         fileSize: fileStats.size,
+//         fileType,
+//         lastModified: fileStats.mtime,
+//       },
+//     });
+
+//     await newFile.save();
+//     logger.info(`File information saved to MongoDB for ${fileName}`);
+//   }
+
+//   async function readFileContent(filePath) {
+//     const content = await fs.readFile(filePath, 'utf8');
+//     const fileName = path.basename(filePath);
+//     return { content, fileName };
+//   }
+
+//   async function createDocuments(content, fileName, library, textSplitter) {
+//     return textSplitter.createDocuments([content], [{ source: `${library}/${fileName}` }]);
+//   }
+
+//   async function upsertDocuments(vstore, docs, fileName, content, url, description) {
+//     const upsertPromises = docs.map(async (doc, index) => {
+//       const metadata = createMetadata(content, fileName, url, description);
+//       await vstore.addDocuments([doc], {
+//         ids: [`${fileName}_${index}`],
+//         namespace: getEnv('PINECONE_NAMESPACE_3'),
+//         metadata: metadata,
+//       });
+//       logger.info(`Upserted chunk ${index} from ${fileName}`);
+//       logger.info(`Metadata: ${JSON.stringify(metadata)}`);
+//     });
+
+//     await Promise.all(upsertPromises);
+//     logger.info(`Upserted ${docs.length} chunks from ${fileName}`);
+//   }
+
+//   function createMetadata(content, fileName, url, description) {
+//     return {
+//       language: safeExecute(() => detectLanguage(fileName), 'Unknown'),
+//       framework: library,
+//       componentType: safeExecute(() => detectComponentType(content), 'Unknown'),
+//       functionality: safeExecute(() => detectFunctionality(content), ['General']),
+//       libraryVersion: safeExecute(() => detectLibraryVersion(content), 'Unknown'),
+//       releaseDate: new Date().toISOString(),
+//       complexity: safeExecute(() => calculateComplexity(content), 'Unknown'),
+//       linesOfCode: content.split('\n').length,
+//       dependencies: safeExecute(() => detectDependencies(content), []),
+//       useCase: description || 'Not specified',
+//       performance: 'Not specified',
+//       author: 'Unknown',
+//       sourceUrl: url,
+//       license: safeExecute(() => detectLicense(content), 'Unknown'),
+//     };
+//   }
+// };
+
+// module.exports = { upsertDocs };

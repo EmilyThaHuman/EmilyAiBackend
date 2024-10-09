@@ -10,7 +10,7 @@ const { logger } = require('@/config/logging');
 //  - Workspaces are used to organize chatSessions, files, and other resources.
 //  - The primary data within each workspaces is:
 //    - Active Chat Session: The active chat session within the workspace.
-//    - Folders: An array of folders within the workspace.
+//    - Folders: An array of folders within the works
 // =============================
 const workspaceSchema = createSchema({
   userId: { type: Schema.Types.ObjectId, ref: 'User' },

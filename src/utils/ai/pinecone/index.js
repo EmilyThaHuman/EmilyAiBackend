@@ -10,4 +10,5 @@ module.exports = {
   ...require('./query.js'),
   ...require('./get.js'),
   ...require('./customUpsert.js'),
+  ...require('./utils.js'),
 };

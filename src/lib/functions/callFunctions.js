@@ -1,18 +1,29 @@
+const { logger } = require('@/config/logging');
+const { getDefaultOpenaiClient } = require('@/utils/ai/openAi/get');
+const { getEnv } = require('@/utils/api');
+const { default: axios } = require('axios');
+const fs = require('fs').promises;
+const path = require('path');
+// const sharp = require('sharp');
+
 const analyzeTextWithGPT = async (text) => {
   try {
+    const openai = await getDefaultOpenaiClient();
     const response = await openai.Completion.create({
-      model: 'gpt-3.5-turbo', // Use GPT-3.5-turbo model
+      model: getEnv('OPENAI_API_CHAT_COMPLETION_MODEL'),
       prompt: `You are a PI, Extract relevant information about the following content:\n\n${text}`,
       max_tokens: 200, // Adjust as needed
     });
     return response.choices[0].text.trim();
   } catch (error) {
-    console.error('Error analyzing text with GPT:', error);
-    return `Could not analyze content.`;
+    logger.error('Error analyzing text with GPT:', error);
+    return 'Could not analyze content.';
   }
 };
 const analyzeImage = async (imageUrl) => {
   try {
+    const openai = await getDefaultOpenaiClient();
+
     const response = await openai.chat.completions.create({
       model: 'gpt-4-vision-preview', // Ensure this is the correct model name
       messages: [
@@ -34,56 +45,11 @@ const analyzeImage = async (imageUrl) => {
 
     return response.choices[0].message.content; // Adjust according to the actual structure of the response
   } catch (error) {
-    console.error('Error analyzing image with GPT-4 Vision:', error);
+    logger.error('Error analyzing image with GPT-4 Vision:', error);
     return `Could not analyze image: ${error.message}`;
   }
 };
-const fetchSearchResults = async (query) => {
-  let data = JSON.stringify({
-    q: query,
-  });
-  const config = {
-    method: 'post',
-    url: 'https://google.serper.dev/search',
-    headers: {
-      'X-API-KEY': process.env.GOOGLE_SERPER_API_KEY,
-      'Content-Type': 'application/json',
-    },
-    data: data,
-  };
-
-  try {
-    const response = await axios(config);
-    const results = response.data;
-    // Filter for LinkedIn URLs
-    const frameworkDocs = {
-      MUI: 'https://mui.com/components/',
-      CHAKRA_UI: 'https://chakra-ui.com/docs/getting-started',
-      REACT_BOOTSTRAP: 'https://react-bootstrap.github.io/',
-      TAILWIND: 'https://tailwindcss.com/docs',
-      RADIX_UI: 'https://www.radix-ui.com/primitives/docs',
-      SHADCN: 'https://ui.shadcn.com/docs',
-    };
-    const uiLinksArray = Object.keys(frameworkDocs).map((key) => ({
-      framework: key,
-      url: frameworkDocs[key],
-    }));
-    // const linkedInUrls = results.organic.filter(res => res.link.includes('linkedin.com'));
-    // Scrape each LinkedIn URL
-    for (const result of uiLinksArray) {
-      // const scrapedData = await scrapeLinkedIn(result.link);
-      const scrapedData = {
-        scrapedContent: 'Not available', // Placeholder value
-      };
-      result['scrapedContent'] = scrapedData;
-    }
-    return results;
-  } catch (error) {
-    console.error(`Error: ${error}`);
-    throw error;
-  }
-};
-const summarizeMessages = async (messages, openai) => {
+const summarizeMessages = async (messages, chatOpenAI) => {
   const summarizeFunction = {
     name: 'summarize_messages',
     description:
@@ -116,8 +82,9 @@ const summarizeMessages = async (messages, openai) => {
       required: ['overallSummary', 'individualSummaries'],
     },
   };
-  const response = await openai.completionWithRetry({
-    model: 'gpt-3.5-turbo',
+  const response = await chatOpenAI.completionWithRetry({
+    model: getEnv('OPENAI_API_CHAT_COMPLETION_MODEL'),
+    // prompt: template,
     messages: [
       { role: 'system', content: 'You are a helpful assistant that summarizes chat messages.' },
       {
@@ -163,6 +130,52 @@ const searchFiles = (query, directory) => {
   }
 
   return results;
+};
+const fetchSearchResults = async (query) => {
+  let data = JSON.stringify({
+    q: query,
+  });
+  const config = {
+    method: 'post',
+    url: 'https://google.serper.dev/search',
+    headers: {
+      'X-API-KEY': process.env.GOOGLE_SERPER_API_KEY,
+      'Content-Type': 'application/json',
+    },
+    data: data,
+  };
+
+  try {
+    const response = await axios(config);
+    const results = response.data;
+    // Filter for LinkedIn URLs
+    const frameworkDocs = {
+      MUI: 'https://mui.com/components/',
+      CHAKRA_UI: 'https://chakra-ui.com/docs/getting-started',
+      REACT_BOOTSTRAP: 'https://react-bootstrap.github.io/',
+      TAILWIND: 'https://tailwindcss.com/docs',
+      RADIX_UI: 'https://www.radix-ui.com/primitives/docs',
+      SHADCN: 'https://ui.shadcn.com/docs',
+    };
+    const uiLinksArray = Object.keys(frameworkDocs).map((key) => ({
+      framework: key,
+      url: frameworkDocs[key],
+    }));
+    const chatCodeContextSearch = results.organic.filter((res) =>
+      res.link.includes.oneOf(uiLinksArray.map((ui) => ui.url))
+    );
+    for (const result of chatCodeContextSearch) {
+      // const scrapedData = await scrapeLinkedIn(result.link);
+      const scrapedData = {
+        scrapedContent: 'Not available', // Placeholder value
+      };
+      result['scrapedContent'] = scrapedData;
+    }
+    return results;
+  } catch (error) {
+    logger.error(`Error: ${error}`);
+    throw error;
+  }
 };
 
 module.exports = {

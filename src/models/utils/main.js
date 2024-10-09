@@ -1,12 +1,12 @@
 const { getMainSystemMessageContent } = require('@/lib/prompts/createPrompt');
-const { Message, ChatSession } = require('../chat');
+const { ChatMessage, ChatSession } = require('../chat');
 const { Workspace } = require('../workspace');
 const { User } = require('../user');
 const { logger } = require('@/config/logging');
 const { getEnv } = require('@/utils/api');
 
 const createMessage = async (sessionId, role, content, userId, sequenceNumber) => {
-  const message = new Message({
+  const message = new ChatMessage({
     sessionId,
     role,
     content,
@@ -27,7 +27,7 @@ const getSessionMessages = async (sessionId) => {
     }
 
     const messagePromises = chatSession?.messages?.map(async (msg) => {
-      const foundMessage = await Message.findById(msg);
+      const foundMessage = await ChatMessage.findById(msg);
       if (foundMessage) {
         return {
           _id: foundMessage._id,
@@ -47,7 +47,7 @@ const getSessionMessages = async (sessionId) => {
     const systemPrompt = getMainSystemMessageContent();
     const systemMessageIndex = chatMessages.findIndex((msg) => msg.role === 'system');
     if (systemMessageIndex !== -1) {
-      await Message.findByIdAndUpdate(chatMessages[systemMessageIndex]._id, {
+      await ChatMessage.findByIdAndUpdate(chatMessages[systemMessageIndex]._id, {
         content: systemPrompt,
       });
       chatMessages[systemMessageIndex].content = systemPrompt;

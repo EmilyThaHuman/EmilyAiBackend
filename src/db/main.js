@@ -5,41 +5,86 @@ const path = require('path');
 const fs = require('fs');
 const { logger } = require('@/config/logging');
 const { getEnv } = require('@/utils/api');
-// eslint-disable-next-line no-unused-vars
 const { File } = require('@/models');
-const { GridFSBucket } = require('mongodb');
+const { GridFSBucket, MongoClient, ServerApiVersion } = require('mongodb');
 
 let bucket;
-let connectionPool;
-
+let connection;
+let client;
 /**
- * Connect to MongoDB and initialize GridFS bucket.
+ * Connect to MongoDB and initialize GridFS bucket using Mongoose.
  * @async
  * @function connectDB
+ * @returns {Promise<{db: Db, bucket: GridFSBucket, client: MongoClient}>} The MongoDB client instance
  */
 const connectDB = async () => {
   try {
-    if (!connectionPool) {
-      const connectionString = getEnv('MONGODB_URI');
-      logger.info(`[1] MongoDb Connection String Valid --> ${connectionString}`);
-      const connection = await mongoose.connect(connectionString);
-      logger.info(`[2] MongoDb Connection Secured --> ${connection}`);
-      connectionPool = await mongoose.connect(connectionString, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        poolSize: 10, // Adjust based on your needs
-      });
-      // const db = mongoose.connection.db;
-      logger.info(`[3] MongoDb Accessed --> ${connectionPool.connection.db}`);
-      bucket = new GridFSBucket(connectionPool.connection.db, { bucketName: 'uploads' });
-      logger.info(`[4] GridFS bucket initialized successfully Connection Valid --> ${storage}`);
+    if (mongoose.connection.readyState !== 1) {
+      const connectionString = getEnv('MONGODB_URI') || 'mongodb://localhost:27017/your_database';
+      logger.info(`[1] Attempting to connect to MongoDB: ${connectionString}`);
+
+      // Connect to MongoDB using Mongoose
+      await mongoose.connect(connectionString);
+      logger.info('[2] Mongoose connection established successfully');
+      // mongoose.set('debug', true);
+      // logger.info('[2] Mongoose debug mode enabled');
+
+      // Initialize GridFS bucket
+      const db = mongoose.connection.db;
+      bucket = new mongoose.mongo.GridFSBucket(db, { bucketName: 'uploads' });
+      logger.info('[3] GridFS bucket initialized successfully', { bucketName: bucket.bucketName });
     }
-    return connectionPool.connection.db;
+    return {
+      db: mongoose.connection.db,
+      bucket,
+      client: mongoose.connection.getClient(),
+    };
   } catch (error) {
     logger.error(`MongoDB connection failed: ${error.message}`);
     throw error;
   }
 };
+// /**
+//  * Connect to MongoDB and initialize GridFS bucket.
+//  * @async
+//  * @function connectDB
+//  * @returns {Promise<MongoClient>} The MongoDB client instance
+//  */
+// const connectDB = async () => {
+//   try {
+//     if (!connection) {
+//       const connectionString = getEnv('MONGODB_URI') || 'mongodb://localhost:27017/your_database';
+//       logger.info(`[1] Attempting to connect to MongoDB: ${connectionString}`);
+
+//       // Create a MongoClient with ServerApiVersion options
+//       connection = new MongoClient(connectionString, {
+//         serverApi: {
+//           version: ServerApiVersion.v1,
+//           // strict: true,
+//           deprecationErrors: true,
+//         },
+//       });
+
+//       // Connect the client to the server
+//       await connection.connect();
+//       logger.info('[2] MongoDB connection established successfully');
+//       mongoose.set('debug', true);
+//       logger.info('[2] Mongoose debug mode enabled');
+//       // Initialize GridFS bucket
+//       const db = connection.db(); // Defaults to the database specified in the connection string
+//       bucket = new GridFSBucket(db, { bucketName: 'uploads' });
+//       logger.info('[3] GridFS bucket initialized successfully', { bucketName: bucket.bucketName });
+//     }
+//     return {
+//       db: connection.db(),
+//       bucket,
+//       client: connection,
+//     };
+//   } catch (error) {
+//     logger.error(`MongoDB connection failed: ${error.message}`);
+//     throw error;
+//   }
+// };
 
 /**
  * Configure multer for file uploads.
@@ -228,27 +273,7 @@ const fileFilter = (req, file, cb) => {
     cb(new Error('Invalid file type. Only txt, pdf, doc, and docx are allowed.'));
   }
 };
-// const handleFileUpload = (req, res) => {
-//   upload.single('file')(req, res, (err) => {
-//     if (err) {
-//       logger.error(`File upload error: ${err.message}`);
-//       return res.status(500).json({ error: 'File upload failed' });
-//     }
 
-//     if (!req.file) {
-//       return res.status(400).json({ error: 'No file uploaded' });
-//     }
-
-//     const fileData = {
-//       id: req.file.id,
-//       filename: req.file.filename,
-//       metadata: req.file.metadata,
-//     };
-
-//     logger.info(`File uploaded successfully: ${JSON.stringify(fileData)}`);
-//     res.status(200).json({ message: 'File uploaded successfully', file: fileData });
-//   });
-// };
 /**
  * Handles errors during file upload.
  * @function handleUploadError
@@ -279,6 +304,27 @@ const getDB = async () => {
     await connectDB();
   }
   return mongoose.connection;
+};
+
+/**
+ * Gets the MongoDB client, connecting if necessary.
+ * @async
+ * @function getMongoClient
+ * @returns {MongoClient} MongoDB client
+ */
+const getMongoClient = async () => {
+  if (!client) {
+    try {
+      const connectionString = getEnv('MONGODB_URI');
+      client = new MongoClient(connectionString);
+      await client.connect();
+      logger.info('MongoDB client connected successfully');
+    } catch (error) {
+      logger.error(`Error connecting to MongoDB: ${error.message}`);
+      throw error;
+    }
+  }
+  return client;
 };
 const getBucket = () => {
   if (!bucket) {
@@ -344,6 +390,7 @@ module.exports = {
   connectDB,
   getDB,
   getBucket,
+  getMongoClient,
   disconnectDB,
   upload,
   handleUploadError,

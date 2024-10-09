@@ -25,7 +25,7 @@ const chat = new ChatOpenAI({
 
 const chatPrompt = ChatPromptTemplate.fromPromptMessages([
   SystemMessagePromptTemplate.fromTemplate(
-    "You are a helpful AI assistant. Use the following context to answer the human's questions: {context}"
+    'You are a helpful AI assistant. Use the following context to answer the human\'s questions: {context}'
   ),
   new MessagesPlaceholder('history'),
   HumanMessagePromptTemplate.fromTemplate('{input}'),

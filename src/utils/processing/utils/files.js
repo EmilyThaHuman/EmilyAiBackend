@@ -100,6 +100,8 @@ const saveFileToSystemAndDB = async ({ content, userId, workspaceId, folderId, l
   }
 };
 
+const sanitizeFileName = (fileName) => fileName.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+
 module.exports = {
   saveFileToSystemAndDB,
   convertBlobToBase64,
@@ -108,4 +110,5 @@ module.exports = {
   byteToImageURL,
   getFileExtension,
   getFileSize,
+  sanitizeFileName,
 };

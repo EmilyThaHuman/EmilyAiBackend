@@ -7,18 +7,26 @@
 require('dotenv').config();
 require('module-alias/register');
 
-const { connectDB } = require('@/db/main');
 const app = require('./src/app');
-const config = require('@/config');
 const { logger } = require('@/config/logging');
+const { connectDB } = require('@/db/main');
 
 async function main() {
   try {
-    await connectDB();
+    const { client, db, bucket } = await connectDB();
     if (process.env.NODE_ENV !== 'test') {
-      const PORT = config.api.port;
+      const PORT = 3001;
       app.listen(PORT, () => logger.info(`Server Open & Connected To Database 🤟: ${PORT}`));
     }
+    if (client)
+      logger.info(
+        `
+      --------------------------------------------
+      Connected to MongoDB: ${db.databaseName}
+      --------------------------------------------
+      `
+      );
+    if (bucket) logger.info(`Connected to GridFS Bucket: ${bucket.bucketName}`);
   } catch (error) {
     logger.error(`Failed to start the server: ${error.message}`);
     process.exit(1);

@@ -24,7 +24,7 @@ const systemAssistantPrompts = {
     const { prompt } = data;
     const content = [
       'You are a helpful assistant.',
-      "You're tasked with writing a react component using typescript and tailwind for a website.",
+      'You\'re tasked with writing a react component using typescript and tailwind for a website.',
       'Only import React as a dependency.',
       'Be concise and only reply with code.',
     ].join('\n');
@@ -34,9 +34,9 @@ const systemAssistantPrompts = {
     const { prompt, code } = data;
     const content = [
       'You are an AI programming assistant.',
-      "Follow the user's requirements carefully & to the letter.",
-      "You're working on a react component using typescript and tailwind.",
-      "Don't introduce any new components or files.",
+      'Follow the user\'s requirements carefully & to the letter.',
+      'You\'re working on a react component using typescript and tailwind.',
+      'Don\'t introduce any new components or files.',
       'First think step-by-step - describe your plan for what to build in pseudocode, written out in great detail.',
       'You must format every code change with an *edit block* like this:',
       '```',
@@ -70,7 +70,7 @@ const systemAssistantPrompts = {
   reviseTemplatePrompt: (data) => {
     const content = [
       'You are an AI assistant that helps users revise and improve their templates.',
-      "Given the current template and the user's prompt, make necessary improvements:",
+      'Given the current template and the user\'s prompt, make necessary improvements:',
       `Current Template: ${data.baseTemplate}`,
       `Prompt: ${data.prompt}`,
       `Context: ${JSON.stringify(data.context)}`,
@@ -96,7 +96,7 @@ const systemAssistantPrompts = {
     const content = [
       'Act as a Prompt Enhancer AI that takes user-input prompts and transforms them into more engaging, detailed, and thought-provoking questions.',
       'Describe the process you follow to enhance a prompt, the types of improvements you make,',
-      "and share an example of how you'd turn a simple, one-sentence prompt into an enriched, multi-layered question that encourages deeper thinking and more insightful responses.",
+      'and share an example of how you\'d turn a simple, one-sentence prompt into an enriched, multi-layered question that encourages deeper thinking and more insightful responses.',
       `Here is the prompt: ${prompt}`,
       'Tags: AI, Enhancer, Questions',
       'Status: New',
@@ -109,9 +109,9 @@ const systemAssistantPrompts = {
       'I want you to act as a software developer.',
       'I will provide some specific information about a web app requirements,',
       'and it will be your job to come up with an architecture and code for developing a secure app with Golang and Angular.',
-      "My first request is 'I want a system that allows users to register and save their vehicle information according to their roles",
+      'My first request is \'I want a system that allows users to register and save their vehicle information according to their roles',
       'and there will be admin, user and company roles.',
-      "I want the system to use JWT for security'.",
+      'I want the system to use JWT for security\'.',
       'Tags: Software Development, Golang, Angular, JWT',
       'Status: New',
       'Rating: Not Rated',
@@ -124,13 +124,13 @@ const systemAssistantPrompts = {
       'I want you to act as a text based web browser browsing an imaginary internet.',
       'You should only reply with the contents of the page, nothing else.',
       'I will enter a url and you will return the contents of this webpage on the imaginary internet.',
-      "Don't write explanations.",
+      'Don\'t write explanations.',
       'Links on the pages should have numbers next to them written between [].',
       'When I want to follow a link, I will reply with the number of the link.',
       'Inputs on the pages should have numbers next to them written between [].',
       'Input placeholder should be written between ().',
       'When I want to enter text to an input I will do it with the same format for example [1] (example input value).',
-      "This inserts 'example input value' into the input numbered 1.",
+      'This inserts \'example input value\' into the input numbered 1.',
       'When I want to go back i will write (b).',
       'When I want to go forward I will write (f).',
       `My first prompt is [${url}]`,
@@ -266,11 +266,11 @@ const userPrompts = {
   generateNewComponent: (data) => {
     const { prompt } = data;
     return [
-      `- Component Name: Section`,
+      '- Component Name: Section',
       `- Component Description: ${prompt}\n`,
-      `- Do not use libraries or imports other than React.`,
-      `- Do not have any dynamic data. Use placeholders as data. Do not use props.`,
-      `- Write only a single component.`,
+      '- Do not use libraries or imports other than React.',
+      '- Do not have any dynamic data. Use placeholders as data. Do not use props.',
+      '- Write only a single component.',
     ].join('\n');
   },
   reviseComponent: (data) => {

@@ -1,0 +1,30 @@
+[
+  {
+    "component": "Lists",
+    "title": "Untitled",
+    "code": "<ListItemButton component=\"a\" href=\"#simple-list\">\n<ListItemText primary=\"Spam\" />\n</ListItemButton>",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Lists",
+    "title": "Untitled",
+    "code": "import List from '@mui/material/List';\nimport ListItem from '@mui/material/ListItem';",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Lists",
+    "title": "Untitled",
+    "code": "<List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>\n{[1, 2, 3].map((value) => (\n<ListItem\nkey={value}\ndisableGutters\nsecondaryAction={\n<IconButton aria-label=\"comment\">\n<CommentIcon />\n</IconButton>\n}\n>\n<ListItemText primary={`Line item ${value}`} />\n</ListItem>\n))}\n</List><List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>\n{[1, 2, 3].map((value) => (\n<ListItem\nkey={value}\ndisableGutters\nsecondaryAction={\n<IconButton aria-label=\"comment\">\n<CommentIcon />\n</IconButton>\n}\n>\n<ListItemText primary={`Line item ${value}`} />\n</ListItem>\n))}\n</List>",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Lists",
+    "title": "Untitled",
+    "code": "<FixedSizeList\nheight={400}\nwidth={360}\nitemSize={46}\nitemCount={200}\noverscanCount={5}\n>\n{renderRow}\n</FixedSizeList><FixedSizeList\nheight={400}\nwidth={360}\nitemSize={46}\nitemCount={200}\noverscanCount={5}\n>\n{renderRow}\n</FixedSizeList>",
+    "language": "jsx",
+    "description": ""
+  }
+]

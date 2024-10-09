@@ -54,7 +54,7 @@ const router = express.Router();
 // File retrieval routes
 // router.get('/', asyncHandler(getAllFiles));
 router.get('/type/:type', asyncHandler(getAllFilesByType));
-router.get('/:id', asyncHandler(getFileById));
+router.get('/id/:id', asyncHandler(getFileById));
 router.get('/name/:name', asyncHandler(getFileByName));
 router.get('/chat/:id', asyncHandler(getChatFileById));
 router.get('/assistant/:id', asyncHandler(getAssistantFileById));
@@ -355,6 +355,6 @@ router.get('/static/png/all', asyncHandler(getAllPngFiles));
 router.get('/static/:type', asyncHandler(getFileByType));
 router.get('/static/:filename', asyncHandler(getStaticFile));
 router.get('/static/list/:filetype', asyncHandler(getStaticFilesByType));
-router.get('/static/list', asyncHandler(getAllStaticFiles));
+// router.get('/static/list', asyncHandler(getAllStaticFiles));
 
 module.exports = router;

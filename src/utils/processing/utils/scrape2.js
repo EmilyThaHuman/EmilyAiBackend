@@ -1,103 +1,183 @@
-const fs = require('fs');
+const fs = require('fs').promises;
 const path = require('path');
+const axios = require('axios');
+const { logger } = require('@/config/logging');
 const { default: puppeteer } = require('puppeteer');
+const { cleanCodeSnippetMain } = require('./clean');
+const { identifyCodeType } = require('./identifyValue');
+const { getLibraryNameAbbreviation } = require('./misc');
+const { sanitizeFileName } = require('./files');
+const { formatAndCleanCode } = require('./format');
+const { Cheerio } = require('cheerio');
+
+const scrapeSite = async (url) => {
+  try {
+    const response = await axios.get(url);
+    const $ = Cheerio.load(response.data);
+    const content = $('body').text(); // Simplified for demonstration
+    return content;
+  } catch (error) {
+    logger.error('Error scraping content:', error);
+    throw error;
+  }
+};
 
 const scrapeCode = async (componentUrl, componentLibrary) => {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({ headless: 'new' });
   const page = await browser.newPage();
-
-  const allSnippets = [];
   const createdFiles = [];
 
   try {
     await page.goto(componentUrl, { waitUntil: 'networkidle0' });
+    // await page.waitForSelector('.MuiButton-root.MuiButton-text');
+    const buttons = await page.$$('button[data-ga-event-action="expand"]');
+    for (const button of buttons) {
+      await button.click();
+    }
 
-    const componentName = await page.evaluate(() => {
-      return document.querySelector('h1').textContent.trim();
-    });
-
-    const snippets = await page.evaluate(() => {
+    logger.info('All expand code buttons clicked successfully.');
+    const { componentName, snippets } = await page.evaluate(() => {
+      const componentName = document.querySelector('h1')?.textContent.trim() || 'Unknown';
       const snippetElements = document.querySelectorAll('.MuiCode-root');
-      return Array.from(snippetElements).map((snippet) => {
-        const code = snippet.textContent;
-        const language = snippet.getAttribute('data-language') || 'jsx';
-        const title =
-          snippet.closest('.MuiPaper-root')?.querySelector('h2, h3')?.textContent || 'Untitled';
-        const description =
-          snippet.closest('.MuiPaper-root')?.querySelector('p')?.textContent || '';
 
+      const snippets = Array.from(snippetElements).map((snippet, index) => {
+        const parentElement = snippet.closest('.MuiPaper-root');
+        // const code = detectCodeSnippet(snippet.textContent);
+        // logger.info(code);
         return {
-          title,
-          code,
-          language,
-          description,
+          title: parentElement?.querySelector('h2, h3')?.textContent || 'Untitled',
+          code: snippet.textContent,
+          language: snippet.getAttribute('data-language') || 'jsx',
+          description: parentElement?.querySelector('p')?.textContent || '',
+          sequence: index + 1,
         };
       });
+
+      return { componentName, snippets };
     });
 
-    allSnippets.push(
-      ...snippets.map((snippet) => ({
-        component: componentName,
-        ...snippet,
-      }))
-    );
+    logger.info(`Snippets for ${componentName}: ${snippets.length}`);
 
-    console.log(`Snippets for ${componentName}: `, snippets.length);
     if (snippets.length > 0) {
-      // Create base directory for the component library
       const baseDir = path.join(__dirname, '../../../../public/scraped_docs', componentLibrary);
-      fs.mkdirSync(baseDir, { recursive: true });
+      await fs.mkdir(baseDir, { recursive: true });
+      // const allSnippets = await Promise.all(
+      //   snippets.map(async (snippet) => {
+      //     let cleanedCode = cleanCodeSnippetMain(snippet.code);
+      //     if (typeof cleanedCode !== 'string') {
+      //       logger.warn(
+      //         `Cleaned code is not a string for snippet ${snippet.title}. Using original code.`
+      //       );
+      //       cleanedCode = snippet.code;
+      //     }
+      //     const formattedCode = await formatAndCleanCode(cleanedCode);
+      //     const codeType = identifyCodeType(formattedCode);
+      //     const newTitle = `${getLibraryNameAbbreviation(componentLibrary)}_${componentName}`;
+      //     const abbreviatedTitle = getLibraryNameAbbreviation(componentLibrary);
+      //     const functionName = getDefaultExportFunctionName(snippet);
 
-      // Save full JSON data
-      const fileName = `${componentName.toLowerCase().replace(/\s+/g, '_')}_snippets.json`;
+      //     return {
+      //       component: componentName,
+      //       url: componentUrl,
+      //       codeType: codeType,
+      //       library: componentLibrary,
+      //       abbreviation: abbreviatedTitle,
+      //       ...snippet,
+      //       title: newTitle,
+      //       code: formattedCode,
+      //       functionName: functionName,
+      //     };
+      //   })
+      // );
+
+      // const allSnippets = await Promise.all(
+      //   snippets.map(async (snippet) => {
+      //     const cleanedCode = cleanCodeSnippetMain(snippet.code);
+      //     let formattedCode;
+      //     if (typeof cleanedCode === 'string') {
+      //       formattedCode = await formatAndCleanCode(cleanedCode);
+      //     } else {
+      //       logger.warn(
+      //         `Cleaned code is not a string for snippet ${snippet.title}. Skipping formatting.`
+      //       );
+      //       formattedCode = String(cleanedCode); // Convert to string as a fallback
+      //     }
+      //     const codeType = identifyCodeType(formattedCode);
+      //     const newTitle = `${getLibraryNameAbbreviation(componentLibrary)}_${componentName}`;
+      //     const abbreviatedTitle = getLibraryNameAbbreviation(componentLibrary);
+      //     const functionName = getDefaultExportFunctionName(snippet);
+
+      //     return {
+      //       component: componentName,
+      //       url: componentUrl,
+      //       codeType: codeType,
+      //       library: componentLibrary,
+      //       abbreviation: abbreviatedTitle,
+      //       ...snippet,
+      //       title: newTitle,
+      //       code: formattedCode,
+      //       functionName: functionName,
+      //     };
+      //   })
+      // );
+      const allSnippets = snippets.map((snippet) => {
+        const cleanedCode = cleanCodeSnippetMain(snippet.code);
+        const codeType = identifyCodeType(cleanedCode);
+        const newTitle = `${getLibraryNameAbbreviation(componentLibrary)}_${componentName}`;
+        const abbreviatedTitle = getLibraryNameAbbreviation(componentLibrary);
+        // const functionName = getDefaultExportFunctionName(snippet);
+
+        return {
+          component: componentName,
+          url: componentUrl,
+          codeType: codeType,
+          library: componentLibrary,
+          abbreviation: abbreviatedTitle,
+          ...snippet,
+          title: newTitle,
+          code: cleanedCode,
+          // functionName: functionName,
+        };
+      });
+
+      const fileName = `${sanitizeFileName(componentName)}_snippets.json`;
       const filePath = path.join(baseDir, fileName);
-      fs.writeFileSync(filePath, JSON.stringify(allSnippets, null, 2));
-      console.log(`Data saved to ${filePath}`);
+
+      await fs.writeFile(filePath, JSON.stringify(allSnippets, null, 2));
+      logger.info(`Data saved to ${filePath}`);
       createdFiles.push(filePath);
 
-      // Create individual files for each snippet
-      const snippetsDir = path.join(
-        baseDir,
-        'snippets',
-        componentName.toLowerCase().replace(/\s+/g, '_')
-      );
-      fs.mkdirSync(snippetsDir, { recursive: true });
+      const snippetsDir = path.join(baseDir, 'snippets', sanitizeFileName(componentName));
+      await fs.mkdir(snippetsDir, { recursive: true });
 
-      snippets.forEach((snippet, index) => {
-        const snippetFileName = `snippet_${index + 1}.${snippet.language}`;
-        const snippetFilePath = path.join(snippetsDir, snippetFileName);
-        fs.writeFileSync(snippetFilePath, snippet.code);
-        console.log(`Snippet saved to ${snippetFilePath}`);
-        createdFiles.push(snippetFilePath);
-      });
+      await Promise.all(
+        snippets.map(async (snippet, index) => {
+          const snippetFileName = `snippet_${index + 1}.${snippet.language}`;
+          const snippetFilePath = path.join(snippetsDir, snippetFileName);
+          let cleanedCode = cleanCodeSnippetMain(snippet.code);
+          if (typeof cleanedCode !== 'string') {
+            logger.warn(
+              `Cleaned code is not a string for snippet ${index + 1}. Using original code.`
+            );
+            cleanedCode = snippet.code;
+          }
+          cleanedCode = await formatAndCleanCode(cleanedCode);
+          await fs.writeFile(snippetFilePath, cleanedCode);
+          // logger.info(`Snippet saved to ${snippetFilePath}`);
+          createdFiles.push(snippetFilePath);
+        })
+      );
+      logger.info(`Snippets saved to ${snippetsDir}`);
     } else {
-      console.log('No snippets found. Check if the page structure has changed.');
+      logger.warn('No snippets found. Check if the page structure has changed.');
     }
   } catch (error) {
-    console.error('Error during scraping:', error);
+    logger.error('Error during scraping:', error);
   } finally {
     await browser.close();
   }
+
   return createdFiles;
-  //   const fileName = `${componentName.toLowerCase().replace(/\s+/g, '_')}_snippets.json`;
-  //   const filePath = path.join(__dirname, `../../../../public/scraped_docs/${componentLibrary}`, fileName);
-  //   fs.writeFileSync(filePath, JSON.stringify(allSnippets, null, 2), 'utf8');
-
-  //   // fs.writeFileSync(fileName, JSON.stringify(allSnippets, null, 2));
-
-  //   console.log(`Data saved to ${fileName}`);
-
-  // } catch (error) {
-  //   console.error('Error during scraping:', error);
-  // } finally {
-  //   await browser.close();
-  // }
 };
 
-module.exports = {
-  scrapeCode,
-};
-
-// Example usage
-// const componentUrl = 'https://mui.com/material-ui/react-modal/';
-// scrape(componentUrl);
+module.exports = { scrapeCode, scrapeSite };

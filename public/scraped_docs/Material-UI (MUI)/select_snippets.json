@@ -1,0 +1,86 @@
+[
+  {
+    "component": "Select",
+    "url": "https://mui.com/material-ui/react-select/",
+    "codeType": "JSX Component",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Select",
+    "code": "<FormControl fullWidth>\n<InputLabel id=\"demo-simple-select-label\">Age</InputLabel>\n<Select\nlabelId=\"demo-simple-select-label\"\nid=\"demo-simple-select\"\nvalue={age}\nlabel=\"Age\"\nonChange={handleChange}\n>\n<MenuItem value={10}>Ten</MenuItem>\n<MenuItem value={20}>Twenty</MenuItem>\n<MenuItem value={30}>Thirty</MenuItem>\n</Select>\n</FormControl><FormControl fullWidth>\n<InputLabel id=\"demo-simple-select-label\">Age</InputLabel>\n<Select\nlabelId=\"demo-simple-select-label\"\nid=\"demo-simple-select\"\nvalue={age}\nlabel=\"Age\"\nonChange={handleChange}\n>\n<MenuItem value={10}>Ten</MenuItem>\n<MenuItem value={20}>Twenty</MenuItem>\n<MenuItem value={30}>Thirty</MenuItem>\n</Select>\n</FormControl>",
+    "language": "jsx",
+    "description": "",
+    "sequence": 1
+  },
+  {
+    "component": "Select",
+    "url": "https://mui.com/material-ui/react-select/",
+    "codeType": "JSX Component",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Select",
+    "code": "<FormControl fullWidth>\n<InputLabel variant=\"standard\" htmlFor=\"uncontrolled-native\">\nAge\n</InputLabel>\n<NativeSelect\ndefaultValue={30}\ninputProps={{\nname: 'age',\nid: 'uncontrolled-native',\n}}\n>\n<option value={10}>Ten</option>\n<option value={20}>Twenty</option>\n<option value={30}>Thirty</option>\n</NativeSelect>\n</FormControl><FormControl fullWidth>\n<InputLabel variant=\"standard\" htmlFor=\"uncontrolled-native\">\nAge\n</InputLabel>\n<NativeSelect\ndefaultValue={30}\ninputProps={{\nname: 'age',\nid: 'uncontrolled-native',\n}}\n>\n<option value={10}>Ten</option>\n<option value={20}>Twenty</option>\n<option value={30}>Thirty</option>\n</NativeSelect>\n</FormControl>",
+    "language": "jsx",
+    "description": "",
+    "sequence": 2
+  },
+  {
+    "component": "Select",
+    "url": "https://mui.com/material-ui/react-select/",
+    "codeType": "Function Declaration",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Select",
+    "code": "function MyListSubheader(props: ListSubheaderProps) {\nreturn <ListSubheader {...props} />;\n}\nMyListSubheader.muiSkipListHighlight = true;\nexport default MyListSubheader;\nreturn (\n<Select>\n<MyListSubheader>Group 1</MyListSubheader>\n<MenuItem value={1}>Option 1</MenuItem>\n<MenuItem value={2}>Option 2</MenuItem>\n<MyListSubheader>Group 2</MyListSubheader>\n<MenuItem value={3}>Option 3</MenuItem>\n<MenuItem value={4}>Option 4</MenuItem>\n{}\n</Select>",
+    "language": "jsx",
+    "description": "",
+    "sequence": 3
+  },
+  {
+    "component": "Select",
+    "url": "https://mui.com/material-ui/react-select/",
+    "codeType": "Import/Export Statement",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Select",
+    "code": "export default function MyListSubheader(\nprops: ListSubheaderProps & { muiSkipListHighlight: boolean },\n) {\nconst { muiSkipListHighlight, ...other } = props;\nreturn <ListSubheader {...other} />;\n}\nreturn (\n<Select>\n<MyListSubheader muiSkipListHighlight>Group 1</MyListSubheader>\n<MenuItem value={1}>Option 1</MenuItem>\n<MenuItem value={2}>Option 2</MenuItem>\n<MyListSubheader muiSkipListHighlight>Group 2</MyListSubheader>\n<MenuItem value={3}>Option 3</MenuItem>\n<MenuItem value={4}>Option 4</MenuItem>\n{}\n</Select>\n);",
+    "language": "jsx",
+    "description": "",
+    "sequence": 4
+  },
+  {
+    "component": "Select",
+    "url": "https://mui.com/material-ui/react-select/",
+    "codeType": "JSX Component",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Select",
+    "code": "<InputLabel id=\"label\">Age</InputLabel>\n<Select labelId=\"label\" id=\"select\" value=\"20\">\n<MenuItem value=\"10\">Ten</MenuItem>\n<MenuItem value=\"20\">Twenty</MenuItem>\n</Select>",
+    "language": "jsx",
+    "description": "",
+    "sequence": 5
+  },
+  {
+    "component": "Select",
+    "url": "https://mui.com/material-ui/react-select/",
+    "codeType": "JSX Component",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Select",
+    "code": "<TextField id=\"select\" label=\"Age\" value=\"20\" select>\n<MenuItem value=\"10\">Ten</MenuItem>\n<MenuItem value=\"20\">Twenty</MenuItem>\n</TextField>",
+    "language": "jsx",
+    "description": "",
+    "sequence": 6
+  },
+  {
+    "component": "Select",
+    "url": "https://mui.com/material-ui/react-select/",
+    "codeType": "JSX Component",
+    "library": "Material-UI (MUI)",
+    "abbreviation": "MUI",
+    "title": "MUI_Select",
+    "code": "<InputLabel htmlFor=\"select\">Age</InputLabel>\n<NativeSelect id=\"select\">\n<option value=\"10\">Ten</option>\n<option value=\"20\">Twenty</option>\n</NativeSelect>",
+    "language": "jsx",
+    "description": "",
+    "sequence": 7
+  }
+]

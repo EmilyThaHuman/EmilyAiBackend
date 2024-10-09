@@ -1,0 +1,30 @@
+[
+  {
+    "component": "Stepper",
+    "title": "Untitled",
+    "code": "import Stepper from '@mui/material/Stepper'; import Step from '@mui/material/Step'; import StepLabel from '@mui/material/StepLabel';",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Stepper",
+    "title": "Untitled",
+    "code": "<Stepper activeStep={1} alternativeLabel> {steps.map((label) => ( <Step key={label}> <StepLabel>{label}</StepLabel> </Step> ))} </Stepper><Stepper activeStep={1} alternativeLabel> {steps.map((label) => ( <Step key={label}> <StepLabel>{label}</StepLabel> </Step> ))} </Stepper>",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Stepper",
+    "title": "Untitled",
+    "code": "<Stepper alternativeLabel activeStep={1} connector={<QontoConnector />}> {steps.map((label) => ( <Step key={label}> <StepLabel StepIconComponent={QontoStepIcon}>{label}</StepLabel> </Step> ))} </Stepper> <Stepper alternativeLabel activeStep={1} connector={<ColorlibConnector />}> {steps.map((label) => ( <Step key={label}> <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel> </Step> ))} </Stepper><Stepper alternativeLabel activeStep={1} connector={<QontoConnector />}> {steps.map((label) => ( <Step key={label}> <StepLabel StepIconComponent={QontoStepIcon}>{label}</StepLabel> </Step> ))} </Stepper> <Stepper alternativeLabel activeStep={1} connector={<ColorlibConnector />}> {steps.map((label) => ( <Step key={label}> <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel> </Step> ))} </Stepper>",
+    "language": "jsx",
+    "description": ""
+  },
+  {
+    "component": "Stepper",
+    "title": "Untitled",
+    "code": "<StepContent TransitionProps={{ unmountOnExit: false }} />",
+    "language": "jsx",
+    "description": ""
+  }
+]

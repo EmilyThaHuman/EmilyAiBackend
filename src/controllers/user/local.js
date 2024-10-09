@@ -1,8 +1,8 @@
 /* eslint-disable no-dupe-keys */
 const jwt = require('jsonwebtoken');
+const { sign, verify } = jwt;
 const bcrypt = require('bcrypt');
 require('dotenv').config();
-// const { Prompt, Tool, User, Workspace, Folder } = require('@/models');
 const { Prompt, User } = require('@/models');
 const {
   createWorkspace,
@@ -17,628 +17,47 @@ const {
   createModel,
 } = require('@/db/init'); // Adjust the path as needed
 const { logger } = require('@/config/logging');
-const AuthorizationError = require('@/config/constants/errors/AuthorizationError');
-// const path = require('path');
+const { AuthorizationError, ValidationError, ConflictError } = require('@/config/constants/errors');
 const { initialUserPrompts } = require('@/lib/prompts/static');
 const { findAndPopulateUser } = require('@/models/utils');
-// const { tools } = require('@/lib/functions');
-// const { getFileSize } = require('@/utils/processing/utils');
-
-// const saveStyledComponent = async ({ fileData, workspaceId, userId, folderId, space }) => {
-//   try {
-//     if (!fileData) {
-//       throw new Error('No fileData uploaded');
-//     }
-
-//     const cleanId = (id) => id.toString().replace(/^"|"$/g, '');
-//     workspaceId = cleanId(workspaceId);
-//     userId = cleanId(userId);
-//     folderId = folderId === 'undefined' ? undefined : cleanId(folderId);
-
-//     const newComponent = new File({
-//       name: fileData.name,
-//       originalName: fileData.originalname,
-//       contentType: fileData.contentType,
-//       size: fileData.size,
-//       uploadDate: new Date(),
-//       userId,
-//       workspaceId,
-//       folderId,
-//       content: fileData.content, // Store the content directly
-//     });
-
-//     const savedComponent = await newComponent.save();
-
-//     // Update related documents
-//     const updatePromises = [
-//       Workspace.findByIdAndUpdate(workspaceId, { $push: { files: savedComponent._id } }),
-//       User.findByIdAndUpdate(userId, { $push: { files: savedComponent._id } }),
-//     ];
-
-//     if (folderId) {
-//       updatePromises.push(
-//         Folder.findByIdAndUpdate(folderId, { $push: { files: savedComponent._id } })
-//       );
-//     }
-
-//     await Promise.all(updatePromises);
-
-//     logger.info(
-//       `Component ${savedComponent._id} saved and associated with Workspace ${workspaceId}, User ${userId}${folderId ? `, and Folder ${folderId}` : ''}`
-//     );
-
-//     return {
-//       id: savedComponent._id,
-//       name: savedComponent.name,
-//       filename: savedComponent.name,
-//       originalname: savedComponent.originalName,
-//       size: savedComponent.size,
-//       uploadDate: savedComponent.uploadDate,
-//       workspaceId,
-//       userId,
-//       folderId: folderId || null,
-//       space,
-//     };
-//   } catch (error) {
-//     logger.error(`Error in component saving handler: ${error.message}`);
-//     logger.error(`Stack trace: ${error.stack}`);
-//     return null;
-//   }
-// };
-
-// async function saveTools(userId, workspaceId, folderId) {
-//   try {
-//     if (!tools || !Array.isArray(tools) || tools.length === 0) {
-//       logger.warn('No tools to save or tools is not properly defined');
-//       return [];
-//     }
-//     const toolsToSave = tools?.map((tool, index) => ({
-//       userId,
-//       workspaceId,
-//       folderId,
-//       // name: tool.function.name,
-//       name: `Tool ${index + 1}`,
-//       // description: tool.function.description,
-//       schema: JSON.stringify(tool.function),
-//     }));
-
-//     const savedTools = await Tool.insertMany(toolsToSave);
-//     logger.info('All tools have been saved successfully.');
-//     return savedTools;
-//   } catch (error) {
-//     logger.error('Error saving tools:', error);
-//     throw error;
-//   }
-// }
-
-async function saveInitialPrompts(userId, workspaceId, folderId) {
-  try {
-    const promptsToSave = initialUserPrompts.map((prompt) => ({
-      userId,
-      workspaceId,
-      folderId,
-      name: prompt.name,
-      content: prompt.content,
-      role: 'user',
-      type: prompt.type,
-      sharing: prompt.sharing,
-      rating: prompt.rating,
-      tags: prompt.tags,
-    }));
-
-    const savedPrompts = await Prompt.insertMany(promptsToSave);
-    return savedPrompts;
-  } catch (error) {
-    logger.error('Error saving prompts:', error);
-    throw error;
-  }
-}
-
-const generateTokens = (user) => {
-  const accessToken = jwt.sign(
-    { userId: user._id },
-    process.env.AUTH_ACCESS_TOKEN_SECRET,
-    { expiresIn: '1h' } // Access token expires in 1 hour
-  );
-  const refreshToken = jwt.sign(
-    { userId: user._id },
-    process.env.AUTH_REFRESH_TOKEN_SECRET,
-    { expiresIn: '7d' } // Refresh token expires in 7 days
-  );
-  return { accessToken, refreshToken };
-};
-// Top-level constants
-const REFRESH_TOKEN = {
-  secret: process.env.AUTH_REFRESH_TOKEN_SECRET,
-  cookie: {
-    name: 'refreshTkn',
-    options: {
-      sameSite: 'None',
-      secure: true,
-      httpOnly: true,
-      expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
-    },
-  },
-};
+const { REFRESH_TOKEN } = require('@/config/constants');
+const { generateTokens } = require('@/utils/api/auth');
+const {
+  createNewUser,
+  checkUserExists,
+  validateUserInput,
+  initializeUserData,
+} = require('./helpers');
 
 const registerUser = async (req, res, next) => {
-  // eslint-disable-next-line no-unused-vars
-  let workspace, folders;
-
+  let newUser; // Declare newUser outside the try block for scope access in the catch block
   try {
-    logger.info(`${JSON.stringify(req.body)}`, req.body);
+    logger.info(`Registering user with data: ${JSON.stringify(req.body)}`);
     const { username, email, password } = req.body;
 
-    if (!username || !email || !password) {
-      throw new Error('All fields (username, email, password) are required');
-    }
+    // Validate input
+    validateUserInput({ username, email, password });
 
-    if (password.length < 6) {
-      throw new Error('Password must be at least 6 characters long');
-    }
+    // Check if user exists
+    await checkUserExists({ username, email });
 
-    const userExists = await User.findOne({ $or: [{ email }, { username }] });
-    if (userExists) {
-      throw new Error('Username or email already exists');
-    }
+    // Create new user
+    newUser = await createNewUser({ username, email, password });
 
-    const salt = await bcrypt.genSalt(10);
-    const passwordHash = await bcrypt.hash(password, salt);
-    const newUser = new User({
-      // ...defaultUserData,
-      username,
-      email,
-      'auth.password': passwordHash,
-    });
-    await newUser.save();
+    // Generate tokens
     const { accessToken, refreshToken } = generateTokens(newUser);
 
+    // Set refresh token cookie
     res.cookie(REFRESH_TOKEN.cookie.name, refreshToken, REFRESH_TOKEN.cookie.options);
-    // Create workspace
-    workspace = await createWorkspace(newUser);
 
-    // Now create folders
-    folders = await createFolders(newUser, workspace);
+    // Initialize user data (workspaces, folders, initial items)
+    await initializeUserData(newUser, accessToken, refreshToken);
 
-    // Initialize user data
-    // [workspace, folders] = await Promise.all([
-    //   createWorkspace(newUser),
-    //   createFolders(newUser, workspace),
-    // ]);
-    // Create default files in each folder
-    // for (const folder of folders) {
-    //   try {
-    //     const { mongoDocument: defaultFile, gridFsFile } = await createDefaultFile(
-    //       newUser,
-    //       folder,
-    //       {
-    //         fileName: `default_${folder.space}.txt`,
-    //         content: `This is the default content for ${folder.space} folder.`,
-    //         mimeType: 'text/plain',
-    //       }
-    //     );
+    // Populate user data for response
+    const populatedUser = await findAndPopulateUser(newUser._id);
 
-    //     if (!defaultFile || !gridFsFile) {
-    //       throw new Error('Failed to create default file');
-    //     }
+    logger.info(`User registered successfully: ${newUser.username}`);
 
-    //     folder.items.push(defaultFile._id);
-    //     folder.files.push(defaultFile._id);
-    //     newUser.files.push(defaultFile._id);
-    //   } catch (error) {
-    //     logger.error(`Error creating default file for folder ${folder.space}: ${error.message}`);
-    //     continue;
-    //   }
-    // }
-
-    // const filesFolder = folders.find((folder) => folder.space === 'files');
-    const promptsFolder = folders.find((folder) => folder.space === 'prompts');
-    // const toolsFolder = folders.find((folder) => folder.space === 'tools');
-    // const components = [
-    //   {
-    //     filename: 'CustomButton.jsx',
-    //     content: `import { styled } from '@mui/material/styles';\nimport Button from '@mui/material/Button';\n\nconst CustomButton = styled(Button)({\n  backgroundColor: '#3f51b5',\n  color: '#fff',\n  '&:hover': {\n    backgroundColor: '#303f9f',\n  },\n});\n\nexport default CustomButton;`,
-    //   },
-    //   {
-    //     filename: 'CustomTypography.jsx',
-    //     content: `import { styled } from '@mui/material/styles';\nimport Typography from '@mui/material/Typography';\n\nconst CustomTypography = styled(Typography)({\n  color: '#3f51b5',\n  fontWeight: 'bold',\n  fontSize: '1.5rem',\n});\n\nexport default CustomTypography;`,
-    //   },
-    //   {
-    //     filename: 'CustomBox.jsx',
-    //     content: `import { styled } from '@mui/material/styles';\nimport Box from '@mui/material/Box';\n\nconst CustomBox = styled(Box)({\n  display: 'flex',\n  justifyContent: 'center',\n  alignItems: 'center',\n  padding: '20px',\n  backgroundColor: '#f5f5f5',\n  borderRadius: '8px',\n});\n\nexport default CustomBox;`,
-    //   },
-    //   {
-    //     filename: 'CustomTextField.jsx',
-    //     content: `import { styled } from '@mui/material/styles';\nimport TextField from '@mui/material/TextField';\n\nconst CustomTextField = styled(TextField)({\n  '& label.Mui-focused': {\n    color: '#3f51b5',\n  },\n  '& .MuiInput-underline:after': {\n    borderBottomColor: '#3f51b5',\n  },\n});\n\nexport default CustomTextField;`,
-    //   },
-    //   {
-    //     filename: 'CustomCard.jsx',
-    //     content: `import { styled } from '@mui/material/styles';\nimport Card from '@mui/material/Card';\n\nconst CustomCard = styled(Card)({\n  padding: '16px',\n  boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',\n  borderRadius: '8px',\n  backgroundColor: '#fff',\n});\n\nexport default CustomCard;`,
-    //   },
-    // ];
-    // const saveNewFile = async () => {
-    //   const filePromises = components.map((component) => {
-    //     if (!component || !component.filename || !component.content) {
-    //       logger.warn(`Invalid component data: ${JSON.stringify(component)}`);
-    //       return Promise.resolve(null);
-    //     }
-
-    //     const fileData = {
-    //       name: component.filename,
-    //       originalname: component.filename,
-    //       size: Buffer.from(component.content).length, // Calculate size from content
-    //       content: component.content,
-    //       contentType: 'application/javascript',
-    //     };
-    //     return saveStyledComponent({
-    //       fileData,
-    //       workspaceId: workspace._id,
-    //       userId: newUser._id,
-    //       folderId: filesFolder._id,
-    //       space: 'files',
-    //     });
-    //   });
-    //   const savedFiles = await Promise.all(filePromises);
-    //   return savedFiles.filter((file) => file !== null);
-    // };
-
-    const [savedPrompts] = await Promise.all([
-      saveInitialPrompts(newUser._id, workspace._id, promptsFolder._id),
-      // saveTools(newUser._id, workspace._id, toolsFolder._id),
-      // saveNewFile(),
-    ]);
-    const validSavedPrompts = savedPrompts.filter((prompt) => prompt !== null);
-    // const validSavedTools = savedTools.filter((tool) => tool !== null);
-    // const validSavedFiles = savedFiles.filter((file) => file !== null);
-
-    const updatePromises = [
-      ...validSavedPrompts.map((prompt) => {
-        newUser.prompts.push(prompt._id);
-        workspace.prompts.push(prompt._id);
-        promptsFolder.prompts.push(prompt._id);
-      }),
-      // ...validSavedTools.map((tool) => {
-      //   newUser.tools.push(tool._id);
-      //   workspace.tools.push(tool._id);
-      //   toolsFolder.tools.push(tool._id);
-      // }),
-      // ...validSavedFiles.map((file) => {
-      //   newUser.files.push(file._id);
-      //   workspace.files.push(file._id);
-      //   filesFolder.files.push(file._id);
-      // }),
-    ];
-
-    await Promise.all(updatePromises);
-    const [file, preset, prompt, collection, tool, model] = await Promise.all([
-      createFile(
-        newUser,
-        folders.find((folder) => folder.space === 'files')
-      ),
-      createPreset(
-        newUser,
-        folders.find((folder) => folder.space === 'presets')
-      ),
-      createPrompt(
-        newUser,
-        workspace,
-        folders.find((folder) => folder.space === 'prompts')
-      ),
-      createCollection(
-        newUser,
-        folders.find((folder) => folder.space === 'collections')
-      ),
-      createTool(
-        newUser,
-        workspace,
-        folders.find((folder) => folder.space === 'tools')
-      ),
-      createModel(
-        newUser,
-        folders.find((folder) => folder.space === 'models')
-      ),
-    ]);
-    const assistant = await createAssistant(
-      newUser,
-      folders.find((folder) => folder.space === 'assistants'),
-      file
-    );
-    const chatSession = await createChatSession(
-      newUser,
-      workspace,
-      assistant,
-      folders.find((folder) => folder.space === 'chatSessions')
-    );
-
-    // Update folders, workspace, and user with new items
-    const updateOperations = [
-      ...folders.map((folder) => {
-        const itemKey = `${folder.space.slice(0, -1)}s`;
-        if (folder[itemKey]) {
-          folder[itemKey].push(eval(folder.space.slice(0, -1))._id);
-        }
-        return folder.save();
-      }),
-      workspace.updateOne({
-        $push: {
-          files: file._id,
-          presets: preset._id,
-          assistants: assistant._id,
-          chatSessions: chatSession._id,
-          prompts: prompt._id,
-          collections: collection._id,
-          tools: tool._id,
-          models: model._id,
-        },
-      }),
-      newUser.updateOne({
-        $addToSet: { workspaces: workspace._id },
-        $push: {
-          files: file._id,
-          presets: preset._id,
-          assistants: assistant._id,
-          chatSessions: chatSession._id,
-          prompts: prompt._id,
-          collections: collection._id,
-          tools: tool._id,
-          models: model._id,
-        },
-        $set: {
-          userId: newUser._id,
-          authSession: {
-            accessToken,
-            refreshToken,
-            expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000,
-            createdAt: new Date(),
-          },
-          'profile.openai': {
-            apiKey: process.env.OPENAI_API_PROJECT_KEY,
-            organizationId: process.env.OPENAI_API_ORG_ID,
-            apiVersion: '',
-            projects: [
-              {
-                name: process.env.OPENAI_API_PROJECT_NAME,
-                id: process.env.OPENAI_API_PROJECT_ID,
-                organizationId: process.env.OPENAI_API_ORG_ID,
-                organizationName: process.env.OPENAI_API_ORG_NAME,
-                apiKey: process.env.OPENAI_API_PROJECT_KEY,
-                apiVersion: '',
-                default: true,
-                users: [
-                  {
-                    userId: newUser._id,
-                    role: 'admin',
-                    readWrite: true,
-                  },
-                ],
-              },
-            ],
-          },
-        },
-      }),
-    ];
-
-    await Promise.all(updateOperations);
-    // Save tools and push to User, Workspace, and Folder
-    // const savedTools = await saveTools(newUser._id, workspace._id, toolsFolder._id);
-    // savedTools.forEach((tool) => {
-    //   newUser.tools.push(tool._id);
-    //   workspace.tools.push(tool._id);
-    //   toolsFolder.tools.push(tool._id);
-    // });
-    // const file = await createFile(
-    //   newUser,
-    //   folders.find((folder) => folder.space === 'files')
-    // );
-    // const preset = await createPreset(
-    //   newUser,
-    //   folders.find((folder) => folder.space === 'presets')
-    // );
-    // const assistant = await createAssistant(
-    //   newUser,
-    //   folders.find((folder) => folder.space === 'assistants'),
-    //   file
-    // );
-    // const chatSession = await createChatSession(
-    //   newUser,
-    //   workspace,
-    //   assistant,
-    //   folders.find((folder) => folder.space === 'chatSessions')
-    // );
-    // const prompt = await createPrompt(
-    //   newUser,
-    //   workspace,
-    //   folders.find((folder) => folder.space === 'prompts')
-    // );
-    // const collection = await createCollection(
-    //   newUser,
-    //   folders.find((folder) => folder.space === 'collections')
-    // );
-    // const tool = await createTool(
-    //   newUser,
-    //   workspace,
-    //   folders.find((folder) => folder.space === 'tools')
-    // );
-    // const model = await createModel(
-    //   newUser,
-    //   folders.find((folder) => folder.space === 'models')
-    // );
-
-    // folders.find((folder) => folder.space === 'files').files.push(file._id);
-    // folders.find((folder) => folder.space === 'presets').presets.push(preset._id);
-    // folders.find((folder) => folder.space === 'assistants').assistants.push(assistant._id);
-    // folders.find((folder) => folder.space === 'chatSessions').chatSessions.push(chatSession._id);
-    // folders.find((folder) => folder.space === 'prompts').prompts.push(prompt._id);
-    // folders.find((folder) => folder.space === 'collections').collections.push(collection._id);
-    // folders.find((folder) => folder.space === 'tools').tools.push(tool._id);
-    // folders.find((folder) => folder.space === 'models').models.push(model._id);
-
-    // // Save folders
-    // await Promise.all(folders.map((folder) => folder.save()));
-
-    // // Push item IDs to workspace
-    // workspace.files.push(file._id);
-    // workspace.presets.push(preset._id);
-    // workspace.assistants.push(assistant._id);
-    // workspace.chatSessions.push(chatSession._id);
-    // workspace.prompts.push(prompt._id);
-    // workspace.collections.push(collection._id);
-    // workspace.tools.push(tool._id);
-    // workspace.models.push(model._id);
-
-    // // Save workspace
-    // await workspace.save();
-
-    // // Push workspace ID to user
-    // newUser.workspaces = newUser.workspaces.includes(workspace._id)
-    //   ? newUser.workspaces
-    //   : [...newUser.workspaces, workspace._id];
-    // newUser.userId = newUser._id;
-    // newUser.authSession = {
-    //   accessToken,
-    //   refreshToken,
-    //   expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
-    //   createdAt: new Date(),
-    // };
-    // // newUser.authSession = {
-    // //   token: aTkn,
-    // //   tokenType: 'Bearer',
-    // //   accessToken: aTkn,
-    // //   refreshToken: refreshToken,
-    // //   expiresIn: 60 * 60 * 24, // 24 hours
-    // //   expiresAt: Date.now() + 24 * 60 * 60 * 1000,
-    // //   createdAt: new Date(),
-    // // };
-    // const openai = {
-    //   apiKey: process.env.OPENAI_API_PROJECT_KEY,
-    //   organizationId: process.env.OPENAI_API_ORG_ID,
-    //   apiVersion: '',
-    //   projects: [
-    //     {
-    //       name: process.env.OPENAI_API_PROJECT_NAME,
-    //       id: process.env.OPENAI_API_PROJECT_ID,
-    //       organizationId: process.env.OPENAI_API_ORG_ID,
-    //       organizationName: process.env.OPENAI_API_ORG_NAME,
-    //       apiKey: process.env.OPENAI_API_PROJECT_KEY,
-    //       apiVersion: '',
-    //       default: true,
-    //       users: [
-    //         {
-    //           userId: newUser._id,
-    //           role: 'admin',
-    //           readWrite: true,
-    //         },
-    //       ],
-    //     },
-    //   ],
-    // };
-
-    // newUser.profile.openai = openai;
-    // newUser.openai = openai;
-
-    // await newUser.save();
-    // logger.info(`User registered: ${newUser.username}`);
-
-    const populatedUser = await User.findById(newUser._id).populate([
-      'workspaces',
-      {
-        path: 'workspaces',
-        populate: {
-          path: 'chatSessions',
-          model: 'ChatSession', // Replace 'Message' with the actual name of your Message model
-        },
-        populate: {
-          path: 'folders',
-          model: 'Folder', // Replace 'Message' with the actual name of your Message model
-        },
-        populate: {
-          path: 'files',
-          model: 'File', // Replace 'Message' with the actual name of your Message model
-        },
-        populate: {
-          path: 'assistants',
-          model: 'Assistant', // Replace 'Message' with the actual name of your Message model
-        },
-        populate: {
-          path: 'prompts',
-          model: 'Prompt', // Replace 'Message' with the actual name of your Message model
-        },
-        populate: {
-          path: 'tools',
-          model: 'Tool', // Replace 'Message' with the actual name of your Message model
-        },
-      },
-      'assistants',
-      'prompts',
-      {
-        path: 'chatSessions',
-        populate: {
-          path: 'messages',
-          model: 'ChatMessage', // Replace 'Message' with the actual name of your Message model
-        },
-      },
-      {
-        path: 'folders',
-        populate: {
-          path: 'files',
-          model: 'File', // Replace 'Message' with the actual name of your Message model
-        },
-        populate: {
-          path: 'presets',
-          model: 'Preset', // Replace 'Message' with the actual name of your Message model
-        },
-        populate: {
-          path: 'assistants',
-          model: 'Assistant', // Replace 'Message' with the actual name of your Message model
-        },
-
-        populate: {
-          path: 'chatSessions',
-          model: 'ChatSession', // Replace 'Message' with the actual name of your Message model
-        },
-
-        populate: {
-          path: 'prompts',
-          model: 'Prompt', // Replace 'Message' with the actual name of your Message model
-        },
-
-        populate: {
-          path: 'collections',
-          model: 'Collection', // Replace 'Message' with the actual name of your Message model
-        },
-        populate: {
-          path: 'tools',
-          model: 'Tool', // Replace 'Message' with the actual name of your Message model
-        },
-        populate: {
-          path: 'models',
-          model: 'Model', // Replace 'Message' with the actual name of your Message model
-        },
-        // populate: {
-        //   path: 'openai',
-        //   model: 'OpenAI', // Replace 'Message' with the actual name of your Message model
-        // },
-        populate: [
-          {
-            path: 'items',
-            refPath: 'itemType',
-          },
-          {
-            path: 'subfolders',
-            model: 'Folder',
-            populate: {
-              path: 'items',
-              refPath: 'itemType',
-            },
-          },
-        ],
-      },
-      'files',
-      'collections',
-      'models',
-      'tools',
-      'presets',
-    ]);
     res.status(201).json({
       success: true,
       accessToken,
@@ -650,27 +69,438 @@ const registerUser = async (req, res, next) => {
     });
   } catch (error) {
     logger.error(`Error registering user: ${error.message}`);
-    logger.error(`Error Stack: ${error.stack}`);
-    logger.error(`Error Name: ${error.name}`);
 
-    if (error.code === 11000) {
-      if (error.message.includes('chatsessions index: sessionId_1 dup key')) {
-        throw new Error('Error creating chat session. Please try again.');
-      } else if (error.message.includes('username') || error.message.includes('email')) {
-        throw new Error('Username or email already exists');
+    // Cleanup if user creation failed after saving
+    if (newUser) {
+      try {
+        await User.findByIdAndDelete(newUser._id);
+        logger.info(`Partially created user deleted: ${newUser._id}`);
+      } catch (cleanupError) {
+        logger.error(`Error cleaning up user: ${cleanupError.message}`);
       }
-    } else if (error.message.includes('Failed to create default file')) {
-      res.status(500).json({ error: 'Failed to create default files. Please try again.' });
-    } else if (error.message.includes('All fields (username, email, password) are required')) {
-      throw new Error('All fields (username, email, password) are required');
-    } else if (error.message.includes('Password must be at least 6 characters long')) {
-      throw new Error('Password must be at least 6 characters long');
-    } else {
-      throw new Error('An error occurred while registering the user');
     }
-    next(error);
+
+    if (error instanceof ValidationError || error instanceof ConflictError) {
+      res.status(error.status).json({ error: error.message });
+    } else {
+      next(error);
+    }
   }
 };
+
+// const registerUser = async (req, res, next) => {
+//   // eslint-disable-next-line no-unused-vars
+//   let workspace, folders;
+
+//   try {
+//     logger.info(`${JSON.stringify(req.body)}`, req.body);
+//     const { username, email, password } = req.body;
+
+//     if (!username || !email || !password) {
+//       throw new Error('All fields (username, email, password) are required');
+//     }
+
+//     if (password.length < 6) {
+//       throw new Error('Password must be at least 6 characters long');
+//     }
+
+//     const userExists = await User.findOne({ $or: [{ email }, { username }] });
+//     if (userExists) {
+//       throw new Error('Username or email already exists');
+//     }
+
+//     const salt = await bcrypt.genSalt(10);
+//     const passwordHash = await bcrypt.hash(password, salt);
+//     const newUser = new User({
+//       // ...defaultUserData,
+//       username,
+//       email,
+//       'auth.password': passwordHash,
+//     });
+//     await newUser.save();
+//     const { accessToken, refreshToken } = generateTokens(newUser);
+
+//     res.cookie(REFRESH_TOKEN.cookie.name, refreshToken, REFRESH_TOKEN.cookie.options);
+//     workspace = await createWorkspace(newUser);
+//     folders = await createFolders(newUser, workspace);
+
+//     const promptsFolder = folders.find((folder) => folder.space === 'prompts');
+
+//     const [savedPrompts] = await Promise.all([
+//       saveInitialPrompts(newUser._id, workspace._id, promptsFolder._id),
+//     ]);
+//     const validSavedPrompts = savedPrompts.filter((prompt) => prompt !== null);
+
+//     const updatePromises = [
+//       ...validSavedPrompts.map((prompt) => {
+//         newUser.prompts.push(prompt._id);
+//         workspace.prompts.push(prompt._id);
+//         promptsFolder.prompts.push(prompt._id);
+//       }),
+//     ];
+
+//     await Promise.all(updatePromises);
+//     const [file, preset, prompt, collection, tool, model] = await Promise.all([
+//       createFile(
+//         newUser,
+//         folders.find((folder) => folder.space === 'files')
+//       ),
+//       createPreset(
+//         newUser,
+//         folders.find((folder) => folder.space === 'presets')
+//       ),
+//       createPrompt(
+//         newUser,
+//         workspace,
+//         folders.find((folder) => folder.space === 'prompts')
+//       ),
+//       createCollection(
+//         newUser,
+//         folders.find((folder) => folder.space === 'collections')
+//       ),
+//       createTool(
+//         newUser,
+//         workspace,
+//         folders.find((folder) => folder.space === 'tools')
+//       ),
+//       createModel(
+//         newUser,
+//         folders.find((folder) => folder.space === 'models')
+//       ),
+//     ]);
+//     const assistant = await createAssistant(
+//       newUser,
+//       folders.find((folder) => folder.space === 'assistants'),
+//       file
+//     );
+//     const chatSession = await createChatSession(
+//       newUser,
+//       workspace,
+//       assistant,
+//       folders.find((folder) => folder.space === 'chatSessions')
+//     );
+
+//     // Update folders, workspace, and user with new items
+//     const updateOperations = [
+//       ...folders.map((folder) => {
+//         const itemKey = `${folder.space.slice(0, -1)}s`;
+//         if (folder[itemKey]) {
+//           folder[itemKey].push(eval(folder.space.slice(0, -1))._id);
+//         }
+//         return folder.save();
+//       }),
+//       workspace.updateOne({
+//         $push: {
+//           files: file._id,
+//           presets: preset._id,
+//           assistants: assistant._id,
+//           chatSessions: chatSession._id,
+//           prompts: prompt._id,
+//           collections: collection._id,
+//           tools: tool._id,
+//           models: model._id,
+//         },
+//       }),
+//       newUser.updateOne({
+//         $addToSet: { workspaces: workspace._id },
+//         $push: {
+//           files: file._id,
+//           presets: preset._id,
+//           assistants: assistant._id,
+//           chatSessions: chatSession._id,
+//           prompts: prompt._id,
+//           collections: collection._id,
+//           tools: tool._id,
+//           models: model._id,
+//         },
+//         $set: {
+//           userId: newUser._id,
+//           authSession: {
+//             accessToken,
+//             refreshToken,
+//             expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000,
+//             createdAt: new Date(),
+//           },
+//           'profile.openai': {
+//             apiKey: process.env.OPENAI_API_PROJECT_KEY,
+//             organizationId: process.env.OPENAI_API_ORG_ID,
+//             apiVersion: '',
+//             projects: [
+//               {
+//                 name: process.env.OPENAI_API_PROJECT_NAME,
+//                 id: process.env.OPENAI_API_PROJECT_ID,
+//                 organizationId: process.env.OPENAI_API_ORG_ID,
+//                 organizationName: process.env.OPENAI_API_ORG_NAME,
+//                 apiKey: process.env.OPENAI_API_PROJECT_KEY,
+//                 apiVersion: '',
+//                 default: true,
+//                 users: [
+//                   {
+//                     userId: newUser._id,
+//                     role: 'admin',
+//                     readWrite: true,
+//                   },
+//                 ],
+//               },
+//             ],
+//           },
+//         },
+//       }),
+//     ];
+
+//     await Promise.all(updateOperations);
+//     // Save tools and push to User, Workspace, and Folder
+//     // const savedTools = await saveTools(newUser._id, workspace._id, toolsFolder._id);
+//     // savedTools.forEach((tool) => {
+//     //   newUser.tools.push(tool._id);
+//     //   workspace.tools.push(tool._id);
+//     //   toolsFolder.tools.push(tool._id);
+//     // });
+//     // const file = await createFile(
+//     //   newUser,
+//     //   folders.find((folder) => folder.space === 'files')
+//     // );
+//     // const preset = await createPreset(
+//     //   newUser,
+//     //   folders.find((folder) => folder.space === 'presets')
+//     // );
+//     // const assistant = await createAssistant(
+//     //   newUser,
+//     //   folders.find((folder) => folder.space === 'assistants'),
+//     //   file
+//     // );
+//     // const chatSession = await createChatSession(
+//     //   newUser,
+//     //   workspace,
+//     //   assistant,
+//     //   folders.find((folder) => folder.space === 'chatSessions')
+//     // );
+//     // const prompt = await createPrompt(
+//     //   newUser,
+//     //   workspace,
+//     //   folders.find((folder) => folder.space === 'prompts')
+//     // );
+//     // const collection = await createCollection(
+//     //   newUser,
+//     //   folders.find((folder) => folder.space === 'collections')
+//     // );
+//     // const tool = await createTool(
+//     //   newUser,
+//     //   workspace,
+//     //   folders.find((folder) => folder.space === 'tools')
+//     // );
+//     // const model = await createModel(
+//     //   newUser,
+//     //   folders.find((folder) => folder.space === 'models')
+//     // );
+
+//     // folders.find((folder) => folder.space === 'files').files.push(file._id);
+//     // folders.find((folder) => folder.space === 'presets').presets.push(preset._id);
+//     // folders.find((folder) => folder.space === 'assistants').assistants.push(assistant._id);
+//     // folders.find((folder) => folder.space === 'chatSessions').chatSessions.push(chatSession._id);
+//     // folders.find((folder) => folder.space === 'prompts').prompts.push(prompt._id);
+//     // folders.find((folder) => folder.space === 'collections').collections.push(collection._id);
+//     // folders.find((folder) => folder.space === 'tools').tools.push(tool._id);
+//     // folders.find((folder) => folder.space === 'models').models.push(model._id);
+
+//     // // Save folders
+//     // await Promise.all(folders.map((folder) => folder.save()));
+
+//     // // Push item IDs to workspace
+//     // workspace.files.push(file._id);
+//     // workspace.presets.push(preset._id);
+//     // workspace.assistants.push(assistant._id);
+//     // workspace.chatSessions.push(chatSession._id);
+//     // workspace.prompts.push(prompt._id);
+//     // workspace.collections.push(collection._id);
+//     // workspace.tools.push(tool._id);
+//     // workspace.models.push(model._id);
+
+//     // // Save workspace
+//     // await workspace.save();
+
+//     // // Push workspace ID to user
+//     // newUser.workspaces = newUser.workspaces.includes(workspace._id)
+//     //   ? newUser.workspaces
+//     //   : [...newUser.workspaces, workspace._id];
+//     // newUser.userId = newUser._id;
+//     // newUser.authSession = {
+//     //   accessToken,
+//     //   refreshToken,
+//     //   expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
+//     //   createdAt: new Date(),
+//     // };
+//     // // newUser.authSession = {
+//     // //   token: aTkn,
+//     // //   tokenType: 'Bearer',
+//     // //   accessToken: aTkn,
+//     // //   refreshToken: refreshToken,
+//     // //   expiresIn: 60 * 60 * 24, // 24 hours
+//     // //   expiresAt: Date.now() + 24 * 60 * 60 * 1000,
+//     // //   createdAt: new Date(),
+//     // // };
+//     // const openai = {
+//     //   apiKey: process.env.OPENAI_API_PROJECT_KEY,
+//     //   organizationId: process.env.OPENAI_API_ORG_ID,
+//     //   apiVersion: '',
+//     //   projects: [
+//     //     {
+//     //       name: process.env.OPENAI_API_PROJECT_NAME,
+//     //       id: process.env.OPENAI_API_PROJECT_ID,
+//     //       organizationId: process.env.OPENAI_API_ORG_ID,
+//     //       organizationName: process.env.OPENAI_API_ORG_NAME,
+//     //       apiKey: process.env.OPENAI_API_PROJECT_KEY,
+//     //       apiVersion: '',
+//     //       default: true,
+//     //       users: [
+//     //         {
+//     //           userId: newUser._id,
+//     //           role: 'admin',
+//     //           readWrite: true,
+//     //         },
+//     //       ],
+//     //     },
+//     //   ],
+//     // };
+
+//     // newUser.profile.openai = openai;
+//     // newUser.openai = openai;
+
+//     // await newUser.save();
+//     // logger.info(`User registered: ${newUser.username}`);
+
+//     const populatedUser = await User.findById(newUser._id).populate([
+//       'workspaces',
+//       {
+//         path: 'workspaces',
+//         populate: {
+//           path: 'chatSessions',
+//           model: 'ChatSession', // Replace 'Message' with the actual name of your Message model
+//         },
+//         populate: {
+//           path: 'folders',
+//           model: 'Folder', // Replace 'Message' with the actual name of your Message model
+//         },
+//         populate: {
+//           path: 'files',
+//           model: 'File', // Replace 'Message' with the actual name of your Message model
+//         },
+//         populate: {
+//           path: 'assistants',
+//           model: 'Assistant', // Replace 'Message' with the actual name of your Message model
+//         },
+//         populate: {
+//           path: 'prompts',
+//           model: 'Prompt', // Replace 'Message' with the actual name of your Message model
+//         },
+//         populate: {
+//           path: 'tools',
+//           model: 'Tool', // Replace 'Message' with the actual name of your Message model
+//         },
+//       },
+//       'assistants',
+//       'prompts',
+//       {
+//         path: 'chatSessions',
+//         populate: {
+//           path: 'messages',
+//           model: 'ChatMessage', // Replace 'Message' with the actual name of your Message model
+//         },
+//       },
+//       {
+//         path: 'folders',
+//         populate: {
+//           path: 'files',
+//           model: 'File', // Replace 'Message' with the actual name of your Message model
+//         },
+//         populate: {
+//           path: 'presets',
+//           model: 'Preset', // Replace 'Message' with the actual name of your Message model
+//         },
+//         populate: {
+//           path: 'assistants',
+//           model: 'Assistant', // Replace 'Message' with the actual name of your Message model
+//         },
+
+//         populate: {
+//           path: 'chatSessions',
+//           model: 'ChatSession', // Replace 'Message' with the actual name of your Message model
+//         },
+
+//         populate: {
+//           path: 'prompts',
+//           model: 'Prompt', // Replace 'Message' with the actual name of your Message model
+//         },
+
+//         populate: {
+//           path: 'collections',
+//           model: 'Collection', // Replace 'Message' with the actual name of your Message model
+//         },
+//         populate: {
+//           path: 'tools',
+//           model: 'Tool', // Replace 'Message' with the actual name of your Message model
+//         },
+//         populate: {
+//           path: 'models',
+//           model: 'Model', // Replace 'Message' with the actual name of your Message model
+//         },
+//         // populate: {
+//         //   path: 'openai',
+//         //   model: 'OpenAI', // Replace 'Message' with the actual name of your Message model
+//         // },
+//         populate: [
+//           {
+//             path: 'items',
+//             refPath: 'itemType',
+//           },
+//           {
+//             path: 'subfolders',
+//             model: 'Folder',
+//             populate: {
+//               path: 'items',
+//               refPath: 'itemType',
+//             },
+//           },
+//         ],
+//       },
+//       'files',
+//       'collections',
+//       'models',
+//       'tools',
+//       'presets',
+//     ]);
+//     res.status(201).json({
+//       success: true,
+//       accessToken,
+//       refreshToken,
+//       expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+//       userId: newUser._id,
+//       message: 'User registered successfully',
+//       user: populatedUser,
+//     });
+//   } catch (error) {
+//     logger.error(`Error registering user: ${error.message}`);
+//     logger.error(`Error Stack: ${error.stack}`);
+//     logger.error(`Error Name: ${error.name}`);
+
+//     if (error.code === 11000) {
+//       if (error.message.includes('chatsessions index: sessionId_1 dup key')) {
+//         throw new Error('Error creating chat session. Please try again.');
+//       } else if (error.message.includes('username') || error.message.includes('email')) {
+//         throw new Error('Username or email already exists');
+//       }
+//     } else if (error.message.includes('Failed to create default file')) {
+//       res.status(500).json({ error: 'Failed to create default files. Please try again.' });
+//     } else if (error.message.includes('All fields (username, email, password) are required')) {
+//       throw new Error('All fields (username, email, password) are required');
+//     } else if (error.message.includes('Password must be at least 6 characters long')) {
+//       throw new Error('Password must be at least 6 characters long');
+//     } else {
+//       throw new Error('An error occurred while registering the user');
+//     }
+//     next(error);
+//   }
+// };
 const loginUser = async (req, res, next) => {
   try {
     const { usernameOrEmail, password } = req.body;
