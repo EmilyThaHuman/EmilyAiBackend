@@ -2,6 +2,7 @@
 const fs = require('fs').promises;
 const path = require('path');
 const prettier = require('prettier');
+
 const removeDuplicate = (code) =>
   (code = code.replace(/^(import[\s\S]*?export default function [^(]+\(\) {[\s\S]*?})\1$/, '$1'));
 async function detectFileType(code) {

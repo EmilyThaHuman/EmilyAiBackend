@@ -74,7 +74,6 @@ async function findAndPopulateUser(userId) {
 module.exports = {
   createSchema,
   createModel,
-
   createSnippetModel,
   findAndPopulateUser,
 };

@@ -260,13 +260,139 @@ userSchema.pre('save', async function (next) {
 /*
 4. ATTACH CUSTOM STATIC METHODS
  */
-// userSchema.statics.findByCredentials = async (email, password) => {
-//   const user = await UserModel.findOne({ email });
-//   if (!user) throw new CustomError('Wrong credentials!', 400, 'Email or password is wrong!');
-//   const passwdMatch = await bcrypt.compare(password, user.password);
-//   if (!passwdMatch) throw new CustomError('Wrong credentials!!', 400, 'Email or password is wrong!');
-//   return user;
-// };
+userSchema.statics.generateDefaultUser = function () {
+  // Create a full empty user object with default values without saving to the database
+  const defaultUser = new this({
+    username: '',
+    email: '',
+    firstName: '',
+    lastName: '',
+    profile: {
+      img: 'reed_profile.png',
+      imagePath: '/static/images/reed_profile.png',
+      profileImages: [],
+      selectedProfileImage: profileImagePath,
+      filename: 'avatar1.png',
+      bio: '',
+      displayName: '',
+      username: '',
+      hasOnboarded: false,
+      identity: {
+        identityId: '',
+        userId: '',
+        identityData: {
+          email: '',
+          emailVerified: false,
+          phoneVerified: false,
+          sub: '',
+        },
+        provider: '',
+        lastSignInAt: null,
+      },
+      openai: {
+        apiKey: '',
+        organizationId: '',
+        apiVersion: '',
+        projects: [],
+      },
+      envKeyMap: {
+        openaiApiKey: '',
+        openaiOrgId: '',
+        anthropicApiKey: '',
+        googleGeminiApiKey: '',
+        mistralApiKey: '',
+        groqAPIKey: '',
+        perplexityApiKey: '',
+      },
+      stats: {
+        totalMessages: 0,
+        totalTokenCount: 0,
+        totalMessages3Days: 0,
+        totalTokenCount3Days: 0,
+      },
+      location: {
+        city: '',
+        state: '',
+        country: '',
+      },
+      social: {
+        facebook: '',
+        twitter: '',
+        instagram: '',
+        linkedin: '',
+        github: '',
+        website: '',
+      },
+      dashboard: {
+        projects: new Map(),
+      },
+      settings: {
+        user: {
+          theme: 'light',
+          fontSize: 16,
+          language: 'en',
+          timezone: 'Seattle',
+        },
+        chat: {
+          presets: {
+            contextLength: null,
+            description: '',
+            embeddingsProvider: '',
+            folderId: '',
+            includeProfileContext: false,
+            includeWorkspaceInstructions: false,
+            model: '',
+            name: '',
+            prompt: '',
+            sharing: '',
+            temperature: null,
+            userId: '',
+          },
+        },
+      },
+    },
+    auth: {
+      password: '',
+      management: {
+        rateLimit: null,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      },
+      chatModelPrivileges: [],
+      lastLogin: Date.now(),
+      isSuperuser: false,
+    },
+    authSession: {
+      token: '',
+      tokenType: '',
+      accessToken: '',
+      refreshToken: '',
+      expiresIn: 3600,
+      expiresAt: Date.now() + 3600000,
+      createdAt: Date.now(),
+    },
+    appMetadata: {
+      provider: '',
+      providers: [],
+    },
+    isActive: false,
+    dateJoined: Date.now(),
+    hasOnboarded: false,
+    workspaces: [],
+    chatSessions: [],
+    folders: [],
+    assistants: [],
+    prompts: [],
+    files: [],
+    collections: [],
+    models: [],
+    tools: [],
+    presets: [],
+  });
+
+  return defaultUser.toObject();
+};
+
 
 /*
 5. ATTACH CUSTOM INSTANCE METHODS

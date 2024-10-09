@@ -73,10 +73,7 @@ const fileSchema = createSchema({
   // -- REQUIRED FIELDS
   name: { type: String, required: false },
   description: { type: String, required: false },
-  filePath: { type: String, required: false },
   content: { type: String, required: false },
-  size: { type: Number, required: false },
-  tokens: { type: Number, required: false },
   type: {
     type: String,
     required: false,
@@ -98,6 +95,9 @@ const fileSchema = createSchema({
       'gif',
     ],
   },
+  size: { type: Number, required: false },
+  tokens: { type: Number, required: false },
+  filePath: { type: String, required: false },
 
   // -- ADDITIONAL FIELDS
   originalFileType: { type: String, required: false },

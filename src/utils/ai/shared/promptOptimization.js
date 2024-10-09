@@ -77,7 +77,6 @@ const summarizeText = async (text) => {
   return result.text;
 };
 
-// Function to identify mentioned libraries and component types
 const identifyLibrariesAndComponents = async (query) => {
   try {
     const systemMessage = new SystemMessage(
@@ -211,7 +210,6 @@ const getDocumentationUrl = async (library, componentType) => {
   }
 };
 
-// Function to scrape documentation content
 const scrapeDocumentation = async (url) => {
   const response = await axios.get(url);
   const $ = cheerio.load(response.data);
@@ -221,7 +219,6 @@ const scrapeDocumentation = async (url) => {
   return content;
 };
 
-// Function to generate the optimization prompt
 const generateOptimizationPrompt = async (query, results) => {
   const template = `
     You are an expert in React and the following libraries: {libraries}.

@@ -1,14 +1,29 @@
+const { logger } = require('@/config/logging');
 const { getEnv } = require('@/utils/api');
 const { logArrayAsTable } = require('@/utils/processing/utils/loggingFunctions');
 const { Pinecone } = require('@pinecone-database/pinecone');
 
-const getPineconeClient = async () => {
-  const client = new Pinecone({
-    apiKey: getEnv('PINECONE_API_KEY'),
-  });
-  return client;
+const clients = {
+  pinecone: null,
 };
 
+const getPineconeClient = async () => {
+  let client;
+  if (!clients.pinecone) {
+    client = new Pinecone({
+      apiKey: getEnv('PINECONE_API_KEY'),
+    });
+    logger.info(`[PINECONE] Pinecone initialize created`);
+    clients.pinecone = client;
+  } else {
+    client = clients.pinecone;
+    console.log('Reusing Pinecone client');
+  }
+  return client;
+  // return new Pinecone({
+  //   apiKey: getEnv('PINECONE_API_KEY'),
+  // });
+};
 const getPineconeIndexList = async (index) => {
   const indexList = await index.listIndexes();
   return indexList;

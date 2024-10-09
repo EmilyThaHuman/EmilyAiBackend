@@ -4,7 +4,6 @@ const { getEnv } = require('@/utils/api');
 const createPineconeIndex = async (pinecone, indexName) => {
   logger.info(`Checking "${indexName}"...`);
   try {
-    // const pinecones = await getPineconeClient();
     const indexList = await pinecone.listIndexes();
     const index = pinecone.Index(indexName);
     const indexCloud = getEnv('PINECONE_CLOUD');

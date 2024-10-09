@@ -6,4 +6,5 @@ module.exports = {
   ...require('./limits'),
   ...require('./components'),
   ...require('./scrape'),
+  ...require('./auth'),
 };
