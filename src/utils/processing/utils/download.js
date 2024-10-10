@@ -1,4 +1,3 @@
-
 async function downloadFile(fileId, filePath) {
   try {
     const response = await openai.files.content(fileId);
@@ -14,7 +13,7 @@ async function downloadFile(fileId, filePath) {
 
     console.log(`File downloaded and saved to ${filePath}`);
   } catch (error) {
-    console.error('Error downloading file:', error);
+    console.error("Error downloading file:", error);
   }
 }
 

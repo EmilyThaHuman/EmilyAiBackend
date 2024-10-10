@@ -234,14 +234,14 @@ Below is an example (sample uses escape characters for formatting, but ensure to
 }
 \`\`\`
 --- END OF RESPONSE FORMATTING INSTRUCTIONS ---
-`,
+`
 };
 
 const instructions = {
-  responseMarkdown: instructionsPrompts.RESPONSE_FORMAT_MD,
+  responseMarkdown: instructionsPrompts.RESPONSE_FORMAT_MD
 };
 
 module.exports = {
   instructionsPrompts,
-  instructionMap: instructions,
+  instructionMap: instructions
 };

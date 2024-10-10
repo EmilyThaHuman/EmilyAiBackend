@@ -1,1 +1,1 @@
-<Switch value="checkedA" inputProps={{ 'aria-label': 'Switch A' }} />
+<Switch value="checkedA" inputProps={{ "aria-label": "Switch A" }} />;

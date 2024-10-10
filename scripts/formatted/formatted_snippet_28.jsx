@@ -1,7 +1,7 @@
 const MyInputComponent = React.forwardRef((props, ref) => {
   const { component: Component, ...other } = props;
   React.useImperativeHandle(ref, () => ({
-    focus: () => {},
+    focus: () => {}
   }));
   return <Component {...other} />;
 });
@@ -9,7 +9,7 @@ const MyInputComponent = React.forwardRef((props, ref) => {
   InputProps={{
     inputComponent: MyInputComponent,
     inputProps: {
-      component: SomeThirdPartyComponent,
-    },
+      component: SomeThirdPartyComponent
+    }
   }}
 />;

@@ -3,9 +3,9 @@ const getLibraryNameAbbreviation = (fullName) => {
   const match = fullName.match(/\(([^)]+)\)/);
 
   // Check if a match was found and return the abbreviation or an error message
-  return match ? match[1] : 'No abbreviation found';
+  return match ? match[1] : "No abbreviation found";
 };
 
 module.exports = {
-  getLibraryNameAbbreviation,
+  getLibraryNameAbbreviation
 };

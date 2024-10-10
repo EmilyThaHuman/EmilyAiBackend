@@ -1,6 +1,6 @@
 module.exports = {
-  ...require('./user'),
-  ...require('./assistant'),
-  ...require('./system'),
-  ...require('./instructions'),
+  ...require("./user"),
+  ...require("./assistant"),
+  ...require("./system"),
+  ...require("./instructions")
 };

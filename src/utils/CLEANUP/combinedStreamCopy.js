@@ -9,16 +9,16 @@
 //   initializeEmbeddings,
 //   handleSummarization,
 // } = require('../ai/openAi/chat/initialize.js');
-// const { initializeChatSession, getSessionMessages, createMessage } = require('@/models/utils');
+// const { initializeChatSession, getSessionMessages, createMessage } = require('@models/utils');
 // const { StreamResponseHandler } = require('../ai/openAi/chat/handlers.js');
-// const { createPineconeIndex } = require('@/utils/ai/pinecone/create.js');
-// const { logger } = require('@/config/logging');
+// const { createPineconeIndex } = require('@utils/ai/pinecone/create.js');
+// const { logger } = require('@config/logging');
 // const {
 //   getMainSystemMessageContent,
 //   getMainAssistantMessageInstructions,
-// } = require('@/lib/prompts/createPrompt');
+// } = require('@lib/prompts/createPrompt');
 // const { performPerplexityCompletion } = require('../ai/openAi/chat/context.js');
-// const { checkApiKey } = require('@/utils/auth');
+// const { checkApiKey } = require('@utils/auth');
 // const { RecursiveCharacterTextSplitter } = require('langchain/text_splitter');
 // const { StringOutputParser } = require('@langchain/core/output_parsers');
 
@@ -301,15 +301,15 @@
 // //   initializeChatHistory,
 // //   handleSummarization,
 // // } = require('./initialize');
-// // const { initializeChatSession, getSessionMessages, createMessage } = require('@/models/utils');
+// // const { initializeChatSession, getSessionMessages, createMessage } = require('@models/utils');
 // // const { PineconeStore } = require('@langchain/pinecone');
 // // const { StreamResponseHandler } = require('./handlers.js');
 // // const { RecursiveCharacterTextSplitter } = require('langchain/text_splitter');
-// // const { createPineconeIndex } = require('@/utils/ai/pinecone/create.js');
-// // const { logger } = require('@/config/logging');
-// // const { getMainSystemMessageContent, getMainAssistantMessageInstructions } = require('@/lib/prompts/createPrompt');
+// // const { createPineconeIndex } = require('@utils/ai/pinecone/create.js');
+// // const { logger } = require('@config/logging');
+// // const { getMainSystemMessageContent, getMainAssistantMessageInstructions } = require('@lib/prompts/createPrompt');
 // // const { performPerplexityCompletion } = require('./context');
-// // const { checkApiKey } = require('@/utils/auth');
+// // const { checkApiKey } = require('@utils/auth');
 // // const { savePromptBuild } = require('../../shared/promptOptimization');
 // // const { OpenAI, ChatOpenAI } = require('@langchain/openai');
 // // const { PromptTemplate } = require('@langchain/core/prompts');

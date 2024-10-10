@@ -52,9 +52,9 @@ const openAiApiStreamingService = (openai) => ({
     for await (const chunk of stream) {
       yield chunk;
     }
-  },
+  }
 });
 
 module.exports = {
-  openAiApiStreamingService,
+  openAiApiStreamingService
 };

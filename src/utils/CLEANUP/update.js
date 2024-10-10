@@ -1,7 +1,7 @@
-// const { ChatMessage } = require('@/models');
+// const { ChatMessage } = require('@models');
 // // const { MongoDBChatMessageHistory } = require('@langchain/mongodb');
 // const { BufferMemory } = require('langchain/memory');
-// const { logger } = require('@/config/logging');
+// const { logger } = require('@config/logging');
 // const { initializeChatHistory } = require('./initialize');
 
 // const addMessageToChatHistory = async (chatSession, messageData) => {

@@ -1,7 +1,7 @@
-const { logger } = require('@/config/logging');
-const prettier = require('prettier');
+const { logger } = require("@config/logging");
+const prettier = require("prettier");
 const removeDuplicate = (code) =>
-  (code = code.replace(/^(import[\s\S]*?export default function [^(]+\(\) {[\s\S]*?})\1$/, '$1'));
+  (code = code.replace(/^(import[\s\S]*?export default function [^(]+\(\) {[\s\S]*?})\1$/, "$1"));
 
 /**
  * Detects whether the code is TypeScript or JavaScript.
@@ -10,14 +10,14 @@ const removeDuplicate = (code) =>
  */
 function detectFileType(code) {
   try {
-    if (typeof code !== 'string') {
+    if (typeof code !== "string") {
       throw new TypeError(`Input code must be a string, received ${typeof code}`);
     }
     const tsxRegex = /(?:import|export).*from\s+['"].*['"];?|<.*?>/;
     const tsKeywords = /(?:interface|type|namespace|enum|abstract|implements|declare)/;
-    return tsxRegex.test(code) || tsKeywords.test(code) ? 'typescript' : 'babel';
+    return tsxRegex.test(code) || tsKeywords.test(code) ? "typescript" : "babel";
   } catch (error) {
-    logger.error('An error occurred while detecting file type:', error);
+    logger.error("An error occurred while detecting file type:", error);
     throw error;
   }
 }
@@ -30,25 +30,25 @@ function detectFileType(code) {
  */
 async function formatCode(code, parser) {
   try {
-    if (typeof code !== 'string') {
+    if (typeof code !== "string") {
       throw new TypeError(`Input code must be a string, received ${typeof code}`);
     }
     return await prettier.format(code, {
       parser: parser,
-      plugins: [require('prettier-plugin-organize-imports')],
+      plugins: [require("prettier-plugin-organize-imports")],
       semi: true,
       singleQuote: true,
-      trailingComma: 'es5',
+      trailingComma: "es5",
       printWidth: 80,
       tabWidth: 2,
       bracketSpacing: true,
       jsxBracketSameLine: false,
       jsxSingleQuote: false,
-      arrowParens: 'avoid',
-      endOfLine: 'auto',
+      arrowParens: "avoid",
+      endOfLine: "auto"
     });
   } catch (error) {
-    logger.error('Prettier formatting failed:', error);
+    logger.error("Prettier formatting failed:", error);
     // throw error;
     return code;
   }
@@ -61,20 +61,20 @@ async function formatCode(code, parser) {
  */
 function addExtraLineAfterImports(code) {
   try {
-    if (typeof code !== 'string') {
+    if (typeof code !== "string") {
       throw new TypeError(`Input code must be a string, received ${typeof code}`);
     }
     code = String(code);
-    const lines = code.split('\n');
-    const lastImportIndex = lines.findLastIndex((line) => line.trim().startsWith('import'));
+    const lines = code.split("\n");
+    const lastImportIndex = lines.findLastIndex((line) => line.trim().startsWith("import"));
 
     if (lastImportIndex !== -1) {
-      lines.splice(lastImportIndex + 1, 0, '');
+      lines.splice(lastImportIndex + 1, 0, "");
     }
 
-    return lines.join('\n');
+    return lines.join("\n");
   } catch (error) {
-    logger.error('An error occurred while adding an extra line after imports:', error);
+    logger.error("An error occurred while adding an extra line after imports:", error);
     throw error;
   }
 }
@@ -86,8 +86,8 @@ function addExtraLineAfterImports(code) {
  */
 async function formatAndCleanCode(code) {
   try {
-    if (typeof code !== 'string') {
-      logger.warn('Non-string code passed to formatAndCleanCode. Converting to string.');
+    if (typeof code !== "string") {
+      logger.warn("Non-string code passed to formatAndCleanCode. Converting to string.");
       code = String(code);
     }
     const parser = detectFileType(code);
@@ -95,11 +95,11 @@ async function formatAndCleanCode(code) {
     formattedCode = addExtraLineAfterImports(formattedCode);
     return formattedCode;
   } catch (error) {
-    logger.error('An error occurred while formatting and cleaning the code:', error);
+    logger.error("An error occurred while formatting and cleaning the code:", error);
     throw error;
   }
 }
 
 module.exports = {
-  formatAndCleanCode,
+  formatAndCleanCode
 };

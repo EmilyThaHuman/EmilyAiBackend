@@ -1,20 +1,20 @@
-const axios = require('axios');
-require('dotenv').config();
+const axios = require("axios");
+require("dotenv").config();
 const threadByUser = {}; // Store thread IDs by user
 
 async function FetchFrameworkDocumentation(framework) {
   const frameworkDocs = {
-    MUI: 'https://mui.com/components/',
-    CHAKRA_UI: 'https://chakra-ui.com/docs/getting-started',
-    REACT_BOOTSTRAP: 'https://react-bootstrap.github.io/',
-    TAILWIND: 'https://tailwindcss.com/docs',
-    RADIX_UI: 'https://www.radix-ui.com/primitives/docs',
-    SHADCN: 'https://ui.shadcn.com/docs',
+    MUI: "https://mui.com/components/",
+    CHAKRA_UI: "https://chakra-ui.com/docs/getting-started",
+    REACT_BOOTSTRAP: "https://react-bootstrap.github.io/",
+    TAILWIND: "https://tailwindcss.com/docs",
+    RADIX_UI: "https://www.radix-ui.com/primitives/docs",
+    SHADCN: "https://ui.shadcn.com/docs"
   };
 
   const url = frameworkDocs[framework];
   if (!url) {
-    throw new Error('Unsupported framework');
+    throw new Error("Unsupported framework");
   }
   const response = await fetch(url);
   const documentation = await response.text();
@@ -24,30 +24,30 @@ async function FetchFrameworkDocumentation(framework) {
 
 async function fetchSearchResults(query) {
   let data = JSON.stringify({
-    q: query,
+    q: query
   });
   const config = {
-    method: 'post',
-    url: 'https://google.serper.dev/search',
+    method: "post",
+    url: "https://google.serper.dev/search",
     headers: {
-      'X-API-KEY': process.env.GOOGLE_SERPER_API_KEY,
-      'Content-Type': 'application/json',
+      "X-API-KEY": process.env.GOOGLE_SERPER_API_KEY,
+      "Content-Type": "application/json"
     },
-    data: data,
+    data: data
   };
 
   try {
     const response = await axios(config);
     const results = response.data;
     // Filter for LinkedIn URLs
-    const linkedInUrls = results.organic.filter((res) => res.link.includes('linkedin.com'));
+    const linkedInUrls = results.organic.filter((res) => res.link.includes("linkedin.com"));
     // Scrape each LinkedIn URL
     for (const result of linkedInUrls) {
       // const scrapedData = await scrapeLinkedIn(result.link);
       const scrapedData = {
-        scrapedContent: 'Not available', // Placeholder value
+        scrapedContent: "Not available" // Placeholder value
       };
-      result['scrapedContent'] = scrapedData;
+      result["scrapedContent"] = scrapedData;
     }
     return results;
   } catch (error) {
@@ -65,7 +65,7 @@ async function analyzeImagesInText(text) {
       const analysisResult = await analyzeImageWithVisionAPI(url);
       imageAnalysisResults.push({ url, analysis: analysisResult });
     } catch (error) {
-      console.error('Error analyzing image:', error);
+      console.error("Error analyzing image:", error);
     }
   }
 
@@ -75,7 +75,7 @@ async function analyzeImagesInText(text) {
 async function checkStatusAndPrintMessages(threadId, runId, intervalId) {
   let runStatus = await openai.beta.threads.runs.retrieve(threadId, runId);
 
-  if (runStatus.status === 'completed' || runStatus.status === 'failed') {
+  if (runStatus.status === "completed" || runStatus.status === "failed") {
     let messages = await openai.beta.threads.messages.list(threadId);
     messages.data.forEach((msg) => {
       const role = msg.role;
@@ -83,34 +83,34 @@ async function checkStatusAndPrintMessages(threadId, runId, intervalId) {
       console.log(`${role.charAt(0).toUpperCase() + role.slice(1)}: ${content}`);
     });
     clearInterval(intervalId);
-  } else if (runStatus.status === 'requires_action') {
+  } else if (runStatus.status === "requires_action") {
     // Handle required actions
     const requiredActions = runStatus.required_action.submit_tool_outputs.tool_calls;
     let toolsOutput = [];
 
     for (const action of requiredActions) {
-      if (action.function.name === 'fetchSearchResults') {
+      if (action.function.name === "fetchSearchResults") {
         const functionArguments = JSON.parse(action.function.arguments);
         const output = await fetchSearchResults(functionArguments.query);
         toolsOutput.push({
           tool_call_id: action.id,
-          output: JSON.stringify(output),
+          output: JSON.stringify(output)
         });
       }
     }
 
     await openai.beta.threads.runs.submitToolOutputs(threadId, runId, {
-      tool_outputs: toolsOutput,
+      tool_outputs: toolsOutput
     });
   } else {
-    console.log('Run is not completed yet.');
+    console.log("Run is not completed yet.");
   }
 }
 
 async function analyzeImageWithVisionAPI(url) {
   // Implement the logic to analyze the image using OpenAI's Vision API
   // Placeholder function logic
-  return { description: 'Image analysis result' };
+  return { description: "Image analysis result" };
 }
 
 module.exports = {
@@ -119,7 +119,7 @@ module.exports = {
   checkStatusAndPrintMessages,
   analyzeImageWithVisionAPI,
   FetchFrameworkDocumentation,
-  tools,
+  tools
 };
 // async function scrapeLinkedIn(url) {
 //   const browser = await puppeteer.launch();

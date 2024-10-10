@@ -1,7 +1,7 @@
 // update.js
 
 const updatePinecone = async (pinecone, indexName, docs, embeddings) => {
-  console.log('Updating Pinecone index...');
+  console.log("Updating Pinecone index...");
   const index = pinecone.Index(indexName);
 
   const batchSize = 100;
@@ -16,8 +16,8 @@ const updatePinecone = async (pinecone, indexName, docs, embeddings) => {
       values: embedding,
       metadata: {
         content: doc.content,
-        tokens: doc.tokens,
-      },
+        tokens: doc.tokens
+      }
     };
 
     batch.push(vector);
@@ -25,8 +25,8 @@ const updatePinecone = async (pinecone, indexName, docs, embeddings) => {
     if (batch.length === batchSize || i === docs.length - 1) {
       await index.upsert({
         upsertRequest: {
-          vectors: batch,
-        },
+          vectors: batch
+        }
       });
       console.log(`Upserted batch of ${batch.length} vectors`);
       batch = [];

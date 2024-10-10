@@ -1,11 +1,11 @@
-const { logger } = require('@/config/logging');
+const { logger } = require("@config/logging");
 
 // const { Response } = await import('node-fetch');
 const setSSEHeader = (res) => {
-  res.setHeader('Content-Type', 'text/event-stream');
-  res.setHeader('Cache-Control', 'no-cache');
-  res.setHeader('Connection', 'keep-alive');
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
+  res.setHeader("Access-Control-Allow-Origin", "*");
 };
 const RespondWithError = (res, statusCode, message, err) => {
   res.status(statusCode).json({ message, error: err });
@@ -23,7 +23,7 @@ const errorResponse = (res, error, message) => {
 const handleChatError = (res, error) => {
   logger.error(`Error in combinedChatStream: ${error}`);
   if (!res.headersSent) {
-    res.status(500).json({ error: 'An error occurred while processing the chat stream' });
+    res.status(500).json({ error: "An error occurred while processing the chat stream" });
   }
 };
 
@@ -32,5 +32,5 @@ module.exports = {
   createResponse,
   setSSEHeader,
   errorResponse,
-  handleChatError,
+  handleChatError
 };

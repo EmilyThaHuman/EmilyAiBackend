@@ -1,29 +1,29 @@
 /* eslint-disable no-useless-escape */
 /* eslint-disable no-unused-vars */
-const fs = require('fs');
-const path = require('path');
-const { PineconeStore } = require('@langchain/pinecone');
-const { logger } = require('@/config/logging');
+const fs = require("fs");
+const path = require("path");
+const { PineconeStore } = require("@langchain/pinecone");
+const { logger } = require("@config/logging");
 const {
   initializeOpenAI,
   initializePinecone,
   initializeEmbeddings,
-  initializeChatSession,
-} = require('./initialize');
-const { createPineconeIndex } = require('@/utils/ai/pinecone/create.js');
+  initializeChatSession
+} = require("./initialize");
+const { createPineconeIndex } = require("@utils/ai/pinecone/create.js");
 const {
   getMainSystemMessageContent,
   getMainAssistantMessageInstructions,
-  getFormattingInstructions,
-} = require('@/lib/prompts/createPrompt');
-const { performPerplexityCompletion, handleSummarization, extractKeywords } = require('./context');
-const { checkApiKey } = require('@/utils/auth');
-const { getEnv, handleChatError } = require('@/utils/api');
+  getFormattingInstructions
+} = require("@lib/prompts/createPrompt");
+const { performPerplexityCompletion, handleSummarization, extractKeywords } = require("./context");
+const { checkApiKey } = require("@utils/auth");
+const { getEnv, handleChatError } = require("@utils/api");
 const {
   identifyLibrariesAndComponents,
   getDocumentationUrl,
-  scrapeDocumentation,
-} = require('../../shared');
+  scrapeDocumentation
+} = require("../../shared");
 const {
   prepareDocuments,
   formatDocumentation,
@@ -40,19 +40,19 @@ const {
   formatChatCompletionContent,
   writeToFile,
   handleFileStreaming,
-  extractContent,
-} = require('./chat_helpers');
-const { addMessageToSession, getSessionHistory } = require('./chat_history');
-const { recordTokenUsage } = require('@/utils/processing/utils/loggingFunctions');
+  extractContent
+} = require("./chat_helpers");
+const { addMessageToSession, getSessionHistory } = require("./chat_history");
+const { recordTokenUsage } = require("@utils/processing/utils/loggingFunctions");
 
 const combinedChatStream = async (req, res) => {
   const initializationData = getInitializationData(req.body);
-  if (initializationData.streamType === 'file') {
+  if (initializationData.streamType === "file") {
     return handleFileStreaming(req, res);
   }
   try {
     setupResponseHeaders(res);
-    checkApiKey(initializationData.apiKey, 'OpenAI');
+    checkApiKey(initializationData.apiKey, "OpenAI");
 
     // 1 - Initialize or generate chat session
     const chatSession = await initializeChatSession(
@@ -102,15 +102,15 @@ const combinedChatStream = async (req, res) => {
       userId: initializationData.userId,
       workspaceId: initializationData.workspaceId,
       sessionId: chatSession._id,
-      role: 'user',
+      role: "user",
       content: initializationData.prompt,
       metadata: {
         createdAt: Date.now(),
         updatedAt: Date.now(),
-        sessionId: chatSession._id,
-      },
+        sessionId: chatSession._id
+      }
     });
-    logChatData('userMessageDoc', userMessageDoc);
+    logChatData("userMessageDoc", userMessageDoc);
     chatSession.summary = summary;
     await chatSession.save();
     // 10 - Context A: Perform search for prompt-related data
@@ -153,15 +153,15 @@ const combinedChatStream = async (req, res) => {
     let result;
     try {
       result = await chatOpenAI.completionWithRetry({
-        model: getEnv('OPENAI_API_CHAT_COMPLETION_MODEL'),
+        model: getEnv("OPENAI_API_CHAT_COMPLETION_MODEL"),
         messages: [
-          { role: 'system', content: getMainSystemMessageContent() },
-          { role: 'assistant', content: getMainAssistantMessageInstructions() },
-          { role: 'user', content: formattedPrompt },
+          { role: "system", content: getMainSystemMessageContent() },
+          { role: "assistant", content: getMainAssistantMessageInstructions() },
+          { role: "user", content: formattedPrompt }
         ],
         stream: true,
-        response_format: { type: 'json_object' },
-        temperature: 0.2,
+        response_format: { type: "json_object" },
+        temperature: 0.2
       });
     } catch (error) {
       logger.error(`[ERROR][completionWithRetry]: ${error.message}`);
@@ -186,18 +186,18 @@ const setupVectorStores = async (pinecone, embedder, initializationData) => {
   const pineconeIndex = await createPineconeIndex(pinecone, initializationData.pineconeIndex);
   const sessionContextStore = await PineconeStore.fromExistingIndex(embedder, {
     pineconeIndex,
-    namespace: 'chat-history',
-    textKey: 'text',
+    namespace: "chat-history",
+    textKey: "text"
   });
   const searchContextStore = await PineconeStore.fromExistingIndex(embedder, {
     pineconeIndex,
-    namespace: 'perplexity-search-results',
-    textKey: 'text',
+    namespace: "perplexity-search-results",
+    textKey: "text"
   });
   const customDataStore = await PineconeStore.fromExistingIndex(embedder, {
     pineconeIndex,
-    namespace: 'library-documents',
-    textKey: 'text',
+    namespace: "library-documents",
+    textKey: "text"
   });
   return { sessionContextStore, searchContextStore, customDataStore };
 };
@@ -212,9 +212,9 @@ const getRelevantContext = async (
     const relevantSearchResults = await searchContextStore.similaritySearch(prompt, 5);
     const relevantCustomDataDocs = await customDataStore.similaritySearch(prompt, 5);
     return {
-      sessionContext: relevantSessionHistory.map((doc) => doc.pageContent).join('\n'),
-      searchContext: relevantSearchResults.map((doc) => doc.pageContent).join('\n'),
-      libraryContext: relevantCustomDataDocs.map((doc) => doc.pageContent).join('\n'),
+      sessionContext: relevantSessionHistory.map((doc) => doc.pageContent).join("\n"),
+      searchContext: relevantSearchResults.map((doc) => doc.pageContent).join("\n"),
+      libraryContext: relevantCustomDataDocs.map((doc) => doc.pageContent).join("\n")
     };
   } catch (error) {
     logger.error(`[ERROR][getRelevantContext]: ${error.message}`);
@@ -277,13 +277,13 @@ const handleStreamingResponse = async (
 
   try {
     for await (const chunk of result) {
-      const { content = '' } = chunk.choices[0]?.delta || {};
+      const { content = "" } = chunk.choices[0]?.delta || {};
       responseChunks.push(content);
       res.write(`data: ${JSON.stringify({ content })}\n\n`);
       res.flush();
     }
 
-    const fullResponse = responseChunks.join('');
+    const fullResponse = responseChunks.join("");
     recordTokenUsage(await fullResponse.usage);
 
     await processChatCompletion(chatSession, fullResponse, sessionContextStore, initializationData);
@@ -291,7 +291,7 @@ const handleStreamingResponse = async (
     return fullResponse;
   } catch (error) {
     const chatData = { chatSession, userMessageDoc, messages };
-    logChatDataError('handleStreamingResponse', chatData, error);
+    logChatDataError("handleStreamingResponse", chatData, error);
     // logger.error(`[ERROR][handleStreamingResponse]: ${error.message}`);
     throw error;
   } finally {
@@ -318,7 +318,7 @@ const processChatCompletion = async (
   }
 };
 async function savePromptBuild(systemContent, assistantInstructions, formattedPrompt) {
-  const fileName = generateUniqueFileName('prompt-build');
+  const fileName = generateUniqueFileName("prompt-build");
   const filePath = getPublicFilePath(fileName);
   const promptBuild = formatChatPromptBuild(systemContent, assistantInstructions, formattedPrompt);
 
@@ -329,7 +329,7 @@ async function savePromptBuild(systemContent, assistantInstructions, formattedPr
   }
 }
 async function saveChatCompletion(initializationData, chatSession, fullResponse) {
-  const fileName = generateUniqueFileName('chat-completion');
+  const fileName = generateUniqueFileName("chat-completion");
   const filePath = getPublicFilePath(fileName);
 
   try {
@@ -340,7 +340,7 @@ async function saveChatCompletion(initializationData, chatSession, fullResponse)
 
     try {
       const assistantMessageDoc = await addMessageToSession(chatSession, {
-        role: 'assistant',
+        role: "assistant",
         content: content,
         code: formattedContent,
         userId: initializationData.userId,
@@ -349,10 +349,10 @@ async function saveChatCompletion(initializationData, chatSession, fullResponse)
         metadata: {
           createdAt: Date.now(),
           updatedAt: Date.now(),
-          sessionId: chatSession._id,
-        },
+          sessionId: chatSession._id
+        }
       });
-      logChatData('assistantMessageDoc', assistantMessageDoc);
+      logChatData("assistantMessageDoc", assistantMessageDoc);
       await chatSession.calculateTokenUsage();
     } catch (error) {
       logger.error(`Error saving assistant message: ${error}`);

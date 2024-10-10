@@ -1,5 +1,5 @@
-const chatSettingsRoutes = require('./settings');
+const chatSettingsRoutes = require("./settings");
 
 module.exports = {
-  chatSettingsRoutes,
+  chatSettingsRoutes
 };

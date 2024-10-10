@@ -1,4 +1,4 @@
-const { logger } = require('@/config/logging');
+const { logger } = require("@config/logging");
 
 const asyncHandler = (fn) => (req, res, next) => {
   if (req.body.clientApiKey) {

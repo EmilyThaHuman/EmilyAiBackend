@@ -1,9 +1,9 @@
-const { logger } = require('@/config/logging');
+const { logger } = require("@config/logging");
 
 function logArrayAsTable(array) {
   // Check if the array is empty
   if (array.length === 0) {
-    logger.info('The array is empty.');
+    logger.info("The array is empty.");
     return;
   }
 
@@ -11,8 +11,8 @@ function logArrayAsTable(array) {
   const keys = Object.keys(array[0]);
 
   // Create the header row
-  const headerRow = keys.join(' | ');
-  const separatorRow = keys.map(() => '---').join(' | ');
+  const headerRow = keys.join(" | ");
+  const separatorRow = keys.map(() => "---").join(" | ");
 
   // Log the header
   logger.info(headerRow);
@@ -20,18 +20,18 @@ function logArrayAsTable(array) {
 
   // Log each row of data
   array.forEach((item) => {
-    const row = keys.map((key) => item[key] || '').join(' | ');
+    const row = keys.map((key) => item[key] || "").join(" | ");
     logger.info(row);
   });
 }
 
 function recordTokenUsage({ promptTokens, completionTokens, totalTokens }) {
-  logger.info('Prompt tokens:', promptTokens);
-  logger.info('Completion tokens:', completionTokens);
-  logger.info('Total tokens:', totalTokens);
+  logger.info("Prompt tokens:", promptTokens);
+  logger.info("Completion tokens:", completionTokens);
+  logger.info("Total tokens:", totalTokens);
 }
 
 module.exports = {
   logArrayAsTable,
-  recordTokenUsage,
+  recordTokenUsage
 };

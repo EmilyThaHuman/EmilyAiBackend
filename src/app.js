@@ -3,11 +3,12 @@
  * [app.js] | Express application setup
  * --------------------------------------------
  */
+require("module-alias/register");
 
-const express = require('express');
-const middlewares = require('./middlewares');
-const setupRoutes = require('./routes');
-const { errorHandler } = require('./middlewares/error');
+const express = require("express");
+const middlewares = require("./middlewares");
+const setupRoutes = require("./routes");
+const { errorHandler } = require("./middlewares/error");
 const app = express();
 
 middlewares(app);

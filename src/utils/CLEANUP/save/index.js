@@ -1,11 +1,11 @@
 const buildPromptFromTemplate = async (summary, prompt) => {
   try {
     const tempObj = {
-      input: `Please respond to the following prompt: ${prompt}`,
+      input: `Please respond to the following prompt: ${prompt}`
     };
     const promptTemplate = new PromptTemplate({
       template: tempObj.input,
-      inputVariables: ['summary', 'prompt'],
+      inputVariables: ["summary", "prompt"]
     });
     return promptTemplate.format();
   } catch (error) {
@@ -21,7 +21,7 @@ const buildPromptFromTemplate = async (summary, prompt) => {
  * @returns {string} The full prompt.
  */
 function buildBasePrompt(prompt, profileContext, workspaceInstructions, assistant) {
-  let fullPrompt = '';
+  let fullPrompt = "";
 
   if (assistant) {
     fullPrompt += `<INJECT ROLE>\nYou are not an AI. You are ${assistant.name}.\n</INJECT ROLE>\n\n`;
@@ -57,13 +57,13 @@ async function buildFinalMessages(payload, profile, chatImages) {
     chatMessages,
     assistant,
     messageFileItems,
-    chatFileItems,
+    chatFileItems
   } = payload;
 
   const BUILT_PROMPT = buildBasePrompt(
     chatSettings.prompt,
-    chatSettings.includeProfileContext ? profile.profile_context || '' : '',
-    chatSettings.includeWorkspaceInstructions ? workspaceInstructions : '',
+    chatSettings.includeProfileContext ? profile.profile_context || "" : "",
+    chatSettings.includeWorkspaceInstructions ? workspaceInstructions : "",
     assistant
   );
 
@@ -92,9 +92,9 @@ async function buildFinalMessages(payload, profile, chatImages) {
       return {
         message: {
           ...chatMessage.message,
-          content: `${chatMessage.message.content}\n\n${retrievalText}`,
+          content: `${chatMessage.message.content}\n\n${retrievalText}`
         },
-        fileItems: [],
+        fileItems: []
       };
     }
 
@@ -117,17 +117,17 @@ async function buildFinalMessages(payload, profile, chatImages) {
   }
 
   let tempSystemMessage = {
-    chat_id: '',
+    chat_id: "",
     assistant_id: null,
     content: BUILT_PROMPT,
     created_at: new Date().toISOString(),
     id: (processedChatMessages.length + 1).toString(),
     image_paths: [],
     model: payload.chatSettings.model,
-    role: 'system',
+    role: "system",
     sequence_number: processedChatMessages.length,
     updated_at: new Date().toISOString(),
-    user_id: profile.id,
+    user_id: profile.id
   };
 
   finalMessages.unshift(tempSystemMessage);
@@ -138,13 +138,13 @@ async function buildFinalMessages(payload, profile, chatImages) {
     if (message.image_paths.length > 0) {
       content = [
         {
-          type: 'text',
-          text: message.content,
+          type: "text",
+          text: message.content
         },
         ...message.image_paths.map((path) => {
-          let formedUrl = '';
+          let formedUrl = "";
 
-          if (path.startsWith('data')) {
+          if (path.startsWith("data")) {
             formedUrl = path;
           } else {
             const chatImage = chatImages.find((image) => image.path === path);
@@ -155,12 +155,12 @@ async function buildFinalMessages(payload, profile, chatImages) {
           }
 
           return {
-            type: 'image_url',
+            type: "image_url",
             image_url: {
-              url: formedUrl,
-            },
+              url: formedUrl
+            }
           };
-        }),
+        })
       ];
     } else {
       content = message.content;
@@ -168,7 +168,7 @@ async function buildFinalMessages(payload, profile, chatImages) {
 
     return {
       role: message.role,
-      content,
+      content
     };
   });
 
@@ -177,7 +177,7 @@ async function buildFinalMessages(payload, profile, chatImages) {
 
     finalMessages[finalMessages.length - 1] = {
       ...finalMessages[finalMessages.length - 1],
-      content: `${finalMessages[finalMessages.length - 1].content}\n\n${retrievalText}`,
+      content: `${finalMessages[finalMessages.length - 1].content}\n\n${retrievalText}`
     };
   }
 
@@ -193,11 +193,11 @@ async function buildFinalMessages(payload, profile, chatImages) {
 function buildRetrievalText(fileItems) {
   const retrievalText = fileItems
     .map((item) => `<BEGIN SOURCE>\n${item.content}\n</END SOURCE>`)
-    .join('\n\n');
+    .join("\n\n");
 
   return `You may use the following sources if needed to answer the user's question. If you don't know the answer, say "I don't know."\n\n${retrievalText}`;
 }
 function isCodeRelated(summary) {
-  const codeKeywords = ['code', 'program', 'function', 'variable', 'syntax', 'algorithm'];
+  const codeKeywords = ["code", "program", "function", "variable", "syntax", "algorithm"];
   return codeKeywords.some((keyword) => summary.includes(keyword));
 }

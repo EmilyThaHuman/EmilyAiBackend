@@ -1,5 +1,5 @@
 // services/dbService.js
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 // Function to create a new document in the specified model
 const createDocument = async (modelName, data) => {
@@ -30,5 +30,5 @@ module.exports = {
   createDocument,
   findAllDocuments,
   updateDocumentById,
-  deleteDocumentById,
+  deleteDocumentById
 };

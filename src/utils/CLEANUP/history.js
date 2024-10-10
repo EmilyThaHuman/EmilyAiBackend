@@ -1,8 +1,8 @@
 // /* eslint-disable no-unused-vars */
-// const { ChatMessage, ChatSession } = require('@/models');
+// const { ChatMessage, ChatSession } = require('@models');
 // // const { BufferMemory } = require('langchain/memory');
-// const { logger } = require('@/config/logging');
-// const { getMongoClient } = require('@/db');
+// const { logger } = require('@config/logging');
+// const { getMongoClient } = require('@db');
 // const getMessagesCollection = async () => {
 //   const client = await getMongoClient();
 //   return client.db(process.env.MONGODB_DB_NAME).collection('messages');

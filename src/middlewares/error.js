@@ -4,22 +4,22 @@
  * --------------------------------------------
  */
 
-const multer = require('multer');
-const { logger } = require('../config/logging'); // Assuming you have a logging module
-const CustomError = require('@/config/constants/errors/CustomError');
+const multer = require("multer");
+const { logger } = require("../config/logging"); // Assuming you have a logging module
+const CustomError = require("@config/constants/errors/CustomError");
 
 const formatErrorResponse = (err, includeDetails = false) => {
   const response = {
     success: false,
-    message: err.feedback || 'An error occurred',
+    message: err.feedback || "An error occurred",
     status: err.name,
-    statusCode: err.status || 500,
+    statusCode: err.status || 500
   };
 
   if (includeDetails) {
     response.error = err.message;
     response.stack = err.stack;
-    response.functionName = err.stack.split('\n')[1]?.trim()?.split(' ')[1];
+    response.functionName = err.stack.split("\n")[1]?.trim()?.split(" ")[1];
     response.cause = err.cause;
   }
 
@@ -31,7 +31,7 @@ const errorHandler = (err, req, res, next) => {
     return next();
   }
 
-  const isProduction = process.env.NODE_ENV === 'production';
+  const isProduction = process.env.NODE_ENV === "production";
   let statusCode = err.status || 500; // Default to 500 Internal Server Error
 
   // Log the error using your logging module
@@ -44,15 +44,15 @@ const errorHandler = (err, req, res, next) => {
     return;
   }
 
-  if (err.name === 'ValidationError') {
+  if (err.name === "ValidationError") {
     statusCode = 400;
     res.status(statusCode).json({ success: false, message: err.message });
     return;
   }
 
-  if (err.name === 'UnauthorizedError') {
+  if (err.name === "UnauthorizedError") {
     statusCode = 401;
-    res.status(statusCode).json({ success: false, message: 'Unauthorized' });
+    res.status(statusCode).json({ success: false, message: "Unauthorized" });
     return;
   }
 
@@ -69,5 +69,5 @@ const errorHandler = (err, req, res, next) => {
 };
 
 module.exports = {
-  errorHandler,
+  errorHandler
 };

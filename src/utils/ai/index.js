@@ -1,8 +1,8 @@
 module.exports = {
-  ...require('./openAi'),
-  ...require('./pinecone'),
-  ...require('./mongodb'),
-  ...require('./functions'),
+  ...require("./openAi"),
+  ...require("./pinecone"),
+  ...require("./mongodb"),
+  ...require("./functions")
 };
 
 // module.exports = './chat';

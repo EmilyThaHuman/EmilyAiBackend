@@ -1,37 +1,37 @@
-const Sitemapper = require('sitemapper');
-const cheerio = require('cheerio');
-const { PineconeClient } = require('@pinecone-database/pinecone');
-const OpenAI = require('openai');
-require('dotenv').config();
+const Sitemapper = require("sitemapper");
+const cheerio = require("cheerio");
+const { PineconeClient } = require("@pinecone-database/pinecone");
+const OpenAI = require("openai");
+require("dotenv").config();
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: process.env.OPENAI_API_KEY
 });
 
 const pinecone = new PineconeClient();
 
 const uiLibraries = [
-  { name: 'React', sitemap: 'https://reactjs.org/sitemap.xml' },
-  { name: 'Vue', sitemap: 'https://vuejs.org/sitemap.xml' },
-  { name: 'Angular', sitemap: 'https://angular.io/generated/sitemap.xml' },
-  { name: 'Svelte', sitemap: 'https://svelte.dev/sitemap.xml' },
-  { name: 'Tailwind CSS', sitemap: 'https://tailwindcss.com/sitemap.xml' },
-  { name: 'Material-UI', sitemap: 'https://mui.com/sitemap.xml' },
-  { name: 'Radix UI', sitemap: 'https://www.radix-ui.com/sitemap.xml' },
-  { name: 'Chakra UI', sitemap: 'https://chakra-ui.com/sitemap.xml' },
-  { name: 'Ant Design', sitemap: 'https://ant.design/sitemap.xml' },
-  { name: 'Bootstrap', sitemap: 'https://getbootstrap.com/sitemap.xml' },
-  { name: 'Semantic UI', sitemap: 'https://semantic-ui.com/sitemap.xml' },
-  { name: 'Bulma', sitemap: 'https://bulma.io/sitemap.xml' },
-  { name: 'Foundation', sitemap: 'https://get.foundation/sitemap.xml' },
+  { name: "React", sitemap: "https://reactjs.org/sitemap.xml" },
+  { name: "Vue", sitemap: "https://vuejs.org/sitemap.xml" },
+  { name: "Angular", sitemap: "https://angular.io/generated/sitemap.xml" },
+  { name: "Svelte", sitemap: "https://svelte.dev/sitemap.xml" },
+  { name: "Tailwind CSS", sitemap: "https://tailwindcss.com/sitemap.xml" },
+  { name: "Material-UI", sitemap: "https://mui.com/sitemap.xml" },
+  { name: "Radix UI", sitemap: "https://www.radix-ui.com/sitemap.xml" },
+  { name: "Chakra UI", sitemap: "https://chakra-ui.com/sitemap.xml" },
+  { name: "Ant Design", sitemap: "https://ant.design/sitemap.xml" },
+  { name: "Bootstrap", sitemap: "https://getbootstrap.com/sitemap.xml" },
+  { name: "Semantic UI", sitemap: "https://semantic-ui.com/sitemap.xml" },
+  { name: "Bulma", sitemap: "https://bulma.io/sitemap.xml" },
+  { name: "Foundation", sitemap: "https://get.foundation/sitemap.xml" }
 ];
 
 function extractText(htmlContent) {
   const $ = cheerio.load(htmlContent);
-  $('style').remove();
-  $('script').remove();
-  $('[style]').removeAttr('style');
-  return $('body').text().trim();
+  $("style").remove();
+  $("script").remove();
+  $("[style]").removeAttr("style");
+  return $("body").text().trim();
 }
 
 async function fetchTextContent(url) {
@@ -42,8 +42,8 @@ async function fetchTextContent(url) {
 
 async function getEmbedding(text) {
   const response = await openai.embeddings.create({
-    model: 'text-embedding-ada-002',
-    input: text,
+    model: "text-embedding-ada-002",
+    input: text
   });
   return response.data[0].embedding;
 }
@@ -73,8 +73,8 @@ async function scrapeAndUpsertLibrary(library, index) {
         metadata: {
           library: library.name,
           url: site,
-          chunk: i,
-        },
+          chunk: i
+        }
       };
 
       await upsertToPinecone(index, [vector]);
@@ -83,7 +83,7 @@ async function scrapeAndUpsertLibrary(library, index) {
 }
 
 function selectComponent(query, retrievedDocs) {
-  const componentScores = Object.keys(uiLibraries).map(library => {
+  const componentScores = Object.keys(uiLibraries).map((library) => {
     const score = calculateRelevanceScore(query, library, retrievedDocs);
     return { library, score };
   });
@@ -99,10 +99,10 @@ function calculateRelevanceScore(query, library, retrievedDocs) {
 async function main() {
   await pinecone.init({
     environment: process.env.PINECONE_ENVIRONMENT,
-    apiKey: process.env.PINECONE_API_KEY,
+    apiKey: process.env.PINECONE_API_KEY
   });
 
-  const indexName = 'ui-libraries';
+  const indexName = "ui-libraries";
   const index = pinecone.Index(indexName);
 
   for (const library of uiLibraries) {
@@ -110,7 +110,7 @@ async function main() {
     await scrapeAndUpsertLibrary(library, index);
   }
 
-  console.log('All libraries processed and upserted to Pinecone.');
+  console.log("All libraries processed and upserted to Pinecone.");
 }
 
 main().catch(console.error);

@@ -1,4 +1,4 @@
-const ChatFile = mongoose.model('ChatFile', chatFileSchema);
+const ChatFile = mongoose.model("ChatFile", chatFileSchema);
 
 // ChatFileHandler
 class ChatFileHandler {
@@ -8,20 +8,20 @@ class ChatFileHandler {
   }
 
   setupRoutes() {
-    this.router.post('/upload', upload.single('file'), this.receiveFile.bind(this));
-    this.router.get('/chat_file/:uuid/list', this.chatFilesBySessionUUID.bind(this));
-    this.router.get('/download/:id', this.downloadFile.bind(this));
-    this.router.delete('/download/:id', this.deleteFile.bind(this));
+    this.router.post("/upload", upload.single("file"), this.receiveFile.bind(this));
+    this.router.get("/chat_file/:uuid/list", this.chatFilesBySessionUUID.bind(this));
+    this.router.get("/download/:id", this.downloadFile.bind(this));
+    this.router.delete("/download/:id", this.deleteFile.bind(this));
   }
 
   async receiveFile(req, res) {
     try {
-      const sessionUUID = req.body['session-uuid'];
+      const sessionUUID = req.body["session-uuid"];
       const userId = req.user.id; // Assuming user authentication middleware
 
       const file = req.file;
       if (!file) {
-        return res.status(400).json({ error: 'No file uploaded' });
+        return res.status(400).json({ error: "No file uploaded" });
       }
 
       const chatFile = new ChatFile({
@@ -29,7 +29,7 @@ class ChatFileHandler {
         userId: userId,
         name: file.originalname,
         data: fs.readFileSync(file.path),
-        mimeType: file.mimetype,
+        mimeType: file.mimetype
       });
 
       await chatFile.save();
@@ -46,12 +46,12 @@ class ChatFileHandler {
     try {
       const file = await ChatFile.findById(req.params.id);
       if (!file) {
-        return res.status(404).json({ error: 'File not found' });
+        return res.status(404).json({ error: "File not found" });
       }
 
       res.set({
-        'Content-Disposition': `attachment; filename=${file.name}`,
-        'Content-Type': 'application/octet-stream',
+        "Content-Disposition": `attachment; filename=${file.name}`,
+        "Content-Type": "application/octet-stream"
       });
 
       res.send(file.data);
@@ -85,7 +85,7 @@ class ChatFileHandler {
           id: file._id,
           name: file.name,
           mimeType: file.mimeType,
-          createdAt: file.createdAt,
+          createdAt: file.createdAt
         }))
       );
     } catch (error) {

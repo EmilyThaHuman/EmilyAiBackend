@@ -1,6 +1,6 @@
-const { logger } = require('@/config/logging');
-const { ChatOpenAI } = require('@langchain/openai');
-const { default: OpenAI } = require('openai');
+const { logger } = require("@config/logging");
+const { ChatOpenAI } = require("@langchain/openai");
+const { default: OpenAI } = require("openai");
 
 let clients = {};
 
@@ -18,21 +18,21 @@ const getOpenAIClient = async (clientKey, ClientClass, config) => {
 };
 
 const getDefaultOpenaiClient = async () => {
-  return getOpenAIClient('defaultOpenAIClient', OpenAI, {
-    apiKey: process.env.OPENAI_API_PROJECT_KEY,
+  return getOpenAIClient("defaultOpenAIClient", OpenAI, {
+    apiKey: process.env.OPENAI_API_PROJECT_KEY
   });
 };
 
 const getUserOpenaiClient = async (apiKey) => {
-  return getOpenAIClient('userOpenAIClient', OpenAI, { apiKey });
+  return getOpenAIClient("userOpenAIClient", OpenAI, { apiKey });
 };
 
 const getOpenaiClient = async (configs) => {
-  return getOpenAIClient('openAIClient', OpenAI, configs);
+  return getOpenAIClient("openAIClient", OpenAI, configs);
 };
 
 const getOpenaiLangChainClient = (configs) => {
-  return getOpenAIClient('openAILangChainClient', ChatOpenAI, configs);
+  return getOpenAIClient("openAILangChainClient", ChatOpenAI, configs);
 };
 
 // // Function to get Perplexity client
@@ -49,7 +49,7 @@ module.exports = {
   getDefaultOpenaiClient,
   getUserOpenaiClient,
   getOpenaiClient,
-  getOpenaiLangChainClient,
+  getOpenaiLangChainClient
   // getPerplexityClient,
   // getGeminiClient,
 };

@@ -1,4 +1,4 @@
 module.exports = {
-  ...require('./main'),
-  ...require('./query'),
+  ...require("./main"),
+  ...require("./query")
 };

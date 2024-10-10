@@ -1,5 +1,5 @@
 module.exports = {
-  ...require('./context'),
-  ...require('./initialize'),
-  ...require('./combinedChatStream'),
+  ...require("./context"),
+  ...require("./initialize"),
+  ...require("./combinedChatStream")
 };

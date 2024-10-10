@@ -1,55 +1,55 @@
-const fs = require('fs').promises;
-const path = require('path');
-const axios = require('axios');
-const { logger } = require('@/config/logging');
-const { default: puppeteer } = require('puppeteer');
-const { cleanCodeSnippetMain } = require('./clean');
-const { identifyCodeType } = require('./identifyValue');
-const { getLibraryNameAbbreviation } = require('./misc');
-const { sanitizeFileName } = require('./files');
-const { formatAndCleanCode } = require('./format');
-const { Cheerio } = require('cheerio');
+const fs = require("fs").promises;
+const path = require("path");
+const axios = require("axios");
+const { default: puppeteer } = require("puppeteer");
+const { cleanCodeSnippetMain } = require("./clean");
+const { identifyCodeType } = require("./identifyValue");
+const { getLibraryNameAbbreviation } = require("./misc");
+const { sanitizeFileName } = require("./files");
+const { formatAndCleanCode } = require("./format");
+const { Cheerio } = require("cheerio");
+const { logger } = require("@config/logging");
 
 const scrapeSite = async (url) => {
   try {
     const response = await axios.get(url);
     const $ = Cheerio.load(response.data);
-    const content = $('body').text(); // Simplified for demonstration
+    const content = $("body").text(); // Simplified for demonstration
     return content;
   } catch (error) {
-    logger.error('Error scraping content:', error);
+    logger.error("Error scraping content:", error);
     throw error;
   }
 };
 
 const scrapeCode = async (componentUrl, componentLibrary) => {
-  const browser = await puppeteer.launch({ headless: 'new' });
+  const browser = await puppeteer.launch({ headless: "new" });
   const page = await browser.newPage();
   const createdFiles = [];
 
   try {
-    await page.goto(componentUrl, { waitUntil: 'networkidle0' });
+    await page.goto(componentUrl, { waitUntil: "networkidle0" });
     // await page.waitForSelector('.MuiButton-root.MuiButton-text');
     const buttons = await page.$$('button[data-ga-event-action="expand"]');
     for (const button of buttons) {
       await button.click();
     }
 
-    logger.info('All expand code buttons clicked successfully.');
+    logger.info("All expand code buttons clicked successfully.");
     const { componentName, snippets } = await page.evaluate(() => {
-      const componentName = document.querySelector('h1')?.textContent.trim() || 'Unknown';
-      const snippetElements = document.querySelectorAll('.MuiCode-root');
+      const componentName = document.querySelector("h1")?.textContent.trim() || "Unknown";
+      const snippetElements = document.querySelectorAll(".MuiCode-root");
 
       const snippets = Array.from(snippetElements).map((snippet, index) => {
-        const parentElement = snippet.closest('.MuiPaper-root');
+        const parentElement = snippet.closest(".MuiPaper-root");
         // const code = detectCodeSnippet(snippet.textContent);
         // logger.info(code);
         return {
-          title: parentElement?.querySelector('h2, h3')?.textContent || 'Untitled',
+          title: parentElement?.querySelector("h2, h3")?.textContent || "Untitled",
           code: snippet.textContent,
-          language: snippet.getAttribute('data-language') || 'jsx',
-          description: parentElement?.querySelector('p')?.textContent || '',
-          sequence: index + 1,
+          language: snippet.getAttribute("data-language") || "jsx",
+          description: parentElement?.querySelector("p")?.textContent || "",
+          sequence: index + 1
         };
       });
 
@@ -59,7 +59,7 @@ const scrapeCode = async (componentUrl, componentLibrary) => {
     logger.info(`Snippets for ${componentName}: ${snippets.length}`);
 
     if (snippets.length > 0) {
-      const baseDir = path.join(__dirname, '../../../../public/scraped_docs', componentLibrary);
+      const baseDir = path.join(__dirname, "../../../../public/scraped_docs", componentLibrary);
       await fs.mkdir(baseDir, { recursive: true });
       // const allSnippets = await Promise.all(
       //   snippets.map(async (snippet) => {
@@ -135,7 +135,7 @@ const scrapeCode = async (componentUrl, componentLibrary) => {
           abbreviation: abbreviatedTitle,
           ...snippet,
           title: newTitle,
-          code: cleanedCode,
+          code: cleanedCode
           // functionName: functionName,
         };
       });
@@ -147,7 +147,7 @@ const scrapeCode = async (componentUrl, componentLibrary) => {
       logger.info(`Data saved to ${filePath}`);
       createdFiles.push(filePath);
 
-      const snippetsDir = path.join(baseDir, 'snippets', sanitizeFileName(componentName));
+      const snippetsDir = path.join(baseDir, "snippets", sanitizeFileName(componentName));
       await fs.mkdir(snippetsDir, { recursive: true });
 
       await Promise.all(
@@ -155,7 +155,7 @@ const scrapeCode = async (componentUrl, componentLibrary) => {
           const snippetFileName = `snippet_${index + 1}.${snippet.language}`;
           const snippetFilePath = path.join(snippetsDir, snippetFileName);
           let cleanedCode = cleanCodeSnippetMain(snippet.code);
-          if (typeof cleanedCode !== 'string') {
+          if (typeof cleanedCode !== "string") {
             logger.warn(
               `Cleaned code is not a string for snippet ${index + 1}. Using original code.`
             );
@@ -169,10 +169,10 @@ const scrapeCode = async (componentUrl, componentLibrary) => {
       );
       logger.info(`Snippets saved to ${snippetsDir}`);
     } else {
-      logger.warn('No snippets found. Check if the page structure has changed.');
+      logger.warn("No snippets found. Check if the page structure has changed.");
     }
   } catch (error) {
-    logger.error('Error during scraping:', error);
+    logger.error("Error during scraping:", error);
   } finally {
     await browser.close();
   }

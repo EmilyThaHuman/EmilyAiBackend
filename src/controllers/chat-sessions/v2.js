@@ -1,34 +1,34 @@
-const { ConversationChain } = require('langchain/chains');
-const { Conversation } = require('@/models/conversation.js');
+const { ConversationChain } = require("langchain/chains");
+const { Conversation } = require("@models/conversation.js");
 const {
   ChatPromptTemplate,
   SystemMessagePromptTemplate,
   HumanMessagePromptTemplate,
-  MessagesPlaceholder,
-} = require('@langchain/core/prompts');
+  MessagesPlaceholder
+} = require("@langchain/core/prompts");
 const {
   generateOptimizedPrompt,
   performSemanticSearch,
   generateResponse,
   summarizeText,
-  extractKeywords,
-} = require('@/utils/ai/shared/promptOptimization.js');
-const { logger } = require('@/config/logging');
-const { ChatOpenAI } = require('@langchain/openai');
+  extractKeywords
+} = require("@utils/ai/shared/promptOptimization.js");
+const { logger } = require("@config/logging");
+const { ChatOpenAI } = require("@langchain/openai");
 
 const chat = new ChatOpenAI({
-  modelName: 'gpt-4',
+  modelName: "gpt-4",
   temperature: 0.7,
   maxTokens: 500,
-  apiKey: process.env.OPENAI_API_PROJECT_KEY, // Ensure your API key is set in the environment variables
+  apiKey: process.env.OPENAI_API_PROJECT_KEY // Ensure your API key is set in the environment variables
 });
 
 const chatPrompt = ChatPromptTemplate.fromPromptMessages([
   SystemMessagePromptTemplate.fromTemplate(
-    'You are a helpful AI assistant. Use the following context to answer the human\'s questions: {context}'
+    "You are a helpful AI assistant. Use the following context to answer the human's questions: {context}"
   ),
-  new MessagesPlaceholder('history'),
-  HumanMessagePromptTemplate.fromTemplate('{input}'),
+  new MessagesPlaceholder("history"),
+  HumanMessagePromptTemplate.fromTemplate("{input}")
 ]);
 
 const handleChat = async (request, reply) => {
@@ -43,17 +43,17 @@ const handleChat = async (request, reply) => {
 
     const optimizedPrompt = await generateOptimizedPrompt(input);
     const relevantDocs = await performSemanticSearch(optimizedPrompt);
-    const context = relevantDocs.join('\n');
+    const context = relevantDocs.join("\n");
 
     const memory = new RedisChatMessageHistory({
       sessionId: userId,
-      url: process.env.REDIS_URL,
+      url: process.env.REDIS_URL
     });
 
     const chain = new ConversationChain({
       memory,
       prompt: chatPrompt,
-      llm: chat,
+      llm: chat
     });
 
     const response = await generateResponse(optimizedPrompt, context);
@@ -66,7 +66,7 @@ const handleChat = async (request, reply) => {
       message: input,
       response,
       summary,
-      keywords,
+      keywords
     });
 
     const result = { response, summary, keywords };
@@ -78,19 +78,19 @@ const handleChat = async (request, reply) => {
 
     return result;
   } catch (error) {
-    logger.error('Error in chat handler:', error);
-    throw new Error('An error occurred while processing your request.');
+    logger.error("Error in chat handler:", error);
+    throw new Error("An error occurred while processing your request.");
   }
 };
 
 const getConversationHistory = async (request, reply) => {
   try {
     const userId = request.user.id;
-    const history = await Conversation.find({ userId }).sort('-createdAt').limit(50);
+    const history = await Conversation.find({ userId }).sort("-createdAt").limit(50);
     return history;
   } catch (error) {
-    logger.error('Error fetching conversation history:', error);
-    throw new Error('An error occurred while fetching conversation history.');
+    logger.error("Error fetching conversation history:", error);
+    throw new Error("An error occurred while fetching conversation history.");
   }
 };
 
@@ -101,23 +101,23 @@ const streamChat = async (request, reply) => {
 
     const optimizedPrompt = await generateOptimizedPrompt(input);
     const relevantDocs = await performSemanticSearch(optimizedPrompt);
-    const context = relevantDocs.join('\n');
+    const context = relevantDocs.join("\n");
 
     const memory = await ChatMessage.find({ sessionId: userId });
 
     const chain = new ConversationChain({
       memory,
       prompt: chatPrompt,
-      llm: chat,
+      llm: chat
     });
 
     reply.raw.writeHead(200, {
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache',
-      Connection: 'keep-alive',
+      "Content-Type": "text/event-stream",
+      "Cache-Control": "no-cache",
+      Connection: "keep-alive"
     });
 
-    let fullResponse = '';
+    let fullResponse = "";
 
     const handleLLMNewToken = async (token) => {
       fullResponse += token;
@@ -127,7 +127,7 @@ const streamChat = async (request, reply) => {
     await chain.call(
       {
         input: optimizedPrompt,
-        context,
+        context
       },
       [handleLLMNewToken]
     );
@@ -140,16 +140,16 @@ const streamChat = async (request, reply) => {
       message: input,
       response: fullResponse,
       summary,
-      keywords,
+      keywords
     });
 
     reply.raw.write(`data: ${JSON.stringify({ summary, keywords })}\n\n`);
-    reply.raw.write('data: [DONE]\n\n');
+    reply.raw.write("data: [DONE]\n\n");
     reply.raw.end();
   } catch (error) {
-    logger.error('Error in stream chat handler:', error);
+    logger.error("Error in stream chat handler:", error);
     reply.raw.write(
-      `data: ${JSON.stringify({ error: 'An error occurred while processing your request.' })}\n\n`
+      `data: ${JSON.stringify({ error: "An error occurred while processing your request." })}\n\n`
     );
     reply.raw.end();
   }
@@ -158,5 +158,5 @@ const streamChat = async (request, reply) => {
 module.exports = {
   handleChat,
   getConversationHistory,
-  streamChat,
+  streamChat
 };

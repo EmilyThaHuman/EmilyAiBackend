@@ -1,5 +1,5 @@
 // const express = require('express');
-// const { asyncHandler } = require('@/utils/api/sync.js');
+// const { asyncHandler } = require('@utils/api/sync.js');
 // const {
 //   getWorkspaceFoldersByWorkspaceId,
 //   getFolderItemsByFolderId,
@@ -7,7 +7,7 @@
 //   updateFolder,
 //   deleteFolder,
 //   getFoldersBySpace,
-// } = require('@/controllers');
+// } = require('@controllers');
 
 // const router = express.Router();
 

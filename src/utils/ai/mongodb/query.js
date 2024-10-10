@@ -3,26 +3,26 @@ const getVectorSearchResults = async (collection, vectorEmbedding, filterQuery) 
     .aggregate([
       {
         $vectorSearch: {
-          index: 'default',
+          index: "default",
           vector: vectorEmbedding,
-          path: 'embedding',
+          path: "embedding",
           filter: filterQuery,
           limit: 3,
-          numCandidates: 30,
-        },
+          numCandidates: 30
+        }
       },
       {
         $addFields: {
           score: {
-            $meta: 'vectorSearchScore',
-          },
-        },
+            $meta: "vectorSearchScore"
+          }
+        }
       },
-      { $match: { score: { $gte: 0.8 } } },
+      { $match: { score: { $gte: 0.8 } } }
     ])
     .toArray();
 };
 
 module.exports = {
-  getVectorSearchResults,
+  getVectorSearchResults
 };

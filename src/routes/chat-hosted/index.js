@@ -1,5 +1,5 @@
-const hostedModelRoutes = require('./openai');
+const hostedModelRoutes = require("./openai");
 
 module.exports = {
-  hostedModelRoutes,
+  hostedModelRoutes
 };

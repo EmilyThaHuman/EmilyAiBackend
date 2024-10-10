@@ -6,17 +6,17 @@
 //   initializeChatHistory,
 //   handleSummarization,
 // } = require('../ai/openAi/chat/initialize.js');
-// const { initializeChatSession, getSessionMessages, createMessage } = require('@/models/utils');
+// const { initializeChatSession, getSessionMessages, createMessage } = require('@models/utils');
 // const { PineconeStore } = require('@langchain/pinecone');
 // const { StreamResponseHandler } = require('../ai/openAi/chat/handlers.js');
 // const { PromptTemplate } = require('@langchain/core/prompts');
 // const { RecursiveCharacterTextSplitter } = require('langchain/text_splitter');
-// const { createPineconeIndex } = require('@/utils/ai/pinecone/create.js');
-// const { logger } = require('@/config/logging');
+// const { createPineconeIndex } = require('@utils/ai/pinecone/create.js');
+// const { logger } = require('@config/logging');
 // const {
 //   getMainSystemMessageContent,
 //   getMainAssistantMessageInstructions,
-// } = require('@/lib/prompts/createPrompt');
+// } = require('@lib/prompts/createPrompt');
 // const { performPerplexityCompletion } = require('../ai/openAi/chat/context.js');
 // function formatPrompt(context, summary, prompt, dbSearchResults) {
 //   return `Chat Context: ${context}\n\nSummary of previous messages: ${summary}\n\nUser: ${prompt}\n\nRelevant documents: ${dbSearchResults}\n\nAI:`;
@@ -224,7 +224,7 @@
 // //   initializeChatHistory,
 // //   handleSummarization,
 // // } = require('./initialize');
-// // const { initializeChatSession, getSessionMessages, createMessage } = require('@/models/utils');
+// // const { initializeChatSession, getSessionMessages, createMessage } = require('@models/utils');
 // // const { PineconeStore } = require('@langchain/pinecone');
 // // const { StreamResponseHandler } = require('./handlers.js');
 // // const {
@@ -235,9 +235,9 @@
 // //   PromptTemplate,
 // // } = require('@langchain/core/prompts');
 // // const { RecursiveCharacterTextSplitter } = require('langchain/text_splitter');
-// // const { createPineconeIndex } = require('@/utils/ai/pinecone/create.js');
-// // const { logger } = require('@/config/logging');
-// // const { getMainSystemMessageContent, getMainAssistantMessageInstructions } = require('@/lib/prompts/createPrompt');
+// // const { createPineconeIndex } = require('@utils/ai/pinecone/create.js');
+// // const { logger } = require('@config/logging');
+// // const { getMainSystemMessageContent, getMainAssistantMessageInstructions } = require('@lib/prompts/createPrompt');
 // // const { performPerplexityCompletion } = require('./context');
 // // const { ConversationChain } = require('langchain/chains');
 // // const { BufferMemory } = require('langchain/memory');
@@ -405,7 +405,7 @@
 // //   initializeChatHistory,
 // //   handleSummarization,
 // // } = require('./initialize');
-// // const { initializeChatSession, getSessionMessages, createMessage } = require('@/models/utils');
+// // const { initializeChatSession, getSessionMessages, createMessage } = require('@models/utils');
 // // const { PineconeStore } = require('@langchain/pinecone');
 // // const { StreamResponseHandler } = require('./handlers.js');
 // // const {
@@ -415,9 +415,9 @@
 // //   MessagesPlaceholder,
 // // } = require('@langchain/core/prompts');
 // // const { RecursiveCharacterTextSplitter } = require('langchain/text_splitter');
-// // const { createPineconeIndex } = require('@/utils/ai/pinecone/create.js');
-// // const { logger } = require('@/config/logging');
-// // const { getMainSystemMessageContent } = require('@/lib/prompts/createPrompt');
+// // const { createPineconeIndex } = require('@utils/ai/pinecone/create.js');
+// // const { logger } = require('@config/logging');
+// // const { getMainSystemMessageContent } = require('@lib/prompts/createPrompt');
 // // const { performPerplexityCompletion } = require('./context');
 // // const { ConversationChain } = require('langchain/chains');
 // // const { BufferMemory } = require("langchain/memory");

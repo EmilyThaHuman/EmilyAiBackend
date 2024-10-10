@@ -1,5 +1,5 @@
 module.exports = {
-  ...require('./env'),
-  ...require('./response'),
-  ...require('./sync'),
+  ...require("./env"),
+  ...require("./response"),
+  ...require("./sync")
 };

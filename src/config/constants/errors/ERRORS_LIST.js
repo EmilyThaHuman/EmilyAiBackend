@@ -14,17 +14,17 @@ class AuthorizationError extends CustomError {
     this.authorizationError = true;
     this.authParams = authParams || {};
     this.authHeaders = {
-      'WWW-Authenticate': `Bearer ${this.#stringifyAuthParams()}`,
+      "WWW-Authenticate": `Bearer ${this.#stringifyAuthParams()}`
     };
   }
 
   // Private Method to convert object `key: value` to string `key=value`
   #stringifyAuthParams() {
-    let str = '';
+    let str = "";
 
     let { realm, ...others } = this.authParams;
 
-    realm = realm || 'Access to user account';
+    realm = realm || "Access to user account";
 
     str = `realm=${realm}`;
 
@@ -33,13 +33,13 @@ class AuthorizationError extends CustomError {
 
     otherParams.forEach((authParam, index, array) => {
       // Delete other `realm(s)` if exists
-      if (authParam.toLowerCase() === 'realm') {
+      if (authParam.toLowerCase() === "realm") {
         delete others[authParam];
       }
 
-      let comma = ',';
+      let comma = ",";
       // If is last Item then no comma
-      if (array.length - 1 === index) comma = '';
+      if (array.length - 1 === index) comma = "";
 
       str = str + ` ${authParam}=${this.authParams[authParam]}${comma}`;
     });
@@ -51,7 +51,7 @@ class AuthorizationError extends CustomError {
 class ValidationError extends Error {
   constructor(message) {
     super(message);
-    this.name = 'ValidationError';
+    this.name = "ValidationError";
     this.status = 400; // Bad Request
   }
 }
@@ -59,7 +59,7 @@ class ValidationError extends Error {
 class ServerError extends Error {
   constructor(message) {
     super(message);
-    this.name = 'ServerError';
+    this.name = "ServerError";
     this.status = 500; // Internal Server Error
   }
 }
@@ -67,7 +67,7 @@ class ServerError extends Error {
 class ConflictError extends Error {
   constructor(message) {
     super(message);
-    this.name = 'ConflictError';
+    this.name = "ConflictError";
     this.status = 409; // Conflict
   }
 }
@@ -75,151 +75,151 @@ class ConflictError extends Error {
 class ForbiddenError extends Error {
   constructor(message) {
     super(message);
-    this.name = 'ForbiddenError';
+    this.name = "ForbiddenError";
     this.status = 403; // HTTP status code for Forbidden
   }
 }
 
 class UsageLimitExceededError extends Error {
-  constructor(message = 'Usage limit exceeded') {
+  constructor(message = "Usage limit exceeded") {
     super(message);
-    this.name = 'UsageLimitExceededError';
+    this.name = "UsageLimitExceededError";
     this.status = 429; // Too Many Requests
   }
 }
 
 class InvalidCredentialsError extends Error {
-  constructor(message = 'Invalid credentials') {
+  constructor(message = "Invalid credentials") {
     super(message);
-    this.name = 'InvalidCredentialsError';
+    this.name = "InvalidCredentialsError";
     this.status = 401; // Unauthorized
   }
 }
 
 class InvalidUserIDError extends Error {
-  constructor(message = 'Invalid user ID') {
+  constructor(message = "Invalid user ID") {
     super(message);
-    this.name = 'InvalidUserIDError';
+    this.name = "InvalidUserIDError";
     this.status = 400; // Bad Request
   }
 }
 
 class TokenExpiredError extends Error {
-  constructor(message = 'Token expired') {
+  constructor(message = "Token expired") {
     super(message);
-    this.name = 'TokenExpiredError';
+    this.name = "TokenExpiredError";
     this.status = 401; // Unauthorized
   }
 }
 
 class TokenNotYetValidError extends Error {
-  constructor(message = 'Token not yet valid') {
+  constructor(message = "Token not yet valid") {
     super(message);
-    this.name = 'TokenNotYetValidError';
+    this.name = "TokenNotYetValidError";
     this.status = 401; // Unauthorized
   }
 }
 
 class TokenMalformedError extends Error {
-  constructor(message = 'Token malformed') {
+  constructor(message = "Token malformed") {
     super(message);
-    this.name = 'TokenMalformedError';
+    this.name = "TokenMalformedError";
     this.status = 400; // Bad Request
   }
 }
 
 class TokenInvalidError extends Error {
-  constructor(message = 'Token invalid') {
+  constructor(message = "Token invalid") {
     super(message);
-    this.name = 'TokenInvalidError';
+    this.name = "TokenInvalidError";
     this.status = 401; // Unauthorized
   }
 }
 
 class InvalidOpenAPIError extends Error {
-  constructor(message = 'Invalid OpenAPI') {
+  constructor(message = "Invalid OpenAPI") {
     super(message);
-    this.name = 'InvalidOpenAPIError';
+    this.name = "InvalidOpenAPIError";
     this.status = 400; // Bad Request
   }
 }
 
 class OpenAiApiError extends Error {
-  constructor(message = 'OpenAI API error') {
+  constructor(message = "OpenAI API error") {
     super(message);
-    this.name = 'OpenAiApiError';
+    this.name = "OpenAiApiError";
     this.status = 500; // Internal Server Error
   }
 }
 
 class BadRequestError extends Error {
-  constructor(message = 'Bad request') {
+  constructor(message = "Bad request") {
     super(message);
-    this.name = 'BadRequestError';
+    this.name = "BadRequestError";
     this.status = 400; // Bad Request
   }
 }
 
 class NotFoundError extends Error {
-  constructor(message = 'Not found') {
+  constructor(message = "Not found") {
     super(message);
-    this.name = 'NotFoundError';
+    this.name = "NotFoundError";
     this.status = 404; // Not Found
   }
 }
 
 class InternalServerError extends Error {
-  constructor(message = 'Internal server error') {
+  constructor(message = "Internal server error") {
     super(message);
-    this.name = 'InternalServerError';
+    this.name = "InternalServerError";
     this.status = 500; // Internal Server Error
   }
 }
 
 class ServiceUnavailableError extends Error {
-  constructor(message = 'Service unavailable') {
+  constructor(message = "Service unavailable") {
     super(message);
-    this.name = 'ServiceUnavailableError';
+    this.name = "ServiceUnavailableError";
     this.status = 503; // Service Unavailable
   }
 }
 
 class RateLimitExceededError extends Error {
-  constructor(message = 'Rate limit exceeded') {
+  constructor(message = "Rate limit exceeded") {
     super(message);
-    this.name = 'RateLimitExceededError';
+    this.name = "RateLimitExceededError";
     this.status = 429; // Too Many Requests
   }
 }
 
 class PermissionDeniedError extends Error {
-  constructor(message = 'Permission denied') {
+  constructor(message = "Permission denied") {
     super(message);
-    this.name = 'PermissionDeniedError';
+    this.name = "PermissionDeniedError";
     this.status = 403; // Forbidden
   }
 }
 
 class ResourceConflictError extends Error {
-  constructor(message = 'Resource conflict') {
+  constructor(message = "Resource conflict") {
     super(message);
-    this.name = 'ResourceConflictError';
+    this.name = "ResourceConflictError";
     this.status = 409; // Conflict
   }
 }
 
 class UnprocessableEntityError extends Error {
-  constructor(message = 'Unprocessable entity') {
+  constructor(message = "Unprocessable entity") {
     super(message);
-    this.name = 'UnprocessableEntityError';
+    this.name = "UnprocessableEntityError";
     this.status = 422; // Unprocessable Entity
   }
 }
 
 class GatewayTimeoutError extends Error {
-  constructor(message = 'Gateway timeout') {
+  constructor(message = "Gateway timeout") {
     super(message);
-    this.name = 'GatewayTimeoutError';
+    this.name = "GatewayTimeoutError";
     this.status = 504; // Gateway Timeout
   }
 }
@@ -248,5 +248,5 @@ module.exports = {
   ConflictError,
   ForbiddenError,
   AuthorizationError,
-  Error, // Default Error
+  Error // Default Error
 };

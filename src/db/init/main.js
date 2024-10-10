@@ -1,16 +1,8 @@
-const {
-  Workspace,
-  Folder,
-  File,
-  ChatSession,
-  Prompt,
-  Collection,
-  Model,
-  Preset,
-  Assistant,
-  Tool,
-} = require('@/models'); // Adjust the path as needed
-const { uniqueId } = require('lodash');
+const { logger } = require("@config/logging");
+const { ChatSession, Assistant } = require("@models/chat");
+const { Workspace, Folder } = require("@models/workspace");
+const { uniqueId } = require("lodash");
+
 const createWorkspace = async (user) => {
   const workspaceData = {
     userId: user._id,
@@ -25,20 +17,20 @@ const createWorkspace = async (user) => {
     collections: [],
 
     selectedPreset: null,
-    name: 'Home Workspace',
-    imagePath: 'http://localhost:3001/static/avatar3.png',
+    name: "Home Workspace",
+    imagePath: "http://localhost:3001/static/avatar3.png",
     active: true,
 
     defaultContextLength: 4000,
     defaultTemperature: 0.9,
 
-    embeddingsProvider: 'openai',
-    instructions: '',
-    sharing: 'private',
+    embeddingsProvider: "openai",
+    instructions: "",
+    sharing: "private",
     includeProfileContext: false,
     includeWorkspaceInstructions: false,
     isHome: true,
-    type: 'home',
+    type: "home"
   };
 
   const workspace = new Workspace(workspaceData);
@@ -46,19 +38,40 @@ const createWorkspace = async (user) => {
   return workspace;
 };
 
-const createFolders = async (user, workspace) => {
-  const folderTypes = [
-    'chatSessions',
-    'assistants',
-    'files',
-    'models',
-    'tools',
-    'prompts',
-    'presets',
-    'collections',
-  ];
+const folderTypes = [
+  "Workspace",
+  "ChatSession",
+  "Assistant",
+  "File",
+  "ChatModel",
+  "Tool",
+  "Prompt",
+  "Preset",
+  "Collection"
+];
+function convertToFolderType(type) {
+  // Check if the input is one of the allowed folder types
+  if (!folderTypes.includes(type)) {
+    throw new Error(`Invalid type: ${type}. Must be one of: ${folderTypes.join(", ")}`);
+  }
 
+  // Convert the first character to lowercase and append 's'
+  const modifiedType = type.charAt(0).toLowerCase() + type.slice(1) + "s";
+
+  return modifiedType;
+}
+const createFolders = async (user, workspace) => {
   const folders = [];
+  const folderTypes = [
+    "files",
+    "prompts",
+    "chatSessions",
+    "assistants",
+    "tools",
+    "models",
+    "presets",
+    "collections"
+  ];
 
   for (const type of folderTypes) {
     let uniqueName = uniqueId(`${type}_folder`);
@@ -77,79 +90,93 @@ const createFolders = async (user, workspace) => {
       workspaceId: workspace._id,
       name: uniqueName,
       description: `${type} folder`, // Default description, can be customized
-      type: type,
-      space: type,
-      items: [],
+      space: type // Directly setting the space based on folder type
     };
 
     const folder = new Folder(folderData);
     await folder.save();
     folders.push(folder);
+
+    // Update the workspace's folders array
     workspace.folders.push(folder._id);
-    await workspace.save();
-    user.folders.push(folder._id);
-    await user.save();
   }
+
+  // Save the workspace after updating folders
+  await workspace.save();
 
   return folders;
 };
 
-const createFile = async (user, folder) => {
-  const fileData = {
-    userId: user._id,
-    folderId: folder._id,
-    name: 'Deep Learning Research.pdf',
-    description: 'A comprehensive paper on deep learning.',
-    filePath: '/public/static/defaultFiles/default.pdf',
-    data: null,
-    size: 2048,
-    tokens: 3500,
-    type: 'pdf',
-    sharing: 'private',
-    mimeType: 'application/pdf',
-    metadata: {
-      fileSize: 2048,
-      fileType: 'pdf',
-      lastModified: new Date(),
-    },
-  };
+// const createFolders = async (user, workspace) => {
+//   const folders = [];
 
-  const file = new File(fileData);
-  await file.save();
-  return file;
-};
+//   for (const type of folderTypes) {
+//     // skip workspace folder type
+//     if (type === "Workspace") continue;
+//     let uniqueName = uniqueId(`${type}_folder`);
+//     let counter = 1;
+
+//     // Ensure the folder name is unique within the user's workspace
+//     while (
+//       await Folder.exists({ userId: user._id, workspaceId: workspace._id, name: uniqueName })
+//     ) {
+//       uniqueName = `${type}_folder-${counter}`;
+//       counter += 1;
+//     }
+
+//     const folderData = {
+//       userId: user._id,
+//       workspaceId: workspace._id,
+//       name: uniqueName,
+//       description: `${type} folder`, // Default description, can be customized
+//       space: convertToFolderType(type),
+//     };
+
+//     const folder = new Folder(folderData);
+//     await folder.save();
+//     folders.push(folder);
+
+//     // Update the workspace's folders array
+//     workspace.folders.push(folder._id);
+//   }
+
+//   // Save the workspace after updating folders
+//   await workspace.save();
+
+//   return folders;
+// };
 
 const createChatSession = async (user, workspace, assistant, folder) => {
   const chatSessionData = {
-    name: 'First Chat',
-    topic: 'Getting Started',
+    name: "First Chat",
+    topic: "Getting Started",
     userId: user._id,
     workspaceId: workspace._id,
     assistantId: assistant._id,
     folderId: folder._id,
-    model: 'gpt-4-turbo-preview',
-    prompt: 'Let\'s start our first conversation.',
+    model: "gpt-4-turbo-preview",
+    prompt: "Let's start our first conversation.",
     active: true,
     activeSessionId: null,
     settings: {
       maxTokens: 500,
       temperature: 0.7,
-      model: 'gpt-4-turbo-preview',
+      model: "gpt-4-turbo-preview",
       topP: 1,
       n: 1,
       debug: false,
-      summarizeMode: false,
+      summarizeMode: false
     },
     messages: [],
     stats: {
       tokenUsage: 0,
-      messageCount: 0,
+      messageCount: 0
     },
     tuning: {
       debug: false,
-      summary: '',
-      summarizeMode: false,
-    },
+      summary: "",
+      summarizeMode: false
+    }
   };
 
   const chatSession = new ChatSession(chatSessionData);
@@ -157,129 +184,56 @@ const createChatSession = async (user, workspace, assistant, folder) => {
   return chatSession;
 };
 
-const createPreset = async (user, folder) => {
-  const presetData = {
-    userId: user._id,
-    folderId: folder._id,
-    name: 'Default Preset',
-    description: 'Default preset for new users',
-    contextLength: 4000,
-    embeddingsProvider: 'openai',
-    includeProfileContext: true,
-    includeWorkspaceInstructions: true,
-    model: 'gpt-4-turbo-preview',
-    prompt: 'Default prompt',
-    sharing: 'private',
-    temperature: 0.7,
-  };
+const createAssistant = async (user, folder, file, overrides = {}) => {
+  try {
+    const assistantData = {
+      // RELATIONS
+      userId: user._id,
+      workspaceId: folder.workspaceId,
+      folderId: folder._id,
+      // REQUIRED FIELDS with defaults
+      name: overrides.name || "React Component Generator",
+      systemInstructions:
+        overrides.systemInstructions ||
+        "Focus on generating optimized, reusable React components using best practices with modern hooks and functional patterns. Prioritize using Material-UI for styling.",
+      model: overrides.model || "gpt-4-turbo-preview",
+      fileSearch: overrides.fileSearch !== undefined ? overrides.fileSearch : true, // Enable file search to reference code examples
+      codeInterpreter: overrides.codeInterpreter !== undefined ? overrides.codeInterpreter : true, // Enable code interpreter for logic understanding
+      functions: overrides.functions || [],
+      // SETTINGS
+      responseFormat: overrides.responseFormat || "json_object",
+      temperature: overrides.temperature !== undefined ? overrides.temperature : 0.7, // Lower temperature for more deterministic outputs
+      topP: overrides.topP !== undefined ? overrides.topP : 0.9,
+      // ADDITIONAL INSTRUCTIONS
+      instructions:
+        overrides.instructions ||
+        "Generate high-quality React components using functional components and hooks. Include clear prop definitions, modular CSS-in-JS styling with Material-UI, and emphasize code readability and performance. Ensure the code adheres to React 18 standards.",
 
-  const preset = new Preset(presetData);
-  await preset.save();
-  return preset;
-};
+      description:
+        "Assistant for generating React components with Material-UI styling and functional components.",
+      imagePath: "/public/images/default-assistant.png",
+      sharing: "private",
+      contextLength: 4000,
+      embeddingsProvider: "openai",
+      toolResources: {
+        codeInterpreter: {
+          fileIds: [file._id]
+        }
+      }
+    };
 
-const createAssistant = async (user, folder, file) => {
-  const assistantData = {
-    userId: user._id,
-    folderId: folder._id,
-    name: 'Default Assistant',
-    description: 'This is the default assistant.',
-    model: 'gpt-4-turbo-preview',
-    imagePath: '/public/images/default-assistant.png',
-    sharing: 'private',
-    instructions: 'You are a helpful assistant.',
-    contextLength: 4000,
-    includeProfileContext: true,
-    includeWorkspaceInstructions: true,
-    prompt: 'You are a helpful assistant.',
-    temperature: 0.7,
-    embeddingsProvider: 'openai',
-    tools: [],
-    toolResources: {
-      codeInterpreter: {
-        fileIds: [file._id],
-      },
-    },
-  };
-
-  const assistant = new Assistant(assistantData);
-  await assistant.save();
-  return assistant;
-};
-
-const createPrompt = async (user, workspace, folder) => {
-  const promptData = {
-    userId: user._id,
-    workspaceId: workspace._id,
-    folderId: folder._id,
-    content: 'You are a helpful assistant. How can I assist you today?',
-    name: 'Default Prompt',
-    sharing: 'private',
-  };
-
-  const prompt = new Prompt(promptData);
-  await prompt.save();
-  return prompt;
-};
-
-const createCollection = async (user, folder) => {
-  const collectionData = {
-    userId: user._id,
-    folderId: folder._id,
-    name: 'Default Collection',
-    description: 'This is the default collection',
-    sharing: 'private',
-  };
-
-  const collection = new Collection(collectionData);
-  await collection.save();
-  return collection;
-};
-
-const createTool = async (user, workspace, folder) => {
-  const toolData = {
-    userId: user._id,
-    workspaceId: workspace._id,
-    folderId: folder._id,
-    description: 'This is the default tool',
-    name: 'Default Tool',
-    schema: {},
-    url: 'http://example.com',
-    sharing: 'private',
-  };
-
-  const tool = new Tool(toolData);
-  await tool.save();
-  return tool;
-};
-
-const createModel = async (user, folder) => {
-  const modelData = {
-    userId: user._id,
-    folderId: folder._id,
-    name: 'Default Model',
-    description: 'This is the default model',
-    modelId: 'gpt-4-turbo-preview',
-    baseUrl: 'https://api.openai.com/v1',
-    apiKey: '',
-    contextLength: 4000,
-    sharing: 'private',
-  };
-
-  const model = new Model(modelData);
-  await model.save();
-  return model;
+    const assistant = new Assistant(assistantData);
+    await assistant.save();
+    return assistant;
+  } catch (error) {
+    logger.error("Error creating assistant:", error);
+    throw error;
+  }
 };
 
 module.exports = {
   createWorkspace,
   createFolders,
-  createFile,
-  createPreset,
   createAssistant,
-  createChatSession,
-  createPrompt,
-  createCollection,
-  createTool,
-  createModel,
+  createChatSession
 };

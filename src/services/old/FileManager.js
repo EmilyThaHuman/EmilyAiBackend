@@ -1,5 +1,5 @@
-const fs = require('fs').promises;
-const path = require('path');
+const fs = require("fs").promises;
+const path = require("path");
 
 class FileManager {
   constructor(basePath, filesCollection) {
@@ -14,7 +14,7 @@ class FileManager {
       const filePath = path.join(categoryPath, fileName);
 
       if (!this.validateFileName(fileName)) {
-        throw new Error('Invalid file name');
+        throw new Error("Invalid file name");
       }
 
       await fs.writeFile(filePath, content);
@@ -23,12 +23,12 @@ class FileManager {
         category: category,
         file_name: fileName,
         path: filePath,
-        created_at: new Date().toISOString(),
+        created_at: new Date().toISOString()
       };
 
       await this.filesCollection.insertOne(metadata);
     } catch (error) {
-      console.error('Error saving file:', error);
+      console.error("Error saving file:", error);
     }
   }
 
@@ -36,17 +36,17 @@ class FileManager {
     try {
       const metadata = await this.filesCollection.findOne({
         category: category,
-        file_name: fileName,
+        file_name: fileName
       });
 
       if (!metadata) {
-        throw new Error('File not found');
+        throw new Error("File not found");
       }
 
-      const content = await fs.readFile(metadata.path, 'utf-8');
+      const content = await fs.readFile(metadata.path, "utf-8");
       return content;
     } catch (error) {
-      console.error('Error retrieving file:', error);
+      console.error("Error retrieving file:", error);
     }
   }
 
@@ -55,7 +55,7 @@ class FileManager {
       const files = await this.filesCollection.find({ category: category }).toArray();
       return files;
     } catch (error) {
-      console.error('Error listing files:', error);
+      console.error("Error listing files:", error);
     }
   }
 

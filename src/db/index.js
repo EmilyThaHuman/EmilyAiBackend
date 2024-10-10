@@ -1,4 +1,4 @@
 module.exports = {
-  ...require('./main'),
-  ...require('./init'),
+  ...require("./main"),
+  ...require("./init"),
 };

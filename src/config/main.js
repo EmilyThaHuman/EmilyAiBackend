@@ -1,44 +1,44 @@
 /**
  * config/index.js
  */
-const path = require('path');
-const dotenv = require('dotenv');
-const { CHAT_SETTING_LIMITS } = require('./constants');
-const { getEnv } = require('@/utils/api');
+const path = require("path");
+const dotenv = require("dotenv");
+const { CHAT_SETTING_LIMITS } = require("./constants");
+const { getEnv } = require("@utils/api");
 // Load environment variables from .env file
-dotenv.config({ path: path.join(__dirname, '..', '.env') });
+dotenv.config({ path: path.join(__dirname, "..", ".env") });
 
 const development = {
-  db: getEnv('MONGODB_URI'),
+  db: getEnv("MONGODB_URI")
 };
 const production = {
-  db: getEnv('MONGODB_URI'),
+  db: getEnv("MONGODB_URI")
 };
 const test = {
-  db: getEnv('MONGODB_URI'),
+  db: getEnv("MONGODB_URI"),
   facebook: {
-    clientID: 'APP_ID',
-    clientSecret: 'SECRET',
-    callbackURL: 'http://localhost:3000/auth/facebook/callback',
-    scope: ['email', 'user_about_me', 'user_friends'],
+    clientID: "APP_ID",
+    clientSecret: "SECRET",
+    callbackURL: "http://localhost:3000/auth/facebook/callback",
+    scope: ["email", "user_about_me", "user_friends"]
   },
   google: {
-    clientID: 'APP_ID',
-    clientSecret: 'SECRET',
-    callbackURL: 'http://localhost:3000/auth/google/callback',
+    clientID: "APP_ID",
+    clientSecret: "SECRET",
+    callbackURL: "http://localhost:3000/auth/google/callback",
     scope: [
-      'https://www.googleapis.com/auth/userinfo.profile',
-      'https://www.googleapis.com/auth/userinfo.email',
-      'https://www.google.com/m8/feeds',
-    ],
-  },
+      "https://www.googleapis.com/auth/userinfo.profile",
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.google.com/m8/feeds"
+    ]
+  }
 };
 
 const defaults = {
-  root: path.normalize(__dirname + '/..'),
+  root: path.normalize(__dirname + "/.."),
   api: {
     port: parseInt(process.env.PORT, 10) || 3002,
-    host: process.env.HOST || 'localhost',
+    host: process.env.HOST || "localhost",
     openAIKey: process.env.OPENAI_API_PROJECT_KEY,
     embeddingModel: process.env.EMBEDDING_MODEL,
     models: {
@@ -83,56 +83,59 @@ const defaults = {
       geminiBison: process.env.GEMINI_BISON_MODEL,
       llama2: process.env.LLAMA2_MODEL,
       mistral7b: process.env.MISTRAL7B_MODEL,
-      falcon40b: process.env.FALCON40B_MODEL,
+      falcon40b: process.env.FALCON40B_MODEL
     },
     indexName: process.env.PINECONE_INDEX,
     namespace: process.env.PINECONE_NAMESPACE,
     dimension: parseInt(process.env.PINECONE_DIMENSION, 10),
-    topK: parseInt(process.env.PINECONE_TOP_K, 10),
+    topK: parseInt(process.env.PINECONE_TOP_K, 10)
   },
   auth: {
     secret: process.env.AUTH_SECRET,
     audience: process.env.AUTH_AUDIENCE,
     issuer: process.env.AUTH_ISSUER,
-    expiresIn: process.env.AUTH_EXPIRES_IN || '1d',
+    expiresIn: process.env.AUTH_EXPIRES_IN || "1d"
   },
   chat: {
-    settings: CHAT_SETTING_LIMITS,
+    settings: CHAT_SETTING_LIMITS
   },
   database: {
-    uri: getEnv('MONGODB_URI'),
+    uri: getEnv("MONGODB_URI"),
     options: {
       useCreateIndex: true,
-      useFindAndModify: false,
+      useFindAndModify: false
     },
+    mongoose: {
+      url: getEnv("MONGODB_URI") + (process.env.NODE_ENV === "test" ? "-test" : "")
+    }
   },
   logging: {
-    level: process.env.LOG_LEVEL || 'info',
-    format: process.env.LOG_FORMAT || 'combined',
+    level: process.env.LOG_LEVEL || "info",
+    format: process.env.LOG_FORMAT || "combined"
   },
   cors: {
-    origin: ['http://localhost:3000', '*'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    origin: ["http://localhost:3000", "*"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
-    optionsSuccessStatus: 200,
+    optionsSuccessStatus: 200
   },
   rateLimit: {
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: parseInt(process.env.RATE_LIMIT_MAX, 10) || 100,
+    max: parseInt(process.env.RATE_LIMIT_MAX, 10) || 100
   },
   security: {
     helmet: {
       contentSecurityPolicy: {
         directives: {
           defaultSrc: ["'self'"],
-          styleSrc: ["'self'", 'https://fonts.googleapis.com'],
-        },
-      },
-    },
+          styleSrc: ["'self'", "https://fonts.googleapis.com"]
+        }
+      }
+    }
   },
   compression: {
-    threshold: 512,
+    threshold: 512
   },
   session: {
     secret: process.env.SESSION_SECRET,
@@ -140,42 +143,42 @@ const defaults = {
     saveUninitialized: false,
     cookie: {
       maxAge: 24 * 60 * 60 * 1000, // 1 day
-      secure: process.env.NODE_ENV === 'production',
-    },
+      secure: process.env.NODE_ENV === "production"
+    }
   },
   cookie: {
-    secret: process.env.COOKIE_SECRET,
+    secret: process.env.COOKIE_SECRET
   },
   passport: {
     local: {
-      usernameField: 'email',
-    },
+      usernameField: "email"
+    }
   },
   staticFiles: {
-    public: path.join(__dirname, '..', '..', 'public'),
-    dirs: ['static', 'uploads', 'static/images', 'static/files'],
+    public: path.join(__dirname, "..", "..", "public"),
+    dirs: ["static", "uploads", "static/images", "static/files"]
   },
   gridfs: {
-    bucketName: 'uploads',
+    bucketName: "uploads"
   },
   fileUpload: {
     createParentPath: true,
     limits: {
-      fileSize: parseInt(process.env.MAX_FILE_SIZE, 10) || 10 * 1024 * 1024, // 10 MB
+      fileSize: parseInt(process.env.MAX_FILE_SIZE, 10) || 10 * 1024 * 1024 // 10 MB
     },
     abortOnLimit: true,
-    responseOnLimit: 'File size limit has been reached',
+    responseOnLimit: "File size limit has been reached",
     useTempFiles: true,
-    tempFileDir: '/tmp/',
-  },
+    tempFileDir: "/tmp/"
+  }
 };
 
 const config = {
   development: Object.assign({}, development, defaults),
   test: Object.assign({}, test, defaults),
-  production: Object.assign({}, production, defaults),
-}[process.env.NODE_ENV || 'development'];
+  production: Object.assign({}, production, defaults)
+}[process.env.NODE_ENV || "development"];
 
-config.getOpenAIClient = () => require('./services/openai').getLangChainClient();
+config.getOpenAIClient = () => require("./services/openai").getLangChainClient();
 
 module.exports = config;

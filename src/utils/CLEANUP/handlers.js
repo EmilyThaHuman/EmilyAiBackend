@@ -1,5 +1,5 @@
-// const { logger } = require('@/config/logging');
-// const { extractContent, parseContent } = require('@/utils/processing');
+// const { logger } = require('@config/logging');
+// const { extractContent, parseContent } = require('@utils/processing');
 // const EventEmitter = require('node:events');
 
 // // --- RESPONSE HANDLER ---

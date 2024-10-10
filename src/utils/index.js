@@ -1,9 +1,9 @@
 // Exporting from ai directory
 module.exports = {
-  ...require('./ai'),
-  ...require('./auth'),
-  ...require('./processing'),
-  ...require('./api'),
+  ...require("./ai"),
+  ...require("./auth"),
+  ...require("./processing"),
+  ...require("./api")
 };
 // module.exports = require('./ai');
 // module.exports = require('./auth');

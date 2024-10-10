@@ -4,21 +4,20 @@
  * --------------------------------------------
  */
 
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-const compression = require('compression');
-const cookieParser = require('cookie-parser');
-const { morganMiddleware } = require('./morganMiddleware');
-const path = require('path');
-const session = require('express-session');
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const { User } = require('../models');
-const MongoStore = require('connect-mongo');
-const config = require('@/config');
-// const config = require('@/config');
+const express = require("express");
+const cors = require("cors");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
+const compression = require("compression");
+const cookieParser = require("cookie-parser");
+const { morganMiddleware } = require("./morganMiddleware");
+const path = require("path");
+const session = require("express-session");
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
+const { User } = require("../models");
+const MongoStore = require("connect-mongo");
+const config = require("@config/main");
 
 const middlewares = (app) => {
   // Set up Helmet for enhanced security, including Content Security Policy (CSP)
@@ -47,8 +46,8 @@ const middlewares = (app) => {
     session({
       ...config.session,
       store: new MongoStore({
-        mongoUrl: config.database.uri,
-      }),
+        mongoUrl: config.database.uri
+      })
     })
   );
 
@@ -62,11 +61,11 @@ const middlewares = (app) => {
       try {
         const user = await User.findOne({ email });
         if (!user) {
-          return done(null, false, { message: 'Incorrect email or password' });
+          return done(null, false, { message: "Incorrect email or password" });
         }
         const isMatch = await user.comparePassword(password);
         if (!isMatch) {
-          return done(null, false, { message: 'Incorrect email or password' });
+          return done(null, false, { message: "Incorrect email or password" });
         }
         return done(null, user);
       } catch (error) {
@@ -101,17 +100,17 @@ const middlewares = (app) => {
   });
 
   // Endpoint to serve service-worker.js
-  app.get('/service-worker.js', cors(config.cors), (req, res) => {
-    res.sendFile(path.resolve(config.staticFiles.public, 'service-worker.js'));
+  app.get("/service-worker.js", cors(config.cors), (req, res) => {
+    res.sendFile(path.resolve(config.staticFiles.public, "service-worker.js"));
   });
 
   // Middleware for handling Server-Sent Events
   app.use(async (req, res, next) => {
-    if (req.headers.accept && req.headers.accept.includes('text/event-stream')) {
+    if (req.headers.accept && req.headers.accept.includes("text/event-stream")) {
       res.writeHead(200, {
-        'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
-        Connection: 'keep-alive',
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive"
       });
       res.flushHeaders();
     }

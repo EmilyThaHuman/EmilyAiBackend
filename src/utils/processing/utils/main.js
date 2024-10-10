@@ -1,24 +1,24 @@
-const { processCSV } = require('../../processing/types/csv.js');
-const { processDocX } = require('../../processing/types/docx.js');
-const { processJSON } = require('../../processing/types/json.js');
-const { processPdf } = require('../../processing/types/pdf.js');
-const { processTxt } = require('../../processing/types/txt.js');
-const { processMarkdown } = require('../../processing/types/md.js');
+const { processCSV } = require("../../processing/types/csv.js");
+const { processDocX } = require("../../processing/types/docx.js");
+const { processJSON } = require("../../processing/types/json.js");
+const { processPdf } = require("../../processing/types/pdf.js");
+const { processTxt } = require("../../processing/types/txt.js");
+const { processMarkdown } = require("../../processing/types/md.js");
 
 const processDocument = async (doc) => {
-  const extension = doc.metadata.source.split('.').pop().toLowerCase();
+  const extension = doc.metadata.source.split(".").pop().toLowerCase();
   switch (extension) {
-  case 'csv':
+  case "csv":
     return processCSV(doc.pageContent);
-  case 'docx':
+  case "docx":
     return processDocX(doc.pageContent);
-  case 'json':
+  case "json":
     return processJSON(doc.pageContent);
-  case 'md':
+  case "md":
     return processMarkdown(doc.pageContent);
-  case 'pdf':
+  case "pdf":
     return processPdf(doc.pageContent);
-  case 'txt':
+  case "txt":
     return processTxt(doc.pageContent);
   default:
     throw new Error(`Unsupported file type: ${extension}`);

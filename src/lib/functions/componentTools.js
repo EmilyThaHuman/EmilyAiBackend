@@ -1,9 +1,9 @@
-const { getEnv } = require('@/utils/api');
-const { escapeRegExp } = require('@/utils/processing');
-const OpenAI = require('openai');
+const { getEnv } = require("@utils/api");
+const { escapeRegExp } = require("@utils/processing");
+const OpenAI = require("openai");
 
 const openai = new OpenAI({
-  apiKey: getEnv('OPENAI_API_PROJECT_KEY'),
+  apiKey: getEnv("OPENAI_API_PROJECT_KEY")
 });
 
 const extractFirstCodeBlock = (input) => {
@@ -12,20 +12,20 @@ const extractFirstCodeBlock = (input) => {
   while ((matches = pattern.exec(input)) !== null) {
     const language = matches[1];
     const codeBlock = matches[2];
-    if (language === undefined || language === 'tsx' || language === 'json') {
+    if (language === undefined || language === "tsx" || language === "json") {
       return codeBlock;
     }
   }
 
   // console.log(input);
-  throw new Error('No code block found in input');
+  throw new Error("No code block found in input");
 };
 
 const containsDiff = (message) => {
   return (
-    message.includes('<<<<<<< ORIGINAL') &&
-    message.includes('>>>>>>> UPDATED') &&
-    message.includes('=======\n')
+    message.includes("<<<<<<< ORIGINAL") &&
+    message.includes(">>>>>>> UPDATED") &&
+    message.includes("=======\n")
   );
 };
 
@@ -45,8 +45,8 @@ const applyDiff = (code, diff) => {
     // TODO: Before we replace, we can also check how indented the code is
     // and add the same indentation to the replacement.
     let regex = escapeRegExp(before);
-    regex = regex.replaceAll(/\r?\n/g, '\\s+');
-    regex = regex.replaceAll(/\t/g, '');
+    regex = regex.replaceAll(/\r?\n/g, "\\s+");
+    regex = regex.replaceAll(/\t/g, "");
 
     // Create the regex
     const replaceRegex = new RegExp(regex);
@@ -62,47 +62,47 @@ const applyDiff = (code, diff) => {
 
 async function reviseComponent(prompt, code) {
   const completion = await openai.chat.completions.create({
-    model: getEnv('OPENAI_API_CHAT_COMPLETION_MODEL'),
+    model: getEnv("OPENAI_API_CHAT_COMPLETION_MODEL"),
     messages: [
       {
-        role: 'system',
+        role: "system",
         content: [
-          'You are an AI programming assistant.',
-          'Follow the user\'s requirements carefully & to the letter.',
-          'You\'re working on a react component using typescript and tailwind.',
-          'Don\'t introduce any new components or files.',
-          'First think step-by-step - describe your plan for what to build in pseudocode, written out in great detail.',
-          'You must format every code change with an *edit block* like this:',
-          '```',
-          '<<<<<<< ORIGINAL',
-          '    # some comment',
-          '    # Func to multiply',
-          '    def mul(a,b)',
-          '=======',
-          '    # updated comment',
-          '    # Function to add',
-          '    def add(a,b):',
-          '>>>>>>> UPDATED',
-          '```',
-          'There can be multiple code changes.',
-          'Modify as few characters as possible and use as few characters as possible on the diff.',
-          'Minimize any other prose.',
-          'Keep your answers short and impersonal.',
-          'Never create a new component or file.',
-          `Always give answers by modifying the following code:\n\`\`\`tsx\n${code}\n\`\`\``,
-        ].join('\n'),
+          "You are an AI programming assistant.",
+          "Follow the user's requirements carefully & to the letter.",
+          "You're working on a react component using typescript and tailwind.",
+          "Don't introduce any new components or files.",
+          "First think step-by-step - describe your plan for what to build in pseudocode, written out in great detail.",
+          "You must format every code change with an *edit block* like this:",
+          "```",
+          "<<<<<<< ORIGINAL",
+          "    # some comment",
+          "    # Func to multiply",
+          "    def mul(a,b)",
+          "=======",
+          "    # updated comment",
+          "    # Function to add",
+          "    def add(a,b):",
+          ">>>>>>> UPDATED",
+          "```",
+          "There can be multiple code changes.",
+          "Modify as few characters as possible and use as few characters as possible on the diff.",
+          "Minimize any other prose.",
+          "Keep your answers short and impersonal.",
+          "Never create a new component or file.",
+          `Always give answers by modifying the following code:\n\`\`\`tsx\n${code}\n\`\`\``
+        ].join("\n")
       },
       {
-        role: 'user',
-        content: `${prompt}`,
-      },
+        role: "user",
+        content: `${prompt}`
+      }
     ],
     temperature: 0,
     top_p: 1,
     frequency_penalty: 0,
     presence_penalty: 0,
     max_tokens: 2000,
-    n: 1,
+    n: 1
   });
 
   const choices = completion.choices;
@@ -114,13 +114,13 @@ async function reviseComponent(prompt, code) {
     !choices[0].message ||
     !choices[0].message.content
   ) {
-    throw new Error('No choices returned from OpenAI');
+    throw new Error("No choices returned from OpenAI");
   }
 
   const diff = choices[0].message.content;
 
   if (!containsDiff(diff)) {
-    throw new Error('No diff found in message');
+    throw new Error("No diff found in message");
   }
 
   const newCode = applyDiff(code, diff);
@@ -130,43 +130,43 @@ async function reviseComponent(prompt, code) {
 
 async function generateNewComponent(prompt) {
   const completion = await openai.chat.completions.create({
-    model: getEnv('OPENAI_API_CHAT_COMPLETION_MODEL'),
+    model: getEnv("OPENAI_API_CHAT_COMPLETION_MODEL"),
     messages: [
       {
-        role: 'system',
+        role: "system",
         content: [
-          'You are a helpful assistant.',
-          'You\'re tasked with writing a react component using typescript and tailwind for a website.',
-          'Only import React as a dependency.',
-          'Be concise and only reply with code.',
-        ].join('\n'),
+          "You are a helpful assistant.",
+          "You're tasked with writing a react component using typescript and tailwind for a website.",
+          "Only import React as a dependency.",
+          "Be concise and only reply with code."
+        ].join("\n")
       },
       {
-        role: 'user',
+        role: "user",
         content: [
-          '- Component Name: Section',
+          "- Component Name: Section",
           `- Component Description: ${prompt}\n`,
-          '- Do not use libraries or imports other than React.',
-          '- Do not have any dynamic data. Use placeholders as data. Do not use props.',
-          '- Write only a single component.',
-        ].join('\n'),
-      },
+          "- Do not use libraries or imports other than React.",
+          "- Do not have any dynamic data. Use placeholders as data. Do not use props.",
+          "- Write only a single component."
+        ].join("\n")
+      }
     ],
     temperature: 0,
     top_p: 1,
     frequency_penalty: 0,
     presence_penalty: 0,
     max_tokens: 2000,
-    n: 1,
+    n: 1
   });
 
   const choices = completion.choices;
 
   if (!choices || choices.length === 0 || !choices[0] || !choices[0].message) {
-    throw new Error('No choices returned from OpenAI');
+    throw new Error("No choices returned from OpenAI");
   }
 
-  let result = choices[0].message.content || '';
+  let result = choices[0].message.content || "";
   result = extractFirstCodeBlock(result);
 
   // console.log(result);
@@ -175,5 +175,5 @@ async function generateNewComponent(prompt) {
 
 module.exports = {
   reviseComponent,
-  generateNewComponent,
+  generateNewComponent
 };

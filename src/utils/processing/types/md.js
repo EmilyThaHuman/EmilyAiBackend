@@ -1,15 +1,15 @@
-const { encode } = require('gpt-tokenizer');
-const { RecursiveCharacterTextSplitter } = require('langchain/text_splitter');
-const { CHUNK_SIZE, CHUNK_OVERLAP } = require('@/config/constants');
+const { encode } = require("gpt-tokenizer");
+const { RecursiveCharacterTextSplitter } = require("langchain/text_splitter");
+const { CHUNK_SIZE, CHUNK_OVERLAP } = require("@config");
 
 const processMarkdown = async (markdown) => {
   const fileBuffer = Buffer.from(await markdown.arrayBuffer());
-  const textDecoder = new TextDecoder('utf-8');
+  const textDecoder = new TextDecoder("utf-8");
   const textContent = textDecoder.decode(fileBuffer);
 
-  const splitter = RecursiveCharacterTextSplitter.fromLanguage('markdown', {
+  const splitter = RecursiveCharacterTextSplitter.fromLanguage("markdown", {
     chunkSize: CHUNK_SIZE,
-    chunkOverlap: CHUNK_OVERLAP,
+    chunkOverlap: CHUNK_OVERLAP
   });
 
   const splitDocs = await splitter.createDocuments([textContent]);
@@ -21,7 +21,7 @@ const processMarkdown = async (markdown) => {
 
     chunks.push({
       content: doc.pageContent,
-      tokens: encode(doc.pageContent).length,
+      tokens: encode(doc.pageContent).length
     });
   }
 

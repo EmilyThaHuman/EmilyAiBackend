@@ -1,10 +1,10 @@
 // usageController.js
-const axios = require('axios');
+const axios = require("axios");
 
-const BASE_URL = 'https://api.openai.com/v1';
+const BASE_URL = "https://api.openai.com/v1";
 const HEADERS = {
   Authorization: `Bearer ${process.env.OPENAI_API_PROJECT_KEY}`,
-  'Content-Type': 'application/json',
+  "Content-Type": "application/json"
 };
 
 const apiRequest = async (method, url, data = null) => {
@@ -21,7 +21,7 @@ const usageController = {
     const { start_date, end_date } = req.query;
     const url = `${BASE_URL}/usage?start_date=${start_date}&end_date=${end_date}`;
     try {
-      const data = await apiRequest('GET', url);
+      const data = await apiRequest("GET", url);
       res.json(data);
     } catch (error) {
       res.status(400).json(error);
@@ -30,9 +30,9 @@ const usageController = {
   // User controllers
   listUsers: async (req, res) => {
     const { limit = 20, after } = req.query;
-    const url = `${BASE_URL}/users?limit=${limit}&after=${after || ''}`;
+    const url = `${BASE_URL}/users?limit=${limit}&after=${after || ""}`;
     try {
-      const data = await apiRequest('GET', url);
+      const data = await apiRequest("GET", url);
       res.json(data);
     } catch (error) {
       res.status(400).json(error);
@@ -43,7 +43,7 @@ const usageController = {
     const { user_id } = req.params;
     const url = `${BASE_URL}/users/${user_id}`;
     try {
-      const data = await apiRequest('GET', url);
+      const data = await apiRequest("GET", url);
       res.json(data);
     } catch (error) {
       res.status(400).json(error);
@@ -55,7 +55,7 @@ const usageController = {
     const { role } = req.body;
     const url = `${BASE_URL}/users/${user_id}`;
     try {
-      const data = await apiRequest('POST', url, { role });
+      const data = await apiRequest("POST", url, { role });
       res.json(data);
     } catch (error) {
       res.status(400).json(error);
@@ -66,7 +66,7 @@ const usageController = {
     const { user_id } = req.params;
     const url = `${BASE_URL}/users/${user_id}`;
     try {
-      const data = await apiRequest('DELETE', url);
+      const data = await apiRequest("DELETE", url);
       res.json(data);
     } catch (error) {
       res.status(400).json(error);
@@ -76,9 +76,9 @@ const usageController = {
   // Project controllers
   listProjects: async (req, res) => {
     const { limit = 20, after, include_archived = false } = req.query;
-    const url = `${BASE_URL}/projects?limit=${limit}&after=${after || ''}&include_archived=${include_archived}`;
+    const url = `${BASE_URL}/projects?limit=${limit}&after=${after || ""}&include_archived=${include_archived}`;
     try {
-      const data = await apiRequest('GET', url);
+      const data = await apiRequest("GET", url);
       res.json(data);
     } catch (error) {
       res.status(400).json(error);
@@ -89,7 +89,7 @@ const usageController = {
     const { name } = req.body;
     const url = `${BASE_URL}/projects`;
     try {
-      const data = await apiRequest('POST', url, { name });
+      const data = await apiRequest("POST", url, { name });
       res.json(data);
     } catch (error) {
       res.status(400).json(error);
@@ -100,7 +100,7 @@ const usageController = {
     const { project_id } = req.params;
     const url = `${BASE_URL}/projects/${project_id}`;
     try {
-      const data = await apiRequest('GET', url);
+      const data = await apiRequest("GET", url);
       res.json(data);
     } catch (error) {
       res.status(400).json(error);
@@ -112,7 +112,7 @@ const usageController = {
     const { name } = req.body;
     const url = `${BASE_URL}/projects/${project_id}`;
     try {
-      const data = await apiRequest('POST', url, { name });
+      const data = await apiRequest("POST", url, { name });
       res.json(data);
     } catch (error) {
       res.status(400).json(error);
@@ -123,7 +123,7 @@ const usageController = {
     const { project_id } = req.params;
     const url = `${BASE_URL}/projects/${project_id}/archive`;
     try {
-      const data = await apiRequest('POST', url);
+      const data = await apiRequest("POST", url);
       res.json(data);
     } catch (error) {
       res.status(400).json(error);
@@ -134,14 +134,14 @@ const usageController = {
   listProjectUsers: async (req, res) => {
     const { project_id } = req.params;
     const { limit = 20, after } = req.query;
-    const url = `${BASE_URL}/projects/${project_id}/users?limit=${limit}&after=${after || ''}`;
+    const url = `${BASE_URL}/projects/${project_id}/users?limit=${limit}&after=${after || ""}`;
     try {
-      const data = await apiRequest('GET', url);
+      const data = await apiRequest("GET", url);
       res.json(data);
     } catch (error) {
       res.status(400).json(error);
     }
-  },
+  }
 };
 
 module.exports = usageController;

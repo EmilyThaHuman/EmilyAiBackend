@@ -1,17 +1,24 @@
 {
   "env": {
     "node": true,
-    "es2022": true
+    "es2022": true,
+    "jest": true
   },
   "extends": ["eslint:recommended", "plugin:node/recommended"],
   "parserOptions": {
     "ecmaVersion": 2022,
     "sourceType": "module"
   },
+  "plugins": ["node"],
+
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
   "rules": {
     "indent": ["error", 2],
     "linebreak-style": ["error", "unix"],
-    "quotes": ["error", "single"],
+    "quotes": ["error", "double", { "avoidEscape": true, "allowTemplateLiterals": true }],
     "semi": ["error", "always"],
     "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
     "no-console": "warn",
@@ -20,6 +27,26 @@
       { "version": ">=14.0.0", "ignores": ["modules"] }
     ],
     "node/no-missing-import": "off",
+    "node/no-missing-require": [
+      "error",
+      {
+        "allowModules": [],
+        "resolvePaths": [
+          "./src",
+          "./src/config",
+          "./src/db",
+          "./src/lib",
+          "./src/middlewares",
+          "./src/models",
+          "./src/routes",
+          "./src/services",
+          "./src/utils",
+          "./src/app.js",
+          "./src/config/logging/logger.js"
+        ],
+        "tryExtensions": [".js", ".json", ".node"]
+      }
+    ],
     "node/file-extension-in-import": ["error", "always", { ".js": "never" }],
     "node/prefer-global/buffer": ["error", "always"],
     "node/prefer-global/console": ["error", "always"],
@@ -31,16 +58,24 @@
   },
   "settings": {
     "import/resolver": {
-      "node": {
-        "paths": ["src"],
-        "extensions": [".js", ".jsx", ".ts", ".tsx", ".json"]
-      },
-      "alias": {
-        "map": [
-          ["@", "./src"],
-          ["@/config", "./src/config"]
-        ],
-        "extensions": [".js", ".jsx", ".ts", ".tsx", ".json"]
+      "babel-module": {
+        "root": ["./src"],
+        "extensions": [".js", ".jsx", ".json"],
+        "alias": {
+          "@app": "./app.js",
+          "@controllers": "./controllers",
+          "@models": "./models",
+          "@routes": "./routes",
+          "@services": "./services",
+          "@utils": "./utils",
+          "@config": "./config",
+          "@db": "./db",
+          "@middlewares": "./middlewares",
+          "@lib": "./lib",
+          "@public": "../public",
+          "@test": "./__test__",
+          "@logger": "./config/logging"
+        }
       }
     }
   }

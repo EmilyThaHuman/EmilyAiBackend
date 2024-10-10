@@ -1,4 +1,4 @@
-const { logger } = require('@/config');
+const { logger } = require("@config");
 
 const openAiApiRunService = (openai) => ({
   /**
@@ -113,9 +113,9 @@ const openAiApiRunService = (openai) => ({
     const myRun = await openai.beta.Threads.Runs.submitToolOutputs(threadId, runId, config);
     console.log(myRun);
     return myRun;
-  },
+  }
 });
 
 module.exports = {
-  openAiApiRunService,
+  openAiApiRunService
 };

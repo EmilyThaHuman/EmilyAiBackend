@@ -1,18 +1,18 @@
 const scrapeCode = async (componentUrl, componentLibrary) => {
-  const browser = await puppeteer.launch({ headless: 'new' });
+  const browser = await puppeteer.launch({ headless: "new" });
   const page = await browser.newPage();
   const createdFiles = [];
 
   try {
-    await page.goto(componentUrl, { waitUntil: 'networkidle0' });
+    await page.goto(componentUrl, { waitUntil: "networkidle0" });
 
     // Wait for the buttons to be loaded
-    await page.waitForSelector('.MuiButton-root.MuiButton-text');
+    await page.waitForSelector(".MuiButton-root.MuiButton-text");
 
     // Click all "Expand code" buttons
     await clickExpandButtons(page);
 
-    logger.info('All expand code buttons clicked successfully.');
+    logger.info("All expand code buttons clicked successfully.");
 
     const { componentName, snippets } = await extractComponentData(page);
 
@@ -21,10 +21,10 @@ const scrapeCode = async (componentUrl, componentLibrary) => {
     if (snippets.length > 0) {
       await saveSnippets(componentName, componentLibrary, componentUrl, snippets);
     } else {
-      logger.warn('No snippets found. Check if the page structure has changed.');
+      logger.warn("No snippets found. Check if the page structure has changed.");
     }
   } catch (error) {
-    logger.error('Error during scraping:', error);
+    logger.error("Error during scraping:", error);
   } finally {
     await browser.close();
   }
@@ -36,11 +36,11 @@ async function clickExpandButtons(page) {
   let expandButtonsFound = true;
   while (expandButtonsFound) {
     expandButtonsFound = await page.evaluate(() => {
-      const buttons = Array.from(document.querySelectorAll('.MuiButton-root.MuiButton-text'));
+      const buttons = Array.from(document.querySelectorAll(".MuiButton-root.MuiButton-text"));
       const expandButton = buttons.find(
         (button) =>
-          button.textContent.includes('Expand code') ||
-          button.textContent.includes('Show the full source')
+          button.textContent.includes("Expand code") ||
+          button.textContent.includes("Show the full source")
       );
       if (expandButton) {
         expandButton.click();
@@ -56,17 +56,17 @@ async function clickExpandButtons(page) {
 
 async function extractComponentData(page) {
   return page.evaluate(() => {
-    const componentName = document.querySelector('h1')?.textContent.trim() || 'Unknown';
-    const snippetElements = document.querySelectorAll('.MuiCode-root');
+    const componentName = document.querySelector("h1")?.textContent.trim() || "Unknown";
+    const snippetElements = document.querySelectorAll(".MuiCode-root");
 
     const snippets = Array.from(snippetElements).map((snippet, index) => {
-      const parentElement = snippet.closest('.MuiPaper-root');
+      const parentElement = snippet.closest(".MuiPaper-root");
       return {
-        title: parentElement?.querySelector('h2, h3')?.textContent || 'Untitled',
+        title: parentElement?.querySelector("h2, h3")?.textContent || "Untitled",
         code: snippet.textContent,
-        language: snippet.getAttribute('data-language') || 'jsx',
-        description: parentElement?.querySelector('p')?.textContent || '',
-        sequence: index + 1,
+        language: snippet.getAttribute("data-language") || "jsx",
+        description: parentElement?.querySelector("p")?.textContent || "",
+        sequence: index + 1
       };
     });
 
@@ -75,7 +75,7 @@ async function extractComponentData(page) {
 }
 
 async function saveSnippets(componentName, componentLibrary, componentUrl, snippets) {
-  const baseDir = path.join(__dirname, '../../../../public/scraped_docs', componentLibrary);
+  const baseDir = path.join(__dirname, "../../../../public/scraped_docs", componentLibrary);
   await fs.mkdir(baseDir, { recursive: true });
 
   const allSnippets = snippets.map((snippet) => {
@@ -91,7 +91,7 @@ async function saveSnippets(componentName, componentLibrary, componentUrl, snipp
       abbreviation: abbreviatedTitle,
       ...snippet,
       title: newTitle,
-      code: cleanedCode,
+      code: cleanedCode
     };
   });
 
@@ -102,7 +102,7 @@ async function saveSnippets(componentName, componentLibrary, componentUrl, snipp
   logger.info(`Data saved to ${filePath}`);
   createdFiles.push(filePath);
 
-  const snippetsDir = path.join(baseDir, 'snippets', sanitizeFileName(componentName));
+  const snippetsDir = path.join(baseDir, "snippets", sanitizeFileName(componentName));
   await fs.mkdir(snippetsDir, { recursive: true });
 
   await Promise.all(
@@ -118,9 +118,9 @@ async function saveSnippets(componentName, componentLibrary, componentUrl, snipp
 
 // const fs = require('fs').promises;
 // const path = require('path');
-// const { logger } = require('@/config/logging');
+// const { logger } = require('@config/logging');
 // const { default: puppeteer } = require('puppeteer');
-// const { componentRegexPatterns } = require('@/config/constants');
+// const { componentRegexPatterns } = require('@config');
 
 // // Enhanced function to clean code snippets
 // const cleanCodeSnippet = (code) => {
@@ -244,7 +244,7 @@ async function saveSnippets(componentName, componentLibrary, componentUrl, snipp
 
 // // const fs = require('fs').promises;
 // // const path = require('path');
-// // const { logger } = require('@/config/logging');
+// // const { logger } = require('@config/logging');
 // // const puppeteer = require('puppeteer');
 
 // // // Enhanced code cleaning function
@@ -346,10 +346,10 @@ async function saveSnippets(componentName, componentLibrary, componentUrl, snipp
 // // // const { OpenAIEmbeddings } = require('@langchain/openai');
 // // // const { RecursiveCharacterTextSplitter } = require('langchain/text_splitter');
 // // // const { getPineconeClient } = require('./get');
-// // // const { scrapeCode } = require('@/utils/processing/utils');
-// // // const { logger } = require('@/config/logging');
-// // // const { File } = require('@/models');
-// // // const { getEnv } = require('@/utils/api');
+// // // const { scrapeCode } = require('@utils/processing/utils');
+// // // const { logger } = require('@config/logging');
+// // // const { File } = require('@models');
+// // // const { getEnv } = require('@utils/api');
 // // // const { createPineconeIndex } = require('./create');
 // // // const {
 // // //   detectLanguage,

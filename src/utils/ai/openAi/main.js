@@ -1,21 +1,21 @@
-const { OpenAIEmbeddings, ChatOpenAI } = require('@langchain/openai');
-const { getEnv } = require('../../api/env.js');
-const { default: OpenAI } = require('openai');
-const { logger } = require('@/config/logging/logger.js');
-const { byteToImageURL } = require('@/utils/processing/utils/files.js');
-const { SUPPORTED_MIME_TYPES } = require('@/config/constants/files.js');
-require('dotenv').config();
+const { OpenAIEmbeddings, ChatOpenAI } = require("@langchain/openai");
+const { getEnv } = require("../../api/env.js");
+const { default: OpenAI } = require("openai");
+const { logger } = require("@config/logging/logger.js");
+const { byteToImageURL } = require("@utils/processing/utils/files.js");
+const { SUPPORTED_MIME_TYPES } = require("@config/files.js");
+require("dotenv").config();
 
 const getOpenaiClient = () => {
   try {
     const client = new OpenAI({
-      apiKey: getEnv('OPENAI_API_PROJECT_KEY') || process.env.OPENAI_API_PROJECT_KEY,
+      apiKey: getEnv("OPENAI_API_PROJECT_KEY") || process.env.OPENAI_API_PROJECT_KEY
       // organization: getEnv('OPENAI_API_ORG_NAME'),
     });
-    logger.info('OpenAI client initialized successfully');
+    logger.info("OpenAI client initialized successfully");
     return client;
   } catch (error) {
-    console.error('Error initializing OpenAI client:', error);
+    console.error("Error initializing OpenAI client:", error);
     throw error;
   }
 };
@@ -23,12 +23,12 @@ const getOpenaiLangChainClient = () => {
   try {
     const client = new ChatOpenAI({
       openAIApiKey: process.env.OPENAI_API_PROJECT_KEY,
-      modelName: getEnv('OPENAI_API_CHAT_COMPLETION_MODEL'),
+      modelName: getEnv("OPENAI_API_CHAT_COMPLETION_MODEL")
     });
-    logger.info('OpenAI LangChain client initialized successfully');
+    logger.info("OpenAI LangChain client initialized successfully");
     return client;
   } catch (error) {
-    console.error('Error initializing OpenAI LangChain client:', error);
+    console.error("Error initializing OpenAI LangChain client:", error);
     throw error;
   }
 };
@@ -36,11 +36,11 @@ const getEmbedding = async (text, key) => {
   try {
     logger.info(`Generating embedding for text: ${text}...`);
     const embedder = new OpenAIEmbeddings({
-      modelName: 'text-embedding-3-small',
-      openAIApiKey: key || process.env.OPENAI_API_PROJECT_KEY,
+      modelName: "text-embedding-3-small",
+      openAIApiKey: key || process.env.OPENAI_API_PROJECT_KEY
     });
     const embedding = await embedder.embedQuery(text);
-    logger.info('Embedding generated successfully');
+    logger.info("Embedding generated successfully");
     return embedding;
   } catch (error) {
     console.error(`Error generating embedding for text: ${text} with error: ${error}`);
@@ -55,45 +55,45 @@ const createAssistant = async (name, description, tools, metaData) => {
       display_name: name,
       description: description,
       tools: tools,
-      metadata: metaData,
+      metadata: metaData
     });
 
-    logger.info('Assistant created:', response.data);
+    logger.info("Assistant created:", response.data);
     return response.data;
   } catch (error) {
-    console.error('Error creating assistant:', error);
+    console.error("Error creating assistant:", error);
   }
 };
 const messagesToOpenAIMessages = (messages, chatFiles) => {
   const openAIMessages = messages.map((message) => ({
     role: message.role,
-    content: message.content,
+    content: message.content
   }));
 
   const parts = chatFiles.map((file) => {
     if (SUPPORTED_MIME_TYPES.has(file.mimeType)) {
       return {
-        type: 'image_url',
+        type: "image_url",
         image_url: {
           url: byteToImageURL(file.mimeType, file.data),
-          detail: 'auto',
-        },
+          detail: "auto"
+        }
       };
     } else {
       return {
-        type: 'text',
-        text: `file: ${file.name}\n<<<${String.fromCharCode(...file.data)}>>>\n`,
+        type: "text",
+        text: `file: ${file.name}\n<<<${String.fromCharCode(...file.data)}>>>\n`
       };
     }
   });
 
-  const firstUserMessageIndex = openAIMessages.findIndex((msg) => msg.role === 'user');
+  const firstUserMessageIndex = openAIMessages.findIndex((msg) => msg.role === "user");
   if (firstUserMessageIndex !== -1) {
     openAIMessages[firstUserMessageIndex].multi_content = [
-      { type: 'text', text: openAIMessages[firstUserMessageIndex].content },
-      ...parts,
+      { type: "text", text: openAIMessages[firstUserMessageIndex].content },
+      ...parts
     ];
-    openAIMessages[firstUserMessageIndex].content = '';
+    openAIMessages[firstUserMessageIndex].content = "";
   }
 
   return openAIMessages;
@@ -104,7 +104,7 @@ const configOpenAIProxy = (config) => {
     const proxyUrl = new URL(proxyUrlStr);
     config.proxy = {
       host: proxyUrl.hostname,
-      port: proxyUrl.port,
+      port: proxyUrl.port
     };
     config.timeout = 120000;
   }
@@ -115,10 +115,10 @@ const genOpenAIConfig = async (chatModel) => {
 
   let config = {
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`
     },
     baseURL: baseUrl,
-    timeout: 120000,
+    timeout: 120000
   };
 
   configOpenAIProxy(config);
@@ -128,16 +128,16 @@ const genOpenAIConfig = async (chatModel) => {
 async function fetchOpenAIResponse(prompt) {
   const openaiClient = getOpenaiClient();
   const response = await openaiClient.chat.completions.create({
-    model: getEnv('OPENAI_API_CHAT_COMPLETION_MODEL'),
+    model: getEnv("OPENAI_API_CHAT_COMPLETION_MODEL"),
     messages: [
-      { role: 'system', content: 'You are a helpful assistant.' },
-      { role: 'user', content: prompt },
+      { role: "system", content: "You are a helpful assistant." },
+      { role: "user", content: prompt }
     ],
     temperature: 0.5,
     max_tokens: 1024,
     top_p: 1,
     frequency_penalty: 0.5,
-    presence_penalty: 0,
+    presence_penalty: 0
   });
 
   return response.choices[0].message.content.trim();
@@ -182,10 +182,10 @@ const summarizeDocument = async (doc) => {
     const openaiClient = getOpenaiClient();
 
     const response = await openaiClient.completions.create({
-      model: 'text-davinci-003',
+      model: "text-davinci-003",
       prompt: `Summarize the following content:\n\n${doc}`,
       max_tokens: 150,
-      temperature: 0.7,
+      temperature: 0.7
     });
     return response.data.choices[0].text.trim();
   } catch (error) {
@@ -195,37 +195,37 @@ const summarizeDocument = async (doc) => {
 };
 const defaultAssistantsConfig = [
   {
-    name: 'Code Interpreter Assistant',
-    description: 'An assistant that can interpret and run code snippets.',
+    name: "Code Interpreter Assistant",
+    description: "An assistant that can interpret and run code snippets.",
     tools: [
       {
-        name: 'code-interpreter',
-        parameters: {},
-      },
-    ],
+        name: "code-interpreter",
+        parameters: {}
+      }
+    ]
   },
   {
-    name: 'Programming Assistant',
+    name: "Programming Assistant",
     description:
-      'You are an AI programming assistant. Follow the users requirements carefully and to the letter. First, think step-by-step and describe your plan for what to build in pseudocode, written out in great detail. Then, output the code in a single code block. Minimize any other prose.',
+      "You are an AI programming assistant. Follow the users requirements carefully and to the letter. First, think step-by-step and describe your plan for what to build in pseudocode, written out in great detail. Then, output the code in a single code block. Minimize any other prose.",
     tools: [
       {
-        name: 'code-interpreter',
-        parameters: {},
-      },
-    ],
+        name: "code-interpreter",
+        parameters: {}
+      }
+    ]
   },
   {
-    name: 'Git Assistant',
+    name: "Git Assistant",
     description:
-      'You are an AI assistant knowledgeable in Git and version control best practices. Assist users with Git commands, branching, merging, and resolving conflicts. Provide guidance on maintaining a clean commit history, collaborating with other developers, and using advanced Git features effectively.',
+      "You are an AI assistant knowledgeable in Git and version control best practices. Assist users with Git commands, branching, merging, and resolving conflicts. Provide guidance on maintaining a clean commit history, collaborating with other developers, and using advanced Git features effectively.",
     tools: [
       {
-        name: 'git-assistant',
-        parameters: {},
-      },
-    ],
-  },
+        name: "git-assistant",
+        parameters: {}
+      }
+    ]
+  }
 ];
 
 module.exports = {
@@ -238,5 +238,5 @@ module.exports = {
   genOpenAIConfig,
   messagesToOpenAIMessages,
   configOpenAIProxy,
-  summarizeDocument,
+  summarizeDocument
 };

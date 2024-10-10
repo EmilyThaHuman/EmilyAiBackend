@@ -1,7 +1,7 @@
 <Button
-onClick={() => {
-alert('clicked');
-}}
+  onClick={() => {
+    alert("clicked");
+  }}
 >
-Click me
-</Button>
+  Click me
+</Button>;

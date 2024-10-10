@@ -1,88 +1,88 @@
-const LLM = require('@/types').LLM;
+const LLM = require("@/types").LLM;
 
 const ANTHROPIC_PLATFORM_LINK =
-  'https://docs.anthropic.com/claude/reference/getting-started-with-the-api';
+  "https://docs.anthropic.com/claude/reference/getting-started-with-the-api";
 
 // Anthropic Models (UPDATED 03/13/24) -----------------------------
 
 // Claude 2 (UPDATED 12/21/23)
 const CLAUDE_2 = {
-  modelId: 'claude-2.1',
-  modelName: 'Claude 2',
-  provider: 'anthropic',
-  hostedId: 'claude-2.1',
+  modelId: "claude-2.1",
+  modelName: "Claude 2",
+  provider: "anthropic",
+  hostedId: "claude-2.1",
   platformLink: ANTHROPIC_PLATFORM_LINK,
   imageInput: false,
   pricing: {
-    currency: 'USD',
-    unit: '1M tokens',
+    currency: "USD",
+    unit: "1M tokens",
     inputCost: 8,
-    outputCost: 24,
-  },
+    outputCost: 24
+  }
 };
 
 // Claude Instant (UPDATED 12/21/23)
 const CLAUDE_INSTANT = {
-  modelId: 'claude-instant-1.2',
-  modelName: 'Claude Instant',
-  provider: 'anthropic',
-  hostedId: 'claude-instant-1.2',
+  modelId: "claude-instant-1.2",
+  modelName: "Claude Instant",
+  provider: "anthropic",
+  hostedId: "claude-instant-1.2",
   platformLink: ANTHROPIC_PLATFORM_LINK,
   imageInput: false,
   pricing: {
-    currency: 'USD',
-    unit: '1M tokens',
+    currency: "USD",
+    unit: "1M tokens",
     inputCost: 0.8,
-    outputCost: 2.4,
-  },
+    outputCost: 2.4
+  }
 };
 
 // Claude 3 Haiku (UPDATED 03/13/24)
 const CLAUDE_3_HAIKU = {
-  modelId: 'claude-3-haiku-20240307',
-  modelName: 'Claude 3 Haiku',
-  provider: 'anthropic',
-  hostedId: 'claude-3-haiku-20240307',
+  modelId: "claude-3-haiku-20240307",
+  modelName: "Claude 3 Haiku",
+  provider: "anthropic",
+  hostedId: "claude-3-haiku-20240307",
   platformLink: ANTHROPIC_PLATFORM_LINK,
   imageInput: true,
   pricing: {
-    currency: 'USD',
-    unit: '1M tokens',
+    currency: "USD",
+    unit: "1M tokens",
     inputCost: 0.25,
-    outputCost: 1.25,
-  },
+    outputCost: 1.25
+  }
 };
 
 // Claude 3 Sonnet (UPDATED 03/04/24)
 const CLAUDE_3_SONNET = {
-  modelId: 'claude-3-sonnet-20240229',
-  modelName: 'Claude 3 Sonnet',
-  provider: 'anthropic',
-  hostedId: 'claude-3-sonnet-20240229',
+  modelId: "claude-3-sonnet-20240229",
+  modelName: "Claude 3 Sonnet",
+  provider: "anthropic",
+  hostedId: "claude-3-sonnet-20240229",
   platformLink: ANTHROPIC_PLATFORM_LINK,
   imageInput: true,
   pricing: {
-    currency: 'USD',
-    unit: '1M tokens',
+    currency: "USD",
+    unit: "1M tokens",
     inputCost: 3,
-    outputCost: 15,
-  },
+    outputCost: 15
+  }
 };
 
 // Claude 3 Opus (UPDATED 03/04/24)
 const CLAUDE_3_OPUS = {
-  modelId: 'claude-3-opus-20240229',
-  modelName: 'Claude 3 Opus',
-  provider: 'anthropic',
-  hostedId: 'claude-3-opus-20240229',
+  modelId: "claude-3-opus-20240229",
+  modelName: "Claude 3 Opus",
+  provider: "anthropic",
+  hostedId: "claude-3-opus-20240229",
   platformLink: ANTHROPIC_PLATFORM_LINK,
   imageInput: true,
   pricing: {
-    currency: 'USD',
-    unit: '1M tokens',
+    currency: "USD",
+    unit: "1M tokens",
     inputCost: 15,
-    outputCost: 75,
-  },
+    outputCost: 75
+  }
 };
 
 const ANTHROPIC_LLM_LIST = [
@@ -90,9 +90,9 @@ const ANTHROPIC_LLM_LIST = [
   CLAUDE_INSTANT,
   CLAUDE_3_HAIKU,
   CLAUDE_3_SONNET,
-  CLAUDE_3_OPUS,
+  CLAUDE_3_OPUS
 ];
 
 module.exports = {
-  ANTHROPIC_LLM_LIST,
+  ANTHROPIC_LLM_LIST
 };

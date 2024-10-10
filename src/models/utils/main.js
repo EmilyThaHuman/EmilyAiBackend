@@ -1,9 +1,9 @@
-const { getMainSystemMessageContent } = require('@/lib/prompts/createPrompt');
-const { ChatMessage, ChatSession } = require('../chat');
-const { Workspace } = require('../workspace');
-const { User } = require('../user');
-const { logger } = require('@/config/logging');
-const { getEnv } = require('@/utils/api');
+const { ChatMessage, ChatSession } = require("../chat");
+const { Workspace } = require("../workspace");
+const { User } = require("../user");
+const { getMainSystemMessageContent } = require("@lib/prompts");
+const { logger } = require("@config/logging");
+const { getEnv } = require("@utils/api");
 
 const createMessage = async (sessionId, role, content, userId, sequenceNumber) => {
   const message = new ChatMessage({
@@ -13,7 +13,7 @@ const createMessage = async (sessionId, role, content, userId, sequenceNumber) =
     userId,
     // tokens: content.split(' ').length
     sequenceNumber,
-    metaData: {},
+    metaData: {}
   });
   await message.save();
   return message._id;
@@ -21,9 +21,9 @@ const createMessage = async (sessionId, role, content, userId, sequenceNumber) =
 
 const getSessionMessages = async (sessionId) => {
   try {
-    const chatSession = await ChatSession.findById(sessionId).populate('messages');
+    const chatSession = await ChatSession.findById(sessionId).populate("messages");
     if (!chatSession) {
-      throw new Error('Chat session not found');
+      throw new Error("Chat session not found");
     }
 
     const messagePromises = chatSession?.messages?.map(async (msg) => {
@@ -32,7 +32,7 @@ const getSessionMessages = async (sessionId) => {
         return {
           _id: foundMessage._id,
           role: foundMessage.role,
-          content: foundMessage.content,
+          content: foundMessage.content
         };
       }
       return null;
@@ -45,19 +45,19 @@ const getSessionMessages = async (sessionId) => {
     );
 
     const systemPrompt = getMainSystemMessageContent();
-    const systemMessageIndex = chatMessages.findIndex((msg) => msg.role === 'system');
+    const systemMessageIndex = chatMessages.findIndex((msg) => msg.role === "system");
     if (systemMessageIndex !== -1) {
       await ChatMessage.findByIdAndUpdate(chatMessages[systemMessageIndex]._id, {
-        content: systemPrompt,
+        content: systemPrompt
       });
       chatMessages[systemMessageIndex].content = systemPrompt;
     } else {
       const newSystemMessage = {
-        role: 'system',
-        content: systemPrompt,
+        role: "system",
+        content: systemPrompt
       };
       chatMessages.unshift(newSystemMessage);
-      const systemMessageId = await createMessage(sessionId, 'system', systemPrompt, null, 1);
+      const systemMessageId = await createMessage(sessionId, "system", systemPrompt, null, 1);
       chatSession.systemPrompt = systemMessageId;
       chatSession.messages.unshift(systemMessageId);
       await chatSession.save();
@@ -65,7 +65,7 @@ const getSessionMessages = async (sessionId) => {
     // logger.info(`FETCHED SESSION ${chatMessages.length} MESSAGES: ${JSON.stringify(chatMessages)}`, chatMessages);
     return chatMessages;
   } catch (error) {
-    console.error('Error fetching session messages:', error);
+    logger.error("Error fetching session messages:", error);
     throw error;
   }
 };
@@ -74,14 +74,14 @@ const initializeChatSession = async (
   providedSessionId,
   providedWorkspaceId,
   userId,
-  prompt,
+  prompt
   // sessionLength
 ) => {
   try {
     let chatSession;
     if (providedSessionId & providedWorkspaceId & userId) {
       chatSession = await ChatSession.findById({
-        _id: providedSessionId,
+        _id: providedSessionId
       });
     }
 
@@ -96,31 +96,31 @@ const initializeChatSession = async (
           userId: userId,
           topic: prompt,
           active: true,
-          model: getEnv('OPENAI_API_CHAT_COMPLETION_MODEL'),
+          model: getEnv("OPENAI_API_CHAT_COMPLETION_MODEL"),
           messages: [],
           systemPrompt: null,
           tools: [],
           files: [],
-          summary: '',
+          summary: "",
           stats: {
             tokenUsage: 0,
-            messageCount: 0,
+            messageCount: 0
           },
           settings: {
             contextCount: 15,
             maxTokens: 3000, // max length of the completion
             temperature: 0.5,
-            model: 'gpt-4-1106-preview',
+            model: "gpt-4-1106-preview",
             topP: 1,
             n: 4,
             debug: false,
-            summarizeMode: false,
+            summarizeMode: false
           },
           tuning: {
             debug: false,
-            summary: '',
-            summarizeMode: false,
-          },
+            summary: "",
+            summarizeMode: false
+          }
         });
         await chatSession.save();
         logger.info(`Session Creation Successful: ${chatSession._id}`);
@@ -129,14 +129,14 @@ const initializeChatSession = async (
           workspace.chatSessions.push(chatSession._id);
           await workspace.save();
         } else {
-          throw new Error('Workspace not found');
+          throw new Error("Workspace not found");
         }
         const user = await User.findById(userId);
         if (user) {
           user.chatSessions.push(chatSession._id);
           await user.save();
         } else {
-          throw new Error('User not found');
+          throw new Error("User not found");
         }
       } catch (error) {
         logger.error(
@@ -174,5 +174,5 @@ const initializeChatSession = async (
 module.exports = {
   createMessage,
   getSessionMessages,
-  initializeChatSession,
+  initializeChatSession
 };

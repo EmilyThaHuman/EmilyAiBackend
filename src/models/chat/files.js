@@ -1,17 +1,17 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const { Schema } = mongoose;
-const { createSchema, createModel } = require('../utils/schema');
-const { logger } = require('@/config/logging');
+const { createSchema, createModel } = require("../utils/schema");
+const { logger } = require("@config/logging");
 
 // =============================
 // [MESSAGES] content, role, files, sessionId
 // =============================
 const messageSchema = createSchema({
   // -- RELATIONSHIPS
-  userId: { type: Schema.Types.ObjectId, ref: 'User' },
-  sessionId: { type: Schema.Types.ObjectId, ref: 'ChatSession' },
-  assistantId: { type: Schema.Types.ObjectId, ref: 'Assistant' },
-  files: [{ type: Schema.Types.ObjectId, ref: 'File' }],
+  userId: { type: Schema.Types.ObjectId, ref: "User" },
+  sessionId: { type: Schema.Types.ObjectId, ref: "ChatSession" },
+  assistantId: { type: Schema.Types.ObjectId, ref: "Assistant" },
+  files: [{ type: Schema.Types.ObjectId, ref: "File" }],
 
   // -- REQUIRED FIELDS
   content: { type: String, required: false, maxlength: 1000000 },
@@ -20,7 +20,7 @@ const messageSchema = createSchema({
   role: {
     type: String,
     required: false,
-    enum: ['system', 'user', 'assistant', 'function', 'tool'],
+    enum: ["system", "user", "assistant", "function", "tool"]
   },
   sequenceNumber: Number,
 
@@ -28,11 +28,11 @@ const messageSchema = createSchema({
   type: String,
   data: {
     content: String,
-    additional_kwargs: {},
+    additional_kwargs: {}
   },
   summary: {
     type: mongoose.Schema.Types.Mixed, // Allows storing any data type, including objects
-    required: false,
+    required: false
   },
   tokens: { type: Number, required: false },
   localEmbedding: String,
@@ -47,14 +47,14 @@ const messageSchema = createSchema({
       sessionId: String,
       assistantId: String,
       files: [],
-      content: '',
-    },
-  },
+      content: ""
+    }
+  }
 });
 messageSchema.index({ sessionId: 1, createdAt: 1 });
 // Pre-save middleware
-messageSchema.pre('save', async function (next) {
-  logger.info('Chat Message pre-save hook');
+messageSchema.pre("save", async function (next) {
+  logger.info("Chat Message pre-save hook");
   this.updatedAt = Date.now();
 
   next();
@@ -64,11 +64,11 @@ messageSchema.pre('save', async function (next) {
 // =============================
 const fileSchema = createSchema({
   // -- RELATIONSHIPS
-  userId: { type: Schema.Types.ObjectId, ref: 'User' },
-  workspaceId: { type: Schema.Types.ObjectId, ref: 'Workspace' },
-  sessionId: { type: Schema.Types.ObjectId, ref: 'ChatSession' },
-  folderId: { type: Schema.Types.ObjectId, ref: 'Folder' },
-  messageId: { type: Schema.Types.ObjectId, ref: 'ChatMessage' },
+  userId: { type: Schema.Types.ObjectId, ref: "User" },
+  workspaceId: { type: Schema.Types.ObjectId, ref: "Workspace" },
+  sessionId: { type: Schema.Types.ObjectId, ref: "ChatSession" },
+  folderId: { type: Schema.Types.ObjectId, ref: "Folder" },
+  messageId: { type: Schema.Types.ObjectId, ref: "ChatMessage" },
 
   // -- REQUIRED FIELDS
   name: { type: String, required: false },
@@ -78,22 +78,22 @@ const fileSchema = createSchema({
     type: String,
     required: false,
     enum: [
-      'txt',
-      'pdf',
-      'doc',
-      'docx',
-      'md',
-      'html',
-      'json',
-      'csv',
-      'tsv',
-      'jsx',
-      'js',
-      'png',
-      'jpg',
-      'jpeg',
-      'gif',
-    ],
+      "txt",
+      "pdf",
+      "doc",
+      "docx",
+      "md",
+      "html",
+      "json",
+      "csv",
+      "tsv",
+      "jsx",
+      "js",
+      "png",
+      "jpg",
+      "jpeg",
+      "gif"
+    ]
   },
   size: { type: Number, required: false },
   tokens: { type: Number, required: false },
@@ -106,15 +106,15 @@ const fileSchema = createSchema({
     type: String,
     required: false,
     enum: [
-      'chatSessions',
-      'assistants',
-      'files',
-      'models',
-      'tools',
-      'presets',
-      'prompts',
-      'collections',
-    ],
+      "chatSessions",
+      "assistants",
+      "files",
+      "models",
+      "tools",
+      "presets",
+      "prompts",
+      "collections"
+    ]
   },
   sharing: { type: String },
   mimeType: { type: String, required: false },
@@ -122,64 +122,64 @@ const fileSchema = createSchema({
     fileSize: Number,
 
     fileType: String,
-    lastModified: Date,
-  },
+    lastModified: Date
+  }
 });
-fileSchema.pre('save', async function (next) {
-  logger.info('File pre-save hook');
+fileSchema.pre("save", async function (next) {
+  logger.info("File pre-save hook");
   this.updatedAt = Date.now();
 
   next();
 });
 const assistantFileSchema = createSchema({
-  userId: { type: Schema.Types.ObjectId, ref: 'User' },
-  workspaceId: { type: Schema.Types.ObjectId, ref: 'Workspace' },
-  assistantId: { type: Schema.Types.ObjectId, ref: 'Assistant' },
-  fileId: { type: Schema.Types.ObjectId, ref: 'File' },
+  userId: { type: Schema.Types.ObjectId, ref: "User" },
+  workspaceId: { type: Schema.Types.ObjectId, ref: "Workspace" },
+  assistantId: { type: Schema.Types.ObjectId, ref: "Assistant" },
+  fileId: { type: Schema.Types.ObjectId, ref: "File" }
 });
 const chatFileSchema = createSchema({
-  userId: { type: Schema.Types.ObjectId, ref: 'User' },
-  workspaceId: { type: Schema.Types.ObjectId, ref: 'Workspace' },
-  sessionId: { type: Schema.Types.ObjectId, ref: 'ChatSession' },
-  fileId: { type: Schema.Types.ObjectId, ref: 'File' },
+  userId: { type: Schema.Types.ObjectId, ref: "User" },
+  workspaceId: { type: Schema.Types.ObjectId, ref: "Workspace" },
+  sessionId: { type: Schema.Types.ObjectId, ref: "ChatSession" },
+  fileId: { type: Schema.Types.ObjectId, ref: "File" }
 });
-chatFileSchema.pre('updateOne', function (next) {
+chatFileSchema.pre("updateOne", function (next) {
   this.set({ updatedAt: Date.now() });
   next();
 });
 const collectionFileSchema = createSchema({
-  userId: { type: Schema.Types.ObjectId, ref: 'User' },
-  workspaceId: { type: Schema.Types.ObjectId, ref: 'Workspace' },
-  fileId: { type: Schema.Types.ObjectId, ref: 'File' },
-  collectionId: { type: Schema.Types.ObjectId, ref: 'Collection' },
+  userId: { type: Schema.Types.ObjectId, ref: "User" },
+  workspaceId: { type: Schema.Types.ObjectId, ref: "Workspace" },
+  fileId: { type: Schema.Types.ObjectId, ref: "File" },
+  collectionId: { type: Schema.Types.ObjectId, ref: "Collection" }
 });
 const messageFileItemSchema = createSchema({
-  userId: { type: Schema.Types.ObjectId, ref: 'User' },
-  workspaceId: { type: Schema.Types.ObjectId, ref: 'Workspace' },
-  messageId: { type: Schema.Types.ObjectId, ref: 'ChatMessage' },
-  fileItemId: { type: Schema.Types.ObjectId, ref: 'FileItem' },
+  userId: { type: Schema.Types.ObjectId, ref: "User" },
+  workspaceId: { type: Schema.Types.ObjectId, ref: "Workspace" },
+  messageId: { type: Schema.Types.ObjectId, ref: "ChatMessage" },
+  fileItemId: { type: Schema.Types.ObjectId, ref: "FileItem" }
 });
 // messageFileItemSchema.index({ message_id: 1 });
-messageFileItemSchema.pre('updateOne', function (next) {
+messageFileItemSchema.pre("updateOne", function (next) {
   this.set({ updated_at: Date.now() });
   next();
 });
 const fileItemSchema = createSchema({
-  userId: { type: Schema.Types.ObjectId, ref: 'User' },
-  fileId: { type: Schema.Types.ObjectId, ref: 'File' },
+  userId: { type: Schema.Types.ObjectId, ref: "User" },
+  fileId: { type: Schema.Types.ObjectId, ref: "File" },
   content: { type: String, required: false },
   tokens: { type: Number, required: false },
   localEmbedding: String,
   openaiEmbedding: String,
-  sharing: String,
+  sharing: String
 });
 
-const File = createModel('File', fileSchema);
-const ChatFile = createModel('ChatFile', chatFileSchema);
-const CollectionFile = createModel('CollectionFile', collectionFileSchema);
-const MessageFileItem = createModel('MessageFileItem', messageFileItemSchema);
-const FileItem = createModel('FileItem', fileItemSchema);
-const AssistantFile = createModel('AssistantFile', assistantFileSchema);
+const File = createModel("File", fileSchema);
+const ChatFile = createModel("ChatFile", chatFileSchema);
+const CollectionFile = createModel("CollectionFile", collectionFileSchema);
+const MessageFileItem = createModel("MessageFileItem", messageFileItemSchema);
+const FileItem = createModel("FileItem", fileItemSchema);
+const AssistantFile = createModel("AssistantFile", assistantFileSchema);
 
 module.exports = {
   File,
@@ -187,5 +187,5 @@ module.exports = {
   CollectionFile,
   MessageFileItem,
   FileItem,
-  AssistantFile,
+  AssistantFile
 };

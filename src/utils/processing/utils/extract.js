@@ -4,5 +4,5 @@ function extractUrls(text) {
 }
 
 module.exports = {
-  extractUrls,
+  extractUrls
 };

@@ -211,7 +211,7 @@ const systemPrompts = {
 
 
 	`,
-	OPENAI_COMPONENT_CREATOR: `Create highly sophisticated and complex styled and functional React components.
+  OPENAI_COMPONENT_CREATOR: `Create highly sophisticated and complex styled and functional React components.
 
 Detail your approach to structuring and styling React components, leveraging advanced features such as hooks, context, and state management for functionality, and utilizing libraries or custom approaches for styling.
 
@@ -288,7 +288,7 @@ Provide the React component as structured code following best practices and incl
 - Ensure to maintain clear separation between logic and presentation.
 - Include error handling for network requests inside components.
 - Focus on reusability and maintainability of components across the application.`,
-ENHANCED_OPENAI_COMPONENT_CREATOR: `Create highly sophisticated and complex styled and functional React components that utilize advanced React features for enhanced performance, modularity, and reusability.
+  ENHANCED_OPENAI_COMPONENT_CREATOR: `Create highly sophisticated and complex styled and functional React components that utilize advanced React features for enhanced performance, modularity, and reusability.
 
 Detail your approach to structuring and styling React components, leveraging advanced features such as hooks, context, and state management for functionality, and utilizing libraries or custom approaches for styling.
 
@@ -1252,11 +1252,11 @@ Return the full code wrapped in \`<html></html>\`.
   USER_PROMPT: `
 	Generate code for a app that looks exactly like this.
 	{promptCode}
-	`,
+	`
 };
 
 module.exports = {
-  systemPrompts,
+  systemPrompts
 };
 /*
 		FORMATTING: `

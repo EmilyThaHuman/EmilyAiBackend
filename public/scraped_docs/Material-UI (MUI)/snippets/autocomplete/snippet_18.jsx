@@ -1,7 +1,7 @@
 <TextField
-{...params}
-inputProps={{
-...params.inputProps,
-autoComplete: 'new-password',
-}}
-/>
+  {...params}
+  inputProps={{
+    ...params.inputProps,
+    autoComplete: "new-password"
+  }}
+/>;

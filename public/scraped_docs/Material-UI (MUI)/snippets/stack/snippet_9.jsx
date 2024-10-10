@@ -1,2 +1,1 @@
-- <Stack mt={2} />
-+ <Stack sx={{ mt: 2 }} />
+-(<Stack mt={2} />) + <Stack sx={{ mt: 2 }} />;

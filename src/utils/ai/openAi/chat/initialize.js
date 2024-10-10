@@ -1,10 +1,10 @@
-const { ChatSession, Workspace, User } = require('@/models');
-const { logger } = require('@/config/logging/logger.js');
-const { Pinecone } = require('@pinecone-database/pinecone');
-const { ChatOpenAI, OpenAIEmbeddings } = require('@langchain/openai');
-const { tools } = require('@/lib/functions/tools.js');
-const { getEnv } = require('@/utils/api/env.js');
-const { logChatDataError } = require('./chat_helpers.js');
+const { ChatSession, Workspace, User } = require("@models");
+const { logger } = require("@config/logging/logger.js");
+const { Pinecone } = require("@pinecone-database/pinecone");
+const { ChatOpenAI, OpenAIEmbeddings } = require("@langchain/openai");
+const { tools } = require("@lib/functions");
+const { getEnv } = require("@utils/api/env.js");
+const { logChatDataError } = require("./chat_helpers.js");
 
 const initializeChatSession = async (sessionId, workspaceId, userId, prompt, sessionLength) => {
   try {
@@ -20,31 +20,31 @@ const initializeChatSession = async (sessionId, workspaceId, userId, prompt, ses
           userId: userId,
           topic: prompt,
           active: true,
-          model: getEnv('OPENAI_API_CHAT_COMPLETION_MODEL'),
+          model: getEnv("OPENAI_API_CHAT_COMPLETION_MODEL"),
           messages: [],
           systemPrompt: null,
           tools: [],
           files: [],
-          summary: '',
+          summary: "",
           stats: {
             tokenUsage: 0,
-            messageCount: 0,
+            messageCount: 0
           },
           settings: {
             contextCount: 15,
             maxTokens: 300, // max length of the completion
             temperature: 0.5,
-            model: getEnv('OPENAI_API_CHAT_COMPLETION_MODEL'),
+            model: getEnv("OPENAI_API_CHAT_COMPLETION_MODEL"),
             topP: 1,
             n: 4,
             debug: false,
-            summarizeMode: false,
+            summarizeMode: false
           },
           tuning: {
             debug: false,
-            summary: '',
-            summarizeMode: false,
-          },
+            summary: "",
+            summarizeMode: false
+          }
         });
         await chatSession.save();
         logger.info(`Session Creation Successful: ${chatSession._id}`);
@@ -53,14 +53,14 @@ const initializeChatSession = async (sessionId, workspaceId, userId, prompt, ses
           workspace.chatSessions.push(chatSession._id);
           await workspace.save();
         } else {
-          throw new Error('Workspace not found');
+          throw new Error("Workspace not found");
         }
         const user = await User.findById(userId);
         if (user) {
           user.chatSessions.push(chatSession._id);
           await user.save();
         } else {
-          throw new Error('User not found');
+          throw new Error("User not found");
         }
       } catch (error) {
         logger.error(
@@ -82,7 +82,7 @@ const initializeChatSession = async (sessionId, workspaceId, userId, prompt, ses
     return chatSession;
   } catch (error) {
     const chatData = { sessionId, userId, prompt };
-    logChatDataError('initializeChatSession', chatData, error);
+    logChatDataError("initializeChatSession", chatData, error);
     throw error;
   }
 };
@@ -94,15 +94,15 @@ const initializeOpenAI = (apiKey, chatSession, completionModel) => {
     maxTokens: 300,
     streaming: true,
     openAIApiKey: apiKey || process.env.OPENAI_API_PROJECT_KEY,
-    organization: 'reed_tha_human',
+    organization: "reed_tha_human",
     tools: tools,
-    code_interpreter: 'auto',
-    function_call: 'auto',
+    code_interpreter: "auto",
+    function_call: "auto",
     callbacks: {
       handleLLMNewToken: (token) => {
         logger.info(`New token: ${token}`);
-      },
-    },
+      }
+    }
   };
   return new ChatOpenAI(configs);
 };
@@ -113,8 +113,8 @@ const initializePinecone = () => {
 
 const initializeEmbeddings = (apiKey) => {
   return new OpenAIEmbeddings({
-    modelName: getEnv('PINECONE_EMBEDDING_MODEL_NAME'),
-    apiKey: apiKey || getEnv('OPENAI_API_PROJECT_KEY'),
+    modelName: getEnv("PINECONE_EMBEDDING_MODEL_NAME"),
+    apiKey: apiKey || getEnv("OPENAI_API_PROJECT_KEY")
   });
 };
 
@@ -122,7 +122,7 @@ module.exports = {
   initializeOpenAI,
   initializePinecone,
   initializeEmbeddings,
-  initializeChatSession,
+  initializeChatSession
 };
 // /**
 //  * Save messages to a chat session.

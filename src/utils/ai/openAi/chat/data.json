@@ -12,7 +12,12 @@
       "createdAt": "2024-08-09T03:37:04.293Z",
       "updatedAt": "2024-08-09T03:37:04.293Z",
       "__v": 0,
-      "messages": [{ "type": "human", "data": { "content": "Generate a menu component for a dropdown using MUI" } }]
+      "messages": [
+        {
+          "type": "human",
+          "data": { "content": "Generate a menu component for a dropdown using MUI" }
+        }
+      ]
     },
     {
       "_id": "66b58ee260fc95cb97770a0a",

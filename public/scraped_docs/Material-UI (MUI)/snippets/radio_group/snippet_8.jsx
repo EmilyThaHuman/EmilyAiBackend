@@ -1,6 +1,6 @@
 <Radio
-value="radioA"
-inputProps={{
-'aria-label': 'Radio A',
-}}
-/>
+  value="radioA"
+  inputProps={{
+    "aria-label": "Radio A"
+  }}
+/>;

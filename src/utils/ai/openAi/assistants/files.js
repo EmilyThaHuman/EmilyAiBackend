@@ -1,11 +1,11 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 const openAiApiFileService = (openai) => ({
   uploadFile: async (filePath) => {
     const file = await openai.files.create({
       file: fs.createReadStream(filePath),
-      purpose: 'fine-tune',
+      purpose: "fine-tune"
     });
     console.log(file);
     return file.id;
@@ -29,9 +29,9 @@ const openAiApiFileService = (openai) => ({
   retrieveFileContent: async (fileId) => {
     const file = await openai.files.content(fileId);
     return file;
-  },
+  }
 });
 
 module.exports = {
-  openAiApiFileService,
+  openAiApiFileService
 };

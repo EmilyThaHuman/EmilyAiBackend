@@ -1,11 +1,11 @@
-require('dotenv').config();
+require("dotenv").config();
 
 const getEnv = (key) => {
   return process.env[key];
 };
 
 const validateEnvironmentVariables = () => {
-  const requiredEnvVars = ['PINECONE_INDEX'];
+  const requiredEnvVars = ["PINECONE_INDEX"];
   requiredEnvVars.forEach((key) => {
     if (!process.env[key]) {
       throw new Error(`Environment variable ${key} is required`);
@@ -15,5 +15,5 @@ const validateEnvironmentVariables = () => {
 
 module.exports = {
   getEnv,
-  validateEnvironmentVariables,
+  validateEnvironmentVariables
 };
