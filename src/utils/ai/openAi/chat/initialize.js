@@ -1,9 +1,11 @@
-const { ChatSession, Workspace, User } = require("@models");
-const { logger } = require("@config/logging/logger.js");
+const { User } = require("@models/user");
+const { Workspace } = require("@models/workspace");
+const { ChatSession } = require("@models/chat");
+const { logger } = require("@config/logging");
 const { Pinecone } = require("@pinecone-database/pinecone");
 const { ChatOpenAI, OpenAIEmbeddings } = require("@langchain/openai");
 const { tools } = require("@lib/functions");
-const { getEnv } = require("@utils/api/env.js");
+const { getEnv } = require("@utils/api");
 const { logChatDataError } = require("./chat_helpers.js");
 
 const initializeChatSession = async (sessionId, workspaceId, userId, prompt, sessionLength) => {
@@ -40,11 +42,6 @@ const initializeChatSession = async (sessionId, workspaceId, userId, prompt, ses
             debug: false,
             summarizeMode: false
           },
-          tuning: {
-            debug: false,
-            summary: "",
-            summarizeMode: false
-          }
         });
         await chatSession.save();
         logger.info(`Session Creation Successful: ${chatSession._id}`);

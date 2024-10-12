@@ -9,7 +9,7 @@ const { Document } = require("langchain/document");
 
 // Initialize OpenAI embeddings
 const embedding_model = new OpenAIEmbeddings({
-  openAIApiKey: "YOUR_OPENAI_API_KEY", // Add your OpenAI API Key
+  openAIApiKey: "OPENAI_API_PROJECT_KEY", // Add your OpenAI API Key
   modelName: "text-embedding-3-small" // You can leave this unchanged
 });
 

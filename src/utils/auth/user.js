@@ -48,9 +48,9 @@ async function getServerProfile(userId, clientApiKey) {
 // Function to add API keys to the profile
 function addApiKeysToProfile(profile, clientApiKey) {
   try {
-    // const apiKey = process.env.OPENAI_API_KEY;
+    // const apiKey = process.env.OPENAI_API_PROJECT_KEY;
     checkApiKey(clientApiKey, "OpenAI");
-    profile.openai_api_key = clientApiKey;
+    profile.openai.apiKey = clientApiKey;
     return profile;
   } catch (error) {
     console.error("Error adding API keys to profile:", error);

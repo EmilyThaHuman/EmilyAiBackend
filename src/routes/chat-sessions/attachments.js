@@ -41,7 +41,7 @@ const {
   // deleteFileFromBucket,
   // listFilesInBucket,
   // // handleFileUploadFunction,
-} = require("@controllers");
+} = require("@controllers/chat-sessions");
 const { asyncHandler } = require("@utils/api");
 const { logger } = require("@config/logging");
 const { getDB, handleFileUpload } = require("@db");

@@ -2,7 +2,7 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const { User } = require("@models");
+const { User } = require("@models/user");
 const {
   AuthorizationError,
   ValidationError,
@@ -18,6 +18,8 @@ const {
   validateUserInput,
   initializeUserData
 } = require("./helpers");
+const { getEnv } = require("@utils/api");
+
 
 const registerUser = async (req, res, next) => {
   let newUser; // Declare newUser outside the try block for scope access in the catch block
@@ -46,6 +48,18 @@ const registerUser = async (req, res, next) => {
     // Populate user data for response
     const populatedUser = await findAndPopulateUser(newUser._id);
 
+    // Setup user session
+    req.session.user = {
+      userId: newUser._id,
+      accessToken,
+      username: newUser.username,
+      email: newUser.email,
+      expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      workspaceId: populatedUser.workspaces[0]._id,
+      chatSessionId: populatedUser.chatSessions[0]._id,
+      apiKey: getEnv("OPENAI_API_PROJECT_KEY")
+    };
+
     logger.info(`User registered successfully: ${newUser.username}`);
 
     res.status(201).json({
@@ -54,7 +68,9 @@ const registerUser = async (req, res, next) => {
       refreshToken,
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
       userId: newUser._id,
-      message: "User registered successfully",
+      workspaceId: populatedUser.workspaces[0]._id,
+      chatSessionId: populatedUser.chatSessions[0]._id,
+      message: `${newUser.username} registered successfully`,
       // user: populatedUser,
       user: {
         // -- auth data --
@@ -70,10 +86,11 @@ const registerUser = async (req, res, next) => {
           avatar: populatedUser.profile.img,
           avatarPath: populatedUser.profile.imagePath,
           bio: populatedUser.profile.bio,
-          stats: populatedUser.stats,
+          stats: populatedUser.profile.stats,
           social: populatedUser.profile.social,
-          openai: populatedUser.openai,
-          envKeyMap: populatedUser.envKeyMap
+          openai: populatedUser.profile.openai,
+          envKeyMap: populatedUser.profile.envKeyMap,
+          defaultApiKey: getEnv("OPENAI_API_PROJECT_KEY")
         }
       }
     });
@@ -97,7 +114,6 @@ const registerUser = async (req, res, next) => {
     }
   }
 };
-
 const loginUser = async (req, res, next) => {
   try {
     const { usernameOrEmail, password } = req.body;
@@ -143,7 +159,6 @@ const loginUser = async (req, res, next) => {
     // res.status(500).json({ message: 'Error logging in', error: error.message, stack: error.stack, status: error.name });
   }
 };
-
 const logoutUser = async (req, res) => {
   try {
     // Check if there's a token in the request
@@ -174,7 +189,6 @@ const logoutUser = async (req, res) => {
     res.status(500).json({ message: "Error logging out", error: error.message });
   }
 };
-
 const refreshAccessToken = async (req, res) => {
   try {
     const { refreshToken } = req.body;
@@ -210,7 +224,6 @@ const refreshAccessToken = async (req, res) => {
     res.status(401).json({ message: "Invalid token", error: error.message });
   }
 };
-
 const addApiKey = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -263,15 +276,63 @@ const getProfileImage = async (req, res) => {
     res.status(500).send("Error retrieving image: " + error.message);
   }
 };
-const updateUserProfile = async (req, res) => {
+function removeEmptyStrings(obj) {
+  return Object.fromEntries(Object.entries(obj).filter(([_, value]) => value !== ""));
+}
+const updateProfile = async (req, res) => {
   try {
-    const { updatedData } = req.params;
-    Object.assign(req.user.profile, updatedData);
-    const updatedUser = await req.user.save();
+    const profileData = removeEmptyStrings(req.body);
+    const user = await User.findById(req.params.userId);
 
-    res.status(200).json({ user: updatedUser });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    logger.info(
+      `Updating profile for user: ${user.email} with data: ${JSON.stringify(profileData)}`
+    );
+
+    // Update specific fields
+    if (profileData.avatarUrl) {
+      user.profile.imagePath = profileData.avatarUrl;
+    }
+    if (profileData.displayName) {
+      user.profile.displayName = profileData.displayName;
+    }
+    if (profileData.username) {
+      user.profile.username = profileData.username;
+    }
+
+    // Update API keys in the envKeyMap
+    const apiKeys = [
+      "anthropicApiKey",
+      "googleGeminiApiKey",
+      "groqApiKey",
+      "mistralApiKey",
+      "openaiApiKey",
+      "openrouterApiKey",
+      "perplexityApiKey"
+    ];
+    apiKeys.forEach((key) => {
+      if (profileData[key]) {
+        user.profile.envKeyMap.set(key, profileData[key]);
+      }
+    });
+
+    // Update openaiOrgId separately as it's not in the envKeyMap
+    if (profileData.openaiOrgId) {
+      user.profile.openaiOrgId = profileData.openaiOrgId;
+    }
+
+    const updatedUser = await user.save();
+
+    res.status(200).json({
+      message: "Profile updated successfully",
+      profile: updatedUser.profile
+    });
   } catch (error) {
-    res.status(500).send("Error updating user profile: " + error.message);
+    logger.error(`Error updating user profile: ${error.message}`);
+    res.status(500).json({ error: "Error updating user profile", message: error.message });
   }
 };
 const refreshToken = async (req, res) => {
@@ -302,7 +363,7 @@ module.exports = {
   validateToken,
   uploadProfileImage,
   getProfileImage,
-  updateUserProfile,
+  updateProfile,
   refreshToken,
   addApiKey,
   refreshAccessToken

@@ -329,7 +329,7 @@ chatSessionSchema.methods.updateSettings = async function (newSettings) {
   return this.save();
 };
 chatSessionSchema.methods.calculateTokenUsage = async function () {
-  const messages = await this.model("ChatMessage").find({ sessionId: this._id });
+  const messages = await ChatMessage.find({ sessionId: this._id });
   this.stats.tokenUsage = messages.reduce((sum, message) => sum + (message.tokens || 0), 0);
   return this.save();
 };

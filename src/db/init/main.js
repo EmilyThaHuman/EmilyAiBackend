@@ -1,6 +1,16 @@
 const { logger } = require("@config/logging");
 const { ChatSession, Assistant } = require("@models/chat");
 const { Workspace, Folder } = require("@models/workspace");
+const {
+  generateChatTitle,
+  summarizeUserQuery,
+  categorizeUserQuery,
+  extractKeywords,
+  expandQuery,
+  generateResponseOutline,
+  generateActionItems,
+  generateFollowUpQuestions
+} = require("@utils/ai/openAi/chat/chat_utils");
 const { uniqueId } = require("lodash");
 
 const createWorkspace = async (user) => {
@@ -38,28 +48,6 @@ const createWorkspace = async (user) => {
   return workspace;
 };
 
-const folderTypes = [
-  "Workspace",
-  "ChatSession",
-  "Assistant",
-  "File",
-  "ChatModel",
-  "Tool",
-  "Prompt",
-  "Preset",
-  "Collection"
-];
-function convertToFolderType(type) {
-  // Check if the input is one of the allowed folder types
-  if (!folderTypes.includes(type)) {
-    throw new Error(`Invalid type: ${type}. Must be one of: ${folderTypes.join(", ")}`);
-  }
-
-  // Convert the first character to lowercase and append 's'
-  const modifiedType = type.charAt(0).toLowerCase() + type.slice(1) + "s";
-
-  return modifiedType;
-}
 const createFolders = async (user, workspace) => {
   const folders = [];
   const folderTypes = [
@@ -105,83 +93,6 @@ const createFolders = async (user, workspace) => {
   await workspace.save();
 
   return folders;
-};
-
-// const createFolders = async (user, workspace) => {
-//   const folders = [];
-
-//   for (const type of folderTypes) {
-//     // skip workspace folder type
-//     if (type === "Workspace") continue;
-//     let uniqueName = uniqueId(`${type}_folder`);
-//     let counter = 1;
-
-//     // Ensure the folder name is unique within the user's workspace
-//     while (
-//       await Folder.exists({ userId: user._id, workspaceId: workspace._id, name: uniqueName })
-//     ) {
-//       uniqueName = `${type}_folder-${counter}`;
-//       counter += 1;
-//     }
-
-//     const folderData = {
-//       userId: user._id,
-//       workspaceId: workspace._id,
-//       name: uniqueName,
-//       description: `${type} folder`, // Default description, can be customized
-//       space: convertToFolderType(type),
-//     };
-
-//     const folder = new Folder(folderData);
-//     await folder.save();
-//     folders.push(folder);
-
-//     // Update the workspace's folders array
-//     workspace.folders.push(folder._id);
-//   }
-
-//   // Save the workspace after updating folders
-//   await workspace.save();
-
-//   return folders;
-// };
-
-const createChatSession = async (user, workspace, assistant, folder) => {
-  const chatSessionData = {
-    name: "First Chat",
-    topic: "Getting Started",
-    userId: user._id,
-    workspaceId: workspace._id,
-    assistantId: assistant._id,
-    folderId: folder._id,
-    model: "gpt-4-turbo-preview",
-    prompt: "Let's start our first conversation.",
-    active: true,
-    activeSessionId: null,
-    settings: {
-      maxTokens: 500,
-      temperature: 0.7,
-      model: "gpt-4-turbo-preview",
-      topP: 1,
-      n: 1,
-      debug: false,
-      summarizeMode: false
-    },
-    messages: [],
-    stats: {
-      tokenUsage: 0,
-      messageCount: 0
-    },
-    tuning: {
-      debug: false,
-      summary: "",
-      summarizeMode: false
-    }
-  };
-
-  const chatSession = new ChatSession(chatSessionData);
-  await chatSession.save();
-  return chatSession;
 };
 
 const createAssistant = async (user, folder, file, overrides = {}) => {
@@ -231,9 +142,196 @@ const createAssistant = async (user, folder, file, overrides = {}) => {
   }
 };
 
+const createChatSession = async (user, workspace, assistant, folder) => {
+  // Initial setup for the first prompt
+  const firstPrompt = "Let's start our first conversation.";
+
+  // Generate the chat title using the initial prompt
+  // const title = await generateChatTitle(firstPrompt);
+
+  // // Summarize the prompt for quick reference later
+  // const summary = await summarizeUserQuery(firstPrompt);
+
+  // Categorize the session based on the first prompt
+  // const category = await categorizeUserQuery(firstPrompt);
+
+  // // Extract keywords from the prompt to enhance search capabilities
+  // const keywords = await extractKeywords(firstPrompt);
+
+  // // Expand the query for added context to improve chat quality
+  // const expandedQuery = await expandQuery(firstPrompt);
+
+  // // Generate a response outline to structure future messages
+  // const responseOutline = await generateResponseOutline(firstPrompt);
+
+  // // Generate actionable items that could help guide the chat
+  // const actionItems = await generateActionItems(firstPrompt);
+
+  // // Generate follow-up questions for engaging the user further
+  // const followUpQuestions = await generateFollowUpQuestions(firstPrompt);
+
+  // Calculate initial token usage based on the first prompt
+  const initialTokenUsage = firstPrompt.split(" ").length; // Simple token estimation
+
+  const chatSessionData = {
+    name: "title" || "First Chat",
+    topic: "Getting Started",
+    userId: user._id,
+    workspaceId: workspace._id,
+    assistantId: assistant._id,
+    folderId: folder._id,
+    model: "gpt-4-turbo-preview",
+    prompt: firstPrompt,
+    active: true,
+    activeSessionId: null,
+    settings: {
+      maxTokens: 500,
+      temperature: 0.7,
+      model: "gpt-4-turbo-preview",
+      topP: 1,
+      n: 1,
+      debug: false,
+      summarizeMode: false
+    },
+    messages: [],
+    stats: {
+      tokenUsage: initialTokenUsage || 0,
+      messageCount: 1 // Counting the first prompt as the initial message
+    },
+    tuning: {
+      debug: false,
+      summary: "summary of session" || "",
+      summarizeMode: false
+    }
+    // category: category || "General Information",
+    // keywords: keywords || [],
+    // expandedQuery: expandedQuery || "",
+    // responseOutline: responseOutline || "",
+    // actionItems: actionItems || [],
+    // followUpQuestions: followUpQuestions || []
+  };
+
+  // Create a new chat session with the enriched data
+  const chatSession = new ChatSession(chatSessionData);
+
+  // Save the chat session to the database
+  await chatSession.save();
+
+  // Update token usage based on the entire session after saving
+  await chatSession.calculateTokenUsage();
+
+  return chatSession;
+};
+
 module.exports = {
   createWorkspace,
   createFolders,
   createAssistant,
   createChatSession
 };
+// const createChatSession = async (user, workspace, assistant, folder) => {
+//   // Generate the chat title using the initial prompt
+//   const firstPrompt = "Let's start our first conversation.";
+//   const title = await generateChatTitle(firstPrompt);
+
+//   // Summarize the prompt for quick reference later
+//   const summary = await summarizeUserQuery(firstPrompt);
+
+//   // Categorize the session based on the first prompt
+//   const category = await categorizeUserQuery(firstPrompt);
+
+//   // Extract keywords from the prompt to enhance search capabilities
+//   const keywords = await extractKeywords(firstPrompt);
+
+//   // Expand the query for added context to improve chat quality
+//   const expandedQuery = await expandQuery(firstPrompt);
+
+//   // Generate a response outline to structure future messages
+//   const responseOutline = await generateResponseOutline(firstPrompt);
+
+//   // Generate actionable items that could help guide the chat
+//   const actionItems = await generateActionItems(firstPrompt);
+
+//   // Generate follow-up questions for engaging the user further
+//   const followUpQuestions = await generateFollowUpQuestions(firstPrompt);
+
+//   const chatSessionData = {
+//     name: title || "First Chat",
+//     topic: title,
+//     userId: user._id,
+//     workspaceId: workspace._id,
+//     assistantId: assistant._id,
+//     folderId: folder._id,
+//     model: "gpt-4-turbo-preview",
+//     prompt: firstPrompt,
+//     active: true,
+//     activeSessionId: null,
+//     settings: {
+//       maxTokens: 500,
+//       temperature: 0.7,
+//       model: "gpt-4-turbo-preview",
+//       topP: 1,
+//       n: 1,
+//       debug: false,
+//       summarizeMode: false
+//     },
+//     messages: [],
+//     stats: {
+//       tokenUsage: 0,
+//       messageCount: 0
+//     },
+//     tuning: {
+//       debug: false,
+//       summary: summary || "",
+//       summarizeMode: false
+//     },
+//     category: category || "General Information",
+//     keywords: keywords || [],
+//     expandedQuery: expandedQuery || "",
+//     responseOutline: responseOutline || "",
+//     actionItems: actionItems || [],
+//     followUpQuestions: followUpQuestions || []
+//   };
+
+//   const chatSession = new ChatSession(chatSessionData);
+//   await chatSession.save();
+//   return chatSession;
+// };
+
+// const createChatSession = async (user, workspace, assistant, folder) => {
+//   const chatSessionData = {
+//     name: "First Chat",
+//     topic: "Getting Started",
+//     userId: user._id,
+//     workspaceId: workspace._id,
+//     assistantId: assistant._id,
+//     folderId: folder._id,
+//     model: "gpt-4-turbo-preview",
+//     prompt: "Let's start our first conversation.",
+//     active: true,
+//     activeSessionId: null,
+//     settings: {
+//       maxTokens: 500,
+//       temperature: 0.7,
+//       model: "gpt-4-turbo-preview",
+//       topP: 1,
+//       n: 1,
+//       debug: false,
+//       summarizeMode: false
+//     },
+//     messages: [],
+//     stats: {
+//       tokenUsage: 0,
+//       messageCount: 0
+//     },
+//     tuning: {
+//       debug: false,
+//       summary: "",
+//       summarizeMode: false
+//     }
+//   };
+
+//   const chatSession = new ChatSession(chatSessionData);
+//   await chatSession.save();
+//   return chatSession;
+// };

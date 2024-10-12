@@ -52,6 +52,7 @@ const profileSchema = new Schema(
   {
     img: { type: String, default: "reed_profile.png" },
     imagePath: { type: String, default: "/static/images/reed_profile.png" },
+    avatarUrl: { type: String },
     profileImages: { type: Array, default: [] },
     selectedProfileImage: { type: String, default: profileImagePath },
     defaultAvatar: { type: String, default: "avatar1.png" },
@@ -69,10 +70,19 @@ const profileSchema = new Schema(
         anthropicApiKey: "",
         googleGeminiApiKey: "",
         mistralApiKey: "",
-        groqAPIKey: "",
+        groqApiKey: "",
         perplexityApiKey: ""
       }
     },
+    defaultApiKey: { type: String, default: "" },
+    openai: openAiSchema,
+    openaiApiKey: String,
+    openaiOrgId: String,
+    anthropicApiKey: String,
+    googleGeminiApiKey: String,
+    mistralApiKey: String,
+    groqApiKey: String,
+    perplexityApiKey: String,
     stats: {
       totalMessages: { type: Number, default: 0 },
       totalTokenCount: { type: Number, default: 0 },
@@ -300,7 +310,7 @@ userSchema.statics.generateDefaultUser = function () {
         anthropicApiKey: "",
         googleGeminiApiKey: "",
         mistralApiKey: "",
-        groqAPIKey: "",
+        groqApiKey: "",
         perplexityApiKey: ""
       },
       stats: {

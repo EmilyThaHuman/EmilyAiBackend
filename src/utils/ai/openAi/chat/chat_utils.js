@@ -2,14 +2,15 @@
 const dotenv = require("dotenv");
 const { logger } = require("@config/logging");
 const { ChatOpenAI } = require("@langchain/openai");
-const sanitizeHtml = require("sanitize-html");
+// const sanitizeHtml = require("sanitize-html");
 const crypto = require("crypto");
+const { getEnv } = require("@utils/api");
 
 dotenv.config();
 
 const openai = new ChatOpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-  modelName: "gpt-3.5-turbo",
+  apiKey: getEnv("OPENAI_API_PROJECT_KEY"),
+  modelName: getEnv("OPENAI_API_CHAT_COMPLETION_MODEL"),
   temperature: 0.7,
   maxTokens: 150
 });
@@ -23,8 +24,8 @@ const openai = new ChatOpenAI({
  */
 async function createChatCompletion(messages, max_tokens = 150, temperature = 0.7) {
   try {
-    const response = await openai.createChatCompletion({
-      model: openai.modelName,
+    const response = await openai.completionWithRetry({
+      model: getEnv("OPENAI_API_CHAT_COMPLETION_MODEL"),
       messages,
       max_tokens,
       temperature
@@ -45,7 +46,7 @@ async function createChatCompletion(messages, max_tokens = 150, temperature = 0.
  * @returns {Promise<string>} - Generated chat title.
  */
 async function generateChatTitle(firstPrompt) {
-  if (!process.env.OPENAI_API_KEY) {
+  if (!process.env.OPENAI_API_PROJECT_KEY) {
     throw new Error("OpenAI API key is not configured.");
   }
 
@@ -247,5 +248,5 @@ module.exports = {
   generateActionItems,
   generateFollowUpQuestions,
   validateUserIntent,
-  generateMetadata,
+  generateMetadata
 };

@@ -6,6 +6,7 @@
 
 require("dotenv").config();
 require("module-alias/register");
+require('newrelic');
 
 const app = require("./src/app");
 const { logger } = require("./src/config/logging");

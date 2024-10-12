@@ -5,11 +5,12 @@ const { PromptTemplate } = require("@langchain/core/prompts");
 const { StringOutputParser } = require("@langchain/core/output_parsers");
 const { Document } = require("langchain/document");
 const { OpenAIEmbeddings } = require("@langchain/openai");
+const { getEnv } = require("@utils/api");
 
 // Initialize OpenAI embeddings
 const embedding_model = new OpenAIEmbeddings({
-  openAIApiKey: "YOUR_OPENAI_API_KEY", // Add your OpenAI API Key
-  modelName: "text-embedding-3-small" // You can leave this unchanged
+  openAIApiKey: getEnv("OPENAI_API_PROJECT_KEY"),
+  modelName: getEnv("PINECONE_EMBEDDING_MODEL_NAME")
 });
 
 // Connect to MongoDB

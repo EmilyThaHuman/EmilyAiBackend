@@ -11,7 +11,7 @@ const {
   fetchWorkspaceAndChatSession,
   createWorkspaceChatSession,
   createWorkspaceFolder
-} = require("@controllers");
+} = require("@controllers/workspaces");
 
 const router = express.Router();
 

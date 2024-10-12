@@ -1,5 +1,4 @@
 const { ConversationChain } = require("langchain/chains");
-const { Conversation } = require("@models/conversation.js");
 const {
   ChatPromptTemplate,
   SystemMessagePromptTemplate,

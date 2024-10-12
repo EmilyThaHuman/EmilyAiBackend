@@ -6,7 +6,7 @@ const dotenv = require("dotenv");
 const { CHAT_SETTING_LIMITS } = require("./constants");
 const { getEnv } = require("@utils/api");
 // Load environment variables from .env file
-dotenv.config({ path: path.join(__dirname, "..", ".env") });
+dotenv.config({ path: path.join(__dirname, "..", "..", ".env") });
 
 const development = {
   db: getEnv("MONGODB_URI")
@@ -179,6 +179,6 @@ const config = {
   production: Object.assign({}, production, defaults)
 }[process.env.NODE_ENV || "development"];
 
-config.getOpenAIClient = () => require("./services/openai").getLangChainClient();
+// config.getOpenAIClient = () => require("./services/openai").getLangChainClient();
 
 module.exports = config;

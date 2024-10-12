@@ -2,6 +2,7 @@ const { Tables } = require("@/supabase/types");
 const { LLM, LLMID, OpenRouterLLM } = require("@/types");
 const { toast } = require("sonner");
 const { LLM_LIST_MAP } = require("./llm/llm-list");
+const { logger } = require("@config/logging");
 
 const fetchHostedModels = async (profile) => {
   try {
@@ -48,7 +49,7 @@ const fetchHostedModels = async (profile) => {
       hostedModels: modelsToAdd
     };
   } catch (error) {
-    console.warn("Error fetching hosted models: " + error);
+    logger.warn("Error fetching hosted models: " + error);
   }
 };
 
@@ -73,7 +74,7 @@ const fetchOllamaModels = async () => {
 
     return localModels;
   } catch (error) {
-    console.warn("Error fetching Ollama models: " + error);
+    logger.warn("Error fetching Ollama models: " + error);
   }
 };
 
@@ -99,7 +100,7 @@ const fetchOpenRouterModels = async () => {
 
     return openRouterModels;
   } catch (error) {
-    console.error("Error fetching Open Router models: " + error);
+    logger.error("Error fetching Open Router models: " + error);
     toast.error("Error fetching Open Router models: " + error);
   }
 };

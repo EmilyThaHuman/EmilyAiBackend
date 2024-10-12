@@ -60,7 +60,7 @@ async function fetchWorkspaceAndChatSessions(workspaceId) {
       chatSessions
     };
   } catch (error) {
-    console.error("Error fetching workspace and chat sessions:", error);
+    logger.error("Error fetching workspace and chat sessions:", error);
     throw error;
   }
 }
@@ -106,7 +106,7 @@ async function fetchWorkspaceAndChatSession(workspaceId, chatSessionId) {
       chatSession
     };
   } catch (error) {
-    console.error("Error fetching workspace and chat session:", error);
+    logger.error("Error fetching workspace and chat session:", error);
     throw error;
   }
 }
@@ -166,7 +166,7 @@ const createWorkspaceChatSession = async (workspaceId, userId, sessionData) => {
       chatSession
     };
   } catch (error) {
-    console.error("Error creating or fetching chat session:", error);
+    logger.error("Error creating or fetching chat session:", error);
     throw error;
   }
 };
@@ -264,7 +264,7 @@ const fetchWorkspaceAndFolders = async (workspaceId, space) => {
       folders: folderTree
     };
   } catch (error) {
-    console.error("Error fetching workspace and folders:", error);
+    logger.error("Error fetching workspace and folders:", error);
     throw error;
   }
 };
@@ -308,7 +308,7 @@ const getHomeWorkspace = async (req, res) => {
     }
     res.json({ id: homeWorkspace._id });
   } catch (error) {
-    console.error("Error retrieving home workspace:", error);
+    logger.error("Error retrieving home workspace:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -431,7 +431,7 @@ const createWorkspace = async (req, res) => {
 
     res.status(201).json(responseObj);
   } catch (error) {
-    console.error("Error creating workspace:", error);
+    logger.error("Error creating workspace:", error);
     res.status(500).json({ error: "Internal Server Error", message: error.message });
   }
 };

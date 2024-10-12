@@ -1,143 +1,3 @@
-// // /* eslint-disable node/no-missing-require */
-// const mongoose = require("mongoose");
-// const { User } = require("../user");
-// const { logger } = require("@config/logging");
-
-// // Enhanced error handling function
-// const handleError = (error, message = "An error occurred") => {
-//   logger.error(`${message}: ${error.message}`, { stack: error.stack });
-//   if (process.env.NODE_ENV !== "production") {
-//     console.error(`${message}:`, error);
-//   }
-//   throw new Error(message);
-// };
-
-// // Centralized model mapping
-// const MODEL_MAP = {
-//   files: "File",
-//   prompts: "Prompt",
-//   chatSessions: "ChatSession",
-//   assistants: "Assistant",
-//   tools: "Tool",
-//   models: "ChatModel",
-//   presets: "Preset",
-//   collections: "Collection"
-// };
-
-// // Helper function to create populate objects
-// const createPopulateObject = (path, nestedPopulate = null) => ({
-//   path,
-//   ...(nestedPopulate && { populate: nestedPopulate })
-// });
-
-// // Enhanced function to find and populate a user
-// const findAndPopulateUser = async (userId) => {
-//   try {
-//     if (!mongoose.Types.ObjectId.isValid(userId)) {
-//       throw new Error(`Invalid userId: ${userId}`);
-//     }
-
-//     const workspacePopulate = [
-//       createPopulateObject("folders", {
-//         path: "items",
-
-//         model: (doc) => MODEL_MAP[doc.space] || null
-//       }),
-//       ...Object.keys(MODEL_MAP).map((path) => createPopulateObject(path))
-//     ];
-
-//     const user = await User.findById(userId)
-//       .populate(createPopulateObject("workspaces", workspacePopulate))
-//       .populate(
-//         createPopulateObject("chatSessions", [
-//           { path: "messages" },
-//           { path: "tools" },
-//           { path: "files" }
-//         ])
-//       )
-//       .populate(Object.keys(MODEL_MAP))
-//       .lean()
-//       .exec();
-
-//     if (!user) {
-//       throw new Error(`User with ID ${userId} not found.`);
-//     }
-
-//     logger.info(`Successfully fetched user with ID ${userId}`);
-//     return user;
-//   } catch (error) {
-//     handleError(error, "Error fetching user");
-//   }
-// };
-
-// module.exports = { findAndPopulateUser };
-// const mongoose = require("mongoose");
-// const { User } = require("../user");
-// const { Schema, model } = mongoose;
-// const { logger } = require("@config/logging");
-
-// // Enhanced error handling function
-// function handleError(error, message = "An error occurred") {
-//   logger.error(`${message}: ${error.message}`, { stack: error.stack });
-//   if (process.env.NODE_ENV !== "production") {
-//     console.error(`${message}:`, error);
-//   }
-//   throw error; // Throw the original error to preserve stack trace
-// }
-
-// // Mapping of space types to model names
-// const SPACE_TO_MODEL = {
-//   files: "File",
-//   prompts: "Prompt",
-//   chatSessions: "ChatSession",
-//   assistants: "Assistant",
-//   tools: "Tool",
-//   models: "Model",
-//   presets: "Preset",
-//   collections: "Collection"
-// };
-
-// // Enhanced function to find and populate a user
-// async function findAndPopulateUser(userId) {
-//   if (!mongoose.Types.ObjectId.isValid(userId)) {
-//     throw new Error(`Invalid userId: ${userId}`);
-//   }
-
-//   try {
-//     const user = await User.findById(userId)
-//       .populate({
-//         path: "workspaces",
-//         populate: [
-//           {
-//             path: "folders",
-//             populate: {
-//               path: "items",
-//               model: (doc) => SPACE_TO_MODEL[doc.space] || null
-//             }
-//           },
-//           ...Object.keys(SPACE_TO_MODEL).map((path) => ({ path }))
-//         ]
-//       })
-//       .populate({
-//         path: "chatSessions",
-//         populate: ["messages", "tools", "files"]
-//       })
-//       .populate(Object.keys(SPACE_TO_MODEL))
-//       .lean()
-//       .exec();
-
-//     if (!user) {
-//       throw new Error(`User with ID ${userId} not found.`);
-//     }
-
-//     logger.info(`Successfully fetched user with ID ${userId}`);
-//     return user;
-//   } catch (error) {
-//     handleError(error, `Error fetching user with ID ${userId}`);
-//   }
-// }
-
-// module.exports = { findAndPopulateUser };
 const mongoose = require("mongoose");
 const { User } = require("../user");
 const { logger } = require("@config/logging");
@@ -148,7 +8,7 @@ function handleError(error, message = "An error occurred") {
   if (process.env.NODE_ENV !== "production") {
     logger.error(`${message}:`, error); // For local development debugging
   }
-  throw new Error(message); // Re-throw the error to be handled upstream
+  throw new Error(message);
 }
 
 async function populateUserFolders(userId) {
@@ -259,7 +119,7 @@ async function findAndPopulateUser(userId) {
         path: "chatSessions",
         populate: [{ path: "messages" }, { path: "tools" }, { path: "files" }]
       })
-      .populate("assistants prompts files collections models tools presets")
+      .populate("assistants chatSessions prompts files collections models tools presets")
       .exec();
 
     if (!userWithWorkspaces) {

@@ -11,7 +11,7 @@ const {
   ChatSession
 } = require("@models");
 const { getDB, getBucket } = require("@db");
-const fs = require("fs").promises;
+const fs = require("node:fs");
 const path = require("path");
 const { asyncHandler } = require("@utils/api");
 const { default: mongoose } = require("mongoose");
@@ -414,7 +414,7 @@ const getListFiles = (req, res) => {
   const directoryPath = path.join(__dirname, "../../../public/static");
   fs.readdir(directoryPath, (err, files) => {
     if (err) {
-      console.error("Unable to scan files:", err);
+      logger.error("Unable to scan files:", err);
       return res.status(500).send({ message: "Unable to scan files!" });
     }
     if (!files || files.length === 0) {
@@ -454,7 +454,7 @@ const downloadCustomPrompts = (req, res) => {
   const filePath = path.join(__dirname, "@/public/static", "chatgpt-prompts-custom.json");
   res.download(filePath, "chatgpt-prompts-custom.json", (err) => {
     if (err) {
-      console.error(err);
+      logger.error(err);
       res.status(500).end();
     }
   });
@@ -463,7 +463,7 @@ const getAllStaticJsonFiles = (req, res) => {
   const staticDir = path.join(__dirname, "@/public/static");
   fs.readdir(staticDir, (err, files) => {
     if (err) {
-      console.error("Error reading directory:", err);
+      logger.error("Error reading directory:", err);
       return res.status(500).send("Internal Server Error");
     }
     const jsonFiles = files.filter((file) => file.endsWith(".json"));
@@ -475,19 +475,19 @@ const addCustomPrompt = (req, res) => {
   const filePath = path.join(__dirname, "@/public", "user-custom-prompts.json");
   fs.readFile(filePath, "utf8", (err, data) => {
     if (err) {
-      console.error("Error reading file:", err);
+      logger.error("Error reading file:", err);
       return res.status(500).send("Internal Server Error");
     }
     let prompts = [];
     try {
       prompts = JSON.parse(data);
     } catch (err) {
-      console.error("Error parsing JSON:", err);
+      logger.error("Error parsing JSON:", err);
     }
     prompts.push({ name, content });
     fs.writeFile(filePath, JSON.stringify(prompts, null, 2), "utf8", (err) => {
       if (err) {
-        console.error("Error writing file:", err);
+        logger.error("Error writing file:", err);
         return res.status(500).send("Internal Server Error");
       }
       res.status(200).send("Prompt added successfully");
@@ -498,7 +498,7 @@ const getAllPngFiles = (req, res) => {
   const directoryPath = path.join(__dirname, "@/public/static");
   fs.readdir(directoryPath, (err, files) => {
     if (err) {
-      console.error("Error reading directory:", err);
+      logger.error("Error reading directory:", err);
       return res.status(500).send("Internal Server Error");
     }
     const pngFiles = files.filter((file) => file.endsWith(".png"));
@@ -510,7 +510,7 @@ const getFileByType = (req, res) => {
   const directoryPath = path.join(__dirname, "@/public/static");
   fs.readdir(directoryPath, (err, files) => {
     if (err) {
-      console.error("Unable to scan files:", err);
+      logger.error("Unable to scan files:", err);
       return res.status(500).send({ message: "Unable to scan files!" });
     }
     if (!files || files.length === 0) {

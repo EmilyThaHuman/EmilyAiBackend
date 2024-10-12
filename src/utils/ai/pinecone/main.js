@@ -78,7 +78,7 @@ module.exports = { chatCompletionWithLLM };
 //     const flattenedDocs = processedDocs.flat();
 
 //     const embeddings = new OpenAIEmbeddings({
-// 			apiKey: getEnv('OPENAI_API_KEY') || process.env.OPENAI_API_KEY,
+// 			apiKey: getEnv('OPENAI_API_KEY') || process.env.OPENAI_API_PROJECT_KEY,
 //       dimensions: 512,  // Ensure dimensions are passed as an integer
 // 			model: getEnv('EMBEDDING_MODEL') || process.env.EMBEDDING_MODEL,
 // 		 });

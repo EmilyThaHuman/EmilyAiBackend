@@ -14,10 +14,11 @@ const {
   ValidationError,
   ConflictError,
   ALLOWED_FILE_TYPES_ABBR,
-  SUPPORTED_MIME_TYPES_ABBR,
+  SUPPORTED_MIME_TYPES_ABBR
 } = require("@config/constants");
 const { createWorkspace, createFolders, createAssistant, createChatSession } = require("@db/init");
 const { logger } = require("@config/logging");
+const { getEnv } = require("@utils/api");
 
 const validateUserInput = ({ username, email, password }) => {
   if (!username || !email || !password) {
@@ -204,7 +205,7 @@ const saveInitialPresets = async (userId, workspaceId, folderId) => {
     const savedPresets = await Preset.insertMany(presetsToSave);
     return savedPresets;
   } catch (error) {
-    console.error("Error saving presets:", error);
+    logger.error("Error saving presets:", error);
     throw error;
   }
 };
@@ -226,7 +227,7 @@ const saveInitialModels = async (userId, workspaceId, folderId) => {
     const savedModels = await Model.insertMany(modelsToSave);
     return savedModels;
   } catch (error) {
-    console.error("Error saving models:", error);
+    logger.error("Error saving models:", error);
     throw error;
   }
 };
@@ -265,54 +266,53 @@ const saveInitialCollections = async (userId, workspaceId, folderId) => {
     const savedCollections = await Collection.insertMany(collectionsToSave);
     return savedCollections;
   } catch (error) {
-    console.error("Error saving collections:", error);
+    logger.error("Error saving collections:", error);
     throw error;
   }
 };
 
 const initializeUserData = async (newUser, accessToken, refreshToken) => {
   try {
-    // Create workspace and folders
+    // Create workspace and folders concurrently
     const workspace = await createWorkspace(newUser);
     const folders = await createFolders(newUser, workspace);
+    // const [workspace, folders] = await Promise.all([
+    //   createWorkspace(newUser),
+    //   createFolders(newUser)
+    // ]);
 
     // Map folder space to folder documents
-    const folderMap = {};
-    folders.forEach((folder) => {
-      folderMap[folder.space] = folder;
-    });
+    const folderMap = folders.reduce((acc, folder) => {
+      acc[folder.space] = folder;
+      return acc;
+    }, {});
+
+    // Helper function to update entities with items
+    const updateEntitiesWithItems = (entities, items, property) => {
+      items.forEach((item) => {
+        entities.forEach((entity) => {
+          entity[property].push(item._id);
+        });
+      });
+    };
 
     // Save initial prompts
     const promptsFolder = folderMap["prompts"];
     const savedPrompts = await saveInitialPrompts(newUser._id, workspace._id, promptsFolder._id);
-
-    // Update user, workspace, and folder with prompts
-    savedPrompts.forEach((prompt) => {
-      newUser.prompts.push(prompt._id);
-      workspace.prompts.push(prompt._id);
-      promptsFolder.prompts.push(prompt._id);
-      promptsFolder.items.push(prompt._id);
-    });
+    updateEntitiesWithItems([newUser, workspace, promptsFolder], savedPrompts, "prompts");
+    updateEntitiesWithItems([promptsFolder], savedPrompts, "items");
 
     // Save initial files
     const filesFolder = folderMap["files"];
     const savedFiles = await saveInitialFiles(newUser._id, workspace._id, filesFolder._id);
-
-    // Update user, workspace, and folder with files
-    savedFiles.forEach((file) => {
-      newUser.files.push(file._id);
-      workspace.files.push(file._id);
-      filesFolder.files.push(file._id);
-      filesFolder.items.push(file._id);
-    });
+    updateEntitiesWithItems([newUser, workspace, filesFolder], savedFiles, "files");
+    updateEntitiesWithItems([filesFolder], savedFiles, "items");
 
     // Use one of the saved files to create assistant
-    const assistant = await createAssistant(newUser, folderMap["assistants"], savedFiles[0]);
-
-    // Update user, workspace, and folder with assistant
-    newUser.assistants.push(assistant._id);
-    workspace.assistants.push(assistant._id);
-    folderMap["assistants"].assistants.push(assistant._id);
+    const assistantFolder = folderMap["assistants"];
+    const assistant = await createAssistant(newUser, assistantFolder, savedFiles[0]);
+    updateEntitiesWithItems([newUser, workspace, assistantFolder], [assistant], "assistants");
+    updateEntitiesWithItems([assistantFolder], [assistant], "items");
 
     // Save initial tools
     const toolsFolder = folderMap["tools"];
@@ -322,38 +322,20 @@ const initializeUserData = async (newUser, accessToken, refreshToken) => {
       toolsFolder._id,
       assistant._id
     );
-
-    // Update user, workspace, and folder with tools
-    savedTools.forEach((tool) => {
-      newUser.tools.push(tool._id);
-      workspace.tools.push(tool._id);
-      toolsFolder.tools.push(tool._id);
-      toolsFolder.items.push(tool._id);
-    });
+    updateEntitiesWithItems([newUser, workspace, toolsFolder], savedTools, "tools");
+    updateEntitiesWithItems([toolsFolder], savedTools, "items");
 
     // Save initial presets
     const presetsFolder = folderMap["presets"];
     const savedPresets = await saveInitialPresets(newUser._id, workspace._id, presetsFolder._id);
-
-    // Update user, workspace, and folder with presets
-    savedPresets.forEach((preset) => {
-      newUser.presets.push(preset._id);
-      workspace.presets.push(preset._id);
-      presetsFolder.presets.push(preset._id);
-      presetsFolder.items.push(preset._id);
-    });
+    updateEntitiesWithItems([newUser, workspace, presetsFolder], savedPresets, "presets");
+    updateEntitiesWithItems([presetsFolder], savedPresets, "items");
 
     // Save initial models
     const modelsFolder = folderMap["models"];
     const savedModels = await saveInitialModels(newUser._id, workspace._id, modelsFolder._id);
-
-    // Update user, workspace, and folder with models
-    savedModels.forEach((model) => {
-      newUser.models.push(model._id);
-      workspace.models.push(model._id);
-      modelsFolder.models.push(model._id);
-      modelsFolder.items.push(model._id);
-    });
+    updateEntitiesWithItems([newUser, workspace, modelsFolder], savedModels, "models");
+    updateEntitiesWithItems([modelsFolder], savedModels, "items");
 
     // Save initial collections
     const collectionsFolder = folderMap["collections"];
@@ -362,83 +344,38 @@ const initializeUserData = async (newUser, accessToken, refreshToken) => {
       workspace._id,
       collectionsFolder._id
     );
-
-    // Update user, workspace, and folder with collections
-    savedCollections.forEach((collection) => {
-      newUser.collections.push(collection._id);
-      workspace.collections.push(collection._id);
-      collectionsFolder.collections.push(collection._id);
-      collectionsFolder.items.push(collection._id);
-    });
-
-    const chatSession = await createChatSession(
-      newUser,
-      workspace,
-      assistant,
-      folderMap["chatSessions"]
+    updateEntitiesWithItems(
+      [newUser, workspace, collectionsFolder],
+      savedCollections,
+      "collections"
     );
+    updateEntitiesWithItems([collectionsFolder], savedCollections, "items");
 
-    await Promise.all(
-      folders.map(async (folder) => {
-        const item = chatSession._id === folder.space ? chatSession : assistant;
-        if (item && folder[folder.space]) {
-          folder[folder.space].push(item._id);
-          folder.items.push(item._id);
-          await folder.save();
-        }
-      })
-    );
+    // Create chat session
+    const chatSessionFolder = folderMap["chatSessions"];
+    const chatSession = await createChatSession(newUser, workspace, assistant, chatSessionFolder);
+    updateEntitiesWithItems([workspace, chatSessionFolder], [chatSession], "chatSessions");
+    updateEntitiesWithItems([chatSessionFolder], [chatSession], "items");
 
-    // Map of items
-    // const itemsMap = {
-    //   assistants: assistant,
-    //   chatSessions: chatSession
-    // };
-    // for (const [key, item] of Object.entries(itemsMap)) {
-    //   const folder = folderMap[key];
-    //   if (folder) {
-    //     folder.items.push(item._id);
-    //     await folder.save();
-    //   }
-    // }
-    // Update folders with new items
-    // await Promise.all(
-    //   folders.map(async (folder) => {
-    //     const item = itemsMap[folder.space];
-    //     if (item && folder[folder.space]) {
-    //       folder[folder.space].push(item._id);
-    //       folder.items.push(item._id);
-    //       await folder.save();
-    //     }
-    //   })
-    // );
-
-    // Update workspace with assistant and chat session
+    // Save workspace and user
     workspace.assistants.push(assistant._id);
     workspace.chatSessions.push(chatSession._id);
     await workspace.save();
 
-    // Update user
     newUser.workspaces.push(workspace._id);
     newUser.assistants.push(assistant._id);
     newUser.chatSessions.push(chatSession._id);
 
-    // update auth
-    newUser.authSession = {
-      accessToken,
-      refreshToken,
-      expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
-      createdAt: new Date()
-    };
     newUser.isActive = true;
     newUser.hasOnboarded = true;
 
-    // Update profile
+    // Update user profile
     newUser.profile.bio = "No bio provided";
-    newUser.profile.envKeyMap["openaiApiKey"] = process.env.OPENAI_API_PROJECT_KEY;
-
+    newUser.profile.username = newUser.username || "No username provided";
+    newUser.profile.displayName = "No display name provided";
+    newUser.profile.envKeyMap["openaiApiKey"] = getEnv("OPENAI_API_PROJECT_KEY");
     newUser.profile.openai = {
-      apiKey: process.env.OPENAI_API_PROJECT_KEY,
+      apiKey: getEnv("OPENAI_API_PROJECT_KEY"),
       organizationId: process.env.OPENAI_API_ORG_ID,
       apiVersion: "",
       projects: [
@@ -447,7 +384,7 @@ const initializeUserData = async (newUser, accessToken, refreshToken) => {
           id: process.env.OPENAI_API_PROJECT_ID,
           organizationId: process.env.OPENAI_API_ORG_ID,
           organizationName: process.env.OPENAI_API_ORG_NAME,
-          apiKey: process.env.OPENAI_API_PROJECT_KEY,
+          apiKey: getEnv("OPENAI_API_PROJECT_KEY"),
           apiVersion: "",
           default: true,
           users: [
@@ -460,14 +397,20 @@ const initializeUserData = async (newUser, accessToken, refreshToken) => {
         }
       ]
     };
+    // Update user authentication session
+    newUser.authSession = {
+      accessToken,
+      refreshToken,
+      expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
+      createdAt: new Date()
+    };
 
     await newUser.save();
 
     return { newUser, workspace, folders };
   } catch (error) {
     logger.error(`Error initializing user data: ${error.message}`);
-    throw error;
-    // throw new ServerError("Failed to initialize user data");
+    throw new Error("Failed to initialize user data");
   }
 };
 
@@ -480,3 +423,185 @@ module.exports = {
   createNewUser,
   initializeUserData
 };
+
+// const initializeUserData = async (newUser, accessToken, refreshToken) => {
+//   try {
+//     // Create workspace and folders
+//     const workspace = await createWorkspace(newUser);
+//     const folders = await createFolders(newUser, workspace);
+
+//     // Map folder space to folder documents
+//     const folderMap = {};
+//     folders.forEach((folder) => {
+//       folderMap[folder.space] = folder;
+//     });
+
+//     // Save initial prompts
+//     const promptsFolder = folderMap["prompts"];
+//     const savedPrompts = await saveInitialPrompts(newUser._id, workspace._id, promptsFolder._id);
+
+//     // Update user, workspace, and folder with prompts
+//     savedPrompts.forEach((prompt) => {
+//       newUser.prompts.push(prompt._id);
+//       workspace.prompts.push(prompt._id);
+//       promptsFolder.prompts.push(prompt._id);
+//       promptsFolder.items.push(prompt._id);
+//     });
+
+//     // Save initial files
+//     const filesFolder = folderMap["files"];
+//     const savedFiles = await saveInitialFiles(newUser._id, workspace._id, filesFolder._id);
+
+//     // Update user, workspace, and folder with files
+//     savedFiles.forEach((file) => {
+//       newUser.files.push(file._id);
+//       workspace.files.push(file._id);
+//       filesFolder.files.push(file._id);
+//       filesFolder.items.push(file._id);
+//     });
+
+//     // Use one of the saved files to create assistant
+//     const assistant = await createAssistant(newUser, folderMap["assistants"], savedFiles[0]);
+
+//     // Update user, workspace, and folder with assistant
+//     newUser.assistants.push(assistant._id);
+//     workspace.assistants.push(assistant._id);
+//     folderMap["assistants"].assistants.push(assistant._id);
+
+//     // Save initial tools
+//     const toolsFolder = folderMap["tools"];
+//     const savedTools = await saveInitialTools(
+//       newUser._id,
+//       workspace._id,
+//       toolsFolder._id,
+//       assistant._id
+//     );
+
+//     // Update user, workspace, and folder with tools
+//     savedTools.forEach((tool) => {
+//       newUser.tools.push(tool._id);
+//       workspace.tools.push(tool._id);
+//       toolsFolder.tools.push(tool._id);
+//       toolsFolder.items.push(tool._id);
+//     });
+
+//     // Save initial presets
+//     const presetsFolder = folderMap["presets"];
+//     const savedPresets = await saveInitialPresets(newUser._id, workspace._id, presetsFolder._id);
+
+//     // Update user, workspace, and folder with presets
+//     savedPresets.forEach((preset) => {
+//       newUser.presets.push(preset._id);
+//       workspace.presets.push(preset._id);
+//       presetsFolder.presets.push(preset._id);
+//       presetsFolder.items.push(preset._id);
+//     });
+
+//     // Save initial models
+//     const modelsFolder = folderMap["models"];
+//     const savedModels = await saveInitialModels(newUser._id, workspace._id, modelsFolder._id);
+
+//     // Update user, workspace, and folder with models
+//     savedModels.forEach((model) => {
+//       newUser.models.push(model._id);
+//       workspace.models.push(model._id);
+//       modelsFolder.models.push(model._id);
+//       modelsFolder.items.push(model._id);
+//     });
+
+//     // Save initial collections
+//     const collectionsFolder = folderMap["collections"];
+//     const savedCollections = await saveInitialCollections(
+//       newUser._id,
+//       workspace._id,
+//       collectionsFolder._id
+//     );
+
+//     // Update user, workspace, and folder with collections
+//     savedCollections.forEach((collection) => {
+//       newUser.collections.push(collection._id);
+//       workspace.collections.push(collection._id);
+//       collectionsFolder.collections.push(collection._id);
+//       collectionsFolder.items.push(collection._id);
+//     });
+
+//     const chatSessionFolder = folderMap["chatSessions"];
+//     const chatSession = await createChatSession(
+//       newUser,
+//       workspace,
+//       assistant,
+//       folderMap["chatSessions"]
+//     );
+//     chatSessionFolder.chatSessions.push(chatSession._id);
+
+//     const assistantFolder = folderMap["assistants"];
+//     assistantFolder.assistants.push(assistant._id);
+//     assistantFolder.items.push(assistant._id);
+
+//     await Promise.all(
+//       folders.map(async (folder) => {
+//         if        const item = chatSession._id === folder.space ? chatSession : assistant;
+//         if (item && folder[folder.space]) {
+//           folder[folder.space].push(item._id);
+//           folder.items.push(item._id);
+//           await folder.save();
+//         }
+//       })
+//     );
+
+//     workspace.assistants.push(assistant._id);
+//     workspace.chatSessions.push(chatSession._id);
+//     await workspace.save();
+
+//     // Update user
+//     newUser.workspaces.push(workspace._id);
+//     newUser.assistants.push(assistant._id);
+//     newUser.chatSessions.push(chatSession._id);
+
+//     // update auth
+//     newUser.authSession = {
+//       accessToken,
+//       refreshToken,
+//       expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
+//       createdAt: new Date()
+//     };
+//     newUser.isActive = true;
+//     newUser.hasOnboarded = true;
+
+//     // Update profile
+//     newUser.profile.bio = "No bio provided";
+//     newUser.profile.envKeyMap["openaiApiKey"] = process.env.OPENAI_API_PROJECT_KEY;
+
+//     newUser.profile.openai = {
+//       apiKey: process.env.OPENAI_API_PROJECT_KEY,
+//       organizationId: process.env.OPENAI_API_ORG_ID,
+//       apiVersion: "",
+//       projects: [
+//         {
+//           name: process.env.OPENAI_API_PROJECT_NAME,
+//           id: process.env.OPENAI_API_PROJECT_ID,
+//           organizationId: process.env.OPENAI_API_ORG_ID,
+//           organizationName: process.env.OPENAI_API_ORG_NAME,
+//           apiKey: process.env.OPENAI_API_PROJECT_KEY,
+//           apiVersion: "",
+//           default: true,
+//           users: [
+//             {
+//               userId: newUser._id,
+//               role: "admin",
+//               readWrite: true
+//             }
+//           ]
+//         }
+//       ]
+//     };
+
+//     await newUser.save();
+
+//     return { newUser, workspace, folders };
+//   } catch (error) {
+//     logger.error(`Error initializing user data: ${error.message}`);
+//     throw error;
+//     // throw new ServerError("Failed to initialize user data");
+//   }
+// };
