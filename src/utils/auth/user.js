@@ -1,4 +1,4 @@
-const { logger } = require("@config");
+const { logger } = require("@config/logging");
 const mongoose = require("mongoose");
 
 const getUserId = async (req, res) => {

@@ -1,5 +1,5 @@
 const { logger } = require("@config/logging");
-const { File } = require("@models");
+const { File } = require("@models/chat");
 const fs = require("fs");
 const { encode } = require("gpt-tokenizer");
 const path = require("path");

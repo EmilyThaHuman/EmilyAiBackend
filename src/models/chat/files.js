@@ -125,6 +125,8 @@ const fileSchema = createSchema({
     lastModified: Date
   }
 });
+fileSchema.index({ space: 1, createdAt: 1 });
+// Pre-save middleware
 fileSchema.pre("save", async function (next) {
   logger.info("File pre-save hook");
   this.updatedAt = Date.now();

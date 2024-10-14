@@ -5,7 +5,7 @@ const { OpenAIEmbeddings } = require("@langchain/openai");
 const { getPineconeClient } = require("./get");
 const { scrapeCode } = require("@utils/processing/utils");
 const { logger } = require("@config/logging");
-const { File } = require("@models");
+const { File } = require("@models/chat");
 const { getEnv } = require("@utils/api");
 const { createPineconeIndex } = require("./create");
 const {

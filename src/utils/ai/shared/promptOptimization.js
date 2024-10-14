@@ -6,8 +6,9 @@ const { getEnv } = require("@utils/api");
 const cheerio = require("cheerio");
 const axios = require("axios");
 const { SystemMessage, HumanMessage } = require("@langchain/core/messages");
-const { UI_LIBRARIES } = require("@config");
+const { UI_LIBRARIES } = require("@config/constants");
 const { PromptTemplate } = require("@langchain/core/prompts");
+const { logger } = require("@config/logging");
 
 const chatOpenAI = new ChatOpenAI({
   model: getEnv("OPENAI_API_CHAT_COMPLETION_MODEL"),

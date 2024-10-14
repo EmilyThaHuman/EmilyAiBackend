@@ -10,16 +10,6 @@ const { Workspace, Folder } = require("@models/workspace");
 const { User } = require("@models/user");
 
 let bucket;
-let chatgpt;
-
-const loadChatGPT = async () => {
-  if (!chatgpt) {
-    const { ChatGPTAPI } = await import("chatgpt");
-    chatgpt = new ChatGPTAPI({
-      apiKey: getEnv("OPENAI_API_PROJECT_KEY")
-    });
-  }
-};
 
 /**
  * Connect to MongoDB and initialize GridFS bucket using Mongoose.
@@ -29,7 +19,6 @@ const loadChatGPT = async () => {
  */
 const connectDB = async () => {
   try {
-    loadChatGPT();
     if (mongoose.connection.readyState !== 1) {
       const connectionString = getEnv("MONGODB_URI") || "mongodb://localhost:27017/test";
       logger.info(`[1] Attempting to connect to MongoDB: ${connectionString}`);
@@ -46,11 +35,6 @@ const connectDB = async () => {
       logger.info("[3] GridFS bucket initialized successfully", {
         bucketName: "uploads"
       });
-      const query = await chatgpt.sendMessage("check how much storage is left in my database");
-      const results = await db.collection("orders").find(query).toArray(); // Ensure results are in an array format
-      for (const result of results) {
-        logger.info(`[4] Result: ${result}`);
-      }
     }
     return {
       db: mongoose.connection.db,

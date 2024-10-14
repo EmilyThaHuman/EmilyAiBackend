@@ -1,0 +1,104 @@
+
+    --- CHAT COMPLETION RESPONSE ---
+    <h1>React Tool Dial Component with Framer Motion Animations</h1>
+
+<p>This React component is designed to provide a dynamic and interactive tool dial, utilizing Framer Motion for smooth animations. The tool dial serves as an innovative UI element, allowing users to select from a variety of tools or actions through a rotating dial interface. This component is particularly useful for applications requiring a compact and engaging way to offer multiple functionalities.</p>
+
+<h2>Component Design Rationale</h2>
+
+<p>- **Interactive Experience**: Enhances user engagement with interactive animations.</p>
+<p>- **Space Efficiency**: Offers multiple options in a compact UI element, saving valuable screen space.</p>
+<p>- **Customizability**: Easily customizable to fit the theme and functionality of various applications.</p>
+
+<h2>Component Code</h2>
+
+```jsx
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+
+<p>const ToolDial = ({ tools }) => {</p>
+<p>  const [isOpen, setIsOpen] = useState(false);</p>
+
+<p>  const toggleOpen = () => setIsOpen(!isOpen);</p>
+
+<p>  const variants = {</p>
+<p>    open: { rotate: 360 },</p>
+<p>    closed: { rotate: 0 },</p>
+<p>  };</p>
+
+<p>  return (</p>
+<p>    <div className='tool-dial-container'></p>
+<p>      <motion.button</p>
+<p>        className='dial-button'</p>
+<p>        onClick={toggleOpen}</p>
+<p>        whileHover={{ scale: 1.1 }}</p>
+<p>        whileTap={{ scale: 0.9 }}</p>
+<p>        animate={isOpen ? 'open' : 'closed'}</p>
+<p>        variants={variants}</p>
+<p>      ></p>
+<p>        {/* Icon or text indicating the tool dial */}</p>
+<p>      </motion.button></p>
+
+<p>      {isOpen && (</p>
+<p>        <motion.div className='tools-container'</p>
+<p>          initial={{ scale: 0 }}</p>
+<p>          animate={{ scale: 1 }}</p>
+<p>          exit={{ scale: 0 }}</p>
+<p>          transition={{ type: 'spring', stiffness: 100 }}</p>
+<p>        ></p>
+<p>          {tools.map((tool, index) => (</p>
+<p>            <motion.button</p>
+<p>              key={index}</p>
+<p>              className='tool-button'</p>
+<p>              whileHover={{ scale: 1.1 }}</p>
+<p>              whileTap={{ scale: 0.9 }}</p>
+<p>              onClick={() => tool.action()}</p>
+<p>            ></p>
+<p>              {tool.icon}</p>
+<p>            </motion.button></p>
+<p>          ))}</p>
+<p>        </motion.div></p>
+<p>      )}</p>
+<p>    </div></p>
+<p>  );</p>
+<p>};</p>
+
+<p>export default ToolDial;</p>
+<p>```</p>
+
+<h2>Usage Example</h2>
+
+```jsx
+// In your App component or similar
+import React from 'react';
+import ToolDial from './ToolDial';
+import { FaPencilAlt, FaEraser, FaPaintBrush } from 'react-icons/fa';
+
+<p>const tools = [</p>
+<p>  { icon: <FaPencilAlt />, action: () => console.log('Pencil selected') },</p>
+<p>  { icon: <FaPaintBrush />, action: () => console.log('Brush selected') },</p>
+<p>  { icon: <FaEraser />, action: () => console.log('Eraser selected') }</p>
+<p>];</p>
+
+<p>const App = () => {</p>
+<p>  return (</p>
+<p>    <div></p>
+<p>      <ToolDial tools={tools} /></p>
+<p>    </div></p>
+<p>  );</p>
+<p>};</p>
+
+<p>export default App;</p>
+<p>```</p>
+
+<h2>Customization</h2>
+
+<p>- **Icons and Actions**: Customize the `tools` prop with your desired tools, each represented by an icon and an action function.</p>
+<p>- **Styling**: Apply custom CSS or Tailwind classes to the `.tool-dial-container`, `.dial-button`, and `.tool-button` classes to match your application's design.</p>
+
+<h2>References</h2>
+
+<p>- Framer Motion API Documentation (https://www.framer.com/api/motion)</p>
+<p>- React Icons for easy icon integration (https://react-icons.github.io/react-icons/)</p>
+    --------------------------------
+  

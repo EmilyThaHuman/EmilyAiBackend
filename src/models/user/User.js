@@ -167,6 +167,10 @@ const authSessionSchema = new Schema(
     tokenType: { type: String, default: "" },
     accessToken: { type: String, default: "" },
     refreshToken: { type: String, default: "" },
+    userId: { type: String, default: "" },
+    workspaceId: { type: String, default: "" },
+    chatSessionId: { type: String, default: "" },
+    apiKey: { type: String, default: "" },
     expiresIn: { type: Number, default: 3600 },
     expiresAt: { type: Number, default: () => Date.now() + 3600000 },
     createdAt: { type: Date, default: Date.now }

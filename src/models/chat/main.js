@@ -44,6 +44,38 @@ const chatMessageSchema = createSchema({
   }
 });
 chatMessageSchema.index({ sessionId: 1, createdAt: 1 });
+chatMessageSchema.pre("save", async function (next) {
+  logger.info("ChatMessage pre-save hook");
+  if (this.isNew) {
+    const existingMessage = await this.constructor.findOne({ content: this.content });
+    if (existingMessage) {
+      return next(new Error("A message with this content already exists"));
+    }
+
+    await mongoose
+      .model("ChatSession")
+      .findByIdAndUpdate(
+        this.sessionId,
+        { $push: { messages: this._id } },
+        { new: true, useFindAndModify: false }
+      );
+  }
+  this.updatedAt = Date.now();
+  next();
+});
+chatMessageSchema.pre("findOneAndUpdate", async function (next) {
+  const update = this.getUpdate();
+  if (update.content) {
+    const existingMessage = await this.model.findOne({
+      content: update.content,
+      _id: { $ne: this.getQuery()._id }
+    });
+    if (existingMessage) {
+      return next(new Error("A message with this content already exists"));
+    }
+  }
+  next();
+});
 chatMessageSchema.statics.createMessage = async function (messageData) {
   const message = new this(messageData);
   await message.save();
@@ -78,37 +110,6 @@ chatMessageSchema.methods.calculateTokens = function () {
   this.tokens = this.content.split(" ").length;
   return this.save();
 };
-chatMessageSchema.pre("save", async function (next) {
-  if (this.isNew) {
-    const existingMessage = await this.constructor.findOne({ content: this.content });
-    if (existingMessage) {
-      return next(new Error("A message with this content already exists"));
-    }
-
-    await mongoose
-      .model("ChatSession")
-      .findByIdAndUpdate(
-        this.sessionId,
-        { $push: { messages: this._id } },
-        { new: true, useFindAndModify: false }
-      );
-  }
-  this.updatedAt = Date.now();
-  next();
-});
-chatMessageSchema.pre("findOneAndUpdate", async function (next) {
-  const update = this.getUpdate();
-  if (update.content) {
-    const existingMessage = await this.model.findOne({
-      content: update.content,
-      _id: { $ne: this.getQuery()._id }
-    });
-    if (existingMessage) {
-      return next(new Error("A message with this content already exists"));
-    }
-  }
-  next();
-});
 // I need you to fix and optimize my Rag Chat Bot App's History/Session/Message saving logic. The way I want it to would is after a messagge gets added and saved, that message should have its _id value pushed into chatSession.messages which is an array of refIds each of which connects to a saved message. Below is my custom chatsession model for reference:
 // =============================
 // [CHAT SESSIONS]
@@ -124,6 +125,7 @@ const chatSessionSchema = createSchema(
     // -- REQUIRED FIELDS
     name: { type: String, required: false, default: "Default Chat Session" },
     model: { type: String, required: false, default: "gpt-4-turbo-preview" },
+    path: { type: String, required: false, default: "/chat" },
     status: {
       type: String,
       enum: ["active", "archived"],
@@ -138,7 +140,8 @@ const chatSessionSchema = createSchema(
     history: [{ type: Schema.Types.ObjectId, ref: "Message" }],
     // -- PROMPT AND TOOL USAGE
     prompt: { type: String },
-    systemPrompt: { type: Schema.Types.ObjectId, ref: "Prompt" },
+    systemPrompt: { type: String },
+    assistantInstructions: { type: String },
     promptHistory: [{ type: String }],
     completionHistory: [{ type: String }],
     tools: [{ type: Schema.Types.ObjectId, ref: "Tool" }],
@@ -281,6 +284,29 @@ chatSessionSchema.statics.createSession = async function (sessionData) {
   await session.save();
   return session;
 };
+chatSessionSchema.statics.addSystemPrompt = async function (sessionId, prompt) {
+  const session = await this.findById(sessionId);
+  if (!session) {
+    throw new Error(`Session ${sessionId} not found.`);
+  }
+  session.systemPrompt = prompt;
+  await session.save();
+
+  return session;
+};
+chatSessionSchema.addAssistantInstructions = async function (sessionId, instruction) {
+  const session = await this.findById(sessionId);
+  if (!session) {
+    throw new Error(`Session ${this._id} not found.`);
+  }
+  session.assistantInstructions.push(instruction);
+  await session.save();
+  return session;
+};
+chatSessionSchema.statics.getSession = async function (sessionId) {
+  const session = await this.findById(sessionId);
+  return session;
+};
 chatSessionSchema.methods.archiveSession = async function () {
   this.status = "archived";
   this.active = false;
@@ -288,7 +314,6 @@ chatSessionSchema.methods.archiveSession = async function () {
   await this.save();
   return this;
 };
-// Method to reactivate a chat session
 chatSessionSchema.methods.reactivateSession = async function () {
   if (this.status === "archived") {
     this.status = "active";
@@ -299,15 +324,6 @@ chatSessionSchema.methods.reactivateSession = async function () {
   }
   throw new Error(`Session ${this._id} is not archived and cannot be reactivated.`);
 };
-// [ChatHistory][Function 1] Add ChatMessage
-// chatSessionSchema.methods.addMessage = async function (messageData) {
-//   const newMessage = await ChatMessage.create({ ...messageData, sessionId: this._id });
-//   this.messages.push(newMessage._id);
-//   this.stats.messageCount += 1;
-//   await this.save();
-//   return newMessage;
-// };
-// Method to add a message to the session
 chatSessionSchema.methods.addMessage = async function (messageData) {
   const newMessage = await mongoose
     .model("ChatMessage")
@@ -360,7 +376,6 @@ chatMessageSchema.methods.markAsImportant = async function () {
   logger.info(`Message ${this._id} marked as important`);
   return this;
 };
-
 chatSessionSchema.pre("save", async function (next) {
   if (this.isNew) {
     let uniqueName = this.name;
@@ -379,8 +394,19 @@ chatSessionSchema.pre("save", async function (next) {
     }
     this.name = uniqueName;
   }
-  this.updatedAt = Date.now();
+  if (this.isNew) {
+    // Chat session is being created
+    await mongoose.model("User").findByIdAndUpdate(this.userId, {
+      $addToSet: { chatSessions: this._id }
+    });
 
+    await mongoose.model("Workspace").findByIdAndUpdate(this.workspaceId, {
+      $addToSet: { chatSessions: this._id }
+    });
+  } else {
+    // Chat session is being updated
+    this.updatedAt = Date.now();
+  }
   next();
 });
 // =============================

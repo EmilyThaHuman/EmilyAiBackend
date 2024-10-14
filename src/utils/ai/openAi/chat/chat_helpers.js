@@ -1,8 +1,7 @@
-const { logger } = require("@config/logging");
-const fs = require("fs");
-const fsPromises = require("fs").promises;
+const fs = require("node:fs/promises");
 const path = require("path");
 const { RecursiveCharacterTextSplitter } = require("langchain/text_splitter");
+const { logger } = require("@config/logging");
 
 const prepareDocuments = (initializationData, chatSession, content) => [
   {
@@ -127,6 +126,7 @@ const setupResponseHeaders = (res) => {
   res.setHeader("Connection", "keep-alive");
 };
 const getInitializationData = (body) => ({
+  // --- main --- //
   apiKey: body.clientApiKey || process.env.OPENAI_API_PROJECT_KEY,
   userId: body.userId,
   workspaceId: body.workspaceId,
@@ -169,11 +169,30 @@ function getPublicFilePath(fileName) {
 }
 async function writeToFile(filePath, content) {
   try {
-    await fsPromises.writeFile(filePath, content);
+    await fs.writeFile(filePath, content);
     logger.info(`File saved to ${filePath}`);
   } catch (error) {
     logger.error(`Error saving file: ${error}`);
     throw error;
+  }
+}
+/**
+ * Function to save the full response as a Markdown file
+ *
+ * @param {string} content - The markdown content to save
+ */
+async function saveMarkdown(content) {
+  try {
+    // Generate a unique filename based on the current timestamp
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const filename = `response_${timestamp}.md`;
+    const filepath = path.join(__dirname, 'public', filename);
+
+    // Write the content to the file
+    await fs.writeFile(filepath, content, 'utf-8');
+    console.log(`Saved response to ${filepath}`);
+  } catch (error) {
+    console.error('Error saving markdown file:', error);
   }
 }
 function formatChatCompletionContent(content) {
@@ -244,8 +263,10 @@ function extractContent(jsonString) {
 
     return content;
   } catch (error) {
-    console.error("Error extracting content:", error);
-    return null;
+    logger.error("[extractContent] Error extracting content:", error);
+    // return null;
+    return json
+
   }
 }
 module.exports = {

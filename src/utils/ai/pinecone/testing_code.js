@@ -1,3 +1,5 @@
+import { logger } from "@config/logging";
+
 const scrapeCode = async (componentUrl, componentLibrary) => {
   const browser = await puppeteer.launch({ headless: "new" });
   const page = await browser.newPage();

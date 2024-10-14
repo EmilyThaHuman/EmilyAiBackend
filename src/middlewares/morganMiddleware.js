@@ -26,7 +26,6 @@ const morganMiddleware = morgan((tokens, req, res) => {
   const status = tokens.coloredStatus(req, res);
   const contentLength = tokens.res(req, res, "content-length");
   const reqBody = tokens.shortReqBody(req);
-  // logger.info(`REQ BODY: ${JSON.stringify(req.body)}`);
   return `${method} ${url} ${status} ${contentLength} REQ OBJECT: ${reqBody}`;
 });
 

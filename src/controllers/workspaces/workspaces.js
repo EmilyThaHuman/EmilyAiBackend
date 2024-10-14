@@ -1,19 +1,18 @@
 const { default: mongoose } = require("mongoose");
 const { logger } = require("@config/logging");
-const { getDB } = require("@db");
+const { getDB } = require("@db/main");
 const {
-  Workspace,
   ChatSession,
-  Folder,
   Preset,
   Tool,
   Model,
   Prompt,
-  User,
-  Collection,
   Assistant,
   File
-} = require("@models");
+} = require("@models/chat");
+const { User } = require("@models/user");
+const { Workspace, Folder } = require("@models/workspace");
+const { Collection } = require("@models/main");
 
 const getAllWorkspaces = async (req, res) => {
   try {
@@ -45,7 +44,7 @@ async function fetchWorkspaceAndChatSessions(workspaceId) {
       Workspace.findById(workspaceId).lean().populate("chatSessions"),
       ChatSession.find({ workspaceId }).lean().populate("messages").populate("systemPrompt")
     ]);
-    logger.info(`workspace: ${workspace}`);
+    // logger.info(`workspace: ${workspace}`);
     logger.info(`chatSessions: ${chatSessions}`);
     // Check if workspace exists
     if (!workspace) {
@@ -87,7 +86,7 @@ async function fetchWorkspaceAndChatSession(workspaceId, chatSessionId) {
         .populate("systemPrompt")
     ]);
 
-    logger.info(`workspace: ${workspace}`);
+    // logger.info(`workspace: ${workspace}`);
     logger.info(`chatSession: ${chatSession}`);
 
     // Check if workspace and chat session exist
@@ -315,10 +314,13 @@ const getHomeWorkspace = async (req, res) => {
 
 const getWorkspaceById = async (req, res) => {
   try {
-    const workspace = await Workspace.findById(req.params.id)
+    const workspace = await Workspace.findById(req.params.workspaceId)
       .populate("chatSessions")
+      .populate("assistants")
+      .populate("tools")
+      .populate("prompts")
       .populate("folders");
-    logger.info(`workspace: ${workspace}`);
+    // logger.info(`workspace: ${workspace}`);
     if (!workspace) {
       return res.status(404).json({ message: "Workspace not found" });
     }

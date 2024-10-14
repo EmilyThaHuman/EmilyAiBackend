@@ -5,6 +5,7 @@ const path = require("path");
 const dotenv = require("dotenv");
 const { CHAT_SETTING_LIMITS } = require("./constants");
 const { getEnv } = require("@utils/api");
+
 // Load environment variables from .env file
 dotenv.config({ path: path.join(__dirname, "..", "..", ".env") });
 
@@ -39,6 +40,7 @@ const defaults = {
   api: {
     port: parseInt(process.env.PORT, 10) || 3002,
     host: process.env.HOST || "localhost",
+    cluster: process.env.CLUSTER || "local",
     openAIKey: process.env.OPENAI_API_PROJECT_KEY,
     embeddingModel: process.env.EMBEDDING_MODEL,
     models: {
@@ -90,6 +92,23 @@ const defaults = {
     dimension: parseInt(process.env.PINECONE_DIMENSION, 10),
     topK: parseInt(process.env.PINECONE_TOP_K, 10)
   },
+  database: {
+    username: process.env.MONGODB_USERNAME,
+    password: process.env.MONGODB_PASSWORD,
+    clusterUrl: process.env.MONGODB_CLUSTER_URL,
+    database: process.env.MONGODB_DB_NAME,
+    appName: process.env.MONGODB_APPNAME,
+    port: parseInt(process.env.DB_PORT, 10) || 27017,
+    host: process.env.DB_HOST,
+    uri: process.env.MONGODB_URI,
+    options: {
+      useCreateIndex: true,
+      useFindAndModify: false
+    },
+    mongoose: {
+      url: getEnv("MONGODB_URI") + (process.env.NODE_ENV === "test" ? "-test" : "")
+    }
+  },
   auth: {
     secret: process.env.AUTH_SECRET,
     audience: process.env.AUTH_AUDIENCE,
@@ -98,16 +117,6 @@ const defaults = {
   },
   chat: {
     settings: CHAT_SETTING_LIMITS
-  },
-  database: {
-    uri: getEnv("MONGODB_URI"),
-    options: {
-      useCreateIndex: true,
-      useFindAndModify: false
-    },
-    mongoose: {
-      url: getEnv("MONGODB_URI") + (process.env.NODE_ENV === "test" ? "-test" : "")
-    }
   },
   logging: {
     level: process.env.LOG_LEVEL || "info",

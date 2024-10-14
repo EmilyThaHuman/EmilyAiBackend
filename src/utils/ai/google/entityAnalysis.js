@@ -1,7 +1,6 @@
-// utils/entityAnalysis.js
-import language from "@google-cloud/language";
-import { logger } from "./logger.js";
+import { logger } from "@config/logging";
 
+// utils/entityAnalysis.js
 const client = new language.LanguageServiceClient();
 
 export async function analyzeEntities(text) {

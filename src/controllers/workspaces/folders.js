@@ -1,4 +1,5 @@
-const { Folder: WorkspaceFolder, User, Workspace } = require("@models");
+const { User } = require("@models/user");
+const { Folder: WorkspaceFolder, Workspace } = require("@models/workspace");
 
 /**
  * Fetches all folders with a given space name.

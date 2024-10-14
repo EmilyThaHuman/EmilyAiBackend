@@ -1,4 +1,4 @@
-const { Assistant } = require("@models");
+const { Assistant } = require("@models/chat");
 
 const getAllChatAssistants = async (req, res) => {
   const chatAssistants = await Assistant.find();

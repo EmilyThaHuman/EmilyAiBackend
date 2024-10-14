@@ -2,14 +2,12 @@
 
 const { pipeline } = require("stream/promises");
 const { createReadStream } = require("fs");
-const fs = require("fs");
+const fs = require("node:fs/promises");
 const pdf = require("pdf-parse");
 const { populateVectorStore } = require("@utils/ai/pinecone/populate");
 const mammoth = require("mammoth");
 const { logger } = require("@config/logging");
-// Removed static require for @xenova/transformers
 
-// Function to dynamically import the ESM module
 async function loadTransformers() {
   const { Pipeline } = await import("@xenova/transformers");
   return { Pipeline };
@@ -50,7 +48,7 @@ const processFile = async (job) => {
   try {
     switch (mimetype) {
     case "application/pdf":
-      const pdfBuffer = await fs.promises.readFile(filepath);
+      const pdfBuffer = await fs.readFile(filepath);
       const pdfData = await pdf(pdfBuffer);
       content = pdfData.text;
       break;
@@ -73,7 +71,7 @@ const processFile = async (job) => {
       content = JSON.stringify(records);
       break;
     case "text/plain":
-      content = await fs.promises.readFile(filepath, "utf-8");
+      content = await fs.readFile(filepath, "utf-8");
       break;
     case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
       const workbook = xlsx.readFile(filepath);
@@ -94,7 +92,7 @@ const processFile = async (job) => {
     throw error;
   } finally {
     // Clean up the temporary file
-    await fs.promises.unlink(filepath);
+    await fs.unlink(filepath);
   }
 };
 

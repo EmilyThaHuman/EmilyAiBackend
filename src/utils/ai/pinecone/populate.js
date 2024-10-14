@@ -1,3 +1,4 @@
+const { logger } = require("@config/logging");
 const { Document } = require("langchain/document");
 const { RecursiveCharacterTextSplitter } = require("langchain/text_splitter");
 

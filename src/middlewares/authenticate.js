@@ -1,6 +1,6 @@
-const { AuthorizationError } = require("@config/errors");
+const { AuthorizationError } = require("@config/constants");
 const { logger } = require("@config/logging");
-const { User } = require("@models");
+const { User } = require("@models/user");
 const jwt = require("jsonwebtoken");
 
 // Pull in Environment variables

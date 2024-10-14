@@ -1,12 +1,12 @@
 const { User } = require("@models/user");
 const { Workspace } = require("@models/workspace");
 const { ChatSession } = require("@models/chat");
-const { logger } = require("@config/logging");
 const { Pinecone } = require("@pinecone-database/pinecone");
 const { ChatOpenAI, OpenAIEmbeddings } = require("@langchain/openai");
 const { tools } = require("@lib/functions");
 const { getEnv } = require("@utils/api");
 const { logChatDataError } = require("./chat_helpers.js");
+const { logger } = require("@config/logging/logger.js");
 
 const initializeChatSession = async (sessionId, workspaceId, userId, prompt, sessionLength) => {
   try {
@@ -92,14 +92,14 @@ const initializeOpenAI = (apiKey, chatSession, completionModel) => {
     streaming: true,
     openAIApiKey: apiKey || process.env.OPENAI_API_PROJECT_KEY,
     organization: "reed_tha_human",
-    tools: tools,
+    // tools: tools,
     code_interpreter: "auto",
     function_call: "auto",
-    callbacks: {
-      handleLLMNewToken: (token) => {
-        logger.info(`New token: ${token}`);
-      }
-    }
+    // callbacks: {
+    //   handleLLMNewToken: (token) => {
+    //     logger.info(`New token: ${token}`);
+    //   }
+    // }
   };
   return new ChatOpenAI(configs);
 };

@@ -4,8 +4,8 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon --watch index.js",
+    "start": "node -r newrelic index.js",
+    "dev": "nodemon --watch index.js -r",
     "prod": "cross-env NODE_ENV=production node index.js",
     "build": "babel src --out-dir dist --copy-files",
     "test": "jest --coverage --verbose --runInBand --detectOpenHandles",

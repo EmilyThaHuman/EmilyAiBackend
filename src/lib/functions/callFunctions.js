@@ -1,6 +1,6 @@
 const { logger } = require("@config/logging");
 const { default: axios } = require("axios");
-const fs = require("fs").promises;
+const fs = require("node:fs/promises");
 const path = require("path");
 const { getOpenaiLangChainClient } = require("@utils/ai/openAi/get");
 const { getEnv } = require("@utils/api");
@@ -119,11 +119,11 @@ const extractSummaries = (summaryResponse) => {
 };
 const searchFiles = (query, directory) => {
   const results = [];
-  const files = fs.readdirSync(directory);
+  const files = fs.readdir(directory);
 
   for (const file of files) {
     const filePath = path.join(directory, file);
-    const content = fs.readFileSync(filePath, "utf-8");
+    const content = fs.readFile(filePath, "utf-8");
     if (content.toLowerCase().includes(query.toLowerCase())) {
       results.push({ file, path: filePath });
     }

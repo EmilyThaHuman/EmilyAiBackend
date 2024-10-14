@@ -21,7 +21,15 @@ const errorResponse = (res, error, message) => {
 };
 
 const handleChatError = (res, error) => {
-  logger.error(`Error in combinedChatStream: ${error}`);
+  logger.error(`Error in combinedChatStream: ${error.message}`);
+  logger.error(`STACK: ${error.stack}`);
+  if (error.response && error.response.status) {
+    const statusCode = error.response.status;
+    const errorMessage = error.response.data.error || "An error occurred";
+    res.status(statusCode).json({ error: errorMessage });
+  } else {
+    res.status(500).json({ error: "An error occurred" });
+  }
   if (!res.headersSent) {
     res.status(500).json({ error: "An error occurred while processing the chat stream" });
   }

@@ -1,13 +1,8 @@
 const express = require("express");
 const path = require("path");
 const {
-  // getAllFiles,
   getAllFilesByType,
-  // getStoredFilesByType,
-  // getStoredFilesBySpace,
-  // getStoredFileByName,
   createMessageFileItems,
-  // uploadFileToStorage,
   getFileById,
   getChatFileById,
   getAssistantFileById,
@@ -32,81 +27,71 @@ const {
   addCustomPrompt,
   getAllPngFiles,
   getFileByType,
-  // getStorage,
   getStaticFile,
-  getStaticFilesByType,
-  getAllStaticFiles
-  // uploadFileToBucket,
-  // downloadFileFromBucket,
-  // deleteFileFromBucket,
-  // listFilesInBucket,
-  // // handleFileUploadFunction,
+  getStaticFilesByType
 } = require("@controllers/chat-sessions");
 const { asyncHandler } = require("@utils/api");
 const { logger } = require("@config/logging");
-const { getDB, handleFileUpload } = require("@db");
+const { getDB, handleFileUpload } = require("@db/main");
 const { default: mongoose } = require("mongoose");
 const { upsertDocs } = require("@utils/ai/pinecone");
-// const { upload } = require('@/middlewares/upload');
-
+const { File } = require("@models/chat");
 const router = express.Router();
 
 // File retrieval routes
-// router.get('/', asyncHandler(getAllFiles));
-router.get("/type/:type", asyncHandler(getAllFilesByType));
-router.get("/id/:id", asyncHandler(getFileById));
-router.get("/name/:name", asyncHandler(getFileByName));
-router.get("/chat/:id", asyncHandler(getChatFileById));
-router.get("/assistant/:id", asyncHandler(getAssistantFileById));
-router.get("/message/:messageId", asyncHandler(getMessageFileItemsByMessageId));
-
-// File creation and update routes
-router.post("/", asyncHandler(createFile));
-router.post("/chat", asyncHandler(createChatFile));
-router.post("/assistant", asyncHandler(createAssistantFile));
-router.post("/message", asyncHandler(createMessageFileItems));
-router.put("/:id", asyncHandler(updateFile));
-
-// File upload routes
-router.post("/upload", handleFileUpload);
-router.post("/upsert-docs", upsertDocs);
-router.get("/", async (req, res) => {
+router.get("/:userId", async (req, res) => {
+  // let uploadData;
+  // let uploadMessage;
   try {
-    const db = await getDB();
-    // const bucket = getBucket();
-    const collection = db.collection("uploads.files");
+    // const db = await getDB();
+    // const collection = db.collection("uploads.files");
 
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const skip = (page - 1) * limit;
+    // const page = parseInt(req.query.page) || 1;
+    // const limit = parseInt(req.query.limit) || 10;
+    // const skip = (page - 1) * limit;
 
-    const files = await collection.find({}).skip(skip).limit(limit).toArray();
-    const total = await collection.countDocuments();
+    // uploadData = { files: [], total: 0, page, limit };
+    // const uploads = await collection.find({}).skip(skip).limit(limit).toArray();
+    // const total = await collection.countDocuments();
 
-    if (!files || files.length === 0) {
-      return res.json({ files: [], total: 0, page, limit });
+    // if (!uploads || uploads.length === 0) {
+    //   uploadMessage = "No files found";
+    // } else {
+    //   // this method is used to get the files from the database
+    //   const fileList = uploadData.files.map((file) => ({
+    //     id: file._id.toString(),
+    //     _id: file._id.toString(),
+    //     userId: file.userId,
+    //     workspaceId: file.workspaceId,
+    //     folderId: file.folderId,
+    //     filename: file.filename,
+    //     contentType: file.contentType,
+    //     size: file.length,
+    //     uploadDate: file.uploadDate,
+    //     metadata: file.metadata,
+    //     url: `/api/files/${file._id}/download`
+    //   }));
+    //   uploadData.files = fileList;
+    // }
+    let files;
+    try {
+      files = await File.find({
+        userId: req.params.userId
+      }).lean();
+    } catch {
+      logger.error(`Error fetching files: ${error.message}`);
+      res.status(500).json({ error: "Error fetching files", message: error.message });
     }
-
-    const fileList = files.map((file) => ({
-      id: file._id.toString(),
-      _id: file._id.toString(),
-      workspaceId: file.metadata.workspaceId,
-      folderId: file.metadata.folderId,
-      filename: file.filename,
-      contentType: file.contentType,
-      size: file.length,
-      uploadDate: file.uploadDate,
-      metadata: file.metadata,
-      url: `/api/files/${file._id}/download`
-    }));
+    logger.info(`Files fetched successfully: ${files}`);
 
     return res.json({
       message: "Files fetched successfully",
-      files: fileList,
-      total,
-      page,
-      limit,
-      totalPages: Math.ceil(total / limit)
+      files: files
+      // uploads: uploadData.files,
+      // total: uploadData.total,
+      // page: uploadData.page,
+      // limit: uploadData.limit,
+      // totalPages: Math.ceil(total / limit)
     });
   } catch (error) {
     logger.error(`Error fetching files: ${error.message}`);
@@ -270,7 +255,6 @@ router.get(
     }
   })
 );
-// Route for downloading files
 router.get(
   "/:id/download",
   asyncHandler(async (req, res) => {
@@ -305,18 +289,14 @@ router.get(
     }
   })
 );
-
-// Message routes
+router.get("/type/:type", asyncHandler(getAllFilesByType));
+router.get("/id/:id", asyncHandler(getFileById));
+router.get("/name/:name", asyncHandler(getFileByName));
+router.get("/chat/:id", asyncHandler(getChatFileById));
+router.get("/assistant/:id", asyncHandler(getAssistantFileById));
+router.get("/message/:messageId", asyncHandler(getMessageFileItemsByMessageId));
 router.get("/messages/session/:sessionId", asyncHandler(getMessagesByChatSessionId));
 router.get("/messages/:id", asyncHandler(getMessageById));
-router.post("/messages", asyncHandler(createMessage));
-router.post("/messages/bulk", asyncHandler(createMessages));
-router.put("/messages/:id", asyncHandler(updateMessage));
-router.delete("/messages/:id", asyncHandler(deleteMessage));
-router.delete("/messages", asyncHandler(deleteMessagesIncludingAndAfter));
-
-// Static file routes
-// Route to get image by name
 router.get("/images/:imageName", (req, res) => {
   try {
     const imageName = req.params.imageName;
@@ -332,6 +312,26 @@ router.get("/images/:imageName", (req, res) => {
     res.status(500).json({ error: "Error fetching image", message: error.message });
   }
 });
+router.get("/downloads/:filename", asyncHandler(getDownloads));
+router.get("/downloads/custom-prompts", asyncHandler(downloadCustomPrompts));
+router.get("/static/list", asyncHandler(getListFiles));
+router.get("/static/:filePath", asyncHandler(getFile));
+router.get("/static/json/all", asyncHandler(getAllStaticJsonFiles));
+router.post("/static/custom-prompts", asyncHandler(addCustomPrompt));
+router.get("/static/png/all", asyncHandler(getAllPngFiles));
+router.get("/static/:type", asyncHandler(getFileByType));
+router.get("/static/:filename", asyncHandler(getStaticFile));
+router.get("/static/list/:filetype", asyncHandler(getStaticFilesByType));
+
+// File creation and update routes
+router.post("/", asyncHandler(createFile));
+router.post("/chat", asyncHandler(createChatFile));
+router.post("/assistant", asyncHandler(createAssistantFile));
+router.post("/message", asyncHandler(createMessageFileItems));
+router.post("/upload", handleFileUpload);
+router.post("/upsert-docs", upsertDocs);
+router.post("/messages", asyncHandler(createMessage));
+router.post("/messages/bulk", asyncHandler(createMessages));
 router.post("/images/:imageName", (req, res) => {
   const imageName = req.params.imageName;
   const imagePath = path.join(__dirname, "../../../public/static/images", imageName);
@@ -344,17 +344,12 @@ router.post("/images/:imageName", (req, res) => {
   });
 });
 
-router.get("/downloads/:filename", asyncHandler(getDownloads));
-router.get("/downloads/custom-prompts", asyncHandler(downloadCustomPrompts));
-// app.use('/static', express.static(path.join(__dirname, 'public/static/images')));
-router.get("/static/list", asyncHandler(getListFiles));
-router.get("/static/:filePath", asyncHandler(getFile));
-router.get("/static/json/all", asyncHandler(getAllStaticJsonFiles));
-router.post("/static/custom-prompts", asyncHandler(addCustomPrompt));
-router.get("/static/png/all", asyncHandler(getAllPngFiles));
-router.get("/static/:type", asyncHandler(getFileByType));
-router.get("/static/:filename", asyncHandler(getStaticFile));
-router.get("/static/list/:filetype", asyncHandler(getStaticFilesByType));
-// router.get('/static/list', asyncHandler(getAllStaticFiles));
+// File update routes
+router.put("/:id", asyncHandler(updateFile));
+router.put("/messages/:id", asyncHandler(updateMessage));
+
+// File deletion routes
+router.delete("/messages/:id", asyncHandler(deleteMessage));
+router.delete("/messages", asyncHandler(deleteMessagesIncludingAndAfter));
 
 module.exports = router;

@@ -3,13 +3,7 @@ require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { User } = require("@models/user");
-const {
-  AuthorizationError,
-  ValidationError,
-  ConflictError,
-  logger,
-  REFRESH_TOKEN
-} = require("@config");
+const { AuthorizationError, ValidationError, ConflictError, REFRESH_TOKEN } = require("@config");
 const { findAndPopulateUser } = require("@models/utils");
 const { generateTokens } = require("@utils/api/auth");
 const {
@@ -19,7 +13,7 @@ const {
   initializeUserData
 } = require("./helpers");
 const { getEnv } = require("@utils/api");
-
+const { logger } = require("@config/logging");
 
 const registerUser = async (req, res, next) => {
   let newUser; // Declare newUser outside the try block for scope access in the catch block
@@ -120,7 +114,7 @@ const loginUser = async (req, res, next) => {
     const query = usernameOrEmail.includes("@")
       ? { email: usernameOrEmail }
       : { username: usernameOrEmail };
-    let user = await User.findOne(query);
+    let user = await User.findOne(query).populate("workspaces chatSessions");
     if (!user) {
       throw new Error("User not found");
     }
@@ -132,31 +126,66 @@ const loginUser = async (req, res, next) => {
       throw new Error("Invalid password");
     }
     const { accessToken, refreshToken } = generateTokens(user);
-    // Update user with new tokens
-    user.authSession = {
+    const userSession = {
       accessToken,
       refreshToken,
-      expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
+      userId: user._id,
+      expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      username: user.username,
+      email: user.email,
+      workspaceId: user.workspaces[0]._id,
+      chatSessionId: user.chatSessions[0]._id,
+      apiKey: getEnv("OPENAI_API_PROJECT_KEY")
+    };
+    // Update user with new tokens
+    user.authSession = {
+      ...userSession,
       createdAt: new Date()
     };
+    req.session.user = userSession;
 
     await user.save();
     logger.info(`User logged in: ${user.email}`);
 
     const populatedUser = await findAndPopulateUser(user._id);
-    res.status(200).json({
+    // Setup user session
+    logger.info(`New User Session For: ${populatedUser.username}`);
+
+    res.status(201).json({
       success: true,
+      message: `${populatedUser.username} logged in successfully`,
       accessToken,
       refreshToken,
-      expiresIn: 60 * 60 * 24, // 24 hours
-      userId: user._id,
-      message: "Logged in successfully",
-      user: populatedUser
+      expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      userId: populatedUser._id,
+      workspaceId: populatedUser.workspaces[0]._id,
+      chatSessionId: populatedUser.chatSessions[0]._id,
+      // user: populatedUser,
+      user: {
+        // -- auth data --
+        _id: populatedUser._id,
+        username: populatedUser.username,
+        email: populatedUser.email,
+        // -- app data --
+        workspaces: populatedUser.workspaces,
+        chatSessions: populatedUser.chatSessions,
+        // -- user profile --
+        profile: {
+          name: populatedUser.profile.name,
+          avatar: populatedUser.profile.img,
+          avatarPath: populatedUser.profile.imagePath,
+          bio: populatedUser.profile.bio,
+          stats: populatedUser.profile.stats,
+          social: populatedUser.profile.social,
+          openai: populatedUser.profile.openai,
+          envKeyMap: populatedUser.profile.envKeyMap,
+          defaultApiKey: getEnv("OPENAI_API_PROJECT_KEY")
+        }
+      }
     });
   } catch (error) {
     logger.error(`Error logging in: ${error.message}`);
     next(error);
-    // res.status(500).json({ message: 'Error logging in', error: error.message, stack: error.stack, status: error.name });
   }
 };
 const logoutUser = async (req, res) => {

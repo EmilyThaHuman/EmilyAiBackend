@@ -12,13 +12,17 @@ const {
   createWorkspaceChatSession,
   createWorkspaceFolder
 } = require("@controllers/workspaces");
+const { ChatSession, Preset, Tool, Model, Prompt, Assistant, File } = require("@models/chat");
+const { User } = require("@models/user");
+const { Workspace, Folder } = require("@models/workspace");
+const { Collection } = require("@models/main");
 
 const router = express.Router();
 
 // --- Workspace service ---
 router.get("/", asyncHandler(getAllWorkspaces));
-router.post("/create", asyncHandler(createWorkspace));
 router.get("/:workspaceId", asyncHandler(getWorkspaceById));
+router.post("/create", asyncHandler(createWorkspace));
 router.put("/:workspaceId", asyncHandler(updateWorkspace));
 router.delete("/:workspaceId", asyncHandler(deleteWorkspace));
 // --- Folders service ---
@@ -66,27 +70,80 @@ router.get("/:workspaceId/folders/:folderId", async (req, res) => {
 router.get("/:workspaceId/folders/space/:space", async (req, res) => {
   try {
     const { workspaceId, space } = req.params;
-    // const { space } = req.query;
-    const result = await fetchWorkspaceAndFolders(workspaceId, space);
 
-    // const result = await getFoldersBySpace(spaceName, {
-    //   page: parseInt(page),
-    //   limit: parseInt(limit),
-    //   sortBy,
-    //   sortOrder,
-    // });
+    // Fetch folders for the given workspaceId and space
+    const folders = await Folder.find({ workspaceId, space }).lean();
+
+    // Determine which item type to fetch based on the space
+    let ItemModel;
+    switch (space) {
+      case "prompts":
+        ItemModel = Prompt;
+        break;
+      case "files":
+        ItemModel = File;
+        break;
+      case "tools":
+        ItemModel = Tool;
+        break;
+
+      case "models":
+        ItemModel = Model;
+        break;
+      case "presets":
+        ItemModel = Preset;
+        break;
+      case "assistants":
+        ItemModel = Assistant;
+        break;
+      case "collections":
+        ItemModel = Collection;
+        break;
+      case "chatSessions":
+        ItemModel = ChatSession;
+      // Add other cases for different spaces/item types
+      default:
+        throw new Error("Invalid space type");
+    }
+
+    // Fetch all items of the specified type for the given workspaceId
+    const items = await ItemModel.find({ workspaceId }).lean();
+
+    // Populate folders with their items
+    const populatedFolders = folders.map((folder) => ({
+      ...folder,
+      items: items.filter(
+        (item) => item.folderId && item.folderId.toString() === folder._id.toString()
+      )
+    }));
 
     res.json({
-      message: `Workspace and folders fetched successfully, space: ${space}, result: ${JSON.stringify(result)}`,
-      workspace: result.workspace,
-      folders: result.folders
-      // ...result,
+      message: `Workspace folders and ${space} fetched successfully`,
+      folders: populatedFolders,
+      allItems: items
     });
   } catch (error) {
     console.error(`Error in /folders/:space route: ${error.message}`);
-    res.status(500).json({ error: "Error fetching folders", message: error.message });
+    res.status(500).json({ error: `Error fetching folders and ${space}`, message: error.message });
   }
 });
+
+// router.get("/:workspaceId/folders/space/:space", async (req, res) => {
+//   try {
+//     const { workspaceId, space } = req.params;
+//     // const { space } = req.query;
+//     const result = await fetchWorkspaceAndFolders(workspaceId, space);
+//     res.json({
+//       message: `Workspace and folders fetched successfully, space: ${space}, result: ${JSON.stringify(result)}`,
+//       workspace: result.workspace,
+//       folders: result.folders
+//       // ...result,
+//     });
+//   } catch (error) {
+//     console.error(`Error in /folders/:space route: ${error.message}`);
+//     res.status(500).json({ error: "Error fetching folders", message: error.message });
+//   }
+// });
 router.get("/:workspaceId/folders/:folderId/items", async (req, res) => {
   try {
     const { workspaceId, folderId } = req.params;
@@ -174,7 +231,5 @@ router.post("/:workspaceId/chatSessions", async (req, res) => {
       .json({ error: "Error creating or fetching chat session", message: error.message });
   }
 });
-
-// router.get('/folders/:space', asyncHandler(getAllWorkspaces));
 
 module.exports = router;

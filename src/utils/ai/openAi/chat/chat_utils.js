@@ -1,10 +1,9 @@
 // services/utils.js
 const dotenv = require("dotenv");
-const { logger } = require("@config/logging");
 const { ChatOpenAI } = require("@langchain/openai");
-// const sanitizeHtml = require("sanitize-html");
 const crypto = require("crypto");
 const { getEnv } = require("@utils/api");
+const { logger } = require("@config/logging");
 
 dotenv.config();
 

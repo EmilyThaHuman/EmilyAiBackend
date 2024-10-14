@@ -1,10 +1,10 @@
-const { logger } = require("@config/logging");
-const { getEnv } = require("@utils/api");
 const { default: axios } = require("axios");
-const { logChatDataError } = require("./chat_helpers");
 const { PromptTemplate } = require("@langchain/core/prompts");
 const { ChatOpenAI } = require("@langchain/openai");
 const { SystemMessage, HumanMessage } = require("@langchain/core/messages");
+const { logChatDataError } = require("./chat_helpers");
+const { getEnv } = require("@utils/api");
+const { logger } = require("@config/logging");
 
 const chatOpenAI = new ChatOpenAI({
   model: getEnv("OPENAI_API_CHAT_COMPLETION_MODEL"),

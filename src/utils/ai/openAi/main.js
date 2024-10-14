@@ -1,9 +1,9 @@
 const { OpenAIEmbeddings, ChatOpenAI } = require("@langchain/openai");
 const { getEnv } = require("../../api/env.js");
 const { default: OpenAI } = require("openai");
-const { logger } = require("@config/logging/logger.js");
 const { byteToImageURL } = require("@utils/processing/utils/files.js");
 const { SUPPORTED_MIME_TYPES } = require("@config/files.js");
+const { logger } = require("@config/logging/logger.js");
 require("dotenv").config();
 
 const getOpenaiClient = () => {

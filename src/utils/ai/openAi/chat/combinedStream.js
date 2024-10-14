@@ -1,9 +1,7 @@
-/* eslint-disable no-useless-escape */
-/* eslint-disable no-unused-vars */
-const fs = require("fs");
-const path = require("path");
-const { PineconeStore } = require("@langchain/pinecone");
+const fs = require("node:fs/promises");
 const { logger } = require("@config/logging");
+
+const { PineconeStore } = require("@langchain/pinecone");
 const {
   initializeOpenAI,
   initializePinecone,
@@ -43,10 +41,103 @@ const {
   extractContent
 } = require("./chat_helpers");
 const { addMessageToSession, getSessionHistory } = require("./chat_history");
-const { recordTokenUsage } = require("@utils/processing/utils/loggingFunctions");
+const { getOpenaiClient, getDefaultOpenaiClient } = require("../get");
+const { ChatSession } = require("@models/chat");
+// const { recordTokenUsage } = require("@utils/processing/utils/loggingFunctions");
 
+/**
+ * Function Definitions for OpenAI Function Calling
+ * Define the structure of the JSON response you expect.
+ */
+const functionDefinitions = [
+  {
+    type: "function",
+    name: "generateResponse",
+    description: "Generates a response based on user input.",
+    parameters: {
+      type: "object",
+      properties: {
+        content: {
+          type: "string",
+          description: "The content of the response."
+        },
+        metadata: {
+          type: "object",
+          properties: {
+            timestamp: {
+              type: "string",
+              description: "The time the response was generated."
+            },
+            responseLength: {
+              type: "integer",
+              description: "The length of the response in characters."
+            }
+          },
+          required: ["timestamp", "responseLength"]
+        }
+      },
+      required: ["content", "metadata"]
+    }
+  }
+];
+const createNewSession = async (defaultData) => {
+  if (!defaultData.userId || !defaultData.workspaceId) {
+    return res.status(400).json({ message: "Missing required parameters." });
+  }
+  const {
+    userId,
+    workspaceId,
+    sessionId,
+    regenerate,
+    prompt,
+    clientApiKey,
+  } = defaultData;
+  try {
+    // Create a new chat session
+    const newChat = await ChatSession.create({
+      userId,
+      workspaceId,
+      sessionId: sessionId || generateObjectId(),
+      regenerate,
+      prompt,
+      clientApiKey,
+      title: prompt,
+      name: prompt,
+      status: "active",
+      messages: [],
+      path: `/chat/${sessionId}`
+    });
+
+    // save
+    await newChat.save();
+
+    // update with system/assistant instructions
+    const systemPrompt = getMainSystemMessageContent();
+    const assistantInstructions = getMainAssistantMessageInstructions();
+    await newChat.addSystemPrompt(newChat._id, systemPrompt);
+    await newChat.addAssistantMessage(newChat._id, assistantInstructions);
+
+    // push refId to user and workspace chatSessions arrays
+    await newChat.updateUserAndWorkspaceChatSessions(newChat._id);
+
+    res.status(201).json({ chatSession: newChat });
+  } catch (error) {
+    logger.error("Error creating chat session:", error.message);
+    res.status(500).json({ message: "Failed to create chat session." });
+  }
+};
 const combinedChatStream = async (req, res) => {
-  const initializationData = getInitializationData(req.body);
+  let initializationData;
+  if (req.body.newSession) {
+    const defaultData = (initializationData = getInitializationData(req.body));
+    const newSession = await createNewSession(defaultData);
+    initializationData = {
+      ...defaultData,
+      sessionId: newSession._id,
+    };
+  } else {
+    initializationData = getInitializationData(req.body);
+  }
   if (initializationData.streamType === "file") {
     return handleFileStreaming(req, res);
   }
@@ -150,26 +241,10 @@ const combinedChatStream = async (req, res) => {
       getMainAssistantMessageInstructions(),
       formattedPrompt
     );
-    let result;
-    try {
-      result = await chatOpenAI.completionWithRetry({
-        model: getEnv("OPENAI_API_CHAT_COMPLETION_MODEL"),
-        messages: [
-          { role: "system", content: getMainSystemMessageContent() },
-          { role: "assistant", content: getMainAssistantMessageInstructions() },
-          { role: "user", content: formattedPrompt }
-        ],
-        stream: true,
-        response_format: { type: "json_object" },
-        temperature: 0.2
-      });
-    } catch (error) {
-      logger.error(`[ERROR][completionWithRetry]: ${error.message}`);
-      throw error;
-    }
     await handleStreamingResponse(
       res,
-      result,
+      chatOpenAI,
+      formattedPrompt,
       chatSession,
       userMessageDoc,
       sessionContextStore,
@@ -183,23 +258,28 @@ const combinedChatStream = async (req, res) => {
   }
 };
 const setupVectorStores = async (pinecone, embedder, initializationData) => {
-  const pineconeIndex = await createPineconeIndex(pinecone, initializationData.pineconeIndex);
-  const sessionContextStore = await PineconeStore.fromExistingIndex(embedder, {
-    pineconeIndex,
-    namespace: "chat-history",
-    textKey: "text"
-  });
-  const searchContextStore = await PineconeStore.fromExistingIndex(embedder, {
-    pineconeIndex,
-    namespace: "perplexity-search-results",
-    textKey: "text"
-  });
-  const customDataStore = await PineconeStore.fromExistingIndex(embedder, {
-    pineconeIndex,
-    namespace: "library-documents",
-    textKey: "text"
-  });
-  return { sessionContextStore, searchContextStore, customDataStore };
+  try {
+    const pineconeIndex = await createPineconeIndex(pinecone, initializationData.pineconeIndex);
+    const sessionContextStore = await PineconeStore.fromExistingIndex(embedder, {
+      pineconeIndex,
+      namespace: "chat-history",
+      textKey: "text"
+    });
+    const searchContextStore = await PineconeStore.fromExistingIndex(embedder, {
+      pineconeIndex,
+      namespace: "perplexity-search-results",
+      textKey: "text"
+    });
+    const customDataStore = await PineconeStore.fromExistingIndex(embedder, {
+      pineconeIndex,
+      namespace: "library-documents",
+      textKey: "text"
+    });
+    return { sessionContextStore, searchContextStore, customDataStore };
+  } catch (error) {
+    logger.error(`[ERROR][setupVectorStores]: ${error.message}`);
+    throw error; // Always rethrow the error or handle it properly
+  }
 };
 const getRelevantContext = async (
   sessionContextStore,
@@ -211,6 +291,37 @@ const getRelevantContext = async (
     const relevantSessionHistory = await sessionContextStore.similaritySearch(prompt, 5);
     const relevantSearchResults = await searchContextStore.similaritySearch(prompt, 5);
     const relevantCustomDataDocs = await customDataStore.similaritySearch(prompt, 5);
+
+    try {
+      logger.info(`[getRelevantContext] prompt: ${prompt}`);
+      logger.info(
+        `[getRelevantContext] relevantSessionHistory: ${JSON.stringify(relevantSessionHistory)}`
+      );
+    } catch (error) {
+      logger.error(
+        `[ERROR][getRelevantContext] sessionContextStore.similaritySearch: ${error.message}`
+      );
+    }
+    try {
+      logger.info(`[getRelevantContext] prompt: ${prompt}`);
+      logger.info(
+        `[getRelevantContext] relevantSearchResults: ${JSON.stringify(relevantSearchResults)}`
+      );
+    } catch (error) {
+      logger.error(
+        `[ERROR][getRelevantContext] relevantSearchResults.similaritySearch: ${error.message}`
+      );
+    }
+    try {
+      logger.info(`[getRelevantContext] prompt: ${prompt}`);
+      logger.info(
+        `[getRelevantContext] relevantCustomDataDocs: ${JSON.stringify(relevantCustomDataDocs)}`
+      );
+    } catch (error) {
+      logger.error(
+        `[ERROR][getRelevantContext] relevantCustomDataDocs.similaritySearch: ${error.message}`
+      );
+    }
     return {
       sessionContext: relevantSessionHistory.map((doc) => doc.pageContent).join("\n"),
       searchContext: relevantSearchResults.map((doc) => doc.pageContent).join("\n"),
@@ -266,40 +377,196 @@ const getDocumentationContent = async (uiLibraries, componentTypes) => {
 };
 const handleStreamingResponse = async (
   res,
-  result,
+  chatOpenAI,
+  formattedPrompt,
   chatSession,
   userMessageDoc,
   sessionContextStore,
   initializationData,
   messages
 ) => {
-  const responseChunks = [];
+  const DONE_MESSAGE = "DONE"; // Define DONE_MESSAGE if not already defined
+  const sendData = (data) => {
+    res.write(`data: ${JSON.stringify(data)}\n\n`);
+  };
 
   try {
-    for await (const chunk of result) {
-      const { content = "" } = chunk.choices[0]?.delta || {};
-      responseChunks.push(content);
-      res.write(`data: ${JSON.stringify({ content })}\n\n`);
-      res.flush();
+    // Initiate the streaming request to OpenAI
+    const resultStream = await chatOpenAI.completionWithRetry({
+      model: getEnv("OPENAI_API_CHAT_COMPLETION_MODEL"),
+      messages: [
+        { role: "system", content: getMainSystemMessageContent() },
+        { role: "assistant", content: getMainAssistantMessageInstructions() },
+        { role: "user", content: formattedPrompt }
+      ],
+      stream: true,
+      // streamUsage: true,
+      temperature: 0.2,
+      tools: [
+        {
+          type: "function",
+          function: {
+            name: "generateResponse",
+            strict: true,
+            parameters: {
+              type: "object",
+              required: ["content", "metadata"],
+              properties: {
+                content: {
+                  type: "string",
+                  description: "The content of the response."
+                },
+                metadata: {
+                  type: "object",
+                  required: ["timestamp", "responseLength"],
+                  properties: {
+                    timestamp: {
+                      type: "string",
+                      description: "The time the response was generated."
+                    },
+                    responseLength: {
+                      type: "integer",
+                      description: "The length of the response in characters."
+                    }
+                  },
+                  additionalProperties: false
+                }
+              },
+              additionalProperties: false
+            },
+            description: "Generates a response based on user input."
+          }
+        }
+      ],
+      parallel_tool_calls: true,
+      response_format: {
+        type: "json_object"
+      }
+    });
+    let fullResponse = "";
+    // let usageInfo = {};
+    const liveLogResponse = () => {
+      logger.info("Accumulated Response:", fullResponse);
+    };
+    for await (const chunk of resultStream) {
+      const chunkString = chunk.toString();
+      fullResponse += chunkString;
+
+      try {
+        const parsed = JSON.parse(chunkString);
+
+        // if (parsed.usage) {
+        //   usageInfo = parsed.usage;
+        //   sendData({ type: "usage", usage: usageInfo });
+        // }
+
+        if (parsed.choices && parsed.choices.length > 0) {
+          const choice = parsed.choices[0];
+
+          if (choice.message) {
+            const content = choice.message.content || "";
+            sendData({ type: "message", content });
+          }
+
+          if (choice.function_call) {
+            const { name, arguments: args } = choice.function_call;
+            const responseData = JSON.parse(args);
+            sendData({ type: "function_call", name, arguments: responseData });
+          }
+        }
+      } catch (parseError) {
+        logger.error(`Error parsing chunk: ${parseError.message}`);
+        throw new Error(`Error parsing chunk: ${JSON.stringify(parseError)}`);
+      }
     }
-
-    const fullResponse = responseChunks.join("");
-    recordTokenUsage(await fullResponse.usage);
-
+    await saveChatCompletion(initializationData, chatSession, fullResponse);
     await processChatCompletion(chatSession, fullResponse, sessionContextStore, initializationData);
 
-    return fullResponse;
-  } catch (error) {
-    const chatData = { chatSession, userMessageDoc, messages };
-    logChatDataError("handleStreamingResponse", chatData, error);
-    // logger.error(`[ERROR][handleStreamingResponse]: ${error.message}`);
-    throw error;
-  } finally {
-    res.write(`data: ${JSON.stringify({ content: DONE_MESSAGE })}\n\n`);
+    // Send the DONE message and end the response
+    sendData({ type: "end", message: DONE_MESSAGE });
     res.end();
+  } catch (error) {
+    logger.error(`[ERROR][handleStreamingResponse]: ${error.message}`);
+    sendData({ type: "error", message: error.message });
+    res.end();
+    throw error;
   }
 };
+/**
+ * Handles the OpenAI streaming response and sends it back to the client as a markdown or plain text.
+ */
+const handleMarkdownStreamingResponse = async (
+  res,
+  chatOpenAI,
+  formattedPrompt,
+  chatSession,
+  userMessageDoc,
+  sessionContextStore,
+  initializationData,
+  messages
+) => {
+  const sendJSON = (data) => res.write(`data: ${JSON.stringify(data)}\n\n`);
+  let accumulatedResponse = "";
 
+  try {
+    const result = await chatOpenAI.completionWithRetry({
+      model: getEnv("OPENAI_API_CHAT_COMPLETION_MODEL"),
+      messages: [
+        { role: "system", content: getMainSystemMessageContent() },
+        { role: "assistant", content: getMainAssistantMessageInstructions() },
+        { role: "user", content: formattedPrompt }
+      ],
+      stream: true,
+      stream_usage: true,
+      temperature: 0.2,
+      functions: functionDefinitions,
+      function_call: "auto"
+    });
+
+    for await (const chunk of result) {
+      const payloads = chunk.toString().split("\n\n");
+      for (const payload of payloads) {
+        if (!payload.trim()) continue;
+        if (payload === "[DONE]") {
+          sendJSON({ type: "end" });
+          saveMarkdown(accumulatedResponse); // Save the accumulated response to a markdown file
+          res.end();
+          return;
+        }
+
+        const parsed = JSON.parse(payload.replace(/^data: /, ""));
+        const { usage, choices } = parsed;
+
+        // Handle usage statistics
+        if (usage) {
+          sendJSON({ type: "usage", usage });
+        }
+
+        // Accumulate content chunks
+        const contentChunk = choices?.[0]?.delta?.content || "";
+        accumulatedResponse += contentChunk;
+
+        sendJSON({ type: "content", content: contentChunk }); // Stream back to client
+      }
+    }
+  } catch (error) {
+    logger.error(`[ERROR][handleStreamingResponse]: ${error.message}`);
+    throw error;
+  }
+};
+/**
+ * Save the accumulated markdown response to a file.
+ */
+const saveMarkdown = async (content) => {
+  const fileName = generateUniqueFileName("chat-response");
+  const filePath = getPublicFilePath(fileName);
+  try {
+    await writeToFile(filePath, content);
+    logger.info(`Markdown saved at ${filePath}`);
+  } catch (error) {
+    logger.error(`[ERROR][saveMarkdown]: ${error.message}`);
+  }
+};
 const processChatCompletion = async (
   chatSession,
   fullResponse,
@@ -325,12 +592,14 @@ async function savePromptBuild(systemContent, assistantInstructions, formattedPr
   try {
     await writeToFile(filePath, promptBuild);
   } catch (error) {
-    logger.error(`Error saving prompt build: ${error}`);
+    logger.error(`[ERROR][savePromptBuild]: ${error.message}`);
+    throw error;
   }
 }
 async function saveChatCompletion(initializationData, chatSession, fullResponse) {
   const fileName = generateUniqueFileName("chat-completion");
   const filePath = getPublicFilePath(fileName);
+  await fs.writeFile(filePath, responseText);
 
   try {
     const content = extractContent(fullResponse);
@@ -355,12 +624,187 @@ async function saveChatCompletion(initializationData, chatSession, fullResponse)
       logChatData("assistantMessageDoc", assistantMessageDoc);
       await chatSession.calculateTokenUsage();
     } catch (error) {
-      logger.error(`Error saving assistant message: ${error}`);
+      logger.error(`[ERROR][saveChatCompletion]: ${error.message}`);
       throw error;
     }
   } catch (error) {
-    logger.error(`Error saving chat completion: ${error}`);
+    logger.error(`[ERROR][saveChatCompletion]: ${error.message}`);
+    throw error;
   }
 }
 
 module.exports = { combinedChatStream };
+
+// Check if the result is an async iterator (stream)
+// if (result && typeof result[Symbol.asyncIterator] === "function") {
+//   for await (const chunk of result) {
+//     const content = chunk.choices?.[0]?.delta?.content || "";
+//     fullResponse += content;
+//     responseChunks.push(content);
+
+//     // Send each chunk to the client
+//     sendData({ content });
+
+//     // Flush the response if possible
+//     if (typeof res.flush === "function") {
+//       res.flush();
+//     }
+
+//     // Log the accumulated response
+//     liveLogResponse();
+//   }
+// } else {
+//   logger.error("Invalid result from completionWithRetry");
+//   throw new Error("Invalid response stream");
+// }
+
+// // Optionally handle usage data
+// if (result.usage) {
+//   const { prompt_tokens, completion_tokens, total_tokens } = result.usage;
+//   await recordTokenUsage(prompt_tokens, completion_tokens, total_tokens);
+// } else {
+//   logger.warn("Token usage data not available in the response.");
+// }
+
+// Save and process the full response
+//   await saveChatCompletion(initializationData, chatSession, fullResponse);
+//   await processChatCompletion(chatSession, fullResponse, sessionContextStore, initializationData);
+
+//   // Send the DONE message and end the response
+//   sendData({ type: "end", message: DONE_MESSAGE });
+//   res.end();
+// } catch (error) {
+//   logger.error(`[ERROR][handleStreamingResponse]: ${error.message}`);
+//   sendData({ type: "error", message: error.message });
+//   res.end();
+// }
+//   sendData({ content: DONE_MESSAGE });
+//   res.end();
+//   return fullResponse;
+// } catch (error) {
+//   const chatData = { chatSession, userMessageDoc, messages };
+//   logChatDataError("handleStreamingResponse", chatData, error);
+//   sendData({ error: error.message });
+//   res.end();
+//   throw error;
+// }
+// };
+
+// Stream the data chunks
+//   result.data.on("data", (chunk) => {
+//     const payloads = chunk.toString().split("\n\n");
+//     for (const payload of payloads) {
+//       if (payload.trim() === "") continue;
+//       if (payload === "[DONE]") {
+//         sendJSON({ type: "end" });
+//         res.end();
+//         return;
+//       }
+
+//       try {
+//         const parsed = JSON.parse(payload.replace(/^data: /, ""));
+//         const { usage, choices } = parsed;
+
+//         // If stream_options is true, an additional chunk with usage stats is sent
+//         if (usage) {
+//           sendJSON({ type: "usage", usage });
+//           continue;
+//         }
+
+//         const choice = choices[0];
+//         if (choice.function_call) {
+//           const { name, arguments: args } = choice.function_call;
+//           const responseData = JSON.parse(args);
+
+//           // Accumulate the response
+//           accumulatedResponse = { ...accumulatedResponse, ...responseData };
+//           sendJSON({ type: "message", content: accumulatedResponse });
+//           liveLogResponse();
+//         } else {
+//           const text = choice.delta.content;
+//           if (text) {
+//             // Accumulate the text content
+//             accumulatedResponse.content = (accumulatedResponse.content || "") + text;
+//             // Optionally, update metadata here if needed
+//             sendJSON({ type: "message", content: accumulatedResponse });
+//             liveLogResponse();
+//           }
+//         }
+//       } catch (error) {
+//         console.error("Error parsing stream payload:", error);
+//       }
+//     }
+//   });
+// };
+// const handleStreamingResponse = async (
+//   res,
+//   chatOpenAI,
+//   formattedPrompt,
+//   chatSession,
+//   userMessageDoc,
+//   sessionContextStore,
+//   initializationData,
+//   messages
+// ) => {
+//   let result;
+//   try {
+//     result = await chatOpenAI.completionWithRetry({
+//       model: getEnv("OPENAI_API_CHAT_COMPLETION_MODEL"),
+//       messages: [
+//         { role: "system", content: getMainSystemMessageContent() },
+//         { role: "assistant", content: getMainAssistantMessageInstructions() },
+//         { role: "user", content: formattedPrompt }
+//       ],
+//       stream: true,
+//       stream_usage: true,
+//       response_format: { type: "json_object" },
+//       temperature: 0.2,
+//       tools: functionDefinitions,
+//       tool_call: "auto"
+//     });
+//   } catch (error) {
+//     logger.error(`[ERROR][completionWithRetry]: ${error.message}`);
+//     throw error;
+//   }
+//   const responseChunks = [];
+//   let accumulatedResponse = {};
+//   const sendJSON = (data) => {
+//     res.write(`data: ${JSON.stringify(data)}\n\n`);
+//   };
+//   const liveLogResponse = () => {
+//     logger.info("Accumulated Response:", JSON.stringify(accumulatedResponse, null, 2));
+//   };
+//   try {
+//     if (result && result[Symbol.asyncIterator]) {
+//       for await (const chunk of result) {
+//         liveLogResponse()
+//         const { content = "" } = chunk.choices[0]?.delta || {};
+//         responseChunks.push(content);
+//         res.write(`data: ${JSON.stringify({ content })}\n\n`);
+//         res.flush();
+//       }
+//     } else {
+//       logger.error("Invalid result from completionWithRetry");
+//       throw new Error("Invalid response stream");
+//     }
+
+//     const fullResponse = responseChunks.join("");
+//     // if (fullResponse.usage) {
+//     //   const { prompt_tokens, completion_tokens, total_tokens } = fullResponse.usage;
+//     //   recordTokenUsage(prompt_tokens, completion_tokens, total_tokens);
+//     // } else {
+//     //   logger.warn("Token usage data not available in the response.");
+//     // }
+//     await saveChatCompletion(initializationData, chatSession, fullResponse);
+//     await processChatCompletion(chatSession, fullResponse, sessionContextStore, initializationData);
+
+//     return fullResponse;
+//   } catch (error) {
+//     const chatData = { chatSession, userMessageDoc, messages };
+//     logChatDataError("handleStreamingResponse", chatData, error);
+//     throw error;
+//   } finally {
+//     res.write(`data: ${JSON.stringify({ content: DONE_MESSAGE })}\n\n`);
+//     res.end();
+//   }
+// };

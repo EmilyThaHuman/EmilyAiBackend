@@ -2,9 +2,8 @@ const mongoose = require("mongoose");
 const fs = require("fs");
 const path = require("path");
 const { initialUserFiles } = require("@lib/files");
-const { SUPPORTED_MIME_TYPES_ABBR, ALLOWED_FILE_TYPES_ABBR } = require("@config");
-// const { logger } = require('@config/logging');
-const { File } = require("@models");
+const { SUPPORTED_MIME_TYPES_ABBR, ALLOWED_FILE_TYPES_ABBR } = require("@config/constants");
+const { File } = require("@models/chat");
 const { logger } = require("@config/logging");
 
 const createChatSession = async (userId, workspaceId, sessionName = "New Chat Session") => {

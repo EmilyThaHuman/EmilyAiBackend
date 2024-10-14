@@ -25,10 +25,18 @@ function logArrayAsTable(array) {
   });
 }
 
-function recordTokenUsage({ promptTokens, completionTokens, totalTokens }) {
-  logger.info("Prompt tokens:", promptTokens);
-  logger.info("Completion tokens:", completionTokens);
-  logger.info("Total tokens:", totalTokens);
+function recordTokenUsage({ prompt_tokens, completion_tokens, total_tokens }) {
+  if (!prompt_tokens || !completion_tokens || !total_tokens) {
+    logger.error("Invalid token usage data");
+    return;
+  }
+  try {
+    logger.info("Prompt tokens:", prompt_tokens);
+    logger.info("Completion tokens:", completion_tokens);
+    logger.info("Total tokens:", total_tokens);
+  } catch (error) {
+    logger.error(`Error recording token usage: ${error.message}`);
+  }
 }
 
 module.exports = {

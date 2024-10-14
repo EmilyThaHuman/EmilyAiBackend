@@ -12,10 +12,9 @@ const {
 const { combinedChatStream } = require("@utils/ai/openAi/chat/combinedStream");
 const { ChatOpenAI } = require("@langchain/openai");
 const { ChatMessage, ChatSession } = require("@models/chat");
-const { nanoid } = require("ai");
-const { logger } = require("@config/logging");
 const { generateObjectId } = require("@utils/auth");
 const { getEnv } = require("@utils/api");
+const { logger } = require("@config/logging");
 
 const router = express.Router();
 
@@ -47,10 +46,10 @@ router.post(
             role: "system",
             content: `Generate a concise and descriptive title for this chat session based on the user's first prompt. The title should be no more than five words and encapsulate the main topic or purpose of the conversation.
 
-Examples:
-- 'I need help planning my vacation to Italy.' becomes Vacation Planning GPT ✈️
-- 'Can you assist me in understanding quantum physics?' becomes Quantum Physics GPT 🔬
-`
+            Examples:
+            - 'I need help planning my vacation to Italy.' becomes Vacation Planning GPT ✈️
+            - 'Can you assist me in understanding quantum physics?' becomes Quantum Physics GPT 🔬
+          `
           }
         ],
         max_tokens: 10,
