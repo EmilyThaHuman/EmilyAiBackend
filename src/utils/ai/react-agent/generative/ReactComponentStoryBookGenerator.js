@@ -1,5 +1,7 @@
-import { ChatBot } from "../utils";
+// Import required modules using CommonJS require statements
+const { ChatBot } = require("../utils");
 
+// Define the response example as a template literal
 const responseExample = `
 \`\`\`tsx
 import React from 'react';
@@ -59,6 +61,7 @@ Disabled.args = {
 \`\`\`
 `;
 
+// Define the input example as a template literal
 const inputExample = `
 import React, { ChangeEvent } from 'react';
 import { FieldProps } from '../../types';
@@ -120,6 +123,7 @@ const MultiCheckboxField: React.FC<FieldProps> = ({ fieldConfig, inputProps, fie
 export default MultiCheckboxField;
 `;
 
+// Define the generate form prompt as a template literal
 const GENERATE_FORM_PROMPT = `
 Act as a Frontend Developer.
 Create Typescript File for storybook based on the component (import '@storybook/react').
@@ -135,34 +139,39 @@ return a React storybook file of the component, written in Typescript, using sto
 return your code inside tsx/typescript markdown \`\`\`tsx <Your Code Here> \`\`\`.
 `;
 
-export class ReactComponentStoryBookGenerator {
-  private chatbot: ChatBot;
-  private model: string;
-
+/**
+ * Class responsible for generating React Storybook files for components using a ChatBot.
+ */
+class ReactComponentStoryBookGenerator {
+  /**
+   * Creates an instance of ReactComponentStoryBookGenerator.
+   */
   constructor() {
     this.model = "gpt-3.5-turbo";
-    // this.model = "gpt-4";
+    // this.model = 'gpt-4';
     this.chatbot = new ChatBot(this.model);
   }
 
-  async generateComponentStoryBook({
-    description,
-    useExampleFlow = false,
-  }: {
-    description: string;
-    current?: any;
-    useExampleFlow?: boolean;
-  }): Promise<any> {
+  /**
+   * Generates a React Storybook file for a given component description.
+   *
+   * @param {Object} params - The parameters for generating the Storybook file.
+   * @param {string} params.description - The description of the component.
+   * @param {boolean} [params.useExampleFlow=false] - Whether to use the example flow in the generation.
+   * @returns {Promise<string>} The generated Storybook file content.
+   */
+  async generateComponentStoryBook({ description, useExampleFlow = false }) {
     const exampleFlow = [
       {
         role: "user",
-        content: inputExample,
+        content: inputExample
       },
       {
         role: "assistant",
-        content: responseExample,
-      },
+        content: responseExample
+      }
     ];
+
     const messages = [
       { role: "system", content: GENERATE_FORM_PROMPT },
       ...(useExampleFlow ? exampleFlow : []),
@@ -170,10 +179,16 @@ export class ReactComponentStoryBookGenerator {
       {
         role: "user",
         content:
-          "Generate a React Storybook file in typescript based on the above component (last message), make sure to return your code in tsx/typescript markdown ```tsx <Your Code Here> ```",
-      },
-    ] as any;
+          "Generate a React Storybook file in typescript based on the above component (last message), make sure to return your code in tsx/typescript markdown ```tsx <Your Code Here> ```"
+      }
+    ];
+
     const response = await this.chatbot.getTypescriptResponse(messages);
     return response[0];
   }
 }
+
+// Export the ReactComponentStoryBookGenerator class
+module.exports = {
+  ReactComponentStoryBookGenerator
+};

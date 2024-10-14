@@ -21,30 +21,30 @@ const config = require("@config/main");
 
 const middlewares = (app) => {
   // Set up Helmet for enhanced security, including Content Security Policy (CSP)
-  app.use(helmet(config.security.helmet));
+  app.use(helmet(config.app.middlewares.security.helmet));
 
   // Use Morgan middleware for logging HTTP requests
-  app.use(morganMiddleware);
+  app.use(morganMiddleware(config.app.middlewares.logging.morgan));
 
   // Enable response compression for better performance
-  app.use(compression(config.compression));
+  app.use(compression(config.app.middlewares.compression));
 
   // Parse incoming JSON requests
-  app.use(express.json());
+  app.use(express.json(config.app.express.json));
 
   // Parse URL-encoded data
-  app.use(express.urlencoded({ extended: true }));
+  app.use(express.urlencoded(config.app.express.urlencoded));
 
   // Parse cookies attached to client requests
-  app.use(cookieParser(config.cookie.secret));
+  app.use(cookieParser(config.auth.cookie.secret));
 
   // Configure CORS settings
-  app.use(cors(config.cors));
+  app.use(cors(config.app.middlewares.cors));
 
   // Session configuration
   app.use(
     session({
-      ...config.session,
+      ...config.auth.session,
       store: new MongoStore({
         mongoUrl: config.database.uri
       })
@@ -57,7 +57,7 @@ const middlewares = (app) => {
 
   // Configure local strategy for user authentication
   passport.use(
-    new LocalStrategy(config.passport.local, async (email, password, done) => {
+    new LocalStrategy(config.auth.passport.local, async (email, password, done) => {
       try {
         const user = await User.findOne({ email });
         if (!user) {
@@ -89,19 +89,19 @@ const middlewares = (app) => {
   });
 
   // Serve static files
-  app.use(express.static(config.staticFiles.public));
+  app.use(express.static(config.app.middlewares.staticFiles.public));
 
-  config.staticFiles.dirs.forEach((dir) => {
+  config.app.middlewares.staticFiles.dirs.forEach((dir) => {
     app.use(
       `/static/${dir}`,
-      cors(config.cors),
-      express.static(path.join(config.staticFiles.public, `static/${dir}`))
+      cors(config.app.middlewares.cors),
+      express.static(path.join(config.app.middlewares.staticFiles.public, `static/${dir}`))
     );
   });
 
   // Endpoint to serve service-worker.js
-  app.get("/service-worker.js", cors(config.cors), (req, res) => {
-    res.sendFile(path.resolve(config.staticFiles.public, "service-worker.js"));
+  app.get("/service-worker.js", cors(config.app.middlewares.cors), (req, res) => {
+    res.sendFile(path.resolve(config.app.middlewares.staticFiles.public, "service-worker.js"));
   });
 
   // Middleware for handling Server-Sent Events
@@ -118,7 +118,7 @@ const middlewares = (app) => {
   });
 
   // Apply rate limiting to prevent abuse and improve security
-  app.use(rateLimit(config.rateLimit));
+  app.use(rateLimit(config.app.middlewares.rateLimit));
 };
 
 module.exports = middlewares;

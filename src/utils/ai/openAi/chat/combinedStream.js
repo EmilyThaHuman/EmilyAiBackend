@@ -84,14 +84,7 @@ const createNewSession = async (defaultData) => {
   if (!defaultData.userId || !defaultData.workspaceId) {
     return res.status(400).json({ message: "Missing required parameters." });
   }
-  const {
-    userId,
-    workspaceId,
-    sessionId,
-    regenerate,
-    prompt,
-    clientApiKey,
-  } = defaultData;
+  const { userId, workspaceId, sessionId, regenerate, prompt, clientApiKey } = defaultData;
   try {
     // Create a new chat session
     const newChat = await ChatSession.create({
@@ -133,7 +126,7 @@ const combinedChatStream = async (req, res) => {
     const newSession = await createNewSession(defaultData);
     initializationData = {
       ...defaultData,
-      sessionId: newSession._id,
+      sessionId: newSession._id
     };
   } else {
     initializationData = getInitializationData(req.body);
@@ -450,18 +443,16 @@ const handleStreamingResponse = async (
     };
     for await (const chunk of resultStream) {
       const chunkString = chunk.toString();
-      fullResponse += chunkString;
+      accumulatedResponse += chunkString;
 
+      // Handle each chunk carefully
       try {
-        const parsed = JSON.parse(chunkString);
+        const parsedChunk = JSON.parse(chunkString);
+        logger.info("Parsed Chunk:", parsedChunk);
 
-        // if (parsed.usage) {
-        //   usageInfo = parsed.usage;
-        //   sendData({ type: "usage", usage: usageInfo });
-        // }
-
-        if (parsed.choices && parsed.choices.length > 0) {
-          const choice = parsed.choices[0];
+        if (parsedChunk.choices && parsedChunk.choices.length > 0) {
+          const choice = parsedChunk.choices[0];
+          logger.info("CHOICE:", choice);
 
           if (choice.message) {
             const content = choice.message.content || "";
@@ -474,11 +465,14 @@ const handleStreamingResponse = async (
             sendData({ type: "function_call", name, arguments: responseData });
           }
         }
-      } catch (parseError) {
-        logger.error(`Error parsing chunk: ${parseError.message}`);
-        throw new Error(`Error parsing chunk: ${JSON.stringify(parseError)}`);
+      } catch (error) {
+        // Log the error without crashing
+        logger.error(`Error parsing chunk: ${error.message}, chunk: ${chunkString}`);
+        // Optionally, continue with partial content
+        continue;
       }
     }
+
     await saveChatCompletion(initializationData, chatSession, fullResponse);
     await processChatCompletion(chatSession, fullResponse, sessionContextStore, initializationData);
 

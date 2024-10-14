@@ -15,14 +15,15 @@ const { ChatMessage, ChatSession } = require("@models/chat");
 const { generateObjectId } = require("@utils/auth");
 const { getEnv } = require("@utils/api");
 const { logger } = require("@config/logging");
+const { default: OpenAI } = require("openai");
 
 const router = express.Router();
 
 // --- Chat completion endpoints ---
 router.post("/stream", asyncHandler(combinedChatStream));
 const openai = new ChatOpenAI({
-  apiKey: getEnv("OPENAI_API_PROJECT_KEY"),
-  model: "gpt-3.5-turbo"
+  apiKey: getEnv("OPENAI_API_PROJECT_KEY")
+  // model: "gpt-3.5-turbo"
 });
 
 /**
@@ -31,17 +32,29 @@ const openai = new ChatOpenAI({
 router.post(
   "/generate-title",
   asyncHandler(async (req, res) => {
-    const { firstPrompt } = req.body;
+    const { prompt } = req.body;
 
-    if (!firstPrompt) {
+    if (!prompt) {
       return res.status(400).json({ message: "First prompt is required." });
     }
 
+    const titleGpt = new OpenAI({
+      apiKey: getEnv("OPENAI_API_PROJECT_KEY")
+      // model: "gpt-3.5-turbo"
+    });
+    // const llm = new ChatOpenAI({
+    //   apiKey: getEnv("OPENAI_API_PROJECT_KEY"),
+    //   model: "gpt-4o",
+    //   temperature: 0,
+    //   maxTokens: undefined,
+    //   timeout: undefined,
+    //   maxRetries: 2
+    // });
     try {
-      const response = await openai.chat.completions.create({
+      const response = await titleGpt.chat.completions.create({
         model: "gpt-3.5-turbo",
         messages: [
-          { role: "user", content: firstPrompt },
+          { role: "user", content: prompt },
           {
             role: "system",
             content: `Generate a concise and descriptive title for this chat session based on the user's first prompt. The title should be no more than five words and encapsulate the main topic or purpose of the conversation.
@@ -66,21 +79,94 @@ router.post(
 );
 
 /**
+ * POST /api/generate-component
+ *
+ * Request Body:
+ * {
+ *   "containerPath": "AnalyticsDashboard",
+ *   "componentName": "Button",
+ *   "dependencies": ["Icon"],
+ *   "userStory": "As a user, I want a button to submit the form."
+ * }
+ *
+ * Response: { "componentCode": \`\`\`jsx
+ * \// Button.jsx
+ * import React from 'react';
+ * import Icon from './Icon';
+ * import styles from './Button.module.css';
+ *
+ * const Button = ({ label, icon, onClick }) => {
+ *   return (
+ *     <button className={styles.button} onClick={onClick}>
+ *       {icon && <Icon name={icon} />}
+ *       {label}
+ *     </button>
+ *   );
+ * };
+ *
+ * export default Button;
+ * \`\`\` }
+ **/
+
+router.post("/generate-component", async (req, res) => {
+  const { containerPath, componentName, dependencies, userStory } = req.body;
+
+  if (!containerPath || !componentName || !userStory) {
+    return res
+      .status(400)
+      .json({ error: "containerPath, componentName, and userStory are required." });
+  }
+
+  try {
+    const dirPath = path.join(process.env.LOCAL_COMPONENTS_DIR, containerPath);
+
+    // Read existing configurations and compositions
+    const composition = await readComponentsComposition(dirPath);
+    const configurations = await readComponentsConfigurations(dirPath);
+
+    // Find the component configuration
+    const componentConfig = configurations.find((config) => config.name === componentName);
+
+    if (!componentConfig) {
+      return res
+        .status(404)
+        .json({ error: `Component configuration for ${componentName} not found.` });
+    }
+
+    // Generate prompt
+    const prompt = generateComponentPrompt({
+      description: userStory,
+      componentName,
+      dependencies: componentConfig.uiComponents,
+      implementations: componentConfig.implementations || [],
+      componentConfiguration: componentConfig
+    });
+
+    // Generate component code using OpenAI
+    const [componentCode] = await componentGenerator.generateComponent({ description: prompt });
+
+    if (!componentCode) {
+      return res.status(500).json({ error: "Failed to generate component code." });
+    }
+
+    // Save the generated component code to index.js (or index.jsx)
+    await saveFile(dirPath, "index.js", componentCode);
+
+    res.status(200).json({ componentCode });
+  } catch (error) {
+    console.error("Error generating component:", error);
+    res.status(500).json({ error: "Internal Server Error." });
+  }
+});
+
+/**
  * Creates a new chat session.
  */
 router.post(
   "/create-session",
   asyncHandler(async (req, res) => {
-    const {
-      title,
-      firstPrompt,
-      sessionId,
-      workspaceId,
-      regenerate,
-      prompt,
-      userId,
-      clientApiKey,
-    } = req.body;
+    const { title, firstPrompt, sessionId, workspaceId, regenerate, prompt, userId, clientApiKey } =
+      req.body;
 
     if (!title || !firstPrompt) {
       return res.status(400).json({ message: "Title and first prompt are required." });

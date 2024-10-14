@@ -103,7 +103,6 @@ router.get("/type/:fileType", async (req, res) => {
     const db = await getDB();
     // const bucket = getBucket();
     const collection = db.collection("uploads.files");
-
     const fileType = req.params.fileType;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;

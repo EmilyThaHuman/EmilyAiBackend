@@ -5,7 +5,7 @@
  */
 
 const multer = require("multer");
-const { logger } = require("../config/logging"); // Assuming you have a logging module
+const { logger } = require("../config/logging");
 const CustomError = require("@config/constants/errors/CustomError");
 
 const formatErrorResponse = (err, includeDetails = false) => {

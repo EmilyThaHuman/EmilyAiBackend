@@ -1,11 +1,19 @@
-import OpenAI from 'openai';
-import { ChatCompletionMessageParam, ChatCompletionUserMessageParam, ChatCompletionSystemMessageParam, } from 'openai/src/resources/chat/completions';
+// Import required modules using CommonJS require statements
+const OpenAI = require("openai");
 
+// Retrieve environment variables
 const apiKey = process.env.OPENAI_SECRET_KEY;
 const shouldLog = process.env.OPENAI_LOG === "true";
 const defaultModel = "gpt-4";
 
-const getJsonFromMarkupText = (text: string) => {
+/**
+ * Parses a text string to extract a JSON object from markup text.
+ *
+ * @param {string} text - The text containing JSON within markup.
+ * @returns {Object} The parsed JSON object.
+ * @throws {Error} If the JSON cannot be parsed from the text.
+ */
+const getJsonFromMarkupText = (text) => {
   try {
     const jsonParse = JSON.parse(text);
     if (typeof jsonParse === "object") {
@@ -18,10 +26,7 @@ const getJsonFromMarkupText = (text: string) => {
       const jsonStart = text.indexOf("```");
       const isJsonMarkup = text.indexOf("```json") !== -1;
       const jsonEnd = text.lastIndexOf("```");
-      const jsonText = text.substring(
-        jsonStart + (isJsonMarkup ? 7 : 3),
-        jsonEnd
-      );
+      const jsonText = text.substring(jsonStart + (isJsonMarkup ? 7 : 3), jsonEnd);
 
       const json = JSON.parse(jsonText);
       return json;
@@ -32,7 +37,14 @@ const getJsonFromMarkupText = (text: string) => {
   }
 };
 
-const getJsxFromMarkupText = (text: string) => {
+/**
+ * Extracts JSX code from markup text.
+ *
+ * @param {string} text - The text containing JSX within markup.
+ * @returns {string} The extracted JSX code.
+ * @throws {Error} If the JSX cannot be parsed from the text.
+ */
+const getJsxFromMarkupText = (text) => {
   try {
     const jsxStart = text.indexOf("```");
     if (jsxStart === -1) {
@@ -40,17 +52,17 @@ const getJsxFromMarkupText = (text: string) => {
       return "";
     }
     const tsxMarkupPosition = text.indexOf("```tsx");
-    const typesriptMarkupPosition = text.indexOf("```typescript");
+    const typescriptMarkupPosition = text.indexOf("```typescript");
 
     if (tsxMarkupPosition !== -1) {
-      const jsxEnd = text.indexOf("```", tsxMarkupPosition + 3);
-      const typescriptText = text.substring(jsxStart + 6, jsxEnd);
+      const jsxEnd = text.indexOf("```", tsxMarkupPosition + 6);
+      const typescriptText = text.substring(tsxMarkupPosition + 6, jsxEnd);
       return typescriptText;
-    } else if (typesriptMarkupPosition !== -1) {
-      const jsxEnd = text.indexOf("```", typesriptMarkupPosition + 3);
+    } else if (typescriptMarkupPosition !== -1) {
+      const jsxEnd = text.indexOf("```", typescriptMarkupPosition + 13);
       const isTypescriptMarkup = text.indexOf("```typescript") !== -1;
       const typescriptText = text.substring(
-        jsxStart + (isTypescriptMarkup ? 13 : 3),
+        jsxMarkupPosition + (isTypescriptMarkup ? 13 : 3),
         jsxEnd
       );
       return typescriptText;
@@ -65,10 +77,15 @@ const getJsxFromMarkupText = (text: string) => {
   }
 };
 
-const getAllJsxFromMarkupText = (
-  text: string,
-  foundMarkups: string[] = []
-): string[] => {
+/**
+ * Extracts all JSX code snippets from markup text.
+ *
+ * @param {string} text - The text containing multiple JSX snippets within markup.
+ * @param {string[]} [foundMarkups=[]] - An array to accumulate found JSX snippets.
+ * @returns {string[]} An array of extracted JSX code snippets.
+ * @throws {Error} If any JSX snippet cannot be parsed.
+ */
+const getAllJsxFromMarkupText = (text, foundMarkups = []) => {
   try {
     const jsxStart = text.indexOf("```");
     if (jsxStart === -1) {
@@ -85,10 +102,7 @@ const getAllJsxFromMarkupText = (
       return getAllJsxFromMarkupText(restOfText, foundMarkups);
     } else if (typescriptMarkupPosition !== -1) {
       const jsxEnd = text.indexOf("```", typescriptMarkupPosition + 13);
-      const typescriptText = text.substring(
-        typescriptMarkupPosition + 13,
-        jsxEnd
-      );
+      const typescriptText = text.substring(typescriptMarkupPosition + 13, jsxEnd);
       foundMarkups.push(typescriptText);
       const restOfText = text.substring(jsxEnd + 3);
       return getAllJsxFromMarkupText(restOfText, foundMarkups);
@@ -110,7 +124,13 @@ const getAllJsxFromMarkupText = (
   }
 };
 
-function replaceDoubleSpaces(content: string) {
+/**
+ * Replaces multiple consecutive spaces with a single space in the given content.
+ *
+ * @param {string} content - The content string to process.
+ * @returns {string} The processed content with double spaces replaced by single spaces.
+ */
+const replaceDoubleSpaces = (content) => {
   // Split the input string into lines
   const lines = content.split("\n");
 
@@ -121,83 +141,114 @@ function replaceDoubleSpaces(content: string) {
   const result = processedLines.join("\n");
 
   return result;
-}
+};
 
-const removeSpacesFromMessages = (messages: ChatCompletionMessageParam[]) => {
+/**
+ * Removes extra spaces from the content of each message in the messages array.
+ *
+ * @param {Object[]} messages - An array of message objects.
+ * @param {string} messages[].content - The content of the message.
+ * @returns {Object[]} A new array of messages with spaces replaced.
+ */
+const removeSpacesFromMessages = (messages) => {
   return messages.map((message) => {
     return {
       ...message,
-      content: replaceDoubleSpaces(message.content as string),
+      content: replaceDoubleSpaces(message.content)
     };
   });
 };
 
+/**
+ * Class responsible for interacting with the OpenAI API to generate chat responses.
+ */
 class ChatBot {
-  private openai: OpenAI;
-  private model: string;
-
-  constructor(model: string = defaultModel) {
-
+  /**
+   * Creates an instance of ChatBot.
+   *
+   * @param {string} [model=defaultModel] - The OpenAI model to use.
+   */
+  constructor(model = defaultModel) {
     this.openai = new OpenAI({ apiKey, maxRetries: 100 });
     this.model = model;
-    this.openai.completions.create
   }
 
-  async callChat(messages: ChatCompletionMessageParam[]) {
+  /**
+   * Sends a chat request to the OpenAI API with the given messages.
+   *
+   * @param {Object[]} messages - An array of message objects.
+   * @returns {Promise<Object[]>} An array of response choices from OpenAI.
+   */
+  async callChat(messages) {
     const apiMessages = removeSpacesFromMessages(messages);
-    if (shouldLog) console.debug(`ChatBot ~ Request:`, apiMessages);
-    const params: OpenAI.Chat.ChatCompletionCreateParams = {
+    if (shouldLog) console.debug("ChatBot ~ Request:", apiMessages);
+    const params = {
       model: this.model,
-      messages: apiMessages,
-    }
+      messages: apiMessages
+    };
 
     const response = await this.openai.chat.completions.create(params);
-    if (shouldLog) console.debug(`ChatBot ~ response:`, response.choices);
+    if (shouldLog) console.debug("ChatBot ~ response:", response.choices);
 
     const choices = response.choices;
     return choices;
   }
 
-  async getResponse(prompt: string) {
-    const apiMessages: OpenAI.Chat.ChatCompletionMessageParam[] = [
-      { role: "system", content: prompt },
-    ];
+  /**
+   * Retrieves a single response from the OpenAI API based on the provided prompt.
+   *
+   * @param {string} prompt - The prompt to send to the OpenAI API.
+   * @returns {Promise<Object>} The assistant's response message.
+   * @throws {Error} If no response is received from OpenAI.
+   */
+  async getResponse(prompt) {
+    const apiMessages = [{ role: "system", content: prompt }];
 
     const choices = await this.callChat(apiMessages);
     const rawMessage = choices[0].message;
     if (!rawMessage) throw new Error("No response from OpenAI");
-    if (shouldLog) console.debug(`ChatBot ~ message:`, rawMessage);
+    if (shouldLog) console.debug("ChatBot ~ message:", rawMessage);
     return rawMessage;
   }
 
-  async getTypescriptResponse(
-    messages: ChatCompletionMessageParam[]
-  ): Promise<any> {
+  /**
+   * Retrieves and parses JSX responses from the OpenAI API.
+   *
+   * @param {Object[]} messages - An array of message objects.
+   * @returns {Promise<string[]>} An array of extracted JSX code snippets.
+   */
+  async getTypescriptResponse(messages) {
     const choices = await this.callChat(messages);
     const rawMessage = choices[0].message;
-    if (shouldLog) console.debug(`ChatBot ~ message:`, rawMessage);
+    if (shouldLog) console.debug("ChatBot ~ message:", rawMessage);
     if (!rawMessage) throw new Error("No response from OpenAI");
 
     try {
       const message = getAllJsxFromMarkupText(rawMessage.content, []);
 
-      if (shouldLog) console.debug(`ChatBot ~ parsed:`, message);
+      if (shouldLog) console.debug("ChatBot ~ parsed:", message);
       return message;
     } catch (error) {
       console.debug(error);
     }
   }
 
-  async getJsonResponse(messages: ChatCompletionMessageParam[]): Promise<any> {
+  /**
+   * Retrieves and parses JSON responses from the OpenAI API.
+   *
+   * @param {Object[]} messages - An array of message objects.
+   * @returns {Promise<Object>} The parsed JSON response.
+   */
+  async getJsonResponse(messages) {
     const choices = await this.callChat(messages);
     const rawMessage = choices[0].message;
-    if (shouldLog) console.debug(`ChatBot ~ message:`, rawMessage);
+    if (shouldLog) console.debug("ChatBot ~ message:", rawMessage);
     if (!rawMessage) throw new Error("No response from OpenAI");
 
     try {
       const message = getJsonFromMarkupText(rawMessage.content);
 
-      if (shouldLog) console.debug(`ChatBot ~ parsed:`, message);
+      if (shouldLog) console.debug("ChatBot ~ parsed:", message);
       return message;
     } catch (error) {
       console.debug(error);
@@ -205,4 +256,7 @@ class ChatBot {
   }
 }
 
-export { ChatBot };
+// Export the ChatBot class
+module.exports = {
+  ChatBot
+};

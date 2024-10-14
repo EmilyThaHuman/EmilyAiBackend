@@ -1,6 +1,5 @@
 const { default: mongoose } = require("mongoose");
 const { logger } = require("@config/logging");
-const { getDB } = require("@db/main");
 const {
   ChatSession,
   Preset,
@@ -297,8 +296,8 @@ function organizeFoldersIntoTree(folders) {
 const getHomeWorkspace = async (req, res) => {
   const userId = req.params.userId;
   try {
-    const db = getDB();
-    const homeWorkspace = await db.collection("workspaces").findOne({
+    // const db = getDB();
+    const homeWorkspace = await workspace.findOne({
       userId: userId,
       isHome: true
     });

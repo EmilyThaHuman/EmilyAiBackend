@@ -37,12 +37,201 @@ const test = {
 
 const defaults = {
   root: path.normalize(__dirname + "/.."),
+  // --- Node --- //
+  node: {
+    env: process.env.NODE_ENV || "development",
+    envFile: ".env",
+    envPath: path.join(__dirname, "..", "..", ".env"),
+  },
+  // --- App --- //
+  app: {
+    name: "ReedAi",
+    description: "--- ReedAi ---",
+    version: "1.0.0",
+    host: process.env.HOST || "localhost",
+    port: parseInt(process.env.PORT, 10) || 3002,
+    url: process.env.URL || "http://localhost:3002",
+    express: {
+      trustProxy: true,
+      json: {
+        limit: "1mb"
+      },
+      urlencoded: {
+        extended: true,
+        limit: "1mb"
+      }
+    },
+    middlewares: {
+      logging: {
+        level: process.env.LOG_LEVEL || "info",
+        format: process.env.LOG_FORMAT || "combined",
+        morgan: {
+          format: "combined",
+          options: {
+            stream: process.stdout
+          }
+        },
+        winston: {
+          level: process.env.LOG_LEVEL || "info",
+          format: process.env.LOG_FORMAT || "combined",
+          options: {
+            stream: process.stdout
+          }
+        }
+      },
+      cors: {
+        origin: ["http://localhost:3000", "*"],
+        methods: ["GET", "POST", "PUT", "DELETE"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+        credentials: true,
+        optionsSuccessStatus: 200
+      },
+      rateLimit: {
+        windowMs: 15 * 60 * 1000, // 15 minutes
+        max: parseInt(process.env.RATE_LIMIT_MAX, 10) || 100
+      },
+      security: {
+        helmet: {
+          contentSecurityPolicy: {
+            directives: {
+              defaultSrc: ["'self'"],
+              styleSrc: ["'self'", "https://fonts.googleapis.com"]
+            }
+          }
+        }
+      },
+      compression: {
+        threshold: 512
+      },
+      staticFiles: {
+        public: path.join(__dirname, "..", "..", "public"),
+        dirs: ["static", "uploads", "static/images", "static/files"]
+      }
+    }
+  },
+  // --- DB --- //
+  database: {
+    username: process.env.MONGODB_USERNAME,
+    password: process.env.MONGODB_PASSWORD,
+    clusterUrl: process.env.MONGODB_CLUSTER_URL,
+    database: process.env.MONGODB_DB_NAME,
+    appName: process.env.MONGODB_APPNAME,
+    uri: process.env.MONGODB_URI,
+    options: {
+      useCreateIndex: true,
+      useFindAndModify: false
+    },
+    mongoose: {
+      url: getEnv("MONGODB_URI") + (process.env.NODE_ENV === "test" ? "-test" : "")
+    },
+    gridfs: {
+      bucketName: "uploads"
+    },
+    fileUpload: {
+      createParentPath: true,
+      limits: {
+        fileSize: parseInt(process.env.MAX_FILE_SIZE, 10) || 10 * 1024 * 1024 // 10 MB
+      },
+      abortOnLimit: true,
+      responseOnLimit: "File size limit has been reached",
+      useTempFiles: true,
+      tempFileDir: "/tmp/"
+    }
+  },
+  // --- Auth --- //
+  auth: {
+    // --- JWT --- //
+    jwt: {
+      secret: process.env.AUTH_SECRET,
+      accessToken: process.env.AUTH_ACCESS_TOKEN,
+      refreshToken: process.env.AUTH_REFRESH_TOKEN,
+      audience: process.env.AUTH_AUDIENCE,
+      issuer: process.env.AUTH_ISSUER,
+      expiresIn: process.env.AUTH_EXPIRES_IN || "1d"
+    },
+    // --- Session --- //
+    session: {
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        maxAge: 24 * 60 * 60 * 1000, // 1 day
+        secure: process.env.NODE_ENV === "production"
+      }
+    },
+    // --- Cookie --- //
+    cookie: {
+      secret: process.env.COOKIE_SECRET
+    },
+    // --- Passport --- //
+    passport: {
+      local: {
+        usernameField: "email"
+      }
+    },
+    // --- OAuth --- //
+    oAuth: {
+      facebook: {
+        clientID: process.env.FACEBOOK_CLIENT_ID,
+        clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+        callbackURL: process.env.FACEBOOK_CALLBACK_URL,
+        scope: ["email", "user_about_me", "user_friends"]
+      },
+      google: {
+        clientID: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        callbackURL: process.env.GOOGLE_CALLBACK_URL,
+        scope: [
+          "https://www.googleapis.com/auth/userinfo.profile",
+          "https://www.googleapis.com/auth/userinfo.email",
+          "https://www.google.com/m8/feeds"
+        ]
+      },
+      linkedin: {
+        clientID: process.env.LINKEDIN_CLIENT_ID,
+        clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
+        callbackURL: process.env.LINKEDIN_CALLBACK_URL,
+        scope: ["r_emailaddress", "r_liteprofile"]
+      }
+    }
+  },
+  // --- Api --- //
   api: {
+    // --- Local API --- //
     port: parseInt(process.env.PORT, 10) || 3002,
     host: process.env.HOST || "localhost",
-    cluster: process.env.CLUSTER || "local",
-    openAIKey: process.env.OPENAI_API_PROJECT_KEY,
-    embeddingModel: process.env.EMBEDDING_MODEL,
+    // --- Api Keys --- //
+    keys: {
+      // --- Models --- //
+      openAiApiKey: process.env.OPENAI_API_PROJECT_KEY,
+      perplexityApiKey: process.env.PERPLEXITY_API_PROJECT_KEY,
+      anthropicApiKey: process.env.ANTHROPIC_API_PROJECT_KEY,
+      groqApiKey: process.env.GROQ_API_PROJECT_KEY,
+      googleGeminiApiKey: process.env.GOOGLE_API_PROJECT_KEY,
+      mistralApiKey: process.env.MISTRAL_API_PROJECT_KEY,
+      // --- Vector DB --- //
+      pineconeApiKey: process.env.PINECONE_API_PROJECT_KEY
+    }
+    // --- Chat Models --- //
+  },
+  // --- Chat --- //
+  chat: {
+    settings: {
+      limits: CHAT_SETTING_LIMITS,
+      default: {
+        model: process.env.OPENAI_API_CHAT_COMPLETION_MODEL,
+        maxTokens: 1000,
+        temperature: 0.7,
+        presencePenalty: 0.0,
+        frequencyPenalty: 0.0,
+        topP: 1.0,
+        stopSequences: [],
+        stopWords: [],
+        stopSequencesRegex: [],
+        stopWordsRegex: []
+      }
+    },
+    // --- Chat Model Names --- //
     models: {
       // GPT-3 models
       gpt3: process.env.GPT3_MODEL,
@@ -87,98 +276,29 @@ const defaults = {
       mistral7b: process.env.MISTRAL7B_MODEL,
       falcon40b: process.env.FALCON40B_MODEL
     },
-    indexName: process.env.PINECONE_INDEX,
-    namespace: process.env.PINECONE_NAMESPACE,
-    dimension: parseInt(process.env.PINECONE_DIMENSION, 10),
-    topK: parseInt(process.env.PINECONE_TOP_K, 10)
-  },
-  database: {
-    username: process.env.MONGODB_USERNAME,
-    password: process.env.MONGODB_PASSWORD,
-    clusterUrl: process.env.MONGODB_CLUSTER_URL,
-    database: process.env.MONGODB_DB_NAME,
-    appName: process.env.MONGODB_APPNAME,
-    port: parseInt(process.env.DB_PORT, 10) || 27017,
-    host: process.env.DB_HOST,
-    uri: process.env.MONGODB_URI,
-    options: {
-      useCreateIndex: true,
-      useFindAndModify: false
-    },
-    mongoose: {
-      url: getEnv("MONGODB_URI") + (process.env.NODE_ENV === "test" ? "-test" : "")
-    }
-  },
-  auth: {
-    secret: process.env.AUTH_SECRET,
-    audience: process.env.AUTH_AUDIENCE,
-    issuer: process.env.AUTH_ISSUER,
-    expiresIn: process.env.AUTH_EXPIRES_IN || "1d"
-  },
-  chat: {
-    settings: CHAT_SETTING_LIMITS
-  },
-  logging: {
-    level: process.env.LOG_LEVEL || "info",
-    format: process.env.LOG_FORMAT || "combined"
-  },
-  cors: {
-    origin: ["http://localhost:3000", "*"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-    optionsSuccessStatus: 200
-  },
-  rateLimit: {
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: parseInt(process.env.RATE_LIMIT_MAX, 10) || 100
-  },
-  security: {
-    helmet: {
-      contentSecurityPolicy: {
-        directives: {
-          defaultSrc: ["'self'"],
-          styleSrc: ["'self'", "https://fonts.googleapis.com"]
+    // --- Chat Model Configurations --- //
+    configurations: {
+      // --- Embedding --- //
+      embedding: {
+        general: {
+          model: process.env.EMBEDDING_MODEL,
+          dimension: parseInt(process.env.EMBEDDING_DIMENSION, 10),
+          distance: process.env.EMBEDDING_DISTANCE
+        },
+        // --- Vector DB --- //
+        pinecone: {
+          apiKey: process.env.PINECONE_API_PROJECT_KEY,
+          environment: process.env.PINECONE_ENVIRONMENT,
+          indexName: process.env.PINECONE_INDEX,
+          namespace: process.env.PINECONE_NAMESPACE,
+          dimension: parseInt(process.env.PINECONE_DIMENSION, 10),
+          topK: parseInt(process.env.PINECONE_TOP_K, 10)
         }
-      }
+      },
+      completions: {},
+      streams: {},
+      assistants: {}
     }
-  },
-  compression: {
-    threshold: 512
-  },
-  session: {
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
-      secure: process.env.NODE_ENV === "production"
-    }
-  },
-  cookie: {
-    secret: process.env.COOKIE_SECRET
-  },
-  passport: {
-    local: {
-      usernameField: "email"
-    }
-  },
-  staticFiles: {
-    public: path.join(__dirname, "..", "..", "public"),
-    dirs: ["static", "uploads", "static/images", "static/files"]
-  },
-  gridfs: {
-    bucketName: "uploads"
-  },
-  fileUpload: {
-    createParentPath: true,
-    limits: {
-      fileSize: parseInt(process.env.MAX_FILE_SIZE, 10) || 10 * 1024 * 1024 // 10 MB
-    },
-    abortOnLimit: true,
-    responseOnLimit: "File size limit has been reached",
-    useTempFiles: true,
-    tempFileDir: "/tmp/"
   }
 };
 
@@ -187,7 +307,5 @@ const config = {
   test: Object.assign({}, test, defaults),
   production: Object.assign({}, production, defaults)
 }[process.env.NODE_ENV || "development"];
-
-// config.getOpenAIClient = () => require("./services/openai").getLangChainClient();
 
 module.exports = config;
