@@ -1,0 +1,76 @@
+```json
+{
+  "content": "# Chat Message Dialog Component with Framer Motion Animations
+
+## Explanation
+This React component is designed to display chat messages in a dialog format with smooth animations powered by Framer Motion. The dialog allows users to view chat messages interactively with engaging motion effects.
+
+## Code
+```jsx
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const ChatMessageDialog = ({ messages }) => {
+  const [currentMessage, setCurrentMessage] = useState(null);
+
+  return (
+    <div className='chat-dialog'>
+      <AnimatePresence initial={false} exitBeforeEnter={true}>
+        {currentMessage && (
+          <motion.div
+            key={currentMessage.id}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <motion.p>{currentMessage.text}</motion.p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      {messages.map((message) => (
+        <button key={message.id} onClick={() => setCurrentMessage(message)}>
+          Show Message {message.id}
+        </button>
+      ))}
+    </div>
+  );
+};
+
+const messages = [
+  { id: 1, text: 'Hello, how are you?' },
+  { id: 2, text: 'I\'m good, thanks!' },
+  { id: 3, text: 'Great! How about you?' },
+];
+
+function App() {
+  return (
+    <div className='App'>
+      <ChatMessageDialog messages={messages} />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Usage Example
+```jsx
+// Usage in a parent component
+import ChatMessageDialog from './ChatMessageDialog';
+
+const ParentComponent = () => (
+  <ChatMessageDialog messages={messages} />
+);
+
+export default ParentComponent;
+```
+
+## References
+- Framer Motion Documentation: [Framer Motion](https://www.framer.com/motion/)
+- React Documentation: [React](https://reactjs.org/)
+```,
+  "type": "markdown",
+  "references": ["Framer Motion Documentation: Framer Motion - https://www.framer.com/motion/", "React Documentation: React - https://reactjs.org/"]
+}
+```

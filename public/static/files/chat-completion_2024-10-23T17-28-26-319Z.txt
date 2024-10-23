@@ -1,0 +1,84 @@
+# Chatbot Analytics Dashboard Component
+
+## Explanation
+This React component is designed to create a dashboard for viewing chat session data, including prompts and messages. It includes a header with navigation icons, sidebar navigation with main menu and submenu options, and a content area displaying key metrics and charts related to chatbot analytics.
+
+## Code
+jsx
+import React from 'react';
+import { FaUser, FaCog, FaQuestionCircle, FaSignOutAlt } from 'react-icons/fa';
+
+const ChatbotDashboard = () => {
+  return (
+    <div className='dashboard-container'>
+      {/* Header */}
+      <header className='dashboard-header'>
+        <h1>Chatbot Analytics Dashboard</h1>
+        <div className='navigation-icons'>
+          <FaUser />
+          <FaCog />
+          <FaQuestionCircle />
+          <FaSignOutAlt />
+        </div>
+      </header>
+      {/* Sidebar Navigation */}
+      <aside className='sidebar-navigation'>
+        <ul className='main-menu'>
+          <li>Overview</li>
+          <li>Engagement</li>
+          <li>Conversions</li>
+          <li>Retention</li>
+          <li>Advanced Analytics</li>
+        </ul>
+        <ul className='submenu-options'>
+          <li>Metrics</li>
+          <li>Trends</li>
+          <li>Reports</li>
+        </ul>
+      </aside>
+      {/* Content Area */}
+      <main className='content-area'>
+        <section className='overview-section'>
+          <h2>Overview</h2>
+          <ul className='key-metrics'>
+            <li>Engagement Rate</li>
+            <li>Satisfaction Score</li>
+            <li>Leads Captured</li>
+          </ul>
+          <div className='charts-and-graphs'>
+            {/* Line chart component here */}
+          </div>
+        </section>
+        <section className='engagement-section'>
+          <h2>Engagement</h2>
+          <p>User Engagement: 50% of users interacted with the chatbot</p>
+          <p>Message Click-Through Rate: 30% of visitors reached a specific message</p>
+        </section>
+        <section className='conversions-section'>
+          <h2>Conversions</h2>
+          <p>Leads Captured: 200 visitors left their email address</p>
+          <p>Conversion Rate: 20% of interactions resulted in a conversion</p>
+        </section>
+      </main>
+    </div>
+  );
+};
+
+export default ChatbotDashboard;
+ 
+
+## Usage Example
+jsx
+// Usage in App.js
+import React from 'react';
+import ChatbotDashboard from './ChatbotDashboard';
+
+const App = () => {
+  return (
+    <div className='app-container'>
+      <ChatbotDashboard />
+    </div>
+  );
+};
+
+export default App;

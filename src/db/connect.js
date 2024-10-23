@@ -29,7 +29,7 @@ const connectDB = async () => {
       });
 
       logger.info("[2] Mongoose connection established successfully");
-      mongoose.set("debug", true);
+      // mongoose.set("debug", true);
 
       const db = mongoose.connection.db;
       bucket = new mongoose.mongo.GridFSBucket(db, { bucketName: "uploads" });

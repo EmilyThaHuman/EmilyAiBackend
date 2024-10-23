@@ -1,0 +1,44 @@
+# Animated Button Component using MUI and Framer Motion
+
+## Explanation
+This component is a highly animated button created using Material-UI (MUI) for styling and Framer Motion for animations. It features smooth transitions, hover effects, and click animations to enhance user interaction.
+
+## Code
+jsx
+import React from 'react';
+import { Button } from '@mui/material';
+import { motion } from 'framer-motion';
+
+const AnimatedButton = ({ children, onClick }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.5 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.3 }}
+      style={{ display: 'inline-block' }}
+      whileHover={{ scale: 1.1, rotate: 10 }}
+      whileTap={{ scale: 0.9 }}
+    >
+      <Button onClick={onClick}>{children}</Button>
+    </motion.div>
+  );
+};
+
+export default AnimatedButton;
+
+
+## Usage Example
+jsx
+// Usage in a parent component
+import AnimatedButton from './AnimatedButton';
+
+const ParentComponent = () => (
+  <AnimatedButton onClick={() => alert('Button clicked!')}>Click Me!</AnimatedButton>
+);
+
+export default ParentComponent;
+
+
+## References
+- [Framer Motion Documentation](https://www.framer.com/api/motion)
+- [Material-UI Button API](https://mui.com/components/buttons/)

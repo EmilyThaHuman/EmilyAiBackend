@@ -57,7 +57,6 @@ class LogStreamHandler {
     this.logs = []; // Store log entries
     this.startTime = new Date().toISOString(); // Timestamp of the start of the run
     this.accumulatedResponse = ""; // Store the full accumulated response
-
     this.prevLogLength = 0; // Length of the previous log in characters
   }
 
@@ -75,55 +74,28 @@ class LogStreamHandler {
    * @param {Object} data - The log data.
    */
   logToConsole(data) {
-    // Clear the previous log from the console
-    if (this.prevLogLength > 0) {
-      process.stdout.write("\x1B[2K"); // Clear the entire line
-      process.stdout.write("\x1B[0G"); // Move cursor to the start of the line
-    }
-
-    // Create the log message
     let logMessage;
     if (data.type === "error") {
       logMessage = `[ERROR][LogStreamHandler]: ${data.message}`;
-      logger.error(logMessage); // Log to the main logger
+      logger.error(logMessage);
     } else if (data.type === "run_start" || data.type === "run_end") {
       logMessage = `[INFO][LogStreamHandler]: ${JSON.stringify(data)}`;
-      logger.info(logMessage); // Log to the main logger
+      logger.info(logMessage);
     } else {
-      // For other types like 'token'
       logMessage = `[INFO][LogStreamHandler]: ${data.content}`;
-      logger.info(logMessage); // Log to the main logger
+      logger.info(logMessage);
     }
-
-    // Write the new log message to the console
-    process.stdout.write(`${logMessage}\n`);
-
-    // Update the previous log length
-    this.prevLogLength = logMessage.length;
+    console.log(logMessage);
   }
-  /**
-   * Logs the accumulated response to the console, overwriting the previous log entry.
-   * Uses logger.info for informational logs and logger.error for errors.
-   * @param {string} accumulatedResponse - The full accumulated response so far.
-   */
+
   logAccumulatedResponse(accumulatedResponse) {
-    // Clear the previous log from the console
-    if (this.prevLogLength > 0) {
-      process.stdout.write("\x1B[2K"); // Clear the entire line
-      process.stdout.write("\x1B[0G"); // Move cursor to the start of the line
-      process.stdout.write("\x1B[1A".repeat(this.prevLogLength)); // Move cursor up by the number of lines
-      process.stdout.write("\x1B[2K".repeat(this.prevLogLength)); // Clear the previous log content
-    }
-
-    // Calculate number of lines for the current log
-    const logLines = accumulatedResponse.split("\n").length;
-
-    // Log the accumulated content to the console
-    process.stdout.write(`${accumulatedResponse}\n`);
-
-    // Update the previous log length
-    this.prevLogLength = logLines;
+    // Clear the console
+    process.stdout.write("\x1Bc");
+    // Print the accumulated response
+    console.log("[RESPONSE]:");
+    console.log(accumulatedResponse);
   }
+
   /**
    * Handles the start of a run.
    * @param {Object} run - The run details.
@@ -142,7 +114,6 @@ class LogStreamHandler {
 
     this.logs.push(logEntry);
 
-    // Prepare and send the run start data
     const data = { type: "run_start", data: logEntry };
     this.sendData(data);
     this.logToConsole(data);
@@ -154,16 +125,10 @@ class LogStreamHandler {
    * @param {string} token - The new token.
    */
   handleLLMNewToken(token) {
-    // Accumulate the token into the full response
     this.accumulatedResponse += token;
-
-    // Log the entire accumulated response
     this.logAccumulatedResponse(this.accumulatedResponse);
 
-    // Prepare and send the token data
     const data = { type: "token", content: token };
-
-    // Send token to the client
     this.sendData(data);
   }
 
@@ -172,11 +137,8 @@ class LogStreamHandler {
    * @param {Error} error - The error object.
    */
   handleError(error) {
-    // Prepare and log the error data
     const data = { type: "error", message: error.message };
     this.logToConsole(data);
-
-    // Send error message to client
     this.sendData(data);
   }
 
@@ -185,6 +147,7 @@ class LogStreamHandler {
    * @param {string} finalOutput - The final output of the run.
    */
   async handleRunEnd(finalOutput) {
+    console.log("[RESPONSE]:", finalOutput);
     const endTime = new Date().toISOString();
     const latestLog = this.logs[this.logs.length - 1];
 
@@ -193,14 +156,13 @@ class LogStreamHandler {
       latestLog.final_output = finalOutput;
     }
 
-    // Prepare and log the run end data
     const data = { type: "run_end", data: latestLog };
     this.logToConsole(data);
-
-    // Send final log to the client
     this.sendData(data);
 
-    // End the response once everything is done
+    // Add a newline after the final response
+    console.log();
+
     this.res.end();
   }
 
@@ -214,8 +176,6 @@ class LogStreamHandler {
     this.res.end();
   }
 }
-
-module.exports = LogStreamHandler;
 
 const functionDefinitions = [
   {
@@ -560,7 +520,6 @@ const getDocumentationContent = async (uiLibraries, componentTypes) => {
     throw error;
   }
 };
-
 const handleStreamingResponse = async (
   res,
   formattedPrompt,
@@ -569,11 +528,6 @@ const handleStreamingResponse = async (
   initializationData,
   messages
 ) => {
-  const DONE_MESSAGE = "DONE";
-  const sendData = (data) => {
-    res.write(`data: ${JSON.stringify(data)}\n\n`);
-  };
-
   let fullResponse = "";
   let functionCallData = null;
 
@@ -601,47 +555,12 @@ const handleStreamingResponse = async (
         // Handle and log the error
         logStreamHandler.handleError(error);
       }
-      // async handleLLMNewToken(token) {
-      //   // Log the content accumulation
-      //   logStreamCallbackHandler.onLLMNewToken({ id: chatSession._id, name: "LLM" }, token);
-
-      //   sendData({ type: "message", content: token });
-      //   fullResponse += token;
-      // },
       // async handleLLMNewTokenWithRole(message) {
       //   if (message.role === "function") {
       //     const functionCall = message;
       //     await handleFunctionCall(functionCall, sendData);
       //   }
       // },
-      // async handleLLMEnd() {
-      //   logStreamCallbackHandler.onRunUpdate({
-      //     id: chatSession._id,
-      //     name: "LLM",
-      //     final_output: fullResponse
-      //   });
-
-      //   await saveChatCompletion(initializationData, chatSession, fullResponse);
-      //   await processChatCompletion(
-      //     chatSession,
-      //     fullResponse,
-      //     sessionContextStore,
-      //     initializationData
-      //   );
-      //   sendData({ type: "end", message: DONE_MESSAGE });
-      //   res.end();
-      // },
-      // async handleLLMError(error) {
-      //   logger.error(`[ERROR][handleStreamingResponse]: ${error.stack}`);
-      //   logStreamCallbackHandler.onRunUpdate({
-      //     id: chatSession._id,
-      //     name: "LLM",
-      //     final_output: "error"
-      //   });
-
-      //   sendData({ type: "error", message: error.message });
-      //   res.end();
-      // }
     });
 
     const chatOpenAI = new ChatOpenAI({
@@ -666,10 +585,7 @@ const handleStreamingResponse = async (
       tags: ["chat"]
     });
 
-    await chatOpenAI.invoke(messageSequence, {
-      functions,
-      function_call: "auto"
-    });
+    await chatOpenAI.invoke(messageSequence);
   } catch (error) {
     logStreamHandler.handleError(error);
     logStreamHandler.endStream(); // End the stream in case of an error
@@ -741,6 +657,29 @@ async function savePromptBuild(systemContent, assistantInstructions, formattedPr
     throw error;
   }
 }
+/**
+ * Extracts JSX, JS, and TSX code blocks from the provided file data.
+ *
+ * @param {string} fileData - The content of the file as a string.
+ * @returns {Array<{ language: string, code: string }>} An array of extracted code blocks with their language.
+ */
+function extractCodeBlocks(fileData) {
+  const codeBlocks = [];
+
+  // Regular expression to match code blocks labeled with jsx, js, or tsx
+  const regex = /^(jsx|js|tsx)\n([\s\S]*?)(?=\n^(?:jsx|js|tsx)|\n## |\n$)/gm;
+
+  let match;
+
+  while ((match = regex.exec(fileData)) !== null) {
+    const language = match[1];
+    const code = match[2].trim();
+
+    codeBlocks.push({ language, code });
+  }
+
+  return codeBlocks;
+}
 async function saveChatCompletion(initializationData, chatSession, fullResponse) {
   const fileName = generateUniqueFileName("chat-completion");
   const filePath = getPublicFilePath(fileName);
@@ -749,21 +688,15 @@ async function saveChatCompletion(initializationData, chatSession, fullResponse)
   try {
     const parsedData = extractContent(fullResponse);
     if (parsedData.content) {
-      const chatCompletionContent = formatChatCompletionContent(parsedData.content);
-      logger.info(`[INFO][saveChatCompletion]: ${chatCompletionContent}`);
       await writeToFile(filePath, parsedData.content);
-      await saveMarkdown(parsedData.content);
-      await saveJson(JSON.stringify(parsedData));
     }
-    // let formattedContent = formatDocumentationFromString(content.content);
-    // const chatCompletionContent = formatChatCompletionContent(parsedData.content);
-    // await writeToFile(filePath, parsedData.content);
+    const extractedBlocks = extractCodeBlocks(fullResponse);
 
     try {
       const assistantMessageDoc = await addMessageToSession(chatSession, {
         role: "assistant",
         content: parsedData.content,
-        code: parsedData.content,
+        code: JSON.stringify(extractedBlocks),
         userId: initializationData.userId,
         workspaceId: initializationData.workspaceId,
         sessionId: chatSession._id,

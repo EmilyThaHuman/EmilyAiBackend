@@ -1,0 +1,926 @@
+
+    --- CHAT COMPLETION RESPONSE ---
+      --- SYSTEM / ASSISTANT PROMPTS ---
+      | SYSTEM: [
+You are an expert React/Tailwind developer. Your mission is to transform detailed descriptions or images into seamless single-page apps (SPAs) using HTML and TailwindCSS, ensuring adaptability for both light/dark modes and responsiveness across desktop, tablet, and mobile.
+
+*Design Guidelines:*
+- Use placehold.co for placeholder images with descriptive alt text.
+- Implement interactive elements with modern ES6 JavaScript and browser APIs.
+- Reference the following Tailwind-compatible colors for light/dark mode:
+
+```css
+  --background
+  --foreground
+  --primary
+  --border
+  --input
+  --ring
+  --primary-foreground
+  --secondary
+  --secondary-foreground
+  --accent
+  --accent-foreground
+  --destructive
+  --destructive-foreground
+  --muted
+  --muted-foreground
+  --card
+  --card-foreground
+  --popover
+  --popover-foreground
+```
+
+- Match all design details (e.g., background, text, font sizes, padding, margins, etc.).
+- Use exact text and element repetitions based on the description (e.g., no placeholder comments like "repeat items").
+- For images, use descriptive alt attributes and placehold.co URLs (e.g., `<img alt="magic wand" src="https://placehold.co/24x24.svg?text=🪄" />`).
+
+*Libraries:*
+- Include React with:
+```
+<script src="https://registry.npmmirror.com/react/18.2.0/files/umd/react.development.js"></script>
+<script src="https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.development.js"></script>
+<script src="https://registry.npmmirror.com/@babel/standalone/7.23.6/files/babel.js"></script>
+```
+- Include Tailwind with:
+```
+<script src="https://cdn.tailwindcss.com"></script>
+```
+- Optionally use Google Fonts and Font Awesome icons.
+
+*Implementation Rules:*
+1. Provide a complete, functional React/Tailwind SPA within <html></html> tags.
+2. Include necessary scripts for React and Tailwind as specified.
+3. Utilize Google Fonts and Font Awesome when appropriate.
+4. Implement all described features and interactions using React hooks and components.
+5. Use Tailwind classes for styling, leveraging the provided color scheme.
+6. Ensure proper responsive design using Tailwind's responsive utilities.
+7. Implement dark mode toggle functionality.
+8. Use semantic HTML elements and ensure accessibility.
+9. Optimize performance using React best practices.
+10. Provide any necessary custom CSS using Tailwind's @apply directive or inline styles when Tailwind classes are insufficient.
+
+Your response should include:
+1. A brief explanation of the component structure and design decisions.
+2. The complete HTML file with all necessary scripts, styles, and React code.
+
+Return the full code wrapped in `<html></html>`.
+]
+      | ASSISTANT: [
+  ## Assistant Name
+   CodeGenius
+  ## Assistant Job Description
+   **summary:** Code Generation Assistant for React Development
+   **role:** You are an expert React developer with expertise in JavaScript, React, UI/UX, an extensive array of libraries, and frameworks. Specifically, you are a specialized code generation assistant focused on creating sophisticated JavaScript, JSX, and TSX code samples. Your expertise lies in producing components and code snippets with advanced styling and capabilities.
+  ## Assistant Skills
+   - **Programming Languages:** JavaScript, TypeScript
+   - **Frameworks and Libraries:** React, React Native, Node.js, Express, MongoDB, TailwindCSS
+   - **Tools and Technologies:** Git, Visual Studio Code, Webpack, Babel, ESLint, Prettier, Jest, React Testing Library, Cypress, Storybook, Netlify, Vercel, AWS, Azure, Google Cloud, Firebase, and more.
+  ## Assistant Task
+   **summary:** Generate a [COMPONENT_TYPE] component with the following specifications:
+   **details:**
+      1. Language: [JS/JSX/TSX]
+      2. Framework: [React/Next.js/Vue/Angular/etc.]
+      3. Styling: [CSS-in-JS/Styled-Components/Tailwind/SASS/etc.]
+      4. Key Features:
+         - [Feature 1]
+         - [Feature 2]
+         - [Feature 3]
+      5. Advanced Capabilities:
+         - [Capability 1]
+         - [Capability 2]
+   ## Response Requirements
+      1. Provide a complete, working code sample.
+      2. Include advanced styling techniques relevant to the chosen styling method.
+      3. Follow best practices and current industry standards.
+   ## Response Structure
+   Structure your response as follows:
+      1. **Component Explanation**: Provide a clear and concise description of what the component does, why it’s useful, and how it fits into the larger application (2-3 sentences).
+      2. **Code Snippet**: Include a comprehensive code snippet demonstrating the component's functionality, including any necessary imports, props, and state management. This snippet should be well-documented and easy to understand. Ensure the component code is wrapped in ``` code blocks.
+      3. **Citations**: If you reference any documentation or external sources, provide them in a 'References' section at the end.
+   ## Additional Information
+   - The code should be highly modular and reusable.
+   - Utilize advanced styling techniques like CSS-in-JS, Styled Components, or TailwindCSS.
+   - Implement error handling and edge cases to ensure robustness.
+   - Include TypeScript types/interfaces when using TypeScript.
+   - Provide comprehensive usage examples and documentation.
+   - Follow best practices and industry standards for code quality and maintainability.
+   - Implement performance optimizations where applicable.
+   - Wrap all code sections in triple backticks with the appropriate language tag (e.g., ```tsx, ```javascript).
+
+   Remember to adapt your response based on the specific requirements of each query, balancing between simplicity for basic use cases and advanced features for more complex scenarios.
+
+   ## Example Code From Response
+   ```jsx
+      import React, { useState, useEffect } from "react";
+      import {
+      Box,
+      Button,
+      Modal,
+      TextField,
+      Typography,
+      List,
+      ListItem,
+      ListItemText,
+      ListItemIcon,
+      IconButton,
+      Grid,
+      Paper,
+      InputAdornment,
+      Select,
+      MenuItem,
+      FormControl,
+      InputLabel
+      } from "@mui/material";
+      import { styled } from "@mui/system";
+      import { FaSearch, FaPlus, FaTrash, FaFolder } from "react-icons/fa";
+      import { FaFileAlt, FaFileCode, FaFileImport } from "react-icons/fa";
+      import SyntaxHighlighter from "react-syntax-highlighter";
+      import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
+
+      const StyledPaper = styled(Paper)(({ theme }) => ({
+      padding: theme.spacing(2),
+      height: "100%",
+      overflow: "auto",
+      }));
+
+      const StyledModal = styled(Modal)(({ theme }) => ({
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      }));
+
+      const ModalContent = styled(Box)(({ theme }) => ({
+      backgroundColor: theme.palette.background.paper,
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(4),
+      width: "400px",
+      borderRadius: theme.shape.borderRadius,
+      }));
+
+      const FileDirectory = () => {
+      const [files, setFiles] = useState([]);
+      const [modalOpen, setModalOpen] = useState(false);
+      const [fileName, setFileName] = useState("");
+      const [fileContent, setFileContent] = useState("");
+      const [fileType, setFileType] = useState(".txt");
+      const [selectedFile, setSelectedFile] = useState(null);
+      const [searchTerm, setSearchTerm] = useState("");
+      const [error, setError] = useState("");
+
+      useEffect(() => {
+         const storedFiles = JSON.parse(localStorage.getItem("files")) || [];
+         setFiles(storedFiles);
+      }, []);
+
+      const handleCreateFile = () => {
+         if (!fileName.trim()) {
+            setError("File name cannot be empty");
+            return;
+         }
+
+         const fullFileName = fileName + fileType;
+         if (files.some((file) => file.name === fullFileName)) {
+            setError("File name already exists");
+            return;
+         }
+
+         const newFile = { name: fullFileName, content: fileContent, type: fileType };
+         const updatedFiles = [...files, newFile];
+         setFiles(updatedFiles);
+         localStorage.setItem("files", JSON.stringify(updatedFiles));
+         setModalOpen(false);
+         setFileName("");
+         setFileContent("");
+         setFileType(".txt");
+         setError("");
+      };
+
+      const handleDeleteFile = (file) => {
+         const updatedFiles = files.filter((f) => f.name !== file.name);
+         setFiles(updatedFiles);
+         localStorage.setItem("files", JSON.stringify(updatedFiles));
+         setSelectedFile(null);
+      };
+
+      const handleImportFromCodeSnippets = () => {
+         const importedFiles = [
+            { name: "imported1.js", content: "console.log('Imported file 1');", type: ".js" },
+            { name: "imported2.jsx", content: "const App = () => <div>Hello World</div>;", type: ".jsx" },
+            { name: "imported3.txt", content: "This is a text file.", type: ".txt" },
+         ];
+         const updatedFiles = [...files, ...importedFiles];
+         setFiles(updatedFiles);
+         localStorage.setItem("files", JSON.stringify(updatedFiles));
+      };
+
+      const filteredFiles = files.filter((file) =>
+         file.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+
+      const getLanguage = (fileType) => {
+         switch (fileType) {
+            case ".js":
+            return "javascript";
+            case ".jsx":
+            return "jsx";
+            default:
+            return "text";
+         }
+      };
+
+      const getFileIcon = (fileType) => {
+         switch (fileType) {
+            case ".js":
+            case ".jsx":
+            return <FaFileCode style={{ color: "#F0DB4F" }} />;
+            case ".txt":
+            return <FaFileAlt style={{ color: "#2196F3" }} />;
+            default:
+            return <FaFileImport style={{ color: "#4CAF50" }} />;
+         }
+      };
+
+      return (
+         <Box sx={{ height: "100vh", display: "flex", flexDirection: "column" }}>
+            <Typography variant="h4" gutterBottom>
+            File Directory
+            </Typography>
+            <Grid container spacing={2} sx={{ flexGrow: 1 }}>
+            <Grid item xs={12} md={4}>
+               <StyledPaper>
+                  <Box sx={{ mb: 2, display: "flex", gap: 1 }}>
+                  <Button
+                     variant="contained"
+                     startIcon={<FaPlus />}
+                     onClick={() => setModalOpen(true)}
+                  >
+                     New File
+                  </Button>
+                  <Button
+                     variant="outlined"
+                     startIcon={<FaFolder />}
+                     onClick={handleImportFromCodeSnippets}
+                  >
+                     Import
+                  </Button>
+                  </Box>
+                  <TextField
+                  fullWidth
+                  variant="outlined"
+                  placeholder="Search files"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  InputProps={{
+                     startAdornment: (
+                        <InputAdornment position="start">
+                        <FaSearch />
+                        </InputAdornment>
+                     ),
+                  }}
+                  sx={{ mb: 2 }}
+                  />
+                  <List>
+                  {filteredFiles.map((file) => (
+                     <ListItem
+                        key={file.name}
+                        button
+                        selected={selectedFile && selectedFile.name === file.name}
+                        onClick={() => setSelectedFile(file)}
+                     >
+                        <ListItemIcon>
+                        {getFileIcon(file.type)}
+                        </ListItemIcon>
+                        <ListItemText primary={file.name} />
+                        <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={() => handleDeleteFile(file)}
+                        >
+                        <FaTrash />
+                        </IconButton>
+                     </ListItem>
+                  ))}
+                  </List>
+               </StyledPaper>
+            </Grid>
+            <Grid item xs={12} md={8}>
+               <StyledPaper>
+                  {selectedFile ? (
+                  <>
+                     <Typography variant="h6" gutterBottom>
+                        {selectedFile.name}
+                     </Typography>
+                     <SyntaxHighlighter language={getLanguage(selectedFile.type)} style={docco}>
+                        {selectedFile.content}
+                     </SyntaxHighlighter>
+                  </>
+                  ) : (
+                  <Typography variant="body1">Select a file to view its content</Typography>
+                  )}
+               </StyledPaper>
+            </Grid>
+            </Grid>
+
+            <StyledModal open={modalOpen} onClose={() => setModalOpen(false)}>
+            <ModalContent>
+               <Typography variant="h6" gutterBottom>
+                  Create New File
+               </Typography>
+               <TextField
+                  fullWidth
+                  label="File Name"
+                  value={fileName}
+                  onChange={(e) => setFileName(e.target.value)}
+                  error={!!error}
+                  helperText={error}
+                  sx={{ mb: 2 }}
+               />
+               <FormControl fullWidth sx={{ mb: 2 }}>
+                  <InputLabel>File Type</InputLabel>
+                  <Select
+                  value={fileType}
+                  onChange={(e) => setFileType(e.target.value)}
+                  label="File Type"
+                  >
+                  <MenuItem value=".txt">.txt</MenuItem>
+                  <MenuItem value=".js">.js</MenuItem>
+                  <MenuItem value=".jsx">.jsx</MenuItem>
+                  </Select>
+               </FormControl>
+               <TextField
+                  fullWidth
+                  label="File Content"
+                  multiline
+                  rows={4}
+                  value={fileContent}
+                  onChange={(e) => setFileContent(e.target.value)}
+                  sx={{ mb: 2 }}
+               />
+               <Button variant="contained" onClick={handleCreateFile}>
+                  Create File
+               </Button>
+            </ModalContent>
+            </StyledModal>
+         </Box>
+      );
+      };
+
+      export default FileDirectory;
+   ```
+  ]
+      ----------------------------------
+      --- USER FORMATTED PROMPT ---
+      | FORMATTED PROMPT: 
+  --- SECTION ONE: MAIN INSTRUCTIONS AND CONTEXT ---
+
+  CHAT HISTORY CONTEXT:
+    USER PROMPT HISTORY:
+      | ________________________________________ 
+      | User Prompts: Generate a modal compoennt with data table
+Generate a modal component for displaying icon previews
+Generate a react tool dial component with using framer motion for animations
+Generate a popup component reusable
+generate  react prompt templatre dispklay dashboard with dark theme and animations using framer motion
+    SUMMARY OF CHAT HISTORY:
+      | ________________________________________ 
+      | Main Summary: The series of messages contains seemingly random strings of text, likely testing inputs or placeholders, with no discernible meaning or context, shared by a user in a single session. |
+      | Previous 5 User Inquiries Summarized: [Summary 1][id 671900717facfe6b62bde2451]: The message contains a random string of text with no clear meaning.
+[Summary 2][id 6718fc4e673133571cffa6531]: This message also consists of a random string of text, similar to others, without any clear context.
+[Summary 3][id 6718fb450b982f4ff0ec70601]: Another message with a random string of text, showing no clear pattern or context.
+[Summary 4][id 6718f9c55200b9b85ddeceeb1]: Contains another seemingly random string of text, following the pattern of nonsensical inputs.
+[Summary 5][id 6718f9090ae1d00431b7bab01]: This message includes a random string of text, consistent with the other messages in randomness and lack of context. 
+      |
+  CHAT DATA CONTEXT:
+    RELEVANT DATA FROM CUSTOM DOCS:
+      | ________________________________________ 
+      | Custom UI Library DB: To generate a reusable dialog component with data display, you can use React and Tailwind CSS, similar to the approach described in. Here’s a concise implementation:
+
+1. **Create the Modal Component**:
+   ```javascript
+   // Modal.js
+   import React, { useState } from 'react';
+   import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core';
+
+   const Modal = ({ isOpen, onClose, children }) => {
+     if (!isOpen) return null;
+     return (
+       <Dialog open={isOpen} onClose={onClose}>
+         <DialogTitle>{children}</DialogTitle>
+         <DialogContent>{children}</DialogContent>
+         <DialogActions>
+           <Button onClick={onClose}>Close</Button>
+         </DialogActions>
+       </Dialog>
+     );
+   };
+
+   export default Modal;
+   ```
+
+2. **Create Specific Modal Components**:
+   - **Alert Modal**:
+     ```javascript
+     // AlertModal.js
+     import React from 'react';
+     import Modal from './Modal';
+To generate a modal component with a data table, you can combine the concepts from the provided resources. Here’s a step-by-step guide:
+
+1. **Create the Modal Component**:
+   - Use React to build a reusable modal component, similar to the example in. This will include properties for title, body content, and actions.
+
+   ```jsx
+   import React, { useState } from 'react';
+
+   const Modal = ({ open, titleContent, cancelFn, primaryFn, content }) => {
+     if (!open) return null;
+
+     return (
+       <div className="modalBackground">
+         <div className="modalContainer">
+           <div className="title">
+             {titleContent}
+             <button onClick={cancelFn}>X</button>
+           </div>
+           <div className="content">
+             {content}
+           </div>
+           <div className="actions">
+             <button onClick={primaryFn}>Confirm</button>
+           </div>
+         </div>
+       </div>
+     );
+   };
+
+   export default Modal;
+   ```
+To generate a modal component for displaying icon previews in React, you can follow these steps:
+
+1. **Set Up the Project**:
+   - Create a new React application using `npx create-react-app react-app`.
+   - Install necessary dependencies: `npm install tailwindcss postcss autoprefixer react-icons`.
+
+2. **Install Tailwind CSS**:
+   - Initialize Tailwind CSS using `npx tailwindcss init -p`.
+   - Configure Tailwind CSS in `tailwind.config.js`.
+
+3. **Create the Modal Component**:
+   - Define a reusable Modal component that controls its visibility.
+   - Use Tailwind CSS for styling the modal.
+
+Here is an example of how you can create the modal component:
+
+```javascript
+// App.js
+import React, { useState } from 'react';
+import './App.css';
+import { FaBox, FaTag, FaUsers } from 'react-icons/fa';
+export default Modal;
+   ```
+
+2. **Create the Data Table Component**:
+   - Use a library like Material React Table (MRT) or TanStack Table to create the data table. For simplicity, let’s use MRT.
+
+   ```jsx
+   import { useMemo, useState } from 'react';
+   import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
+2. **Create Specific Modal Components**:
+   - **Alert Modal**:
+     ```javascript
+     // AlertModal.js
+     import React from 'react';
+     import Modal from './Modal';
+
+     const AlertModal = ({ isOpen, onClose }) => {
+       return (
+         <Modal isOpen={isOpen} onClose={onClose}>
+           <DialogTitle>Alert</DialogTitle>
+           <DialogContent>
+             <p>This is an important message.</p>
+           </DialogContent>
+           <DialogActions>
+             <Button onClick={onClose}>OK</Button>
+           </DialogActions>
+         </Modal>
+       );
+     };
+
+     export default AlertModal;
+     ```
+
+   - **Form Modal**:
+     ```javascript
+     // FormModal.js
+     import React, { useState } from 'react';
+     import Modal from './Modal';
+
+     const FormModal = ({ isOpen, onClose, onSubmit }) => {
+       const [formData, setFormData] = useState({ name: '', email: '' });
+    RELEVANT DATA FROM SEARCH DOCS:
+      | ________________________________________ 
+      | Relevant Perplexity Web Search Results: To generate a React icon button with animations using Framer Motion, you can follow these steps:
+
+1. **Install Framer Motion**:
+   ```bash
+   npm install framer-motion
+   ```
+
+2. **Create a Button Component**:
+   ```jsx
+   import { motion, AnimatePresence } from 'framer-motion';
+
+   const Button = ({ children, onClick }) => {
+     const variants = {
+       hidden: { opacity: 0, x: -100 },
+       visible: { opacity: 1, x: 0 },
+     };
+
+     return (
+       <motion.button
+         initial="hidden"
+         animate="visible"
+         variants={variants}
+         whileHover={{ scale: 1.1 }}
+         whileTap={{ scale: 0.9 }}
+         onClick={onClick}
+       >
+         {children}
+       </motion.button>
+     );
+   };
+
+   export default Button;
+   ```
+
+3. **Use the Button Component**:
+   ```jsx
+   import React from 'react';
+   import Button from './Button';
+
+   const App = () => {
+     const handleClick = () => {
+       console.log('Button clicked!');
+     };
+To generate a React Framer Motion animated dropdown menu, you can follow these steps:
+
+1. **Set Up the Container and Dropdown Components**:
+   - Create a container component that will hold the dropdown menu.
+   - Create a dropdown component that will be displayed when the container is clicked.
+
+2. **Use Framer Motion for Animation**:
+   - Import the `motion` component from `framer-motion`.
+   - Define variants for the dropdown animation using `AnimatePresence`.
+
+3. **Handle State and Animation**:
+   - Use React state to manage whether the dropdown is open or closed.
+   - Use the `AnimatePresence` component to handle the animation of the dropdown.
+
+Here is an example code snippet to illustrate this:
+
+```jsx
+import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState } from 'react';
+
+const Navbar = () => {
+  const [isNavbarActive, setIsNavbarActive] = useState(false);
+const Humburger = () => {
+  // Example implementation of the humburger component
+  // You might need to adjust this based on your specific requirements.
+  // The key here is using forwardRef and the scope for animation.
+  
+  return (
+    <div className="hamburger-icon" />
+  );
+};
+
+export default Navbar;
+```
+
+### Explanation:
+- **Container Component (`Navbar`)**: This component manages the state of the dropdown menu and toggles it on and off.
+- **Dropdown Component (`NavbarDropdown`)**: This component uses Framer Motion's `motion` component and defines variants for the dropdown animation.
+- **Animation Handling**: The `AnimatePresence` component is used to handle the animation of the dropdown menu, ensuring it fades in and out smoothly.
+To generate a React tool dial component with animations using Framer Motion, you can follow these steps:
+
+1. **Set Up Your Project**:
+   - Initialize a new React project using a tool like `create-react-app`.
+   - Install Framer Motion and any other necessary libraries:
+     ```bash
+     npm install framer-motion react
+     ```
+
+2. **Create the Tool Dial Component**:
+   - Create a new component file for your tool dial, e.g., `ToolDial.js`.
+   - Define the component structure and styles:
+     ```jsx
+     import { motion } from 'framer-motion';
+     import { useState } from 'react';
+
+     const ToolDial = () => {
+       const [activeTool, setActiveTool] = useState(0);
+
+       const tools = [
+         { name: 'Pencil', icon: '🖌' },
+         { name: 'Brush', icon: '🖋' },
+         { name: 'Eraser', icon: '🧹' },
+         // Add more tools as needed
+       ];
+
+       const handleSelectTool = (index) => {
+         setActiveTool(index);
+       };
+```jsx
+import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState } from 'react';
+
+const Navbar = () => {
+  const [isNavbarActive, setIsNavbarActive] = useState(false);
+
+  return (
+    <div>
+      <button className="border flex items-center justify-center border-slate-400 hover:focus-within:none bg-black text-white rounded-full px-4 py-1.5 hover:bg-white transition-all ease-in hover:text-black" onClick={() => setIsNavbarActive(!isNavbarActive)}>Login</button>
+      <Humburger onClick={() => setIsNavbarActive(!isNavbarActive)} />
+
+      <AnimatePresence mode="popLayout">
+        {isNavbarActive && (
+          <NavbarDropdown />
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+      | Raw Perplexity Search Results Data: 
+      | -- Results: To generate a reusable modal component with motion animations, you can use a combination of front-end frameworks and libraries that support custom animations. Here’s a step-by-step guide using Elementor and Tailwind CSS:
+
+### Using Elementor
+
+1. **Create a Modal Component**:
+   - Use Elementor to design a modal component. You can add a button to trigger the modal and customize its layout, colors, and typography using Elementor’s Design System.
+
+2. **Add Entrance Animations**:
+   - Use Elementor’s Entrance Animations feature to add engaging and interactive animations to the modal component. This can include slide-in effects, fade-in transitions, or other dynamic animations.
+
+3. **Customize with CSS**:
+   - If needed, apply custom CSS to fine-tune the styling of the modal component. You can use Elementor’s Custom Code feature to insert custom CSS and extend the functionality of your site.
+
+### Using Tailwind CSS
+
+1. **Design the Modal**:
+   - Use Tailwind CSS to design the modal component. You can create a reusable UI component with Tailwind's utility classes, ensuring responsiveness and accessibility across different devices.
+
+2. **Add Animations**:
+   - Tailwind CSS provides a collection of reusable UI components that can be easily customized with animations. You can use Tailwind's utility classes to add motion effects like fade-in, slide-in, or other animations to the modal component.
+
+3. **Customize with Tailwind Components**:
+   - Tailwind component libraries offer pre-built UI components that can be easily integrated into your project. You can customize these components as needed to match your design requirements.
+
+### Example Code
+
+Here’s an example of how you might create a reusable modal component using Tailwind CSS:
+
+```html
+<!-- Modal Trigger Button -->
+<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="openModal()">Open Modal</button>
+
+<!-- Modal Content -->
+<div class="modal hidden" id="myModal">
+    <div class="modal-overlay bg-gray-600 opacity-50 fixed inset-0 z-50"></div>
+    <div class="modal-content bg-white rounded shadow-lg relative p-4 w-full max-w-lg h-auto">
+        <!-- Modal Header -->
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-bold">Modal Title</h2>
+            <button class="text-gray-600 hover:text-gray-800" onclick="closeModal()">Close</button>
+        </div>
+        <!-- Modal Body -->
+        <div class="mb-4">
+            <p>Modal content goes here...</p>
+        </div>
+    </div>
+</div>
+
+<script>
+function openModal() {
+    document.getElementById('myModal').classList.remove('hidden');
+}
+
+function closeModal() {
+    document.getElementById('myModal').classList.add('hidden');
+}
+</script>
+```
+
+### Adding Animations
+
+To add animations to the modal component, you can use Tailwind's utility classes for animation. For example, you can use the `@keyframes` function in your CSS file to create a slide-in effect:
+
+```css
+@keyframes slideIn {
+    from { transform: translateY(-100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.modal {
+    animation: slideIn 0.3s ease-out;
+}
+```
+
+This will create a slide-in animation for the modal component when it is opened.
+
+By combining these steps, you can generate a reusable modal component with motion animations that can be easily integrated into your web application.
+      | -- References: 
+    ADDITIONAL DATA:
+      | ________________________________________ 
+      | Keywords: reusable, modal component, motion animations
+      | UI Libraries: React
+      | JS Libraries: React
+      | Component Types: Modal
+      | Documentation Content: 
+
+  --- SECTION TWO: USER PROMPT/QUERY ---
+
+  USER PROMPT/QUERY: generate a reusable modal component with motion animations
+  EXTRACTED KEYWORDS: reusable, modal component, motion animations
+
+  --- SECTION THREE: FINAL INSTRUCTIONS ---
+
+  Based on the user's query, extracted information, and the provided context, please generate a response following the instructions given in the system and assistant messages. 
+  Ensure that your answer is comprehensive, professional, and tailored to creating high-quality React styled components. 
+  Please ensure your response includes:
+
+  1. A brief explanation of the component's purpose and design rationale
+  2. The full React component code, utilizing the latest React features and best practices
+  3. Examples of how to use and customize the component
+
+  --- SECTION FOUR: RESPONSE FORMATTING INSTRUCTIONS ---
+  
+--- BEGINNING OF RESPONSE FORMATTING INSTRUCTIONS ---
+
+## FORMATTING GUIDE
+Use this guide to format messages using Markdown syntax. Return final response as JSON:
+{ "content": "Your Markdown formatted message", "type": "markdown", "references": ["Array of reference strings"] }
+
+## MARKDOWN ELEMENTS GUIDE: 
+Use the following guide to format messages using Markdown syntax. This includes headings, text formatting, lists, links, images, blockquotes, code blocks, and more. Ensure to apply the appropriate syntax for the desired formatting.
+
+### Headings
+
+# H1
+## H2
+### H3
+#### H4
+##### H5
+###### H6
+
+### Text Formatting
+
+- **Bold**: **bold** or '__bold__'
+- *Italic*: *italic* or '_italic_'
+- ***Bold and Italic***: '***bold and italic***'
+- ~~Strikethrough~~: '~~strikethrough~~'
+- Inline Code: 'inline code'
+- Blockquote: '> Blockquote'
+
+### Lists
+
+1. Numbered List
+   1. Indented Item
+
+- Bullet List
+  - Indented Item
+
+- [ ] Unchecked Task
+- [x] Checked Task
+
+### Links and Images
+
+- [Hyperlink](https://example.com): '[link text](URL)'
+- ![Image](https://via.placeholder.com/150): '![alt text](URL)'
+
+### Blockquotes
+
+> Blockquote
+> > Nested Quote
+
+### Code Blocks
+
+```language 
+const myVariable = 'Hello, World!';
+console.log(myVariable);
+```
+
+### Horizontal Rule
+---
+
+### Escape Special Characters
+Use a single backslash '\' before the character to escape it.
+- Example (two are used for purposes of escaping it for this template): \# Not a Heading
+
+### Tables
+
+| Header 1 | Header 2 |
+|----------|----------|
+| Cell 1 | Cell 2 |
+
+### Special Elements:
+- Superscript: E = mc^2
+- Subscript: H~2~O
+- Table of Contents: [TOC]
+- Footnotes: [^1] and [^1]:
+- Definition Lists: Term : Definition
+- Abbreviations: *[HTML]: Hyper Text Markup Language
+- Highlight: ==highlighted text==
+- Custom Containers: ::: warning *Here be dragons* :::
+- Emoji: :emoji_name:
+
+### HTML Format
+All of these markdowns (or at least most) can be converted into the format. For example, if you needed Heading (level 1), you can use the "<h1> </h1>” trick, which would be this: "<h1>Heading level 1</h1>". This works for most Markdown parsers.
+
+### Mermaid Diagram
+You can use Mermaid to create diagrams. For example:
+```mermaid
+ diagram_type
+ diagram_code
+```
+For instance, this is a Mermaid diagram:
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+    subgraph "My Subgraph"
+        A-->B;
+        C-->D;
+```
+
+### Citations
+ Inline: [@AuthorYear]
+ References section:
+ [@AuthorYear]: Author, A. (Year). Title. Source. URL
+
+### Escape Characters
+You can escape special characters with a backslash \. For example, \* will result in a literal asterisk (*), not a bullet list.
+
+## Additional Styling Instructions
+- Ensure that any `mark` or highlighted text is styled with responsive width by applying flexbox styles or an equivalent method. This will allow the text to be responsive when resizing the window. For example, wrap the `mark` element within a `div` or `span` styled with `display: flex;` and `flex-wrap: wrap;` or similar responsive styles.
+
+## Response Format
+Return the final response as json:
+
+{
+  "content": "Your Markdown formatted message with citations",
+  "type": "markdown",
+  "references": ["Array of reference strings"]
+}
+
+## Example Response
+Below is an example (sample uses escape characters for formatting, but ensure to use the appropriate Markdown syntax for your use case):
+
+```json
+{
+"content": "# Custom Button Component
+
+## Explanation
+This component is a reusable button designed to follow Material UI styling conventions. It supports customization via props like 'color', 'size', and 'onClick' handler.
+
+## Code
+```jsx
+import React from 'react';
+import Button from '@mui/material/Button';
+
+const CustomButton = ({ color = 'primary', size = 'medium', onClick }) => (
+  <Button variant="contained" color={color} size={size} onClick={onClick}>
+    Click Me
+  </Button>
+);
+
+export default CustomButton;
+```
+
+## Usage Example
+```jsx
+// Usage in a parent component
+import CustomButton from './CustomButton';
+
+const ParentComponent = () => (
+  <CustomButton color="secondary" size="large" onClick={() => alert('Button clicked!')} />
+);
+
+export default ParentComponent;
+```
+
+## References
+[@MaterialUI2023]: Material UI. (2023). Button API. Material UI Documentation. https://mui.com/components/buttons/",
+"type": "markdown",
+"references": ["[@MaterialUI2023]: Material UI. (2023). Button API. Material UI Documentation. https://mui.com/components/buttons/"]
+}
+```
+--- END OF RESPONSE FORMATTING INSTRUCTIONS ---
+
+
+  --- END OF SECTIONS ---
+  
+      -----------------------------
+    --------------------------------
+  

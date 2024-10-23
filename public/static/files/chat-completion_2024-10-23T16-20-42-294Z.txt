@@ -1,0 +1,51 @@
+# Image Preview Component
+
+## Explanation
+This React component is designed to display image previews with the ability to customize the images shown. It provides a user-friendly interface for viewing images before uploading or selecting them.
+
+## Code
+jsx
+import React from 'react';
+import PropTypes from 'prop-types';
+
+const ImagePreview = ({ images }) => (
+  <div className="image-preview">
+    {images.map((image, index) => (
+      <img key={index} src={image} alt={`Image ${index + 1}`} />
+    ))}
+  </div>
+);
+
+ImagePreview.propTypes = {
+  images: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
+
+export default ImagePreview;
+
+
+## Usage Example
+jsx
+// Usage in a parent component
+import React from 'react';
+import ImagePreview from './ImagePreview';
+
+const ParentComponent = () => {
+  const imageList = [
+    'https://placehold.co/300x200',
+    'https://placehold.co/400x300',
+    'https://placehold.co/500x400',
+  ];
+
+  return (
+    <div>
+      <h2>Image Previews</h2>
+      <ImagePreview images={imageList} />
+    </div>
+  );
+};
+
+export default ParentComponent;
+
+
+## References
+- [React PropTypes Documentation](https://reactjs.org/docs/typechecking-with-proptypes.html)

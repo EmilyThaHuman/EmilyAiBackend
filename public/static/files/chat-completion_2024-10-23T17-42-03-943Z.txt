@@ -1,0 +1,46 @@
+# Chat Navigation Component
+
+## Explanation
+This React component is designed to create a navigation sidebar for a chat app. It allows users to navigate between different sections of the chat application, such as chat history, settings, and help. The component provides a clean and organized layout for easy access to various features.
+
+## Code
+jsx
+import React from 'react';
+
+const ChatNavigation = () => {
+  return (
+    <div className='chat-navigation'>
+      <div className='sidebar'>
+        <h2>Chat Navigation</h2>
+        <ul>
+          <li>Chat History</li>
+          <li>Settings</li>
+          <li>Help</li>
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+export default ChatNavigation;
+
+
+## Usage Example
+jsx
+// Usage in a parent component
+import ChatNavigation from './ChatNavigation';
+
+const ParentComponent = () => (
+  <div className='app-container'>
+    <ChatNavigation />
+    {/* Other components and content here */}
+  </div>
+);
+
+export default ParentComponent;
+
+
+## References
+- UI Bakery Docs: 'Add navigation to application' (2024-10-07)
+- Nocodable: 'How to make a navigation with Tabs in Bubble' (2024-09-24)
+- NPM: `react-native-gifted-chat` documentation (2024-10-01)
