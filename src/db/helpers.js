@@ -208,7 +208,8 @@ const createChatSession = async (user, workspace, assistant, folder) => {
   await chatSession.save();
 
   // Update token usage based on the entire session after saving
-  await chatSession.calculateTokenUsage();
+  const sessionId = chatSession._id;
+  await chatSession.tokenizeAllMessages(sessionId);
 
   return chatSession;
 };

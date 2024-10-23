@@ -93,7 +93,6 @@ const createDefaultFile = () => {
 
   return filesToInsert;
 };
-
 const createFileWithAssociation = async (userId, workspaceId, folderId, fileData) => {
   const fileExtension = path.extname(fileData.name).substring(1).toLowerCase();
 

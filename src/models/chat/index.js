@@ -1,7 +1,10 @@
 module.exports = {
+  ...require("./assistant"),
+  ...require("./chat-message"),
+  ...require("./chat-session"),
   ...require("./files"),
-  ...require("./main"),
-  ...require("./prompt"),
+  ...require("./model"),
   ...require("./preset"),
-  ...require("./model")
+  ...require("./prompt"),
+  ...require("./tool")
 };

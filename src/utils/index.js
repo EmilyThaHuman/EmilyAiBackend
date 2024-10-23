@@ -1,8 +1,10 @@
-// Exporting from ai directory
+const processing = require("./processing");
+const api = require("./api");
+const ai = require("./ai");
 module.exports = {
-  ...require("./ai"),
-  ...require("./processing"),
-  ...require("./api")
+  ...processing,
+  ...api,
+  ...ai
 };
 // module.exports = require('./ai');
 // module.exports = require('./auth');

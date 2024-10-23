@@ -13,8 +13,9 @@ const { combinedChatStream } = require("@utils/ai/openAi/chat/combinedStream");
 const { ChatOpenAI } = require("@langchain/openai");
 const { ChatMessage, ChatSession } = require("@models/chat");
 const { generateObjectId, getEnv } = require("@utils/api");
-const { logger } = require("@config/logging");
 const newrelic = require("newrelic");
+const { streamHeaders } = require("@middlewares/setupHeaders");
+const { logger } = require("@config/logging");
 
 const router = express.Router();
 
@@ -91,7 +92,7 @@ router.post("/feedback", (req, res) => {
 });
 
 // --- Stream completion endpoint ---
-router.post("/stream", asyncHandler(combinedChatStream));
+router.post("/stream", streamHeaders, asyncHandler(combinedChatStream));
 
 // --- Generate chat title endpoint ---
 router.post(

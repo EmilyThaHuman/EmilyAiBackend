@@ -1,67 +1,139 @@
+const fs = require("node:fs/promises");
+const path = require("path");
 const { logger } = require("@config/logging");
 const { File } = require("@models/chat");
-const fs = require("fs");
 const { encode } = require("gpt-tokenizer");
-const path = require("path");
+const prettier = require("prettier");
 
-const convertBlobToBase64 = async (blob) => {
-  if (!blob) {
-    throw new Error("No blob provided");
+function formatSection(content, type) {
+  let formattedContent;
+
+  // Use Prettier for formatting different content types
+  switch (type) {
+    case "jsx":
+    case "javascript":
+      formattedContent = prettier.format(content, { parser: "babel" });
+      break;
+    case "css":
+      formattedContent = prettier.format(content, { parser: "css" });
+      break;
+    default:
+      formattedContent = content.trim(); // For non-code sections, no formatting
+      break;
   }
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result);
-    reader.onerror = reject;
-    reader.readAsDataURL(blob);
+
+  // Return the content with appropriate Markdown code blocks
+  return `\`\`\`${type}\n${formattedContent}\n\`\`\``;
+}
+
+function formatDocumentation({ title, sections }) {
+  let documentation = `# ${title}\n\n`;
+
+  sections.forEach((section) => {
+    // Add the section title
+    documentation += `## ${section.title}\n\n`;
+
+    // Identify content type and format accordingly
+    if (section.type) {
+      documentation += formatSection(section.content, section.type);
+    } else {
+      // If no specific content type is provided, treat as plain text
+      documentation += section.content.trim();
+    }
+
+    documentation += `\n\n`; // Add space between sections
   });
-};
 
-function getMediaTypeFromDataURL(dataURL) {
-  const matches = dataURL.match(/^data:([A-Za-z-+/]+);base64/);
-  return matches ? matches[1] : null;
+  return documentation.trim();
 }
 
-function getBase64FromDataURL(dataURL) {
-  const matches = dataURL.match(/^data:[A-Za-z-+/]+;base64,(.*)$/);
-  return matches ? matches[1] : null;
-}
-const byteToImageURL = (mimeType, data) => {
-  const b64 = `data:${mimeType};base64,${encode(data)}`;
-  return b64;
+/**
+ * Generates a unique filename with a given prefix.
+ * @param {string} prefix
+ * @param {string} extension - File extension (e.g., 'txt', 'md').
+ * @returns {string}
+ */
+const generateUniqueFileName = (prefix, extension = "txt") => {
+  const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+  return `${prefix}_${timestamp}.${extension}`;
 };
 
-const getFileExtension = (filename) => {
-  const extension = filename.split(".").pop();
-  return extension ? extension.toLowerCase() : "";
+/**
+ * Constructs the public file path.
+ * @param {string} fileName
+ * @returns {string}
+ */
+const getPublicFilePath = (fileName) => {
+  return path.join(__dirname, "../../../../public/static/files", fileName);
 };
 
-const getFileSize = (str) => {
-  let sizeInBytes = new TextEncoder().encode(str).length;
-  logger.info(`File size in bytes: ${sizeInBytes}`);
-  // Convert to more readable formats
-  const sizeInKB = sizeInBytes / 1024;
-  const sizeInMB = sizeInKB / 1024;
-  logger.info(`File size in kilobytes: ${sizeInKB.toFixed(2)}`);
-  return {
-    bytes: sizeInBytes,
-    kilobytes: sizeInKB.toFixed(2),
-    megabytes: sizeInMB.toFixed(2)
-  };
+/**
+ * Writes content to a specified file path.
+ * @param {string} filePath
+ * @param {string|Buffer} content
+ * @param {string} encoding - Optional encoding. Defaults to 'utf8'.
+ */
+const writeToFile = async (filePath, content, encoding = "utf8") => {
+  try {
+    await fs.writeFile(filePath, content, encoding);
+    logger.info(`File saved to ${filePath}`);
+  } catch (error) {
+    logger.error(`Error saving file: ${error.message}`);
+    throw new Error(`File saving error: ${error.message}`);
+  }
 };
 
+/**
+ * Saves markdown content to a file.
+ * @param {string} content
+ * @returns {Promise<string>} - The file path where the markdown was saved.
+ */
+const saveMarkdown = async (content) => {
+  try {
+    const filename = generateUniqueFileName("response", "md");
+    const filepath = getPublicFilePath(filename);
+    await writeToFile(filepath, content, "utf-8");
+    logger.info(`Saved markdown to ${filepath}`);
+    return filepath;
+  } catch (error) {
+    logger.error("Error saving markdown file:", error.message);
+    throw new Error(`Markdown saving error: ${error.message}`);
+  }
+};
+
+const saveJson = async (content) => {
+  try {
+    const filename = generateUniqueFileName("response", "json");
+    const filepath = getPublicFilePath(filename);
+    await writeToFile(filepath, content, "utf-8");
+    logger.info(`Saved JSON to ${filepath}`);
+    return filepath;
+  } catch (error) {
+    logger.error("Error saving JSON file:", error.message);
+    throw new Error(`JSON saving error: ${error.message}`);
+  }
+};
+/**
+ * Saves a file to the system and MongoDB.
+ * @param {Object} params
+ * @param {string} params.content - The content to save.
+ * @param {string} params.userId
+ * @param {string} params.workspaceId
+ * @param {string} params.folderId
+ * @param {string} params.library
+ * @returns {Promise<Object>} - Information about the saved file.
+ */
 const saveFileToSystemAndDB = async ({ content, userId, workspaceId, folderId, library }) => {
-  // Generate the file name with timestamp
-  const fileName = `${library}_scraped_${Date.now()}.txt`;
+  const fileName = generateUniqueFileName(`${library}_scraped`);
   const filePath = path.join(__dirname, "../../../../public/uploads", fileName);
 
   try {
-    // Write the scraped content to a file
-    fs.writeFileSync(filePath, content, "utf8");
-    logger.info(`Content saved to ${filePath}`);
+    // Write the content to the file
+    await writeToFile(filePath, content, "utf8");
 
     // Get file stats
-    const fileStats = fs.statSync(filePath);
-    const fileType = path.extname(fileName).slice(1);
+    const fileStats = await fs.stat(filePath);
+    const fileType = path.extname(fileName).slice(1).toLowerCase();
 
     // Create file metadata
     const fileMetadata = {
@@ -75,7 +147,7 @@ const saveFileToSystemAndDB = async ({ content, userId, workspaceId, folderId, l
       type: fileType,
       metadata: {
         fileSize: fileStats.size,
-        fileType: fileType,
+        fileType,
         lastModified: fileStats.mtime
       }
     };
@@ -96,19 +168,16 @@ const saveFileToSystemAndDB = async ({ content, userId, workspaceId, folderId, l
     };
   } catch (error) {
     logger.error("Error in saving file:", error.message);
-    throw new Error("File handling error: " + error.message);
+    throw new Error(`File handling error: ${error.message}`);
   }
 };
 
-const sanitizeFileName = (fileName) => fileName.toLowerCase().replace(/[^a-z0-9]+/g, "_");
-
 module.exports = {
   saveFileToSystemAndDB,
-  convertBlobToBase64,
-  getMediaTypeFromDataURL,
-  getBase64FromDataURL,
-  byteToImageURL,
-  getFileExtension,
-  getFileSize,
-  sanitizeFileName
+  generateUniqueFileName,
+  getPublicFilePath,
+  writeToFile,
+  saveMarkdown,
+  saveJson,
+  formatDocumentation
 };

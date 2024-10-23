@@ -1,0 +1,57 @@
+{
+  "content": "# React Styled Component: CustomCard
+
+## Explanation
+This React component represents a customizable card element that can be used to display various types of content. The card design includes a title, image, description, and a button for interaction. It is styled using TailwindCSS for a modern and responsive look.
+
+## Code
+```jsx
+import React from 'react';
+
+const CustomCard = ({ title, imageUrl, description, buttonText, onClick }) => {
+  return (
+    <div className='bg-card text-card-foreground p-4 rounded-lg shadow-md'>
+      <img src={imageUrl} alt='Card Image' className='w-full h-48 object-cover rounded-md mb-4' />
+      <h2 className='text-lg font-semibold mb-2'>{title}</h2>
+      <p className='text-sm text-muted mb-4'>{description}</p>
+      <button onClick={onClick} className='bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary-foreground hover:text-primary shadow-sm'>
+        {buttonText}
+      </button>
+    </div>
+  );
+};
+
+export default CustomCard;
+```
+
+## Usage Example
+```jsx
+import React from 'react';
+import CustomCard from './CustomCard';
+
+const App = () => {
+  const handleButtonClick = () => {
+    alert('Button Clicked!');
+  };
+
+  return (
+    <div className='flex justify-center items-center h-screen bg-background'>
+      <CustomCard
+        title='Sample Card'
+        imageUrl='https://placehold.co/300x200'
+        description='This is a sample card description.'
+        buttonText='Click Me'
+        onClick={handleButtonClick}
+      />
+    </div>
+  );
+};
+
+export default App;
+```
+
+## References
+1. TailwindCSS Documentation: https://tailwindcss.com/docs",
+  "type": "markdown",
+  "references": ["TailwindCSS Documentation: https://tailwindcss.com/docs"]
+}

@@ -8,7 +8,7 @@ const {
   processTxt,
   processJSX
 } = require("./types");
-const fs = require("fs").promises;
+const fs = require("node:fs/promises");
 const path = require("path");
 const { DirectoryLoader } = require("langchain/document_loaders/fs/directory");
 const { TextLoader } = require("langchain/document_loaders/fs/text");
@@ -17,6 +17,7 @@ const { CSVLoader } = require("langchain/document_loaders/fs/csv");
 const { DocxLoader } = require("langchain/document_loaders/fs/docx");
 const { JSONLoader } = require("langchain/document_loaders/fs/json");
 const { MarkdownLoader } = require("langchain/document_loaders/fs/markdown");
+const { logger } = require("@config/logging");
 
 const PUBLIC_FILE_DIR = path.join(__dirname, "@/public/");
 
@@ -42,7 +43,7 @@ const loadDocuments = async (filePaths) => {
     );
     return documents;
   } catch (error) {
-    console.error("Error loading documents:", error);
+    logger.error("Error loading documents:", error);
     throw error;
   }
 };

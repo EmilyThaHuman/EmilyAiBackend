@@ -255,9 +255,9 @@ const handleFileStreaming = (req, res) => {
   }
 };
 function extractContent(jsonString) {
+  let parsedData;
   try {
-    const parsedData = JSON.parse(jsonString);
-
+    parsedData = JSON.parse(jsonString);
     // Extract the content
     const content = parsedData.content;
 
@@ -265,7 +265,7 @@ function extractContent(jsonString) {
   } catch (error) {
     logger.error("[extractContent] Error extracting content:", error);
     // return null;
-    return json;
+    return parsedData;
   }
 }
 module.exports = {

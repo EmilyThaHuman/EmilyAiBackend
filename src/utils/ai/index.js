@@ -3,5 +3,6 @@ module.exports = {
   ...require("./pinecone"),
   ...require("./mongodb"),
   ...require("./functions"),
-  ...require("./react-agent")
+  ...require("./react-agent"),
+  ...require("./prompt-utils")
 };

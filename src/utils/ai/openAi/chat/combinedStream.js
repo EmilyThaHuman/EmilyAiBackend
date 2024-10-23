@@ -14,33 +14,209 @@ const {
   getFormattingInstructions
 } = require("@lib/prompts/createPrompt");
 const { performPerplexityCompletion, handleSummarization, extractKeywords } = require("./context");
-const { checkApiKey } = require("@utils/api");
-const { getEnv, handleChatError } = require("@utils/api");
+const { getEnv, handleChatError, checkApiKey } = require("@utils/api");
 const {
   identifyLibrariesAndComponents,
   getDocumentationUrl,
   scrapeDocumentation
 } = require("../../shared");
 const {
-  prepareDocuments,
-  formatDocumentation,
-  createFormattedPrompt,
-  logChatData,
-  textSplitter,
-  logChatDataError,
-  DONE_MESSAGE,
-  setupResponseHeaders,
-  getInitializationData,
+  addMessageToSession,
+  getSessionHistory,
+  addSystemMessageToSession,
+  addAssistantInstructionsToSession
+} = require("./chat_history");
+const { ChatSession } = require("@models/chat");
+const { default: mongoose } = require("mongoose");
+const { CallbackManager } = require("@langchain/core/callbacks/manager");
+const { OpenAIChat, ChatOpenAI } = require("@langchain/openai");
+const { SystemMessage, AIMessage, HumanMessage } = require("@langchain/core/messages");
+const { logChatData } = require("@utils/processing/utils/loggingFunctions");
+const { createFormattedPrompt } = require("@utils/ai/prompt-utils");
+const {
   generateUniqueFileName,
   getPublicFilePath,
-  formatChatPromptBuild,
-  formatChatCompletionContent,
   writeToFile,
-  handleFileStreaming,
-  extractContent
-} = require("./chat_helpers");
-const { addMessageToSession, getSessionHistory } = require("./chat_history");
-const { ChatSession } = require("@models/chat");
+  saveMarkdown,
+  saveJson
+} = require("@utils/processing/utils/files");
+const { extractContent } = require("@utils/processing/utils/parse");
+const {
+  formatDocumentation,
+  formatChatCompletionContent,
+  formatChatPromptBuild,
+  formatDocumentationFromString
+} = require("@utils/processing/utils/format");
+const { prepareDocuments } = require("@utils/processing/utils/documents");
+const { RecursiveCharacterTextSplitter } = require("langchain/text_splitter");
+const { handleFileStreaming } = require("@controllers/fileStreaming");
+
+class LogStreamHandler {
+  constructor(res) {
+    this.res = res;
+    this.logs = []; // Store log entries
+    this.startTime = new Date().toISOString(); // Timestamp of the start of the run
+    this.accumulatedResponse = ""; // Store the full accumulated response
+
+    this.prevLogLength = 0; // Length of the previous log in characters
+  }
+
+  /**
+   * Sends data to the client via Server-Sent Events (SSE).
+   * @param {Object} data - The data to send.
+   */
+  sendData(data) {
+    this.res.write(`data: ${JSON.stringify(data)}\n\n`);
+  }
+
+  /**
+   * Logs data to the console, overwriting the previous log entry.
+   * Uses logger.info for informational logs and logger.error for errors.
+   * @param {Object} data - The log data.
+   */
+  logToConsole(data) {
+    // Clear the previous log from the console
+    if (this.prevLogLength > 0) {
+      process.stdout.write("\x1B[2K"); // Clear the entire line
+      process.stdout.write("\x1B[0G"); // Move cursor to the start of the line
+    }
+
+    // Create the log message
+    let logMessage;
+    if (data.type === "error") {
+      logMessage = `[ERROR][LogStreamHandler]: ${data.message}`;
+      logger.error(logMessage); // Log to the main logger
+    } else if (data.type === "run_start" || data.type === "run_end") {
+      logMessage = `[INFO][LogStreamHandler]: ${JSON.stringify(data)}`;
+      logger.info(logMessage); // Log to the main logger
+    } else {
+      // For other types like 'token'
+      logMessage = `[INFO][LogStreamHandler]: ${data.content}`;
+      logger.info(logMessage); // Log to the main logger
+    }
+
+    // Write the new log message to the console
+    process.stdout.write(`${logMessage}\n`);
+
+    // Update the previous log length
+    this.prevLogLength = logMessage.length;
+  }
+  /**
+   * Logs the accumulated response to the console, overwriting the previous log entry.
+   * Uses logger.info for informational logs and logger.error for errors.
+   * @param {string} accumulatedResponse - The full accumulated response so far.
+   */
+  logAccumulatedResponse(accumulatedResponse) {
+    // Clear the previous log from the console
+    if (this.prevLogLength > 0) {
+      process.stdout.write("\x1B[2K"); // Clear the entire line
+      process.stdout.write("\x1B[0G"); // Move cursor to the start of the line
+      process.stdout.write("\x1B[1A".repeat(this.prevLogLength)); // Move cursor up by the number of lines
+      process.stdout.write("\x1B[2K".repeat(this.prevLogLength)); // Clear the previous log content
+    }
+
+    // Calculate number of lines for the current log
+    const logLines = accumulatedResponse.split("\n").length;
+
+    // Log the accumulated content to the console
+    process.stdout.write(`${accumulatedResponse}\n`);
+
+    // Update the previous log length
+    this.prevLogLength = logLines;
+  }
+  /**
+   * Handles the start of a run.
+   * @param {Object} run - The run details.
+   */
+  handleRunStart(run) {
+    const logEntry = {
+      id: run.id,
+      name: run.name,
+      type: run.type,
+      tags: run.tags || [],
+      metadata: run.metadata || {},
+      start_time: this.startTime,
+      streamed_output: [],
+      streamed_output_str: []
+    };
+
+    this.logs.push(logEntry);
+
+    // Prepare and send the run start data
+    const data = { type: "run_start", data: logEntry };
+    this.sendData(data);
+    this.logToConsole(data);
+  }
+
+  /**
+   * Handles each new token received during the run.
+   * Accumulates the response and logs the updated response in the console.
+   * @param {string} token - The new token.
+   */
+  handleLLMNewToken(token) {
+    // Accumulate the token into the full response
+    this.accumulatedResponse += token;
+
+    // Log the entire accumulated response
+    this.logAccumulatedResponse(this.accumulatedResponse);
+
+    // Prepare and send the token data
+    const data = { type: "token", content: token };
+
+    // Send token to the client
+    this.sendData(data);
+  }
+
+  /**
+   * Handles errors that occur during the run.
+   * @param {Error} error - The error object.
+   */
+  handleError(error) {
+    // Prepare and log the error data
+    const data = { type: "error", message: error.message };
+    this.logToConsole(data);
+
+    // Send error message to client
+    this.sendData(data);
+  }
+
+  /**
+   * Handles the completion of the run.
+   * @param {string} finalOutput - The final output of the run.
+   */
+  async handleRunEnd(finalOutput) {
+    const endTime = new Date().toISOString();
+    const latestLog = this.logs[this.logs.length - 1];
+
+    if (latestLog) {
+      latestLog.end_time = endTime;
+      latestLog.final_output = finalOutput;
+    }
+
+    // Prepare and log the run end data
+    const data = { type: "run_end", data: latestLog };
+    this.logToConsole(data);
+
+    // Send final log to the client
+    this.sendData(data);
+
+    // End the response once everything is done
+    this.res.end();
+  }
+
+  /**
+   * Manually ends the stream in case of unexpected issues.
+   */
+  endStream() {
+    const data = { type: "end", message: "Stream Ended" };
+    this.logToConsole(data);
+    this.sendData(data);
+    this.res.end();
+  }
+}
+
+module.exports = LogStreamHandler;
+
 const functionDefinitions = [
   {
     type: "function",
@@ -72,57 +248,89 @@ const functionDefinitions = [
     }
   }
 ];
+const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 1000, chunkOverlap: 200 });
+const getInitializationData = (body) => ({
+  // --- main --- //
+  apiKey: body.clientApiKey || process.env.OPENAI_API_PROJECT_KEY,
+  userId: body.userId,
+  workspaceId: body.workspaceId,
+  sessionId: body.sessionId,
+  prompt: body.regenerate ? null : body.prompt,
+  role: body.role,
+  sessionLength: body.count || 0,
+  streamType: body.streamType,
+  temperature: 0.5,
+  maxTokens: 1024,
+  topP: 1,
+  frequencyPenalty: 0.5,
+  presencePenalty: 0,
+  perplexityApiKey: process.env.PERPLEXITY_API_KEY,
+  searchEngineKey: process.env.GOOGLE_SERPER_API_KEY,
+  pineconeEnv: process.env.PINECONE_API_KEY,
+  pineconeIndex: process.env.PINECONE_INDEX,
+  namespace: process.env.PINECONE_NAMESPACE_1,
+  dimensions: parseInt(process.env.PINECONE_EMBEDDING_MODEL_DIMENSIONS),
+  embeddingModel: process.env.PINECONE_EMBEDDING_MODEL_NAME,
+  completionModel: process.env.OPENAI_API_CHAT_COMPLETION_MODEL
+});
+/**
+ * Logs streaming data to the console.
+ * @param {String} markdown - The markdown content to log.
+ */
 function liveStreamLogger(markdown) {
   // Clear previous log and print updated markdown
   process.stdout.write("\x1b");
-  console.log(markdown);
+  logger.info(markdown);
 }
+/**
+ * Creates a new chat session and initializes system/assistant messages.
+ * Utilizes the refactored ChatSession.createSession method.
+ *
+ * @param {Object} defaultData - The default data containing user and workspace IDs.
+ * @param {Object} res - The Express response object.
+ */
 const createNewSession = async (defaultData) => {
-  if (!defaultData.userId || !defaultData.workspaceId) {
-    return res.status(400).json({ message: "Missing required parameters." });
-  }
   const { userId, workspaceId, sessionId, regenerate, prompt, clientApiKey } = defaultData;
+
+  if (!userId || !workspaceId) {
+    throw new Error("Missing required parameters: userId and workspaceId.");
+  }
+
   try {
-    // Create a new chat session
-    const newChat = await ChatSession.create({
+    const newChat = await ChatSession.createSession({
       userId,
       workspaceId,
-      sessionId: sessionId || generateObjectId(),
+      sessionId: sessionId || mongoose.Types.ObjectId(),
       regenerate,
       prompt,
       clientApiKey,
       title: prompt,
       name: prompt,
       status: "active",
-      messages: [],
-      path: `/chat/${sessionId}`
+      path: `/chat/${sessionId || newChat._id}`
     });
 
-    // save
-    await newChat.save();
-
-    // update with system/assistant instructions
+    // Add system and assistant messages using helper methods
     const systemPrompt = getMainSystemMessageContent();
     const assistantInstructions = getMainAssistantMessageInstructions();
-    await newChat.addSystemPrompt(newChat._id, systemPrompt);
-    await newChat.addAssistantMessage(newChat._id, assistantInstructions);
 
-    // push refId to user and workspace chatSessions arrays
-    await newChat.updateUserAndWorkspaceChatSessions(newChat._id);
+    await addSystemMessageToSession(newChat, systemPrompt);
+    await addAssistantInstructionsToSession(newChat, assistantInstructions);
 
-    res.status(201).json({ chatSession: newChat });
+    return newChat;
   } catch (error) {
-    logger.error("Error creating chat session:", error.message);
-    res.status(500).json({ message: "Failed to create chat session." });
+    logger.error("Error creating chat session:", error);
+    throw new Error("Failed to create chat session.");
   }
 };
+
 const combinedChatStream = async (req, res) => {
   let initializationData;
   if (req.body.newSession) {
-    const defaultData = (initializationData = getInitializationData(req.body));
-    const newSession = await createNewSession(defaultData);
+    initializationData = getInitializationData(req.body);
+    const newSession = await createNewSession(initializationData);
     initializationData = {
-      ...defaultData,
+      ...initializationData,
       sessionId: newSession._id
     };
   } else {
@@ -132,7 +340,6 @@ const combinedChatStream = async (req, res) => {
     return handleFileStreaming(req, res);
   }
   try {
-    setupResponseHeaders(res);
     checkApiKey(initializationData.apiKey, "OpenAI");
 
     // 1 - Initialize or generate chat session
@@ -146,8 +353,8 @@ const combinedChatStream = async (req, res) => {
     // 2 - Initialize or generate chat instance
     const chatOpenAI = initializeOpenAI(
       initializationData.apiKey,
-      initializationData.completionModel,
-      chatSession
+      chatSession,
+      initializationData.completionModel
     );
     // 3 - Initialize pinecone instance
     const pinecone = initializePinecone();
@@ -167,18 +374,6 @@ const combinedChatStream = async (req, res) => {
     // 8 - Generate summary of history
     const summary = await handleSummarization(messages, chatOpenAI, initializationData.sessionId);
     // 9 - Add user message to session
-    // const userMessageDoc = await addMessage(chatSession, {
-    //   userId: initializationData.userId,
-    //   workspaceId: initializationData.workspaceId,
-    //   sessionId: chatSession._id,
-    //   role: 'user',
-    //   content: initializationData.prompt,
-    //   metadata: {
-    //     createdAt: Date.now(),
-    //     updatedAt: Date.now(),
-    //     sessionId: chatSession._id,
-    //   },
-    // });
     const userMessageDoc = await addMessageToSession(chatSession, {
       userId: initializationData.userId,
       workspaceId: initializationData.workspaceId,
@@ -192,6 +387,8 @@ const combinedChatStream = async (req, res) => {
       }
     });
     logChatData("userMessageDoc", userMessageDoc);
+    const currentPromptHistory = chatSession.promptHistory;
+    chatSession.promptHistory = [...currentPromptHistory, initializationData.prompt];
     chatSession.summary = summary;
     await chatSession.save();
     // 10 - Context A: Perform search for prompt-related data
@@ -233,10 +430,8 @@ const combinedChatStream = async (req, res) => {
     );
     await handleStreamingResponse(
       res,
-      chatOpenAI,
       formattedPrompt,
       chatSession,
-      userMessageDoc,
       sessionContextStore,
       initializationData,
       messages
@@ -365,124 +560,158 @@ const getDocumentationContent = async (uiLibraries, componentTypes) => {
     throw error;
   }
 };
+
 const handleStreamingResponse = async (
   res,
-  chatOpenAI,
   formattedPrompt,
   chatSession,
-  userMessageDoc,
   sessionContextStore,
   initializationData,
   messages
 ) => {
-  const DONE_MESSAGE = "DONE"; // Define DONE_MESSAGE if not already defined
+  const DONE_MESSAGE = "DONE";
   const sendData = (data) => {
     res.write(`data: ${JSON.stringify(data)}\n\n`);
   };
 
+  let fullResponse = "";
+  let functionCallData = null;
+
+  const logStreamHandler = new LogStreamHandler(res);
+
   try {
-    // Initiate the streaming request to OpenAI
-    const resultStream = await chatOpenAI.completionWithRetry({
-      model: getEnv("OPENAI_API_CHAT_COMPLETION_MODEL"),
-      messages: [
-        { role: "system", content: getMainSystemMessageContent() },
-        { role: "assistant", content: getMainAssistantMessageInstructions() },
-        { role: "user", content: formattedPrompt }
-      ],
-      stream: true,
-      // streamUsage: true,
-      temperature: 0.2,
-      tools: [
-        {
-          type: "function",
-          function: {
-            name: "generateResponse",
-            strict: true,
-            parameters: {
-              type: "object",
-              required: ["content", "metadata"],
-              properties: {
-                content: {
-                  type: "string",
-                  description: "The content of the response."
-                },
-                metadata: {
-                  type: "object",
-                  required: ["timestamp", "responseLength"],
-                  properties: {
-                    timestamp: {
-                      type: "string",
-                      description: "The time the response was generated."
-                    },
-                    responseLength: {
-                      type: "integer",
-                      description: "The length of the response in characters."
-                    }
-                  },
-                  additionalProperties: false
-                }
-              },
-              additionalProperties: false
-            },
-            description: "Generates a response based on user input."
-          }
-        }
-      ],
-      parallel_tool_calls: true,
-      response_format: {
-        type: "json_object"
+    const callbackManager = CallbackManager.fromHandlers({
+      async handleLLMNewToken(token) {
+        // Log and stream each new token using LogStreamHandler
+        logStreamHandler.handleLLMNewToken(token);
+        fullResponse += token;
+      },
+      async handleLLMEnd() {
+        // Finalize the run and log the end
+        await saveChatCompletion(initializationData, chatSession, fullResponse);
+        await processChatCompletion(
+          chatSession,
+          fullResponse,
+          sessionContextStore,
+          initializationData
+        );
+        logStreamHandler.handleRunEnd(fullResponse);
+      },
+      async handleLLMError(error) {
+        // Handle and log the error
+        logStreamHandler.handleError(error);
       }
+      // async handleLLMNewToken(token) {
+      //   // Log the content accumulation
+      //   logStreamCallbackHandler.onLLMNewToken({ id: chatSession._id, name: "LLM" }, token);
+
+      //   sendData({ type: "message", content: token });
+      //   fullResponse += token;
+      // },
+      // async handleLLMNewTokenWithRole(message) {
+      //   if (message.role === "function") {
+      //     const functionCall = message;
+      //     await handleFunctionCall(functionCall, sendData);
+      //   }
+      // },
+      // async handleLLMEnd() {
+      //   logStreamCallbackHandler.onRunUpdate({
+      //     id: chatSession._id,
+      //     name: "LLM",
+      //     final_output: fullResponse
+      //   });
+
+      //   await saveChatCompletion(initializationData, chatSession, fullResponse);
+      //   await processChatCompletion(
+      //     chatSession,
+      //     fullResponse,
+      //     sessionContextStore,
+      //     initializationData
+      //   );
+      //   sendData({ type: "end", message: DONE_MESSAGE });
+      //   res.end();
+      // },
+      // async handleLLMError(error) {
+      //   logger.error(`[ERROR][handleStreamingResponse]: ${error.stack}`);
+      //   logStreamCallbackHandler.onRunUpdate({
+      //     id: chatSession._id,
+      //     name: "LLM",
+      //     final_output: "error"
+      //   });
+
+      //   sendData({ type: "error", message: error.message });
+      //   res.end();
+      // }
     });
-    let fullResponse = "";
-    // let usageInfo = {};
-    const liveLogResponse = () => {
-      logger.info("Accumulated Response:", fullResponse);
-    };
-    for await (const chunk of resultStream) {
-      const chunkString = chunk.toString();
-      accumulatedResponse += chunkString;
 
-      // Handle each chunk carefully
-      try {
-        const parsedChunk = JSON.parse(chunkString);
-        logger.info("Parsed Chunk:", parsedChunk);
+    const chatOpenAI = new ChatOpenAI({
+      openAIApiKey: initializationData.apiKey,
+      streaming: true,
+      temperature: 0.2,
+      callbackManager
+    });
 
-        if (parsedChunk.choices && parsedChunk.choices.length > 0) {
-          const choice = parsedChunk.choices[0];
-          logger.info("CHOICE:", choice);
+    const functions = functionDefinitions;
 
-          if (choice.message) {
-            const content = choice.message.content || "";
-            sendData({ type: "message", content });
-          }
+    const messageSequence = [
+      new SystemMessage(getMainSystemMessageContent()),
+      new AIMessage(getMainAssistantMessageInstructions()),
+      new HumanMessage(formattedPrompt)
+    ];
 
-          if (choice.function_call) {
-            const { name, arguments: args } = choice.function_call;
-            const responseData = JSON.parse(args);
-            sendData({ type: "function_call", name, arguments: responseData });
-          }
-        }
-      } catch (error) {
-        // Log the error without crashing
-        logger.error(`Error parsing chunk: ${error.message}, chunk: ${chunkString}`);
-        // Optionally, continue with partial content
-        continue;
-      }
-    }
+    logStreamHandler.handleRunStart({
+      id: chatSession.id,
+      name: "LLM Chat Session",
+      type: "llm",
+      tags: ["chat"]
+    });
 
-    await saveChatCompletion(initializationData, chatSession, fullResponse);
-    await processChatCompletion(chatSession, fullResponse, sessionContextStore, initializationData);
-
-    // Send the DONE message and end the response
-    sendData({ type: "end", message: DONE_MESSAGE });
-    res.end();
+    await chatOpenAI.invoke(messageSequence, {
+      functions,
+      function_call: "auto"
+    });
   } catch (error) {
-    logger.error(`[ERROR][handleStreamingResponse]: ${error.message}`);
+    logStreamHandler.handleError(error);
+    logStreamHandler.endStream(); // End the stream in case of an error
+    // logger.error(`[ERROR][handleStreamingResponse]: ${error.stack}`);
+    // sendData({ type: "error", message: error.message });
+    // res.end();
+  }
+};
+
+async function handleFunctionCall(functionCall, sendData) {
+  try {
+    const { name, arguments: args } = functionCall;
+    const functionResult = await executeFunction(name, args);
+
+    // Send function result to the client
+    sendData({ type: "function_result", name, result: functionResult });
+  } catch (error) {
+    logger.error(`[ERROR][handleFunctionCall]: ${error.stack}`);
     sendData({ type: "error", message: error.message });
-    res.end();
+  }
+}
+
+const executeFunction = async (functionName, functionArgs) => {
+  try {
+    const args = JSON.parse(functionArgs);
+
+    if (functionName === "generateResponse") {
+      const content = args.content;
+      const metadata = args.metadata;
+
+      const responseContent = `${content}\n\nGenerated at: ${metadata.timestamp}\nResponse Length: ${metadata.responseLength}`;
+
+      return { content: responseContent };
+    } else {
+      throw new Error(`Function ${functionName} not recognized.`);
+    }
+  } catch (error) {
+    logger.error(`[ERROR][executeFunction]: ${error.message}`);
     throw error;
   }
 };
+
 const processChatCompletion = async (
   chatSession,
   fullResponse,
@@ -515,30 +744,42 @@ async function savePromptBuild(systemContent, assistantInstructions, formattedPr
 async function saveChatCompletion(initializationData, chatSession, fullResponse) {
   const fileName = generateUniqueFileName("chat-completion");
   const filePath = getPublicFilePath(fileName);
-  await fs.writeFile(filePath, responseText);
+  await fs.writeFile(filePath, fullResponse);
 
   try {
-    const content = extractContent(fullResponse);
-    let formattedContent = formatDocumentation(content);
-    const chatCompletionContent = formatChatCompletionContent(formattedContent);
-    await writeToFile(filePath, chatCompletionContent);
+    const parsedData = extractContent(fullResponse);
+    if (parsedData.content) {
+      const chatCompletionContent = formatChatCompletionContent(parsedData.content);
+      logger.info(`[INFO][saveChatCompletion]: ${chatCompletionContent}`);
+      await writeToFile(filePath, parsedData.content);
+      await saveMarkdown(parsedData.content);
+      await saveJson(JSON.stringify(parsedData));
+    }
+    // let formattedContent = formatDocumentationFromString(content.content);
+    // const chatCompletionContent = formatChatCompletionContent(parsedData.content);
+    // await writeToFile(filePath, parsedData.content);
 
     try {
       const assistantMessageDoc = await addMessageToSession(chatSession, {
         role: "assistant",
-        content: content,
-        code: formattedContent,
+        content: parsedData.content,
+        code: parsedData.content,
         userId: initializationData.userId,
         workspaceId: initializationData.workspaceId,
         sessionId: chatSession._id,
         metadata: {
           createdAt: Date.now(),
           updatedAt: Date.now(),
-          sessionId: chatSession._id
+          sessionId: chatSession._id,
+          contentType: parsedData?.type,
+          references: parsedData?.references
         }
       });
       logChatData("assistantMessageDoc", assistantMessageDoc);
-      await chatSession.calculateTokenUsage();
+      const tokenizedMessages = await chatSession.tokenizeAllMessages(chatSession._id);
+      await chatSession.updateTokenUsage(tokenizedMessages);
+      const usage = chatSession.getTokenUsage();
+      logger.info(`Token usage: ${usage}`);
     } catch (error) {
       logger.error(`[ERROR][saveChatCompletion]: ${error.message}`);
       throw error;
@@ -665,7 +906,16 @@ const handleMarkdownStreamingResponse = async (
 //   throw error;
 // }
 // };
-
+// else {
+//           const text = choice.delta.content;
+//           if (text) {
+//             // Accumulate the text content
+//             accumulatedResponse.content = (accumulatedResponse.content || "") + text;
+//             // Optionally, update metadata here if needed
+//             sendJSON({ type: "message", content: accumulatedResponse });
+//             liveLogResponse();
+//           }
+//         }
 // Stream the data chunks
 //   result.data.on("data", (chunk) => {
 //     const payloads = chunk.toString().split("\n\n");

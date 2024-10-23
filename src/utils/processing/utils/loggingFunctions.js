@@ -39,7 +39,28 @@ function recordTokenUsage({ prompt_tokens, completion_tokens, total_tokens }) {
   }
 }
 
+/**
+ * Logs chat data.
+ * @param {string} section
+ * @param {object} chatData
+ */
+function logChatData(section, chatData) {
+  logger.info(`[CHECK][${section}]: ${JSON.stringify(chatData)}`);
+}
+
+/**
+ * Logs chat data errors.
+ * @param {string} section
+ * @param {object} chatData
+ * @param {Error} error
+ */
+function logChatDataError(section, chatData, error) {
+  logger.error(`[ERROR][${section}]: ${JSON.stringify(chatData)}: ${error}`);
+}
+
 module.exports = {
   logArrayAsTable,
-  recordTokenUsage
+  recordTokenUsage,
+  logChatData,
+  logChatDataError
 };

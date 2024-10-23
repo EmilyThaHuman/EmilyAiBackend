@@ -1,5 +1,6 @@
 const { logger } = require("@config/logging");
 const prettier = require("prettier");
+
 const removeDuplicate = (code) =>
   (code = code.replace(/^(import[\s\S]*?export default function [^(]+\(\) {[\s\S]*?})\1$/, "$1"));
 
@@ -100,6 +101,92 @@ async function formatAndCleanCode(code) {
   }
 }
 
+/**
+ * Formats documentation content into HTML.
+ * @param {string} content
+ * @returns {string}
+ */
+function formatDocumentationFromChunks(content) {
+  if (!content || !Array.isArray(content)) {
+    logger.error(`[ERROR][formatDocumentation]: data is undefined or not an array`);
+    return ""; // Return an empty string or handle appropriately
+  }
+  try {
+    const sections = content?.split("\n\n");
+    const formattedSections = sections.map((section) => {
+      if (section.startsWith("```")) {
+        return section;
+      }
+      const lines = section.split("\n");
+      const formattedLines = lines.map((line) => {
+        if (line.startsWith("# ")) {
+          return `<h1>${line.slice(2)}</h1>`;
+        } else if (line.startsWith("## ")) {
+          return `<h2>${line.slice(3)}</h2>`;
+        } else if (line.startsWith("### ")) {
+          return `<h3>${line.slice(4)}</h3>`;
+        } else {
+          return `<p>${line}</p>`;
+        }
+      });
+      return formattedLines.join("\n");
+    });
+    return formattedSections.join("\n\n");
+  } catch (error) {
+    logger.error(`[ERROR][formatDocumentation]: ${error.message}`);
+    throw error;
+  }
+}
+function formatDocumentationFromString(content) {
+  if (!content) {
+    logger.error(`[ERROR][formatDocumentation]: data is undefined or not an array`);
+    return ""; // Return an empty string or handle appropriately
+  }
+  return `
+    --- DOCUMENTATION ---
+    ${content}
+    --------------------------------
+  `;
+}
+
+/**
+ * Formats chat completion content.
+ * @param {string} content
+ * @returns {string}
+ */
+function formatChatCompletionContent(content) {
+  return `
+    --- CHAT COMPLETION RESPONSE ---
+    ${content}
+    --------------------------------
+  `;
+}
+
+/**
+ * Formats chat prompt build.
+ * @param {string} systemContent
+ * @param {string} assistantInstructions
+ * @param {string} formattedPrompt
+ * @returns {string}
+ */
+function formatChatPromptBuild(systemContent, assistantInstructions, formattedPrompt) {
+  return `
+    --- CHAT COMPLETION RESPONSE ---
+      --- SYSTEM / ASSISTANT PROMPTS ---
+      | SYSTEM: [${systemContent}]
+      | ASSISTANT: [${assistantInstructions}]
+      ----------------------------------
+      --- USER FORMATTED PROMPT ---
+      | FORMATTED PROMPT: ${formattedPrompt}
+      -----------------------------
+    --------------------------------
+  `;
+}
+
 module.exports = {
-  formatAndCleanCode
+  formatAndCleanCode,
+  formatDocumentationFromChunks,
+  formatDocumentationFromString,
+  formatChatCompletionContent,
+  formatChatPromptBuild
 };

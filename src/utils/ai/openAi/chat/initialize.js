@@ -72,8 +72,8 @@ const initializeChatSession = async (sessionId, workspaceId, userId, prompt, ses
       }
     } else {
       logger.info(`Chat session found: ${chatSession._id}`);
-      const currentPromptHistory = chatSession.promptHistory;
-      chatSession.promptHistory = [...currentPromptHistory, prompt];
+      // const currentPromptHistory = chatSession.promptHistory;
+      // chatSession.promptHistory = [...currentPromptHistory, prompt];
     }
     await chatSession.save();
     return chatSession;
