@@ -25,6 +25,13 @@
     "sourceMap": true,
     "noImplicitAny": true
   },
-  "include": ["src/**/*", "config/**/*", "public/**/*", "tests/**/*"],
+  "include": [
+    "src/**/*",
+    "config/**/*",
+    "public/**/*",
+    "tests/**/*",
+    "CLEANUP/chat_helpers.js",
+    "CLEANUP/initialize.js"
+  ],
   "exclude": ["node_modules", "dist", "coverage"]
 }

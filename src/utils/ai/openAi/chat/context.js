@@ -106,7 +106,6 @@ const handleSummarization = async (messages, chatOpenAI, sessionId) => {
     throw error;
   }
 };
-
 /**
  * Performs a perplexity completion using the Perplexity AI API.
  *
