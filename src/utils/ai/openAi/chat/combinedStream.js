@@ -1,6 +1,5 @@
 const fs = require("node:fs/promises");
 const { logger } = require("@config/logging");
-
 const { PineconeStore } = require("@langchain/pinecone");
 const {
   initializeOpenAI,
@@ -15,7 +14,7 @@ const {
   getFormattingInstructions
 } = require("@lib/prompts/createPrompt");
 const { performPerplexityCompletion, handleSummarization, extractKeywords } = require("./context");
-const { checkApiKey } = require("@utils/auth");
+const { checkApiKey } = require("@utils/api");
 const { getEnv, handleChatError } = require("@utils/api");
 const {
   identifyLibrariesAndComponents,
@@ -41,14 +40,7 @@ const {
   extractContent
 } = require("./chat_helpers");
 const { addMessageToSession, getSessionHistory } = require("./chat_history");
-const { getOpenaiClient, getDefaultOpenaiClient } = require("../get");
 const { ChatSession } = require("@models/chat");
-// const { recordTokenUsage } = require("@utils/processing/utils/loggingFunctions");
-
-/**
- * Function Definitions for OpenAI Function Calling
- * Define the structure of the JSON response you expect.
- */
 const functionDefinitions = [
   {
     type: "function",
@@ -80,6 +72,11 @@ const functionDefinitions = [
     }
   }
 ];
+function liveStreamLogger(markdown) {
+  // Clear previous log and print updated markdown
+  process.stdout.write("\x1b");
+  console.log(markdown);
+}
 const createNewSession = async (defaultData) => {
   if (!defaultData.userId || !defaultData.workspaceId) {
     return res.status(400).json({ message: "Missing required parameters." });
@@ -486,81 +483,6 @@ const handleStreamingResponse = async (
     throw error;
   }
 };
-/**
- * Handles the OpenAI streaming response and sends it back to the client as a markdown or plain text.
- */
-const handleMarkdownStreamingResponse = async (
-  res,
-  chatOpenAI,
-  formattedPrompt,
-  chatSession,
-  userMessageDoc,
-  sessionContextStore,
-  initializationData,
-  messages
-) => {
-  const sendJSON = (data) => res.write(`data: ${JSON.stringify(data)}\n\n`);
-  let accumulatedResponse = "";
-
-  try {
-    const result = await chatOpenAI.completionWithRetry({
-      model: getEnv("OPENAI_API_CHAT_COMPLETION_MODEL"),
-      messages: [
-        { role: "system", content: getMainSystemMessageContent() },
-        { role: "assistant", content: getMainAssistantMessageInstructions() },
-        { role: "user", content: formattedPrompt }
-      ],
-      stream: true,
-      stream_usage: true,
-      temperature: 0.2,
-      functions: functionDefinitions,
-      function_call: "auto"
-    });
-
-    for await (const chunk of result) {
-      const payloads = chunk.toString().split("\n\n");
-      for (const payload of payloads) {
-        if (!payload.trim()) continue;
-        if (payload === "[DONE]") {
-          sendJSON({ type: "end" });
-          saveMarkdown(accumulatedResponse); // Save the accumulated response to a markdown file
-          res.end();
-          return;
-        }
-
-        const parsed = JSON.parse(payload.replace(/^data: /, ""));
-        const { usage, choices } = parsed;
-
-        // Handle usage statistics
-        if (usage) {
-          sendJSON({ type: "usage", usage });
-        }
-
-        // Accumulate content chunks
-        const contentChunk = choices?.[0]?.delta?.content || "";
-        accumulatedResponse += contentChunk;
-
-        sendJSON({ type: "content", content: contentChunk }); // Stream back to client
-      }
-    }
-  } catch (error) {
-    logger.error(`[ERROR][handleStreamingResponse]: ${error.message}`);
-    throw error;
-  }
-};
-/**
- * Save the accumulated markdown response to a file.
- */
-const saveMarkdown = async (content) => {
-  const fileName = generateUniqueFileName("chat-response");
-  const filePath = getPublicFilePath(fileName);
-  try {
-    await writeToFile(filePath, content);
-    logger.info(`Markdown saved at ${filePath}`);
-  } catch (error) {
-    logger.error(`[ERROR][saveMarkdown]: ${error.message}`);
-  }
-};
 const processChatCompletion = async (
   chatSession,
   fullResponse,
@@ -628,7 +550,67 @@ async function saveChatCompletion(initializationData, chatSession, fullResponse)
 }
 
 module.exports = { combinedChatStream };
+/*
+const handleMarkdownStreamingResponse = async (
+  res,
+  chatOpenAI,
+  formattedPrompt,
+  chatSession,
+  userMessageDoc,
+  sessionContextStore,
+  initializationData,
+  messages
+) => {
+  const sendJSON = (data) => res.write(`data: ${JSON.stringify(data)}\n\n`);
+  let accumulatedResponse = "";
 
+  try {
+    const result = await chatOpenAI.completionWithRetry({
+      model: getEnv("OPENAI_API_CHAT_COMPLETION_MODEL"),
+      messages: [
+        { role: "system", content: getMainSystemMessageContent() },
+        { role: "assistant", content: getMainAssistantMessageInstructions() },
+        { role: "user", content: formattedPrompt }
+      ],
+      stream: true,
+      stream_usage: true,
+      temperature: 0.2,
+      functions: functionDefinitions,
+      function_call: "auto"
+    });
+
+    for await (const chunk of result) {
+      const payloads = chunk.toString().split("\n\n");
+      for (const payload of payloads) {
+        if (!payload.trim()) continue;
+        if (payload === "[DONE]") {
+          sendJSON({ type: "end" });
+          saveMarkdown(accumulatedResponse); // Save the accumulated response to a markdown file
+          res.end();
+          return;
+        }
+
+        const parsed = JSON.parse(payload.replace(/^data: /, ""));
+        const { usage, choices } = parsed;
+
+        // Handle usage statistics
+        if (usage) {
+          sendJSON({ type: "usage", usage });
+        }
+
+        // Accumulate content chunks
+        const contentChunk = choices?.[0]?.delta?.content || "";
+        accumulatedResponse += contentChunk;
+
+        sendJSON({ type: "content", content: contentChunk }); // Stream back to client
+      }
+    }
+  } catch (error) {
+    logger.error(`[ERROR][handleStreamingResponse]: ${error.message}`);
+    throw error;
+  }
+};
+*/
 // Check if the result is an async iterator (stream)
 // if (result && typeof result[Symbol.asyncIterator] === "function") {
 //   for await (const chunk of result) {

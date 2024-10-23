@@ -30,7 +30,7 @@ const consoleTransport = new transports.Console({
 const createDailyRotateFileTransport = (level) => {
   return new transports.DailyRotateFile({
     level: level,
-    filename: path.join(__dirname, "logs", `${level}`, `${level}-%DATE%.log`),
+    filename: path.join(__dirname, "..", "..", "..", "logs", `${level}`, `${level}-%DATE%.log`),
     datePattern: "YYYY-MM-DD",
     zippedArchive: true,
     maxSize: "20m",

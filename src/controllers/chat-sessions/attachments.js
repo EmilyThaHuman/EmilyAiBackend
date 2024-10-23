@@ -1,20 +1,19 @@
 const { logger } = require("@config/logging");
 const {
   File,
-  Folder,
-  Workspace,
-  User,
   AssistantFile,
   ChatFile,
   MessageFileItem,
   ChatMessage,
   ChatSession
-} = require("@models");
+} = require("@models/chat");
+const { User } = require("@models/user");
+const { Folder, Workspace } = require("@models/workspace");
 const { getDB, getBucket } = require("@db");
 const fs = require("node:fs");
 const path = require("path");
-const { asyncHandler } = require("@utils/api");
 const { default: mongoose } = require("mongoose");
+const { asyncHandler } = require("@middlewares/asyncHandler");
 const baseUrl = "http://localhost:3001/static/";
 // Function to upload a file to the GridFS bucket
 const uploadFileToBucket = async (req, res) => {

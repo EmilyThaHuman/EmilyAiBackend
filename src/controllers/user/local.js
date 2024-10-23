@@ -3,7 +3,12 @@ require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { User } = require("@models/user");
-const { AuthorizationError, ValidationError, ConflictError, REFRESH_TOKEN } = require("@config");
+const {
+  AuthorizationError,
+  ValidationError,
+  ConflictError,
+  REFRESH_TOKEN
+} = require("@config/constants");
 const { findAndPopulateUser } = require("@models/utils");
 const { generateTokens } = require("@utils/api/auth");
 const {
@@ -77,6 +82,9 @@ const registerUser = async (req, res, next) => {
         // -- user profile --
         profile: {
           name: populatedUser.profile.name,
+          username: populatedUser.profile.username,
+          displayName: populatedUser.profile.displayName,
+          email: populatedUser.profile.email,
           avatar: populatedUser.profile.img,
           avatarPath: populatedUser.profile.imagePath,
           bio: populatedUser.profile.bio,
@@ -306,7 +314,12 @@ const getProfileImage = async (req, res) => {
   }
 };
 function removeEmptyStrings(obj) {
-  return Object.fromEntries(Object.entries(obj).filter(([_, value]) => value !== ""));
+  return Object.keys(obj).reduce((acc, key) => {
+    if (obj[key] !== "") {
+      acc[key] = obj[key];
+    }
+    return acc;
+  }, {});
 }
 const updateProfile = async (req, res) => {
   try {

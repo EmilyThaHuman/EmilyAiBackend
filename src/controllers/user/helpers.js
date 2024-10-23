@@ -16,7 +16,12 @@ const {
   ALLOWED_FILE_TYPES_ABBR,
   SUPPORTED_MIME_TYPES_ABBR
 } = require("@config/constants");
-const { createWorkspace, createFolders, createAssistant, createChatSession } = require("@db/init");
+const {
+  createWorkspace,
+  createFolders,
+  createAssistant,
+  createChatSession
+} = require("@db/helpers");
 const { logger } = require("@config/logging");
 const { getEnv } = require("@utils/api");
 

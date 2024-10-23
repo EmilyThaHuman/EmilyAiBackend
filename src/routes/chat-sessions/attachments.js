@@ -1,5 +1,6 @@
 const express = require("express");
 const path = require("path");
+const { asyncHandler } = require("@middlewares/asyncHandler");
 const {
   getAllFilesByType,
   createMessageFileItems,
@@ -30,49 +31,17 @@ const {
   getStaticFile,
   getStaticFilesByType
 } = require("@controllers/chat-sessions");
-const { asyncHandler } = require("@utils/api");
 const { logger } = require("@config/logging");
-const { getDB, handleFileUpload } = require("@db/main");
+const { handleFileUpload } = require("@db/fileUpload");
 const { default: mongoose } = require("mongoose");
 const { upsertDocs } = require("@utils/ai/pinecone");
 const { File } = require("@models/chat");
+
 const router = express.Router();
 
 // File retrieval routes
 router.get("/:userId", async (req, res) => {
-  // let uploadData;
-  // let uploadMessage;
   try {
-    // const db = await getDB();
-    // const collection = db.collection("uploads.files");
-
-    // const page = parseInt(req.query.page) || 1;
-    // const limit = parseInt(req.query.limit) || 10;
-    // const skip = (page - 1) * limit;
-
-    // uploadData = { files: [], total: 0, page, limit };
-    // const uploads = await collection.find({}).skip(skip).limit(limit).toArray();
-    // const total = await collection.countDocuments();
-
-    // if (!uploads || uploads.length === 0) {
-    //   uploadMessage = "No files found";
-    // } else {
-    //   // this method is used to get the files from the database
-    //   const fileList = uploadData.files.map((file) => ({
-    //     id: file._id.toString(),
-    //     _id: file._id.toString(),
-    //     userId: file.userId,
-    //     workspaceId: file.workspaceId,
-    //     folderId: file.folderId,
-    //     filename: file.filename,
-    //     contentType: file.contentType,
-    //     size: file.length,
-    //     uploadDate: file.uploadDate,
-    //     metadata: file.metadata,
-    //     url: `/api/files/${file._id}/download`
-    //   }));
-    //   uploadData.files = fileList;
-    // }
     let files;
     try {
       files = await File.find({
@@ -87,11 +56,6 @@ router.get("/:userId", async (req, res) => {
     return res.json({
       message: "Files fetched successfully",
       files: files
-      // uploads: uploadData.files,
-      // total: uploadData.total,
-      // page: uploadData.page,
-      // limit: uploadData.limit,
-      // totalPages: Math.ceil(total / limit)
     });
   } catch (error) {
     logger.error(`Error fetching files: ${error.message}`);
@@ -100,9 +64,7 @@ router.get("/:userId", async (req, res) => {
 });
 router.get("/type/:fileType", async (req, res) => {
   try {
-    const db = await getDB();
-    // const bucket = getBucket();
-    const collection = db.collection("uploads.files");
+    const collection = mongoose.connection.db.collection("uploads.files");
     const fileType = req.params.fileType;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
@@ -141,10 +103,7 @@ router.get("/type/:fileType", async (req, res) => {
 });
 router.get("/name/:fileName", async (req, res) => {
   try {
-    const db = await getDB();
-    // const bucket = getBucket();
-    const collection = db.collection("uploads.files");
-
+    const collection = mongoose.connection.db.collection("uploads.files");
     const fileName = req.params.fileName;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
@@ -183,9 +142,7 @@ router.get("/name/:fileName", async (req, res) => {
 });
 router.get("/space/:space", async (req, res) => {
   try {
-    const db = await getDB();
-    // const bucket = getBucket();
-    const collection = db.collection("uploads.files");
+    const collection = mongoose.connection.db.collection("uploads.files");
 
     const space = req.params.space;
     const page = parseInt(req.query.page) || 1;

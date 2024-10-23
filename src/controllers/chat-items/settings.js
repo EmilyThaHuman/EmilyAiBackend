@@ -1,20 +1,8 @@
 const { logger } = require("@config/logging");
-const {
-  User,
-} = require("@models/user");
-const {
-  Workspace,
-  Folder
-} = require("@models/workspace");
-const {
-  Preset: ChatPreset,
-  Tool: ChatTool,
-  Model: ChatModel,
-  Prompt,
-} = require("@models/chat");
-const {
-  Collection: ChatCollection
-} = require("@models/main");
+const { User } = require("@models/user");
+const { Workspace, Folder } = require("@models/workspace");
+const { Preset: ChatPreset, Tool: ChatTool, Model: ChatModel, Prompt } = require("@models/chat");
+const { Collection: ChatCollection } = require("@models/main");
 
 const createChatSettingsController = (Model, entityName) => {
   return {

@@ -7,7 +7,7 @@ const { CHAT_SETTING_LIMITS } = require("./constants");
 const { getEnv } = require("@utils/api");
 
 // Load environment variables from .env file
-dotenv.config({ path: path.join(__dirname, "..", "..", ".env") });
+dotenv.config({ path: path.join(__dirname, ".env") });
 
 const development = {
   db: getEnv("MONGODB_URI")
@@ -41,7 +41,29 @@ const defaults = {
   node: {
     env: process.env.NODE_ENV || "development",
     envFile: ".env",
-    envPath: path.join(__dirname, "..", "..", ".env"),
+    envPath: path.join(__dirname, "..", "..", ".env")
+  },
+  // --- NewRelic --- //
+  newRelic: {
+    app_name: [`${process.env.NEW_RELIC_APP_NAME}`],
+    keys: {
+      user_key: process.env.NEW_RELIC_API_USER_KEY,
+      license_key: process.env.NEW_RELIC_LICENSE_KEY
+    },
+    configuration: {
+      logging: {
+        level: "info"
+      },
+      distributed_tracing: {
+        enabled: true
+      },
+      instrumentation: {
+        express: false // Disable Express instrumentation if the issue persists
+      },
+      error_collector: {
+        enabled: true
+      }
+    }
   },
   // --- App --- //
   app: {

@@ -1,8 +1,8 @@
 const express = require("express");
-const { asyncHandler } = require("@utils/api");
-const router = express.Router();
+const { asyncHandler } = require("@middlewares/asyncHandler");
 const { assistantController } = require("@utils/ai/openAi/assistants");
-// --- Assistant endpoints ---
+const router = express.Router();
+
 // - Assistant main endpoints -
 router.post("/list", asyncHandler(assistantController.listAssistants));
 router.post("/create", asyncHandler(assistantController.createAssistant));
@@ -22,7 +22,8 @@ router.post(
   asyncHandler(assistantController.createRunStreamWithFunctions)
 );
 router.post("/runs/retrieve", asyncHandler(assistantController.retrieveRun));
-
+// -- other --
 router.post("/byThread", asyncHandler(assistantController.getByThread));
 router.post("/assistant/test", asyncHandler(assistantController.assistantTest));
+
 module.exports = router;

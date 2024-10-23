@@ -11,14 +11,14 @@ function parseMessagesToHTML(messages) {
 
       // Depending on the role, you can style the message differently or add additional logic.
       switch (role) {
-      case "system":
-        return `<div class="system-message">${parseContent(content)}</div>`;
-      case "user":
-        return `<div class="user-message">${parseContent(content)}</div>`;
-      case "assistant":
-        return `<div class="assistant-message">${parseContent(content)}</div>`;
-      default:
-        return `<div class="unknown-message">${parseContent(content)}</div>`;
+        case "system":
+          return `<div class="system-message">${parseContent(content)}</div>`;
+        case "user":
+          return `<div class="user-message">${parseContent(content)}</div>`;
+        case "assistant":
+          return `<div class="assistant-message">${parseContent(content)}</div>`;
+        default:
+          return `<div class="unknown-message">${parseContent(content)}</div>`;
       }
     })
     .join(""); // Join all messages into a single HTML string

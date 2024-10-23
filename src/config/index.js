@@ -1,5 +1,8 @@
+const config = require("./main");
+
 module.exports = {
-  ...require("./main"),
+  // ...require("./main"),
   ...require("./logging"),
-  ...require("./constants")
+  ...require("./constants"),
+  config: config
 };

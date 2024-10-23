@@ -1,5 +1,5 @@
 const express = require("express");
-const { asyncHandler } = require("@utils/api/sync.js");
+const { asyncHandler } = require("@middlewares/asyncHandler");
 const {
   getAllSessions,
   getSessionById,
@@ -12,23 +12,88 @@ const {
 const { combinedChatStream } = require("@utils/ai/openAi/chat/combinedStream");
 const { ChatOpenAI } = require("@langchain/openai");
 const { ChatMessage, ChatSession } = require("@models/chat");
-const { generateObjectId } = require("@utils/auth");
-const { getEnv } = require("@utils/api");
+const { generateObjectId, getEnv } = require("@utils/api");
 const { logger } = require("@config/logging");
-const { default: OpenAI } = require("openai");
+const newrelic = require("newrelic");
 
 const router = express.Router();
 
-// --- Chat completion endpoints ---
-router.post("/stream", asyncHandler(combinedChatStream));
 const openai = new ChatOpenAI({
   apiKey: getEnv("OPENAI_API_PROJECT_KEY")
-  // model: "gpt-3.5-turbo"
 });
 
-/**
- * Generates a chat title based on the first prompt.
- */
+const logAndRespondError = (res, error, message) => {
+  // Using optional chaining and fallback values to avoid undefined error properties
+  const errorMsg = error?.response?.data || error?.message || "Unknown error";
+  logger.error(`${message}: ${errorMsg}`);
+  res.status(500).json({ message, error: errorMsg });
+};
+
+// --- Chat completion stream endpoint ---
+router.post(
+  "/chat-completion-stream",
+  asyncHandler(async (req, res) => {
+    const { message = "Say this is a test", model = "gpt-4" } = req.body || {};
+
+    try {
+      const stream = await openai.chat.completions.create({
+        stream: true,
+        temperature: 0.5,
+        messages: [{ role: "user", content: message }],
+        model
+      });
+
+      res.setHeader("Content-Type", "text/plain");
+
+      for await (const chunk of stream) {
+        // Check if chunk and necessary nested properties exist before accessing
+        const content = chunk?.choices?.[0]?.delta?.content;
+
+        if (content) {
+          res.write(content);
+        }
+      }
+
+      const { traceId } = newrelic.getTraceMetadata();
+      res.write("\n-------- END OF MESSAGE ---------\n");
+      res.write(`Use this id to record feedback '${stream.id}'\n`);
+      res.end();
+    } catch (error) {
+      logAndRespondError(res, error, "Error processing chat completion stream.");
+    }
+  })
+);
+
+// --- Feedback route ---
+router.post("/feedback", (req, res) => {
+  const {
+    category = "feedback-test",
+    rating = 1,
+    message = "Good talk",
+    metadata,
+    id
+  } = req.body || {};
+  const { traceId } = responses.get(id);
+
+  if (!traceId) {
+    return res.status(404).send(`No trace id found for ${message}`);
+  }
+
+  newrelic.recordLlmFeedbackEvent({
+    traceId,
+    category,
+    rating,
+    message,
+    metadata
+  });
+
+  res.send("Feedback recorded");
+});
+
+// --- Stream completion endpoint ---
+router.post("/stream", asyncHandler(combinedChatStream));
+
+// --- Generate chat title endpoint ---
 router.post(
   "/generate-title",
   asyncHandler(async (req, res) => {
@@ -38,130 +103,29 @@ router.post(
       return res.status(400).json({ message: "First prompt is required." });
     }
 
-    const titleGpt = new OpenAI({
-      apiKey: getEnv("OPENAI_API_PROJECT_KEY")
-      // model: "gpt-3.5-turbo"
-    });
-    // const llm = new ChatOpenAI({
-    //   apiKey: getEnv("OPENAI_API_PROJECT_KEY"),
-    //   model: "gpt-4o",
-    //   temperature: 0,
-    //   maxTokens: undefined,
-    //   timeout: undefined,
-    //   maxRetries: 2
-    // });
     try {
-      const response = await titleGpt.chat.completions.create({
+      const response = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",
         messages: [
           { role: "user", content: prompt },
           {
             role: "system",
-            content: `Generate a concise and descriptive title for this chat session based on the user's first prompt. The title should be no more than five words and encapsulate the main topic or purpose of the conversation.
-
-            Examples:
-            - 'I need help planning my vacation to Italy.' becomes Vacation Planning GPT ✈️
-            - 'Can you assist me in understanding quantum physics?' becomes Quantum Physics GPT 🔬
-          `
+            content: `Generate a concise and descriptive title for this chat session based on the user's first prompt. The title should be no more than five words and encapsulate the main topic or purpose of the conversation.`
           }
         ],
         max_tokens: 10,
         temperature: 0.7
       });
 
-      const title = response.data.choices[0].message.content.trim();
+      const title = response?.choices?.[0]?.message?.content?.trim() || "Untitled Session";
       res.json({ title });
     } catch (error) {
-      logger.error("Error generating chat title:", error.response?.data || error.message);
-      res.status(500).json({ message: "Failed to generate chat title." });
+      logAndRespondError(res, error, "Failed to generate chat title.");
     }
   })
 );
 
-/**
- * POST /api/generate-component
- *
- * Request Body:
- * {
- *   "containerPath": "AnalyticsDashboard",
- *   "componentName": "Button",
- *   "dependencies": ["Icon"],
- *   "userStory": "As a user, I want a button to submit the form."
- * }
- *
- * Response: { "componentCode": \`\`\`jsx
- * \// Button.jsx
- * import React from 'react';
- * import Icon from './Icon';
- * import styles from './Button.module.css';
- *
- * const Button = ({ label, icon, onClick }) => {
- *   return (
- *     <button className={styles.button} onClick={onClick}>
- *       {icon && <Icon name={icon} />}
- *       {label}
- *     </button>
- *   );
- * };
- *
- * export default Button;
- * \`\`\` }
- **/
-
-router.post("/generate-component", async (req, res) => {
-  const { containerPath, componentName, dependencies, userStory } = req.body;
-
-  if (!containerPath || !componentName || !userStory) {
-    return res
-      .status(400)
-      .json({ error: "containerPath, componentName, and userStory are required." });
-  }
-
-  try {
-    const dirPath = path.join(process.env.LOCAL_COMPONENTS_DIR, containerPath);
-
-    // Read existing configurations and compositions
-    const composition = await readComponentsComposition(dirPath);
-    const configurations = await readComponentsConfigurations(dirPath);
-
-    // Find the component configuration
-    const componentConfig = configurations.find((config) => config.name === componentName);
-
-    if (!componentConfig) {
-      return res
-        .status(404)
-        .json({ error: `Component configuration for ${componentName} not found.` });
-    }
-
-    // Generate prompt
-    const prompt = generateComponentPrompt({
-      description: userStory,
-      componentName,
-      dependencies: componentConfig.uiComponents,
-      implementations: componentConfig.implementations || [],
-      componentConfiguration: componentConfig
-    });
-
-    // Generate component code using OpenAI
-    const [componentCode] = await componentGenerator.generateComponent({ description: prompt });
-
-    if (!componentCode) {
-      return res.status(500).json({ error: "Failed to generate component code." });
-    }
-
-    // Save the generated component code to index.js (or index.jsx)
-    await saveFile(dirPath, "index.js", componentCode);
-
-    res.status(200).json({ componentCode });
-  } catch (error) {
-    console.error("Error generating component:", error);
-    res.status(500).json({ error: "Internal Server Error." });
-  }
-});
-
-/**
- * Creates a new chat session.
- */
+// --- Create chat session endpoint ---
 router.post(
   "/create-session",
   asyncHandler(async (req, res) => {
@@ -173,13 +137,11 @@ router.post(
     }
 
     try {
-      // Create a new message
       const message = await ChatMessage.create({
         content: firstPrompt,
         type: "user"
       });
 
-      // Create a new chat session
       const newChat = await ChatSession.create({
         sessionId: sessionId || generateObjectId(),
         workspaceId,
@@ -192,18 +154,15 @@ router.post(
         path: `/chat/${sessionId}`
       });
 
-      // Populate messages for response
       await newChat.populate("messages");
-
       res.status(201).json({ chatSession: newChat });
     } catch (error) {
-      logger.error("Error creating chat session:", error.message);
-      res.status(500).json({ message: "Failed to create chat session." });
+      logAndRespondError(res, error, "Failed to create chat session.");
     }
   })
 );
 
-// --- Chat session endpoints ---
+// --- Chat session and messages endpoints ---
 router.get("/", asyncHandler(getAllSessions));
 router.get("/:sessionId", asyncHandler(getSessionById));
 router.get("/:sessionId/messages", asyncHandler(getMessagesFromChat));

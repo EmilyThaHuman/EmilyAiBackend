@@ -1,5 +1,5 @@
-const { logger } = require("@config/logging");
 const mongoose = require("mongoose");
+const { logger } = require("@config/logging");
 
 const getUserId = async (req, res) => {
   try {
@@ -16,7 +16,7 @@ const getUserId = async (req, res) => {
 };
 function getContextWithUser(userID) {
   const ctx = {};
-  ctx[userContextKey] = userID.toString();
+  ctx["userContextKey"] = userID.toString();
   return ctx;
 }
 const generateObjectId = () => new mongoose.Types.ObjectId();
@@ -57,7 +57,6 @@ function addApiKeysToProfile(profile, clientApiKey) {
     throw new Error("Failed to add API keys to profile");
   }
 }
-
 // Function to check if an API key is valid
 function checkApiKey(apiKey, keyName) {
   if (!apiKey) {

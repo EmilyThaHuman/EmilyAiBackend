@@ -46,23 +46,59 @@ const chatMessageSchema = createSchema({
 chatMessageSchema.index({ sessionId: 1, createdAt: 1 });
 chatMessageSchema.pre("save", async function (next) {
   logger.info("ChatMessage pre-save hook");
-  if (this.isNew) {
-    const existingMessage = await this.constructor.findOne({ content: this.content });
-    if (existingMessage) {
-      return next(new Error("A message with this content already exists"));
-    }
 
-    await mongoose
-      .model("ChatSession")
-      .findByIdAndUpdate(
-        this.sessionId,
-        { $push: { messages: this._id } },
-        { new: true, useFindAndModify: false }
-      );
+  if (this.isNew) {
+    try {
+      // Attempt to find an existing message with the same content
+      const existingMessage = await this.constructor.findOne({ content: this.content });
+
+      if (existingMessage) {
+        logger.info(
+          `Existing message found with content: "${this.content}". Replacing it with the new message.`
+        );
+
+        // Replace the existing message's content and updatedAt fields
+        existingMessage.content = this.content;
+        existingMessage.updatedAt = Date.now();
+        // Update other fields as necessary
+        // For example: existingMessage.someField = this.someField;
+
+        await existingMessage.save();
+
+        // Optionally, you can associate the new message ID with the ChatSession if needed
+        // For example, if you want to replace the message ID in the ChatSession's messages array:
+        await mongoose.model("ChatSession").findByIdAndUpdate(
+          this.sessionId,
+          {
+            $pull: { messages: existingMessage._id }, // Remove old message ID
+            $push: { messages: existingMessage._id } // Add the updated message ID (same ID)
+          },
+          { new: true, useFindAndModify: false }
+        );
+
+        // Prevent saving the new message since we've updated the existing one
+        return next();
+      }
+
+      // If no existing message is found, proceed to add the new message to the ChatSession
+      await mongoose
+        .model("ChatSession")
+        .findByIdAndUpdate(
+          this.sessionId,
+          { $push: { messages: this._id } },
+          { new: true, useFindAndModify: false }
+        );
+    } catch (error) {
+      logger.error("Error in ChatMessage pre-save hook:", error);
+      return next(error);
+    }
   }
+
+  // Update the updatedAt timestamp for both new and existing messages
   this.updatedAt = Date.now();
   next();
 });
+
 chatMessageSchema.pre("findOneAndUpdate", async function (next) {
   const update = this.getUpdate();
   if (update.content) {
@@ -172,7 +208,6 @@ const chatSessionSchema = createSchema(
       type: mongoose.Schema.Types.Mixed, // Allows storing any data type, including objects
       required: false
     },
-    path: String,
     category: String,
     keywords: [String],
     sentiment: String,

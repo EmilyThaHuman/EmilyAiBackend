@@ -1,6 +1,6 @@
 const { body, validationResult } = require("express-validator");
 
-export const validate = (validations) => {
+const validate = (validations) => {
   return async (req, res, next) => {
     for (let validation of validations) {
       const result = await validation.run(req);
@@ -16,7 +16,7 @@ export const validate = (validations) => {
   };
 };
 
-export const loginValidator = [
+const loginValidator = [
   body("email").trim().isEmail().withMessage("Email is required"),
   body("password")
     .trim()
@@ -24,11 +24,16 @@ export const loginValidator = [
     .withMessage("Password should contain at least 6 characters")
 ];
 
-export const signupValidator = [
+const signupValidator = [
   body("name").notEmpty().withMessage("Name is required"),
   ...loginValidator
 ];
 
-export const chatCompletionValidator = [
-  body("message").notEmpty().withMessage("Message is required")
-];
+const chatCompletionValidator = [body("message").notEmpty().withMessage("Message is required")];
+
+module.exports = {
+  validate,
+  loginValidator,
+  signupValidator,
+  chatCompletionValidator
+};

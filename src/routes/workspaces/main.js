@@ -1,5 +1,5 @@
 const express = require("express");
-const { asyncHandler } = require("@utils/api/sync.js");
+const { asyncHandler } = require("@middlewares/asyncHandler");
 const {
   getAllWorkspaces,
   getWorkspaceById,

@@ -4,36 +4,36 @@
  * --------------------------------------------
  */
 
+const path = require("path");
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const compression = require("compression");
 const cookieParser = require("cookie-parser");
-const { morganMiddleware } = require("./morganMiddleware");
-const path = require("path");
 const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
-const { User } = require("../models");
 const MongoStore = require("connect-mongo");
+const { morganMiddleware } = require("./morganMiddleware");
 const config = require("@config/main");
+const { User } = require("../models");
 
 const middlewares = (app) => {
   // Set up Helmet for enhanced security, including Content Security Policy (CSP)
   app.use(helmet(config.app.middlewares.security.helmet));
 
   // Use Morgan middleware for logging HTTP requests
-  app.use(morganMiddleware(config.app.middlewares.logging.morgan));
+  app.use(morganMiddleware);
 
   // Enable response compression for better performance
   app.use(compression(config.app.middlewares.compression));
 
   // Parse incoming JSON requests
-  app.use(express.json(config.app.express.json));
+  app.use(express.json());
 
   // Parse URL-encoded data
-  app.use(express.urlencoded(config.app.express.urlencoded));
+  app.use(express.urlencoded({ extended: true }));
 
   // Parse cookies attached to client requests
   app.use(cookieParser(config.auth.cookie.secret));
@@ -76,7 +76,7 @@ const middlewares = (app) => {
 
   // Serialize and deserialize user for session management
   passport.serializeUser((user, done) => {
-    done(null, user.id);
+    done(null, user._id);
   });
 
   passport.deserializeUser(async (id, done) => {

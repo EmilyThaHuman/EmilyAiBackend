@@ -3,7 +3,10 @@
  * [app.js] | Express application setup
  * --------------------------------------------
  */
+
 require("module-alias/register");
+require("dotenv").config();
+// require("newrelic");
 
 const express = require("express");
 const middlewares = require("./middlewares");

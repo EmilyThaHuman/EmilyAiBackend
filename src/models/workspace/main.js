@@ -215,7 +215,7 @@ folderSchema.pre("save", async function (next) {
 
     // Ensure that the `items` array is populated with the correct ref based on `space`
     if (this.items && this.items.length > 0) {
-      this.items = this.items.filter(item => item.ref === this.space);
+      this.items = this.items.filter((item) => item.ref === this.space);
     }
   }
 

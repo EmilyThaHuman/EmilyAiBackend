@@ -1,8 +1,8 @@
 const express = require("express");
 const path = require("path");
-const fs = require("fs").promises;
+const fs = require("node:fs").promises;
 const { logger } = require("@config/logging");
-const { asyncHandler } = require("@utils/api/sync.js");
+const { asyncHandler } = require("@middlewares/asyncHandler");
 const {
   ChatPresetController,
   ChatToolController,
@@ -10,6 +10,7 @@ const {
   ChatPromptController,
   ChatCollectionController
 } = require("@controllers/chat-items");
+
 const router = express.Router();
 
 /* -- MAIN ROUTES -- */
@@ -83,7 +84,6 @@ router.get("/prompts", async (req, res) => {
 });
 router.get("/collections", asyncHandler(ChatCollectionController.getAll));
 /* -- MAIN ROUTES -- */
-
 
 router.get("/presets/:id", asyncHandler(ChatPresetController.getById));
 router.post("/presets", asyncHandler(ChatPresetController.create));

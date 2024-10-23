@@ -13,10 +13,21 @@ let bucket;
 const connectDB = async () => {
   try {
     if (mongoose.connection.readyState !== 1) {
-      const connectionString = getEnv("MONGODB_URI") || "mongodb://localhost:27017/test";
-      logger.info(`[1] Attempting to connect to MongoDB: ${connectionString}`);
+      const connectionString = getEnv("MONGODB_URI");
+      if (!connectionString) {
+        throw new Error("MONGODB_URI is not set in environment variables");
+      }
 
-      await mongoose.connect(connectionString);
+      logger.info(`[1] Attempting to connect to MongoDB`);
+
+      await mongoose.connect(connectionString, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        serverSelectionTimeoutMS: 5000,
+        tlsAllowInvalidCertificates: false,
+        tlsAllowInvalidHostnames: false
+      });
+
       logger.info("[2] Mongoose connection established successfully");
       mongoose.set("debug", true);
 

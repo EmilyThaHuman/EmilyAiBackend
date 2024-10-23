@@ -1,14 +1,6 @@
 const { default: mongoose } = require("mongoose");
 const { logger } = require("@config/logging");
-const {
-  ChatSession,
-  Preset,
-  Tool,
-  Model,
-  Prompt,
-  Assistant,
-  File
-} = require("@models/chat");
+const { ChatSession, Preset, Tool, Model, Prompt, Assistant, File } = require("@models/chat");
 const { User } = require("@models/user");
 const { Workspace, Folder } = require("@models/workspace");
 const { Collection } = require("@models/main");
@@ -297,7 +289,7 @@ const getHomeWorkspace = async (req, res) => {
   const userId = req.params.userId;
   try {
     // const db = getDB();
-    const homeWorkspace = await workspace.findOne({
+    const homeWorkspace = await Workspace.findOne({
       userId: userId,
       isHome: true
     });
@@ -314,12 +306,20 @@ const getHomeWorkspace = async (req, res) => {
 const getWorkspaceById = async (req, res) => {
   try {
     const workspace = await Workspace.findById(req.params.workspaceId)
-      .populate("chatSessions")
+      .populate({
+        path: "chatSessions",
+        populate: [
+          {
+            path: "messages", // Populating messages for each chatSession
+            model: "ChatMessage" // Explicitly defining the model if needed
+          }
+        ]
+      })
       .populate("assistants")
       .populate("tools")
       .populate("prompts")
       .populate("folders");
-    // logger.info(`workspace: ${workspace}`);
+
     if (!workspace) {
       return res.status(404).json({ message: "Workspace not found" });
     }

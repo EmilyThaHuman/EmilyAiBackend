@@ -1,10 +1,5 @@
 {
-  "accordion": [
-    "Accordion",
-    "AccordionContent",
-    "AccordionItem",
-    "AccordionTrigger"
-  ],
+  "accordion": ["Accordion", "AccordionContent", "AccordionItem", "AccordionTrigger"],
   "alert": ["Alert", "AlertDescription", "AlertTitle"],
   "alert-dialog": [
     "AlertDialogAction",
@@ -20,14 +15,7 @@
   "box": ["Box"],
   "button": ["Button"],
   "calendar": [],
-  "card": [
-    "Card",
-    "CardContent",
-    "CardDescription",
-    "CardFooter",
-    "CardHeader",
-    "CardTitle"
-  ],
+  "card": ["Card", "CardContent", "CardDescription", "CardFooter", "CardHeader", "CardTitle"],
   "charts": ["Recharts"],
   "checkbox": ["Checkbox"],
   "collapsible": ["Collapsible", "CollapsibleContent", "CollapsibleTrigger"],
@@ -53,12 +41,7 @@
     "ContextMenuSubTrigger",
     "ContextMenuTrigger"
   ],
-  "dialog": [
-    "DialogContent",
-    "DialogDescription",
-    "DialogTitle",
-    "DialogTrigger"
-  ],
+  "dialog": ["DialogContent", "DialogDescription", "DialogTitle", "DialogTrigger"],
   "dropdown-menu": [
     "DropdownMenuCheckboxItem",
     "DropdownMenuContent",

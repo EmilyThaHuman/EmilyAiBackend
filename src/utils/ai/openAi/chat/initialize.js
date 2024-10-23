@@ -41,7 +41,7 @@ const initializeChatSession = async (sessionId, workspaceId, userId, prompt, ses
             n: 4,
             debug: false,
             summarizeMode: false
-          },
+          }
         });
         await chatSession.save();
         logger.info(`Session Creation Successful: ${chatSession._id}`);
@@ -94,7 +94,7 @@ const initializeOpenAI = (apiKey, chatSession, completionModel) => {
     organization: "reed_tha_human",
     // tools: tools,
     code_interpreter: "auto",
-    function_call: "auto",
+    function_call: "auto"
     // callbacks: {
     //   handleLLMNewToken: (token) => {
     //     logger.info(`New token: ${token}`);

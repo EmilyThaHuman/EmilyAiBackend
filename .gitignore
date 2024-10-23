@@ -2,6 +2,7 @@
 .env
 .env.*local
 .env.test
+.api/
 
 # Ignore package-lock.json
 package-lock.json
@@ -17,7 +18,7 @@ dist/
 ignore/
 
 # Ignore logs in the logging directory
-src/config/logging/logs/
+logs/
 
 # Ignore node_modules directory
 node_modules/
@@ -28,3 +29,10 @@ node_modules/
 
 # Ignore specific script files
 scripts/conversations.json
+
+# Ignore specific cleanup folder
+CLEANUP/
+
+
+
+

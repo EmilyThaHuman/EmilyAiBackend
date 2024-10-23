@@ -1,5 +1,8 @@
 module.exports = {
   ...require("./env"),
   ...require("./response"),
-  ...require("./sync")
+  ...require("./auth"),
+  ...require("./main"),
+  ...require("./user"),
+  ...require("./validate")
 };

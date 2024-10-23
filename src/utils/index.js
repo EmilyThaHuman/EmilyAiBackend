@@ -1,7 +1,6 @@
 // Exporting from ai directory
 module.exports = {
   ...require("./ai"),
-  ...require("./auth"),
   ...require("./processing"),
   ...require("./api")
 };

@@ -26,7 +26,10 @@ const getAllSessions = (req, res) => handleDatabaseOperation(() => ChatSession.f
 const getSessionById = (req, res) => {
   handleDatabaseOperation(
     () =>
-      ChatSession.findById(req.params.sessionId).populate("messages").populate("files").populate("tools"),
+      ChatSession.findById(req.params.sessionId)
+        .populate("messages")
+        .populate("files")
+        .populate("tools"),
     res
   );
 };

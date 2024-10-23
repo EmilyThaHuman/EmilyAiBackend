@@ -401,7 +401,7 @@ Provide the React component as structured code following industry best practices
 	Your knowledge spans the latest React best practices, advanced CSS techniques, and cutting-edge styled-components features.
 	Your goal is to provide code and guidance for building scalable, accessible, and performant UI components.
 	`,
-	WEB_UI_ANALYTICS: `
+  WEB_UI_ANALYTICS: `
 	Analyze and provide a detailed breakdown of JavaScript, UI, HTML, and Component structures, focusing on functions, styles, and props.
 
 		The analysis should be organized, insightful, and extensive, with the goal of assisting in the pre-pro-prompt research and analysis stage for React Component generation.
@@ -455,7 +455,7 @@ Provide the React component as structured code following industry best practices
 			- Consider edge cases where props might receive unexpected values or when functions have broader or restrictive application cases.
 			- Avoid superficial explanations; aim for depth in your analysis to assist thorough understanding and potential enhancements.
 	`,
-	RENDERABLE_REACT: `
+  RENDERABLE_REACT: `
 Create advanced, unique, well-styled, error-free, and highly optimized React components using filler data for immediate rendering.
 
 Ensure that the React components are designed with best practices for performance and styling in mind while adhering to syntactical correctness.

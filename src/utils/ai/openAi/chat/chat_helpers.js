@@ -184,15 +184,15 @@ async function writeToFile(filePath, content) {
 async function saveMarkdown(content) {
   try {
     // Generate a unique filename based on the current timestamp
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const filename = `response_${timestamp}.md`;
-    const filepath = path.join(__dirname, 'public', filename);
+    const filepath = path.join(__dirname, "public", filename);
 
     // Write the content to the file
-    await fs.writeFile(filepath, content, 'utf-8');
+    await fs.writeFile(filepath, content, "utf-8");
     console.log(`Saved response to ${filepath}`);
   } catch (error) {
-    console.error('Error saving markdown file:', error);
+    console.error("Error saving markdown file:", error);
   }
 }
 function formatChatCompletionContent(content) {
@@ -265,8 +265,7 @@ function extractContent(jsonString) {
   } catch (error) {
     logger.error("[extractContent] Error extracting content:", error);
     // return null;
-    return json
-
+    return json;
   }
 }
 module.exports = {
