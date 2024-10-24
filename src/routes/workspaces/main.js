@@ -13,9 +13,9 @@ const {
   createWorkspaceFolder
 } = require("@controllers/workspaces");
 const { ChatSession, Preset, Tool, Model, Prompt, Assistant, File } = require("@models/chat");
-const { User } = require("@models/user");
-const { Workspace, Folder } = require("@models/workspace");
+const { Folder } = require("@models/workspace");
 const { Collection } = require("@models/main");
+const { logger } = require("@config/logging");
 
 const router = express.Router();
 
@@ -68,9 +68,9 @@ router.get("/:workspaceId/folders/:folderId", async (req, res) => {
   }
 });
 router.get("/:workspaceId/folders/space/:space", async (req, res) => {
+  const { workspaceId, space } = req.params;
+  logger.info(`[SPACE] ${space}`);
   try {
-    const { workspaceId, space } = req.params;
-
     // Fetch folders for the given workspaceId and space
     const folders = await Folder.find({ workspaceId, space }).lean();
 
@@ -86,7 +86,6 @@ router.get("/:workspaceId/folders/space/:space", async (req, res) => {
       case "tools":
         ItemModel = Tool;
         break;
-
       case "models":
         ItemModel = Model;
         break;
@@ -109,6 +108,7 @@ router.get("/:workspaceId/folders/space/:space", async (req, res) => {
     // Fetch all items of the specified type for the given workspaceId
     const items = await ItemModel.find({ workspaceId }).lean();
 
+
     // Populate folders with their items
     const populatedFolders = folders.map((folder) => ({
       ...folder,
@@ -123,7 +123,7 @@ router.get("/:workspaceId/folders/space/:space", async (req, res) => {
       allItems: items
     });
   } catch (error) {
-    console.error(`Error in /folders/:space route: ${error.message}`);
+    logger.error(`Error in /folders/:space route: ${error.message}`);
     res.status(500).json({ error: `Error fetching folders and ${space}`, message: error.message });
   }
 });

@@ -58,46 +58,34 @@ const workspaceSchema = createSchema({
 
 workspaceSchema.index({ userId: 1 });
 
+workspaceSchema.methods.getWorkspaceWithAllResources = function () {
+  return this.populate([
+    { path: "folders", select: "name" },
+    { path: "files", select: "fileName" },
+    { path: "chatSessions", select: "sessionId" },
+    { path: "assistants", select: "name" },
+    { path: "tools", select: "name" },
+    { path: "models", select: "name" },
+    { path: "presets", select: "name" },
+    { path: "collections", select: "name" }
+  ]).execPopulate();
+};
+workspaceSchema.methods.getWorkspaceWithFolders = function () {
+  return this.populate("folders").execPopulate();
+};
+workspaceSchema.methods.getWorkspaceWithFolders = function () {
+  return this.populate({
+    path: "folders",
+    select: "name path"
+  }).execPopulate();
+};
+
 workspaceSchema.pre("save", async function (next) {
   logger.info("Workspaceschema pre-save");
 
   next();
 });
-// const workspaceFilesSchema = createSchema({
-//   userId: { type: Schema.Types.ObjectId, ref: "User" },
-//   workspaceId: { type: Schema.Types.ObjectId, ref: "Workspace" },
-//   fileId: { type: Schema.Types.ObjectId, ref: "File" }
-// });
-// const workspacePromptSchema = createSchema({
-//   userId: { type: Schema.Types.ObjectId, ref: "User" },
-//   workspaceId: { type: Schema.Types.ObjectId, ref: "Workspace" },
-//   promptId: { type: Schema.Types.ObjectId, ref: "Prompt" }
-// });
-// const workspaceCollectionSchema = createSchema({
-//   userId: { type: Schema.Types.ObjectId, ref: "User" },
-//   workspaceId: { type: Schema.Types.ObjectId, ref: "Workspace" },
-//   collectionId: { type: Schema.Types.ObjectId, ref: "Collection" }
-// });
-// const workspaceModelSchema = createSchema({
-//   userId: { type: Schema.Types.ObjectId, ref: "User" },
-//   workspaceId: { type: Schema.Types.ObjectId, ref: "Workspace" },
-//   modelId: { type: Schema.Types.ObjectId, ref: "Model" }
-// });
-// const workspacePresetsSchema = createSchema({
-//   userId: { type: Schema.Types.ObjectId, ref: "User" },
-//   workspaceId: { type: Schema.Types.ObjectId, ref: "Workspace" },
-//   presetId: { type: Schema.Types.ObjectId, ref: "Preset" }
-// });
-// const workspaceAssistantSchema = createSchema({
-//   assistantId: { type: Schema.Types.ObjectId, ref: "Assistant" },
-//   workspaceId: { type: Schema.Types.ObjectId, ref: "Workspace" },
-//   userId: { type: Schema.Types.ObjectId, ref: "User" }
-// });
-// const workspaceToolSchema = createSchema({
-//   toolId: { type: Schema.Types.ObjectId, ref: "Tool" },
-//   workspaceId: { type: Schema.Types.ObjectId, ref: "Workspace" },
-//   userId: { type: Schema.Types.ObjectId, ref: "User" }
-// });
+
 // =============================
 // [FOLDERS] name, workspaceId
 // =============================
@@ -173,75 +161,187 @@ const folderSchema = new Schema(
 );
 
 // Indexes
+folderSchema.index({ workspaceId: 1, space: 1 });
 folderSchema.index({ userId: 1, workspaceId: 1, name: 1 }, { unique: true });
 folderSchema.index({ path: 1, workspaceId: 1 });
 
-// Pre-save middleware
-// folderSchema.pre("save", async function (next) {
-//   logger.info("Folderschema pre-save");
-//   if (this.isNew || this.isModified("parent")) {
-//     const parent = await this.constructor.findById(this.parent);
-//     this.path = parent ? `${parent.path}/${this._id}` : `/${this._id}`;
-//     this.level = parent ? parent.level + 1 : 0;
-//   }
-//   this.metadata.originalName = this.name;
-
-//   next();
-// });
-// Pre-save middleware to ensure only the relevant items array is kept based on the space value
+// Pre-save Middleware
 folderSchema.pre("save", async function (next) {
-  logger.info("Folder schema pre-save");
+  try {
+    logger.info("Folder schema pre-save");
 
-  if (this.isNew || this.isModified("space")) {
-    const allowedFields = {
-      files: ["files"],
-      prompts: ["prompts"],
-      chatSessions: ["chatSessions"],
-      assistants: ["assistants"],
-      tools: ["tools"],
-      models: ["models"],
-      presets: ["presets"],
-      collections: ["collections"]
-    };
+    // Handle space-related logic
+    if (this.isNew || this.isModified("space")) {
+      const allowedFields = {
+        files: ["files"],
+        prompts: ["prompts"],
+        chatSessions: ["chatSessions"],
+        assistants: ["assistants"],
+        tools: ["tools"],
+        models: ["models"],
+        presets: ["presets"],
+        collections: ["collections"]
+      };
 
-    const selectedFields = allowedFields[this.space];
+      const selectedFields = allowedFields[this.space];
 
-    // Remove all items arrays that do not match the selected space
-    Object.keys(allowedFields).forEach((field) => {
-      if (!selectedFields.includes(field)) {
-        this[field] = undefined; // Remove unrelated fields from the document
+      if (selectedFields) {
+        Object.keys(allowedFields).forEach((field) => {
+          if (!selectedFields.includes(field)) {
+            this[field] = undefined;
+          }
+        });
       }
-    });
 
-    // Ensure that the `items` array is populated with the correct ref based on `space`
-    if (this.items && this.items.length > 0) {
-      this.items = this.items.filter((item) => item.ref === this.space);
+      if (this.items && this.items.length > 0) {
+        this.items = this.items.filter((item) => item.ref === this.space);
+      }
     }
+
+    // Handle path and level
+    if (this.isNew || this.isModified("parent")) {
+      const parent = this.parent
+        ? await this.constructor.findById(this.parent).select("path level").lean().exec()
+        : null;
+      this.path = parent ? `${parent.path}/${this._id}` : `/${this._id}`;
+      this.level = parent ? parent.level + 1 : 0;
+    }
+
+    // Update metadata
+    if (this.isModified("name")) {
+      this.metadata.originalName = this.name;
+    }
+
+    next();
+  } catch (error) {
+    logger.error(`Error in pre-save middleware: ${error.message}`, { folderId: this._id });
+    next(error);
   }
-
-  // Generate folder path
-  if (this.isNew || this.isModified("parent")) {
-    const parent = await this.constructor.findById(this.parent);
-    this.path = parent ? `${parent.path}/${this._id}` : `/${this._id}`;
-    this.level = parent ? parent.level + 1 : 0;
-  }
-
-  this.metadata.originalName = this.name;
-
-  next();
 });
 
-// Virtual for subfolders
+// Virtuals
 folderSchema.virtual("subfolders", {
   ref: "Folder",
   localField: "_id",
   foreignField: "parent"
 });
 
-// Method to get all descendants
+// Methods
+
+// Retrieve all descendants
 folderSchema.methods.getAllDescendants = async function () {
-  return this.model("Folder").find({ path: new RegExp(`^${this.path}/`) });
+  return this.model("Folder")
+    .find({ path: new RegExp(`^${this.path}/`) })
+    .lean()
+    .exec();
 };
+
+// Retrieve folder with parent
+folderSchema.methods.getFolderWithParent = async function () {
+  return this.populate("parentFolder").execPopulate();
+};
+
+// Update metadata efficiently
+folderSchema.methods.updateMetadata = async function (metadata) {
+  Object.assign(this.metadata, metadata);
+  return this.save();
+};
+
+// Populate specific fields
+folderSchema.methods.populateFields = function (fields) {
+  return this.populate(fields).execPopulate();
+};
+
+// Retrieve recursive subfolders optimized
+folderSchema.methods.getRecursiveSubfoldersOptimized = async function () {
+  return this.model("Folder")
+    .find({ path: new RegExp(`^${this.path}/`) })
+    .lean()
+    .exec();
+};
+
+// Static Methods
+
+// Paginate folders
+folderSchema.statics.paginateFolders = async function (filter, options) {
+  const { page = 1, limit = 10, sort = { createdAt: -1 } } = options;
+  const skip = (page - 1) * limit;
+
+  const folders = await this.find(filter).sort(sort).skip(skip).limit(limit).lean().exec();
+
+  const total = await this.countDocuments(filter).exec();
+
+  return {
+    folders,
+    total,
+    page,
+    pages: Math.ceil(total / limit)
+  };
+};
+
+// Find multiple folders with population
+folderSchema.statics.findMultipleFolders = async function (folderIds, populateOptions = []) {
+  return this.find({ _id: { $in: folderIds } })
+    .populate(populateOptions)
+    .lean()
+    .exec();
+};
+
+// Find by type with pagination
+folderSchema.statics.findByType = async function (type, workspaceId, options = {}) {
+  const { page = 1, limit = 10, sort = { createdAt: -1 } } = options;
+  const skip = (page - 1) * limit;
+
+  const folders = await this.find({ type, workspaceId })
+    .sort(sort)
+    .skip(skip)
+    .limit(limit)
+    .lean()
+    .exec();
+
+  const total = await this.countDocuments({ type, workspaceId }).exec();
+
+  return {
+    folders,
+    total,
+    page,
+    pages: Math.ceil(total / limit)
+  };
+};
+
+// Bulk insert folders
+folderSchema.statics.bulkInsertFolders = async function (foldersData) {
+  try {
+    return this.insertMany(foldersData, { ordered: false });
+  } catch (error) {
+    logger.error(`Bulk insert error: ${error.message}`);
+    throw error;
+  }
+};
+
+// Aggregate folders
+folderSchema.statics.aggregateFolders = async function (pipeline) {
+  try {
+    return this.aggregate(pipeline).exec();
+  } catch (error) {
+    logger.error(`Aggregation error: ${error.message}`, { pipeline });
+    throw error;
+  }
+};
+
+// Query Helpers
+folderSchema.query.byWorkspaceAndType = function (workspaceId, type) {
+  return this.where({ workspaceId, type });
+};
+
+// Soft delete method
+folderSchema.methods.softDelete = async function () {
+  this.deleted = true;
+  return this.save();
+};
+
+// Method to get all folders with matching workspaceId and space value
+
 const Workspace = createModel("Workspace", workspaceSchema);
 const Folder = createModel("Folder", folderSchema);
 
