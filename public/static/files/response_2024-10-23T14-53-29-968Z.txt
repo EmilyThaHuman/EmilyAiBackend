@@ -4,7 +4,7 @@
 This reusable dialog component is designed with a black and white theme, suitable for an admin dashboard or any application requiring a sleek and minimalistic design. The component includes a dialog trigger, header, title, description, and content sections, providing a clean and elegant user interface.
 
 ## React Component Code
-jsx
+```jsx
 import React from 'react';
 import {
   Dialog,
@@ -57,13 +57,14 @@ const customThemeCss = `
 document.head.insertAdjacentHTML('beforeend', `<style>${customThemeCss}</style>`);
 
 export default BlackWhiteDialog;
-
+```
 
 ## Applying Themes
 You can toggle the theme classes on the `<html>` or `<body>` element using JavaScript:
-javascript
+```javascript
 // Apply the theme to the document body
 document.body.classList.add('custom-theme');
+```
 
 
 This component provides a visually appealing dialog with a black and white color scheme, enhancing the overall user experience.

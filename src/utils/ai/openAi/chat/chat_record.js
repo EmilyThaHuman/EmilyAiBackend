@@ -64,10 +64,14 @@ async function saveChatCompletion(initializationData, chatSession, fullResponse)
   try {
     const parsedData = extractContent(fullResponse);
     if (parsedData.content) {
+      logger.info(`[INFO][saveChatCompletion]: Parsed content: ${parsedData.content}`);
       await writeToFile(filePath, parsedData.content);
     }
     const extractedBlocks = extractCodeBlocks(fullResponse);
-
+    if (extractedBlocks.length > 0) {
+      logger.info(`[INFO][saveChatCompletion]: Extracted code blocks: ${extractedBlocks}`);
+      // await writeToFile(filePath, JSON.stringify(extractedBlocks));
+    }
     try {
       const assistantMessageDoc = await addMessageToSession(chatSession, {
         role: "assistant",

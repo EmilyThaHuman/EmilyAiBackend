@@ -32,6 +32,7 @@ const setupVectorStores = async (pinecone, embedder, initializationData) => {
     throw error; // Always rethrow the error or handle it properly
   }
 };
+
 const getRelevantContext = async (
   sessionContextStore,
   searchContextStore,
@@ -40,7 +41,7 @@ const getRelevantContext = async (
 ) => {
   try {
     const relevantSessionHistory = await sessionContextStore.similaritySearch(prompt, 5);
-    const relevantSearchResults = await searchContextStore.similaritySearch(prompt, 5);
+    const relevantSearchResults = await searchContextStore.similaritySearch(prompt, 2);
     const relevantCustomDataDocs = await customDataStore.similaritySearch(prompt, 5);
 
     try {
@@ -83,46 +84,15 @@ const getRelevantContext = async (
     throw error;
   }
 };
+
 const extractAdditionalInfo = async (prompt) => {
   try {
     const keywords = await extractKeywords(prompt);
     const { uiLibraries, jsLibraries, componentTypes } =
       await identifyLibrariesAndComponents(prompt);
-    const documentationContent = await getDocumentationContent(uiLibraries, componentTypes);
-    return { keywords, uiLibraries, jsLibraries, componentTypes, documentationContent };
+    return { keywords, uiLibraries, jsLibraries, componentTypes };
   } catch (error) {
     logger.error(`[ERROR][extractAdditionalInfo]: ${error.message}`);
-    throw error;
-  }
-};
-const getDocumentationContent = async (uiLibraries, componentTypes) => {
-  try {
-    let documentationContent = [];
-    if (uiLibraries.length > 0 && componentTypes.length > 0) {
-      for (const library of uiLibraries) {
-        for (const componentType of componentTypes) {
-          const docUrl = await getDocumentationUrl(library, componentType);
-          if (docUrl) {
-            const content = await scrapeDocumentation(docUrl);
-            documentationContent.push({ library, componentType, content });
-          }
-        }
-      }
-    } else if (componentTypes.length > 0) {
-      const randomLibraries = uiLibraries.sort(() => 0.5 - Math.random()).slice(0, 3);
-      for (const library of randomLibraries) {
-        for (const componentType of componentTypes) {
-          const docUrl = await getDocumentationUrl(library.name, componentType);
-          if (docUrl) {
-            const content = await scrapeDocumentation(docUrl);
-            documentationContent.push({ library: library.name, componentType, content });
-          }
-        }
-      }
-    }
-    return documentationContent;
-  } catch (error) {
-    logger.error(`[ERROR][getDocumentationContent]: ${error.message}`);
     throw error;
   }
 };
@@ -130,6 +100,5 @@ const getDocumentationContent = async (uiLibraries, componentTypes) => {
 module.exports = {
   getRelevantContext,
   extractAdditionalInfo,
-  getDocumentationContent,
   setupVectorStores
 };

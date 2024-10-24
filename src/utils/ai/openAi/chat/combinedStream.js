@@ -25,7 +25,7 @@ const {
   initializeEmbeddings,
   initializeChatSession
 } = require("./chat_initialize");
-const { LogStreamHandler } = require("./chat_classes");
+const { LogStreamHandler } = require("@utils/ai/classes");
 
 const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 1000, chunkOverlap: 200 });
 
@@ -112,8 +112,9 @@ const combinedChatStream = async (req, res) => {
     );
     // 12 - Extract additional information to build context around prompt
     // logChatData('context', context);
-    const { keywords, uiLibraries, jsLibraries, componentTypes, documentationContent } =
-      await extractAdditionalInfo(initializationData.prompt);
+    const { keywords, uiLibraries, jsLibraries, componentTypes } = await extractAdditionalInfo(
+      initializationData.prompt
+    );
     // 13 - Format prompt with all context and search results
     const formattedPrompt = createFormattedPrompt(
       initializationData,
@@ -123,9 +124,7 @@ const combinedChatStream = async (req, res) => {
       keywords,
       uiLibraries,
       jsLibraries,
-      componentTypes,
-      documentationContent,
-      getFormattingInstructions()
+      componentTypes
     );
 
     await savePromptBuild(
@@ -146,6 +145,15 @@ const combinedChatStream = async (req, res) => {
   }
 };
 
+/**
+ * Handles the streaming response by interacting with OpenAI's Chat API and managing the SSE stream.
+ * @param {http.ServerResponse} res - The HTTP response object.
+ * @param {string} formattedPrompt - The prompt to send to the AI model.
+ * @param {Object} chatSession - The current chat session object.
+ * @param {Object} sessionContextStore - The session's context store.
+ * @param {Object} initializationData - Initialization data from the request.
+ * @param {Array} messages - The chat history messages.
+ */
 const handleStreamingResponse = async (
   res,
   formattedPrompt,
@@ -154,40 +162,110 @@ const handleStreamingResponse = async (
   initializationData,
   messages
 ) => {
-  let fullResponse = "";
+  let dup = "";
+  // Initialize the enhanced LogStreamHandler with additional options
+  const logStreamHandler = new LogStreamHandler(res, {
+    clientId: chatSession._id, // Assign a unique client ID for better traceability
+    enableConsoleLogging: false // Enable or disable console logging as needed
+  });
+  // Implement Heartbeat Mechanism: Send a heartbeat every 30 seconds to keep the connection alive
+  const heartbeatInterval = setInterval(() => {
+    logStreamHandler.sendHeartbeat();
+  }, 30000); // Send a heartbeat every 30 seconds
 
-  const logStreamHandler = new LogStreamHandler(res);
+  // Listen for the 'end' event to clear the heartbeat interval
+  logStreamHandler.on("end", () => clearInterval(heartbeatInterval));
 
   try {
+    // Create a CallbackManager with handlers for various events
     const callbackManager = CallbackManager.fromHandlers({
       async handleLLMNewToken(token) {
-        // Log and stream each new token using LogStreamHandler
-        logStreamHandler.handleLLMNewToken(token);
-        fullResponse += token;
+        if (token && typeof token === "string") {
+          logStreamHandler.handleLLMNewToken(token);
+        }
       },
       async handleLLMEnd() {
-        // Finalize the run and log the end
-        await saveChatCompletion(initializationData, chatSession, fullResponse);
-        await processChatCompletion(
-          chatSession,
-          fullResponse,
-          sessionContextStore,
-          initializationData
-        );
-        logStreamHandler.handleRunEnd(fullResponse);
+        try {
+          // Finalize the chat session upon completion
+          const fullResponse = logStreamHandler.getCompleteContent();
+          // logStreamHandler.handleRunEnd();
+          let formattedData;
+          if (typeof fullResponse === "string") {
+            formattedData = fullResponse;
+          } else if (typeof fullResponse === "object" && fullResponse !== null) {
+            formattedData = JSON.stringify(fullResponse);
+          } else {
+            throw new TypeError(`Invalid data type: ${typeof fullResponse}`);
+          }
+          if (typeof formattedData !== "string" || formattedData.length === 0) {
+            logger.error("Invalid formattedData in handleStreamingResponse");
+          } else {
+            logger.info("Full response:", formattedData);
+            await processChatCompletion(
+              chatSession,
+              formattedData,
+              sessionContextStore,
+              initializationData
+            );
+          }
+          res.write(`data: ${formattedData}\n\n`);
+          res.write(`data: [DONE]\n\n`);
+          res.end();
+          // res.write({
+          //   message: "success",
+          //   data: {
+          //     chatSession,
+          //     chatHistory: messages
+          //   }
+          // });
+        } catch (error) {
+          // Handle errors that occur during the chat completion process
+          logger.error("Error during chat completion:", error);
+          // logStreamHandler.handleError(error);
+        }
       },
       async handleLLMError(error) {
-        // Handle and log the error
-        logStreamHandler.handleError(error);
+        try {
+          logger.error("LLM Error:", error);
+          if (!(error instanceof Error)) {
+            error = new Error(typeof error === "string" ? error : JSON.stringify(error));
+          }
+          logStreamHandler.handleError(error);
+        } catch (err) {
+          logger.error("Error in handleLLMError:", err);
+        }
       }
-      // async handleLLMNewTokenWithRole(message) {
-      //   if (message.role === "function") {
-      //     const functionCall = message;
-      //     await handleFunctionCall(functionCall, sendData);
+
+      // async handleLLMNewToken(token) {
+      //   if (token && typeof token === "string") {
+      //     logStreamHandler.handleLLMNewToken(token);
+      //     dup += token;
       //   }
       // },
+      // async handleLLMEnd() {
+      //   try {
+      //     // Finalize the chat session upon completion
+      //     await saveChatCompletion(initializationData, chatSession, fullResponse);
+      //     await processChatCompletion(
+      //       chatSession,
+      //       fullResponse,
+      //       sessionContextStore,
+      //       initializationData
+      //     );
+      //     logStreamHandler.handleRunEnd(fullResponse);
+      //   } catch (error) {
+      //     // Handle errors that occur during the chat completion process
+      //     logger.error("Error during chat completion:", error);
+      //     logStreamHandler.handleError(error);
+      //   }
+      // },
+      // async handleLLMError(error) {
+      //   logger.error("LLM Error:", error);
+      //   logStreamHandler.handleError(error instanceof Error ? error.message : String(error));
+      // }
     });
 
+    // Initialize the ChatOpenAI instance with streaming and the callback manager
     const chatOpenAI = new ChatOpenAI({
       openAIApiKey: initializationData.apiKey,
       streaming: true,
@@ -195,26 +273,40 @@ const handleStreamingResponse = async (
       callbackManager
     });
 
+    // Prepare the message sequence for the AI model
     const messageSequence = [
       new SystemMessage(getMainSystemMessageContent()),
       new AIMessage(getMainAssistantMessageInstructions()),
       new HumanMessage(formattedPrompt)
     ];
 
+    // Log the start of the run
     logStreamHandler.handleRunStart({
-      id: chatSession.id,
+      id: chatSession._id,
       name: "LLM Chat Session",
       type: "llm",
       tags: ["chat"]
+      // metadata: {
+      //   messages: messages
+      // }
     });
 
+    // Invoke the ChatOpenAI model with the message sequence
     await chatOpenAI.invoke(messageSequence);
   } catch (error) {
+    // Handle any unforeseen errors by logging and ending the stream
     logStreamHandler.handleError(error);
-    logStreamHandler.endStream(); // End the stream in case of an error
+    logStreamHandler.endStream(error?.message || "Unknown error");
   }
 };
 
+/**
+ * Processes the completed chat by saving the response and updating the context stores.
+ * @param {Object} chatSession - The current chat session object.
+ * @param {string} fullResponse - The complete response from the AI model.
+ * @param {Object} sessionContextStore - The session's context store.
+ * @param {Object} initializationData - Initialization data from the request.
+ */
 const processChatCompletion = async (
   chatSession,
   fullResponse,
@@ -222,12 +314,20 @@ const processChatCompletion = async (
   initializationData
 ) => {
   try {
+    // Save the chat completion to the database
     await saveChatCompletion(initializationData, chatSession, fullResponse);
+
+    // Prepare documents based on the response
     const docs = prepareDocuments(initializationData, chatSession, fullResponse);
     const splitDocs = await textSplitter.splitDocuments(docs);
+
+    // Add the documents to the session's context store
     await sessionContextStore.addDocuments(splitDocs);
+
+    // Save the updated chat session
     await chatSession.save();
   } catch (error) {
+    // Log any errors that occur during processing
     logger.error(`[ERROR][processChatCompletion]: ${error.message}`);
     throw error;
   }

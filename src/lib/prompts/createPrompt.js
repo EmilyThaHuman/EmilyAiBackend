@@ -5,6 +5,7 @@ const { systemPrompts } = require("./static/system");
 // const { SystemMessagePromptTemplate } = require('@langchain/core/prompts');
 const { toolPrompts } = require("../functions");
 const { instructionsPrompts } = require("./static");
+const { MARKDOWN_FORMATTING_GUIDE } = require("./static/constants");
 
 function convertMapToArray(systemPrompts) {
   return Object.keys(systemPrompts);
@@ -33,11 +34,14 @@ const createPrompt = (type, name) => {
 };
 const getMainSystemMessageContent = (params) => {
   const defaultPrompt = "REACT_TAILWIND_SYSTEM_PROMPT_TEXT";
+  const formattingInstructions = MARKDOWN_FORMATTING_GUIDE;
+  const formattedSystemPrompt = `${systemPrompts[defaultPrompt]}\n\n${formattingInstructions}`;
   const promptList = convertMapToArray(systemPrompts);
   if (params) {
     return systemPrompts[params];
   }
-  return systemPrompts[defaultPrompt];
+  // return systemPrompts[defaultPrompt];
+  return formattedSystemPrompt;
 };
 const getMainAssistantMessageInstructions = (params) => {
   const defaultPrompt = "JS_COMPONENT_ASSISTANT";

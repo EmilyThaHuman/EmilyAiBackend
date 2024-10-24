@@ -1,6 +1,5 @@
 module.exports = {
   ...require("./context"),
-  ...require("./chat_classes"),
   ...require("./chat_constants"),
   ...require("./chat_helpers"),
   ...require("./chat_optimize"),

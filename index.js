@@ -6,6 +6,9 @@
 require("dotenv").config();
 require("module-alias/register");
 // require("newrelic");
+if (process.env.NODE_ENV === "development" && process.env.NEW_RELIC_ENABLED !== "false") {
+  require("newrelic");
+}
 
 const app = require("./src/app");
 const { logger } = require("./src/config/logging");
@@ -22,10 +25,9 @@ async function main() {
     if (client)
       logger.info(
         `
-      --------------------------------------------
-      Connected to MongoDB: ${db.databaseName}
-      --------------------------------------------
-      `
+        --------------------------------------------
+          Connected to MongoDB: ${db.databaseName}
+        --------------------------------------------`
       );
     if (bucket) logger.info(`Connected to GridFS Bucket: ${bucket.bucketName}`);
   } catch (error) {

@@ -21,8 +21,6 @@ const connectDB = async () => {
       logger.info(`[1] Attempting to connect to MongoDB`);
 
       await mongoose.connect(connectionString, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
         serverSelectionTimeoutMS: 5000,
         tlsAllowInvalidCertificates: false,
         tlsAllowInvalidHostnames: false

@@ -13,7 +13,7 @@ const { combinedChatStream } = require("@utils/ai/openAi/chat/combinedStream");
 const { ChatOpenAI } = require("@langchain/openai");
 const { ChatMessage, ChatSession } = require("@models/chat");
 const { generateObjectId, getEnv } = require("@utils/api");
-const newrelic = require("newrelic");
+// const newrelic = require("newrelic");
 const { streamHeaders } = require("@middlewares/setupHeaders");
 const { logger } = require("@config/logging");
 
@@ -31,65 +31,65 @@ const logAndRespondError = (res, error, message) => {
 };
 
 // --- Chat completion stream endpoint ---
-router.post(
-  "/chat-completion-stream",
-  asyncHandler(async (req, res) => {
-    const { message = "Say this is a test", model = "gpt-4" } = req.body || {};
+// router.post(
+//   "/chat-completion-stream",
+//   asyncHandler(async (req, res) => {
+//     const { message = "Say this is a test", model = "gpt-4" } = req.body || {};
 
-    try {
-      const stream = await openai.chat.completions.create({
-        stream: true,
-        temperature: 0.5,
-        messages: [{ role: "user", content: message }],
-        model
-      });
+//     try {
+//       const stream = await openai.chat.completions.create({
+//         stream: true,
+//         temperature: 0.5,
+//         messages: [{ role: "user", content: message }],
+//         model
+//       });
 
-      res.setHeader("Content-Type", "text/plain");
+//       res.setHeader("Content-Type", "text/plain");
 
-      for await (const chunk of stream) {
-        // Check if chunk and necessary nested properties exist before accessing
-        const content = chunk?.choices?.[0]?.delta?.content;
+//       for await (const chunk of stream) {
+//         // Check if chunk and necessary nested properties exist before accessing
+//         const content = chunk?.choices?.[0]?.delta?.content;
 
-        if (content) {
-          res.write(content);
-        }
-      }
+//         if (content) {
+//           res.write(content);
+//         }
+//       }
 
-      const { traceId } = newrelic.getTraceMetadata();
-      res.write("\n-------- END OF MESSAGE ---------\n");
-      res.write(`Use this id to record feedback '${stream.id}'\n`);
-      res.end();
-    } catch (error) {
-      logAndRespondError(res, error, "Error processing chat completion stream.");
-    }
-  })
-);
+//       const { traceId } = newrelic.getTraceMetadata();
+//       res.write("\n-------- END OF MESSAGE ---------\n");
+//       res.write(`Use this id to record feedback '${stream.id}'\n`);
+//       res.end();
+//     } catch (error) {
+//       logAndRespondError(res, error, "Error processing chat completion stream.");
+//     }
+//   })
+// );
 
 // --- Feedback route ---
-router.post("/feedback", (req, res) => {
-  const {
-    category = "feedback-test",
-    rating = 1,
-    message = "Good talk",
-    metadata,
-    id
-  } = req.body || {};
-  const { traceId } = responses.get(id);
+// router.post("/feedback", (req, res) => {
+//   const {
+//     category = "feedback-test",
+//     rating = 1,
+//     message = "Good talk",
+//     metadata,
+//     id
+//   } = req.body || {};
+//   const { traceId } = responses.get(id);
 
-  if (!traceId) {
-    return res.status(404).send(`No trace id found for ${message}`);
-  }
+//   if (!traceId) {
+//     return res.status(404).send(`No trace id found for ${message}`);
+//   }
 
-  newrelic.recordLlmFeedbackEvent({
-    traceId,
-    category,
-    rating,
-    message,
-    metadata
-  });
+//   newrelic.recordLlmFeedbackEvent({
+//     traceId,
+//     category,
+//     rating,
+//     message,
+//     metadata
+//   });
 
-  res.send("Feedback recorded");
-});
+//   res.send("Feedback recorded");
+// });
 
 // --- Stream completion endpoint ---
 router.post("/stream", streamHeaders, asyncHandler(combinedChatStream));
