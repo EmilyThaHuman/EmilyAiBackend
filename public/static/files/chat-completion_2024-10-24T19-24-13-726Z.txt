@@ -1,0 +1,55 @@
+# Material UI Code Snippet Viewer
+
+This component is designed to allow users to input, save, and preview code snippets using Material UI components. It includes a `TextField` for entering code snippets, `Button` components for saving and previewing, and a `Text` component for displaying the saved code snippet. Users can interact with the component to manage and view their code examples.
+
+## Component Code
+
+jsx
+import React, { useState } from 'react';
+import { TextField, Button, Text } from '@mui/material';
+
+const CodeSnippetViewer = () => {
+  const [codeSnippet, setCodeSnippet] = useState('');
+
+  const handleSave = () => {
+    // Save the code snippet to state or local storage
+    console.log('Code snippet saved:', codeSnippet);
+  };
+
+  const handlePreview = () => {
+    // Display the saved code snippet
+    alert(`Previewing:\n${codeSnippet}`);
+  };
+
+  return (
+    <div>
+      <TextField
+        label="Enter Code Snippet"
+        multiline
+        rows={10}
+        value={codeSnippet}
+        onChange={(event) => setCodeSnippet(event.target.value)}
+        fullWidth
+      />
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Button variant="contained" onClick={handleSave}>
+          Save
+        </Button>
+        <Button variant="contained" color="primary" onClick={handlePreview}>
+          Preview
+        </Button>
+      </div>
+      {codeSnippet && (
+        <div style={{ marginTop: 20 }}>
+          <Text variant="body1">
+            Saved Code Snippet:
+            <br />
+            {codeSnippet}
+          </Text>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default CodeSnippetViewer;

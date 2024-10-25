@@ -1,5 +1,6 @@
 const express = require("express");
 const { asyncHandler } = require("@middlewares/asyncHandler");
+const { logger } = require("@config/logging");
 const {
   getAllSessions,
   getSessionById,
@@ -13,9 +14,7 @@ const { combinedChatStream } = require("@utils/ai/openAi/chat/combinedStream");
 const { ChatOpenAI } = require("@langchain/openai");
 const { ChatMessage, ChatSession } = require("@models/chat");
 const { generateObjectId, getEnv } = require("@utils/api");
-// const newrelic = require("newrelic");
 const { streamHeaders } = require("@middlewares/setupHeaders");
-const { logger } = require("@config/logging");
 
 const router = express.Router();
 

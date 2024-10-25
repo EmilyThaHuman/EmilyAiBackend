@@ -168,13 +168,6 @@ const handleStreamingResponse = async (
     clientId: chatSession._id, // Assign a unique client ID for better traceability
     enableConsoleLogging: false // Enable or disable console logging as needed
   });
-  // Implement Heartbeat Mechanism: Send a heartbeat every 30 seconds to keep the connection alive
-  const heartbeatInterval = setInterval(() => {
-    logStreamHandler.sendHeartbeat();
-  }, 30000); // Send a heartbeat every 30 seconds
-
-  // Listen for the 'end' event to clear the heartbeat interval
-  logStreamHandler.on("end", () => clearInterval(heartbeatInterval));
 
   try {
     // Create a CallbackManager with handlers for various events
@@ -209,7 +202,11 @@ const handleStreamingResponse = async (
             );
           }
           res.write(`data: ${formattedData}\n\n`);
-          res.write(`data: [DONE]\n\n`);
+          const doneMessage = {
+            type: "done",
+            content: "[DONE]"
+          };
+          res.write(`data: ${JSON.stringify(doneMessage)}\n\n`);
           res.end();
           // res.write({
           //   message: "success",

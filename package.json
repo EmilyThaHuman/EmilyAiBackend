@@ -14,7 +14,8 @@
     "prettify": "prettier --write .",
     "depCheck": "depcheck --config=.depcheckrc",
     "clean-install": "rimraf node_modules package-lock.json && npm cache clean --force && npm install",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "archive:logs": "node archiveLogs.js"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +25,9 @@
     "@babel/eslint-parser": "^7.25.8",
     "@babel/plugin-proposal-class-properties": "^7.18.6",
     "@babel/plugin-transform-runtime": "^7.25.7",
+    "@copilotkit/react-core": "^1.3.6",
+    "@copilotkit/react-ui": "^1.3.6",
+    "@copilotkit/runtime": "^1.3.6",
     "@dotenvx/dotenvx": "^1.20.1",
     "@google-cloud/language": "^6.5.0",
     "@langchain/community": "^0.3.4",
@@ -71,7 +75,7 @@
     "natural": "^8.0.1",
     "newrelic": "^12.5.1",
     "node-fetch": "^3.3.2",
-    "openai": "^4.67.3",
+    "openai": "^4.68.4",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",

@@ -934,20 +934,8 @@ You are an expert React/Tailwind developer. Your mission is to transform detaile
 9. Optimize performance using React best practices.
 10. Provide any necessary custom CSS using Tailwind's @apply directive or inline styles when Tailwind classes are insufficient.
 
-Your response should include:
-1. Title generalizing the component response funcitonality
-2. A Brief overview of the componenet and style choice
-3. The complete HTML file with all necessary scripts, styles, and React code.
-4. A brief explanation of the component structure, functions and design decisions.
-
-Return the full code for the code section wrapped in \`<html></html>\`.
-
-Return the final response as json with content (markdown text) field containing full response, type for type of content, and references array containing any references which were used or considering during the research and creation process including any included from context:
-{
-  "content": "Your Markdown formatted message with citations",
-  "type": "markdown",
-  "references": ["Array of reference strings"]
-}
+Return only the full code wrapped in <html></html> tags.
+Do not include markdown "\`\`\`" or "\`\`\`html" at the start or end.
 `,
   IONIC_TAILWIND_SYSTEM_PROMPT_TEXT: `
 	You are an expert Ionic/Tailwind developer
