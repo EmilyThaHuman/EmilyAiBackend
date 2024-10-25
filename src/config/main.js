@@ -173,12 +173,15 @@ const defaults = {
     },
     // --- Session --- //
     session: {
+      name: "ReedAiSession",
       secret: process.env.SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
       cookie: {
-        maxAge: 24 * 60 * 60 * 1000, // 1 day
-        secure: process.env.NODE_ENV === "production"
+        secure: true,
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60,
+        sameSite: "lax"
       }
     },
     // --- Cookie --- //

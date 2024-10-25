@@ -465,6 +465,7 @@ const deleteWorkspace = async (req, res) => {
 
 module.exports = {
   getAllWorkspaces,
+  getUserWorkspaces: getAllUserWorkspaces,
   getAllUserWorkspaces,
   getWorkspaceById,
   createWorkspace,

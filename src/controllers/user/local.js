@@ -10,7 +10,7 @@ const {
   REFRESH_TOKEN
 } = require("@config/constants");
 const { findAndPopulateUser } = require("@models/utils");
-const { generateTokens } = require("@utils/api/auth");
+const { generateTokens } = require("@utils/api");
 const {
   createNewUser,
   checkUserExists,
@@ -49,17 +49,17 @@ const registerUser = async (req, res, next) => {
 
     // Setup user session
     req.session.user = {
-      userId: newUser._id,
+      userId: populatedUser._id,
       accessToken,
-      username: newUser.username,
-      email: newUser.email,
+      username: populatedUser.username,
+      email: populatedUser.email,
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
       workspaceId: populatedUser.workspaces[0]._id,
       chatSessionId: populatedUser.chatSessions[0]._id,
       apiKey: getEnv("OPENAI_API_PROJECT_KEY")
     };
 
-    logger.info(`User registered successfully: ${newUser.username}`);
+    logger.info(`User registered successfully: ${populatedUser.username}`);
 
     res.status(201).json({
       success: true,
@@ -79,6 +79,7 @@ const registerUser = async (req, res, next) => {
         // -- app data --
         workspaces: populatedUser.workspaces,
         chatSessions: populatedUser.chatSessions,
+        homeWorkspaceId: populatedUser.homeWorkspaceId,
         // -- user profile --
         profile: {
           name: populatedUser.profile.name,
@@ -177,6 +178,8 @@ const loginUser = async (req, res, next) => {
         // -- app data --
         workspaces: populatedUser.workspaces,
         chatSessions: populatedUser.chatSessions,
+        homeWorkspaceId: populatedUser.homeWorkspaceId,
+
         // -- user profile --
         profile: {
           name: populatedUser.profile.name,

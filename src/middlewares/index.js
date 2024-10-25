@@ -17,23 +17,10 @@ const LocalStrategy = require("passport-local").Strategy;
 const MongoStore = require("connect-mongo");
 const { morganMiddleware } = require("./morganMiddleware");
 const config = require("@config/main");
-const { User } = require("../models");
+const { User } = require("../models/user");
+const MongoDBStore = require('connect-mongodb-session')(session);
 
 const middlewares = (app) => {
-  // --
-  // const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-  // const serviceAdapter = new OpenAIAdapter({ openai });
-
-  // app.use("/copilotkit", (req, res, next) => {
-  //   const runtime = new CopilotRuntime();
-  //   const handler = copilotRuntimeNodeHttpEndpoint({
-  //     endpoint: "/copilotkit",
-  //     runtime,
-  //     serviceAdapter
-  //   });
-
-  //   return handler(req, res, next);
-  // });
   // Set up Helmet for enhanced security, including Content Security Policy (CSP)
   app.use(helmet(config.app.middlewares.security.helmet));
 
@@ -55,13 +42,20 @@ const middlewares = (app) => {
   // Configure CORS settings
   app.use(cors(config.app.middlewares.cors));
 
+  const store = new MongoDBStore({
+    uri: config.database.uri,
+    collection: "sessions"
+  });
+
+  store.on("error", function (error) {
+    console.log(error);
+  });
+
   // Session configuration
   app.use(
     session({
       ...config.auth.session,
-      store: new MongoStore({
-        mongoUrl: config.database.uri
-      })
+      store: store
     })
   );
 

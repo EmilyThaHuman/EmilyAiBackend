@@ -373,6 +373,7 @@ const initializeUserData = async (newUser, accessToken, refreshToken) => {
 
     newUser.isActive = true;
     newUser.hasOnboarded = true;
+    newUser.homeWorkspaceId = workspace._id;
 
     // Update user profile
     newUser.profile.bio = "No bio provided";

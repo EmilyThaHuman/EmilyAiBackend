@@ -32,6 +32,6 @@
     "tests/**/*",
     "CLEANUP/chat_helpers.js",
     "CLEANUP/initialize.js"
-  ],
+, "CLEANUP/chat", "CLEANUP/old", "CLEANUP/validate.js", "CLEANUP/user.js", "CLEANUP/main.js", "CLEANUP/response.js", "CLEANUP/env.js", "CLEANUP/auth.js"  ],
   "exclude": ["node_modules", "dist", "coverage"]
 }

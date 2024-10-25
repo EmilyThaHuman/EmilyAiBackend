@@ -222,6 +222,7 @@ const userSchema = new Schema(
     appMetadata: appMetadataSchema,
 
     // Workspace Relationships
+    homeWorkspaceId: String,
     workspaces: [{ type: Schema.Types.ObjectId, ref: "Workspace", default: [] }],
     chatSessions: [{ type: Schema.Types.ObjectId, ref: "ChatSession", default: [] }],
     folders: [{ type: Schema.Types.ObjectId, ref: "Folder", default: [] }],

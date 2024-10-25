@@ -15,7 +15,7 @@ const { CSVLoader } = require("@langchain/community/document_loaders/fs/csv");
 const { createPineconeIndex } = require("./create.js");
 const { updatePinecone } = require("./update.js");
 const { queryPineconeVectorStoreAndQueryLLM } = require("./query.js");
-const { getEnv } = require("@utils/api/env.js");
+const { getEnv } = require("@utils/api");
 const { processDocument } = require("@utils/processing/utils/main.js");
 
 require("dotenv").config();
