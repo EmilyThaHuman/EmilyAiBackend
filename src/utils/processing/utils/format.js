@@ -1,6 +1,11 @@
 const { logger } = require("@config/logging");
 const prettier = require("prettier");
 
+/**
+ * Removes duplicate code blocks from the given code string.
+ * @param {string} code - The input code string to process.
+ * @returns {string} The processed code string with duplicate blocks removed.
+ */
 const removeDuplicate = (code) =>
   (code = code.replace(/^(import[\s\S]*?export default function [^(]+\(\) {[\s\S]*?})\1$/, "$1"));
 
@@ -67,6 +72,11 @@ function addExtraLineAfterImports(code) {
     }
     code = String(code);
     const lines = code.split("\n");
+    /**
+     * Finds the index of the last import statement in an array of code lines.
+     * @param {string[]} lines - An array of strings representing lines of code.
+     * @returns {number} The index of the last import statement, or -1 if no import statement is found.
+     */
     const lastImportIndex = lines.findLastIndex((line) => line.trim().startsWith("import"));
 
     if (lastImportIndex !== -1) {
@@ -113,6 +123,11 @@ function formatDocumentationFromChunks(content) {
   }
   try {
     const sections = content?.split("\n\n");
+    /**
+     * Formats an array of sections by applying HTML formatting to markdown-style headings and paragraphs.
+     * @param {string[]} sections - An array of string sections to be formatted.
+     * @returns {string[]} An array of formatted sections with HTML tags applied.
+     */
     const formattedSections = sections.map((section) => {
       if (section.startsWith("```")) {
         return section;
@@ -137,6 +152,12 @@ function formatDocumentationFromChunks(content) {
     throw error;
   }
 }
+/**
+ * Formats the provided content into a standardized documentation structure.
+ * @param {string} content - The content to be formatted as documentation.
+ * @returns {string} A formatted string containing the documentation, or an empty string if the input is invalid.
+ * @throws {Error} Logs an error if the input is undefined or not an array.
+ */
 function formatDocumentationFromString(content) {
   if (!content) {
     logger.error(`[ERROR][formatDocumentation]: data is undefined or not an array`);

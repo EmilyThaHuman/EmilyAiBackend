@@ -5,6 +5,15 @@ const { processPdf } = require("../../processing/types/pdf.js");
 const { processTxt } = require("../../processing/types/txt.js");
 const { processMarkdown } = require("../../processing/types/md.js");
 
+/**
+ * Processes a document based on its file extension.
+ * @param {Object} doc - The document object to process.
+ * @param {Object} doc.metadata - Metadata of the document.
+ * @param {string} doc.metadata.source - Source of the document, including file extension.
+ * @param {string} doc.pageContent - Content of the document to be processed.
+ * @returns {Promise<*>} The processed document content, type depends on the specific processing function.
+ * @throws {Error} If the file type is not supported.
+ */
 const processDocument = async (doc) => {
   const extension = doc.metadata.source.split(".").pop().toLowerCase();
   switch (extension) {

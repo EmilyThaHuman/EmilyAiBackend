@@ -16,6 +16,11 @@ function parseIfNecessary(obj) {
   }
   return obj;
 }
+/**
+ * Cleans invalid JSON by removing Markdown-style code block delimiters and problematic control characters.
+ * @param {string} input - The input string containing potentially invalid JSON.
+ * @returns {string} The cleaned JSON string with code block delimiters and problematic control characters removed.
+ */
 function cleanInvalidJson(input) {
   // Remove Markdown-style code block delimiters (```json and ```)
   const withoutBackticks = input.replace(/```(?:json)?/g, "").trim();
@@ -27,6 +32,12 @@ function cleanInvalidJson(input) {
   return cleanedContent;
 }
 
+/**
+ * Extracts and parses JSON content from a raw string input.
+ * @param {string} rawContent - The raw string containing potentially invalid JSON.
+ * @returns {Object|null} The parsed JSON object if successful, or null if parsing fails.
+ * @throws {Error} Implicitly throws if JSON parsing fails, but caught internally.
+ */
 function extractContent(rawContent) {
   const cleanedContent = cleanInvalidJson(rawContent);
   try {

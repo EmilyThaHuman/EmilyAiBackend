@@ -1,6 +1,13 @@
 const { OpenAIEmbeddings } = require("@langchain/openai");
 require("dotenv").config();
 
+/**
+ * Vectorizes the given text using OpenAI's text embedding model.
+ * @param {string|string[]} text - The input text to be vectorized. Can be a single string or an array of strings.
+ * @returns {Promise<number[]>} A promise that resolves to an array of numbers representing the text embedding.
+ * @throws {Error} If the input is not a string or an array of strings.
+ * @throws {Error} If there's an error during the vectorization process.
+ */
 const vectorize = async (text) => {
   try {
     if (typeof text !== "string" && !Array.isArray(text)) {

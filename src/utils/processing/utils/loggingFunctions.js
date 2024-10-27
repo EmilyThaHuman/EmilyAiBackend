@@ -1,5 +1,10 @@
 const { logger } = require("@config/logging");
 
+/**
+ * Logs an array of objects as a formatted table in the console.
+ * @param {Array} array - The array of objects to be logged as a table.
+ * @returns {void} This function does not return a value.
+ */
 function logArrayAsTable(array) {
   // Check if the array is empty
   if (array.length === 0) {
@@ -25,6 +30,15 @@ function logArrayAsTable(array) {
   });
 }
 
+/**
+ * Records token usage data for prompt, completion, and total tokens.
+ * @param {Object} options - The token usage data object.
+ * @param {number} options.prompt_tokens - The number of tokens used in the prompt.
+ * @param {number} options.completion_tokens - The number of tokens used in the completion.
+ * @param {number} options.total_tokens - The total number of tokens used.
+ * @returns {void} This function does not return a value.
+ * @throws {Error} If there's an error while recording token usage.
+ */
 function recordTokenUsage({ prompt_tokens, completion_tokens, total_tokens }) {
   if (!prompt_tokens || !completion_tokens || !total_tokens) {
     logger.error("Invalid token usage data");
