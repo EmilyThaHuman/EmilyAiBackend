@@ -3,6 +3,11 @@ const path = require("path");
 const fs = require("fs");
 const crypto = require("crypto");
 
+/**
+ * Generates a PDF document from the provided text.
+ * @param {string} generatedText - The text content to be converted into a PDF. It should be formatted with sections separated by double newlines.
+ * @returns {Promise<Uint8Array>} A promise that resolves to a Uint8Array representing the generated PDF document.
+ */
 async function generatePDF(generatedText) {
   const pdfDoc = await PDFDocument.create();
   const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
@@ -113,6 +118,12 @@ function savePDF(pdfBytes) {
   fs.writeFileSync(pdfPath, pdfBytes);
   return pdfPath;
 }
+/**
+ * Asynchronously loads and extracts text content from a PDF file.
+ * @param {string} pdfPath - The file path of the PDF to be loaded.
+ * @returns {Promise<string>} A promise that resolves to a string containing all the text content from the PDF.
+ * @throws {Error} If the file cannot be read or the PDF cannot be loaded.
+ */
 async function loadPDF(pdfPath) {
   const data = fs.readFileSync(pdfPath);
   const pdfDoc = await PDFDocument.load(data);
