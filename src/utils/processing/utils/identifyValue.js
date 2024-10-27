@@ -1,3 +1,8 @@
+/**
+ * Identifies the type of code snippet provided.
+ * @param {string} snippet - The code snippet to analyze.
+ * @returns {string} The identified code type or "Unknown" if the type cannot be determined.
+ */
 function identifyCodeType(snippet) {
   // Remove comments and trim whitespace
   const cleanedCode = snippet.replace(/\/\/.*|\/\*[\s\S]*?\*\//g, "").trim();
