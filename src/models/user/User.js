@@ -163,17 +163,16 @@ const authSchema = new Schema(
 );
 const authSessionSchema = new Schema(
   {
-    token: { type: String, default: "" },
-    tokenType: { type: String, default: "" },
-    accessToken: { type: String, default: "" },
-    refreshToken: { type: String, default: "" },
     userId: { type: String, default: "" },
     workspaceId: { type: String, default: "" },
     chatSessionId: { type: String, default: "" },
     apiKey: { type: String, default: "" },
-    expiresIn: { type: Number, default: 3600 },
-    expiresAt: { type: Number, default: () => Date.now() + 3600000 },
-    createdAt: { type: Date, default: Date.now }
+    accessToken: { type: String, default: "" },
+    refreshToken: { type: String, default: "" },
+    expiresIn: { type: Number, default: () => Date.now() + 3600000 },
+    expiresAt: { type: Date, default: new Date(Date.now() + 3600000) },
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now }
   },
   { _id: false }
 );

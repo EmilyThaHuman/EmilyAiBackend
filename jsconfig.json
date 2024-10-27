@@ -39,7 +39,8 @@
     "archive/CLEANUP/main.js",
     "archive/CLEANUP/response.js",
     "archive/CLEANUP/env.js",
-    "archive/CLEANUP/auth.js"
+    "archive/CLEANUP/auth.js",
+    "archive/chat.js"
   ],
   "exclude": ["node_modules", "dist", "coverage"]
 }

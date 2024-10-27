@@ -2,6 +2,14 @@ require("dotenv").config();
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const { sign, verify } = jwt;
+const {
+  ValidationError,
+  ConflictError,
+  ALLOWED_FILE_TYPES_ABBR,
+  SUPPORTED_MIME_TYPES_ABBR
+} = require("@config/constants");
+const { User } = require("@models/user");
+const { logger } = require("@config/logging");
 
 const getEnv = (key) => {
   return process.env[key];
@@ -15,6 +23,7 @@ const validateEnvironmentVariables = () => {
     }
   });
 };
+
 const generateToken = () => crypto.randomBytes(64).toString("hex");
 
 const generateTokens = (user) => {
@@ -30,9 +39,33 @@ const generateTokens = (user) => {
   );
   return { accessToken, refreshToken };
 };
+
+const validateUserInput = ({ username, email, password }) => {
+  if (!username || !email || !password) {
+    throw new ValidationError("All fields (username, email, password) are required");
+  }
+  if (password.length < 6) {
+    throw new ValidationError("Password must be at least 6 characters long");
+  }
+};
+
+const checkUserExists = async ({ username, email }) => {
+  try {
+    const userExists = await User.findOne({ $or: [{ email }, { username }] });
+    if (userExists) {
+      throw new ConflictError("Username or email already exists");
+    }
+  } catch (error) {
+    logger.error("Error checking user existence:", error);
+    throw error;
+  }
+};
+
 module.exports = {
   generateToken,
   generateTokens,
   getEnv,
-  validateEnvironmentVariables
+  validateEnvironmentVariables,
+  validateUserInput,
+  checkUserExists
 };

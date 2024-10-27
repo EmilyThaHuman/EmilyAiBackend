@@ -1,16 +1,10 @@
 const multer = require("multer");
 const crypto = require("crypto");
 const path = require("path");
-const fs = require("fs/promises");
 const { logger } = require("@config/logging");
 const { getBucket } = require("./connect");
 const { File } = require("@models/chat");
-
-/**
- * Configure multer for file uploads.
- */
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
+const { upload } = require("@controllers/files");
 
 /**
  * Handle file upload and store it in GridFS.
@@ -99,6 +93,5 @@ const handleFileUpload = async (req, res) => {
 };
 
 module.exports = {
-  upload,
   handleFileUpload
 };

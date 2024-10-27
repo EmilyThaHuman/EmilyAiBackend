@@ -333,4 +333,7 @@ const config = {
   production: Object.assign({}, production, defaults)
 }[process.env.NODE_ENV || "development"];
 
-module.exports = config;
+module.exports = {
+  ...config,
+  config: config
+};

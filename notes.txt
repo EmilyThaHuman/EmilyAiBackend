@@ -1,2 +1,0 @@
-newrelic profiles add --profile tutorial --apiKey e730b3e51f24eaf2a547ac1ab564b7c7FFFFNRAL -r YOUR_REGION
-newrelic profiles default --profile tutorial

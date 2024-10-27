@@ -2,6 +2,7 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const { logger } = require("@config/logging");
 const { User } = require("@models/user");
 const {
   AuthorizationError,
@@ -10,19 +11,12 @@ const {
   REFRESH_TOKEN
 } = require("@config/constants");
 const { findAndPopulateUser } = require("@models/utils");
-const { generateTokens } = require("@utils/processing/api");
-const {
-  createNewUser,
-  checkUserExists,
-  validateUserInput,
-  initializeUserData
-} = require("./helpers");
+const { generateTokens, validateUserInput, checkUserExists } = require("@utils/processing/api");
+const { createNewUser, initializeUserData } = require("@db/helpers");
 const { getEnv } = require("@utils/processing/api");
-const { logger } = require("@config/logging");
-const { Folder } = require("@models/workspace");
 
 const registerUser = async (req, res, next) => {
-  let newUser; // Declare newUser outside the try block for scope access in the catch block
+  let newUser;
   try {
     logger.info(`Registering user with data: ${JSON.stringify(req.body)}`);
     const { username, email, password } = req.body;
@@ -48,22 +42,34 @@ const registerUser = async (req, res, next) => {
     // Populate user data for response
     const populatedUser = await findAndPopulateUser(newUser._id);
     const populatedFolders = populatedUser.workspaces[0].folders;
-    // const populatedFolders = await Folder.find({
-    //   userId: populatedUser._id,
-    //   workspaceId: populatedUser.workspaces[0]._id
-    // }).populate("items");
 
+    // Sessions Config
+    const sessionExpiry = new Date(Date.now() + 60 * 60 * 1000);
+    const session = {
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+      expiresIn: sessionExpiry.getTime(), // Convert to milliseconds
+      expiresAt: sessionExpiry, // Date
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    // Register user session
+    populatedUser.authSession = session;
     // Setup user session
-    req.session.user = {
-      userId: populatedUser._id,
-      accessToken,
+    const userSession = {
+      ...session,
       username: populatedUser.username,
       email: populatedUser.email,
-      expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      userId: populatedUser._id,
       workspaceId: populatedUser.workspaces[0]._id,
       chatSessionId: populatedUser.chatSessions[0]._id,
       apiKey: getEnv("OPENAI_API_PROJECT_KEY")
     };
+
+    // Register user session
+    req.session.user = userSession;
+
+    await populatedUser.save();
 
     logger.info(`User registered successfully: ${populatedUser.username}`);
 
@@ -142,32 +148,38 @@ const loginUser = async (req, res, next) => {
       throw new Error("Invalid password");
     }
     const { accessToken, refreshToken } = generateTokens(user);
-    const userSession = {
-      accessToken,
-      refreshToken,
-      userId: user._id,
-      expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
-      username: user.username,
-      email: user.email,
-      workspaceId: user.workspaces[0]._id,
-      chatSessionId: user.chatSessions[0]._id,
-      apiKey: getEnv("OPENAI_API_PROJECT_KEY")
-    };
-    // Update user with new tokens
-    user.authSession = {
-      ...userSession,
-      createdAt: new Date()
-    };
-    req.session.user = userSession;
 
     await user.save();
     logger.info(`User logged in: ${user.email}`);
 
+    // Populate user data for response
     const populatedUser = await findAndPopulateUser(user._id);
-    const populatedFolders = await Folder.find({
+    const populatedFolders = populatedUser.workspaces[0].folders;
+    // Sessions Config
+    const sessionExpiry = new Date(Date.now() + 60 * 60 * 1000);
+    const session = {
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+      expiresIn: sessionExpiry.getTime(), // Convert to milliseconds
+      expiresAt: sessionExpiry, // Date
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    // Register user session
+    populatedUser.authSession = session;
+    // Setup user session
+    const userSession = {
+      ...session,
+      username: populatedUser.username,
+      email: populatedUser.email,
       userId: populatedUser._id,
-      workspaceId: populatedUser.workspaces[0]._id
-    }).populate("items");
+      workspaceId: populatedUser.workspaces[0]._id,
+      chatSessionId: populatedUser.chatSessions[0]._id,
+      apiKey: getEnv("OPENAI_API_PROJECT_KEY")
+    };
+    req.session.user = userSession;
+    // Register user session
+    await populatedUser.save();
     // Setup user session
     logger.info(`New User Session For: ${populatedUser.username}`);
 
@@ -180,7 +192,6 @@ const loginUser = async (req, res, next) => {
       userId: populatedUser._id,
       workspaceId: populatedUser.workspaces[0]._id,
       chatSessionId: populatedUser.chatSessions[0]._id,
-      // user: populatedUser,
       user: {
         // -- auth data --
         _id: populatedUser._id,

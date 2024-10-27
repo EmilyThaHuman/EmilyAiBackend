@@ -5,20 +5,22 @@
  */
 
 const path = require("path");
-const express = require("express");
-const cors = require("cors");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const compression = require("compression");
 const cookieParser = require("cookie-parser");
-const session = require("express-session");
 const passport = require("passport");
+const express = require("express");
+const cors = require("cors");
+const session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session);
 const LocalStrategy = require("passport-local").Strategy;
-const MongoStore = require("connect-mongo");
+const { default: mongoose } = require("mongoose");
 const { morganMiddleware } = require("./morganMiddleware");
 const config = require("@config/main");
-const { User } = require("../models/user");
-const MongoDBStore = require('connect-mongodb-session')(session);
+const { logger } = require("@config/logging");
+const { User } = require("@/models/user");
+const { initGridFS } = require("@controllers/files");
 
 const middlewares = (app) => {
   // Set up Helmet for enhanced security, including Content Security Policy (CSP)
@@ -42,13 +44,20 @@ const middlewares = (app) => {
   // Configure CORS settings
   app.use(cors(config.app.middlewares.cors));
 
+  // Initialize GridFS once connected
+  mongoose.connection.once("open", () => {
+    initGridFS(mongoose.connection);
+  });
+
+  // Set up store
   const store = new MongoDBStore({
     uri: config.database.uri,
     collection: "sessions"
   });
 
+  // Log store errors
   store.on("error", function (error) {
-    console.log(error);
+    logger.error("Error in MongoDB session store:", error);
   });
 
   // Session configuration

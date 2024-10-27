@@ -6,6 +6,7 @@ const { logger } = require("@config/logging");
 // =============================
 // [FILES]
 // =============================
+
 const fileSchema = createSchema({
   // -- RELATIONSHIPS
   userId: { type: Schema.Types.ObjectId, ref: "User" },
@@ -13,6 +14,12 @@ const fileSchema = createSchema({
   sessionId: { type: Schema.Types.ObjectId, ref: "ChatSession" },
   folderId: { type: Schema.Types.ObjectId, ref: "Folder" },
   messageId: { type: Schema.Types.ObjectId, ref: "ChatMessage" },
+
+  // -- GENERIC
+  filename: { type: String, required: false },
+  contentType: { type: String, required: false },
+  uploadDate: { type: Date, default: Date.now },
+  length: { type: Number, required: false },
 
   // -- REQUIRED FIELDS
   name: { type: String, required: false },
