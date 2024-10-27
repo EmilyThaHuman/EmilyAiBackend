@@ -1,3 +1,5 @@
+const { MARKDOWN_FORMATTING_GUIDE } = require("./constants");
+
 const instructionsPrompts = {
   RESPONSE_FORMAT_MD: `You are an AI assistant that provides responses in a structured format mimicking the ChatGPT chat style. 
     Your task is to answer the user's question and format your response according to the following template:
@@ -64,10 +66,18 @@ const instructionsPrompts = {
         ],
         "codeBlocks": [
             {
-            "language": "python",
-            "code": "print('Hello, World!')",
+            "language": "javascript",
+            "code": "console.log('Hello, World!')",
             "start": 230,
             "end": 260
+            },
+            {
+            "language": "jsx",
+            "code": "<div>
+              <h1>Hello, World!</h1>
+              <p>This is a JSX code block.</p>
+
+              </div>",
             }
         ],
         "tables": [
@@ -235,13 +245,14 @@ Below is an example (sample uses escape characters for formatting, but ensure to
 \`\`\`
 --- END OF RESPONSE FORMATTING INSTRUCTIONS ---
 `,
+  MARKDOWN_GUIDE: MARKDOWN_FORMATTING_GUIDE
 };
 
 const instructions = {
-  responseMarkdown: instructionsPrompts.RESPONSE_FORMAT_MD,
+  responseMarkdown: instructionsPrompts.RESPONSE_FORMAT_MD
 };
 
 module.exports = {
   instructionsPrompts,
-  instructionMap: instructions,
+  instructionMap: instructions
 };

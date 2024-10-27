@@ -1,0 +1,76 @@
+# Material UI Code Snippet Manager
+
+This component is designed to manage and display code snippets using Material-UI components. It includes features for inputting new code snippets, displaying saved snippets, and deleting snippets. The component provides a user-friendly interface for organizing and viewing code examples.
+
+## Component Code
+
+jsx
+import React, { useState } from 'react';
+import { Typography, Box, TextField, Button, List, ListItem } from '@mui/material';
+
+const CodeSnippetApp = () => {
+  const [code, setCode] = useState('');
+  const [snippets, setSnippets] = useState([]);
+
+  const handleSave = (newCode) => {
+    setCode(newCode);
+    setSnippets([...snippets, newCode]);
+  };
+
+  const handleDelete = (index) => {
+    setSnippets(snippets.filter((snippet, i) => i !== index));
+  };
+
+  return (
+    <Box sx={{ margin: 4 }}>
+      <CodeSnippetInput value={code} handleSave={handleSave} />
+      <CodeSnippetDisplay code={code} />
+      <CodeSnippetList snippets={snippets} handleDelete={handleDelete} />
+    </Box>
+  );
+};
+
+const CodeSnippetInput = ({ value, handleSave }) => {
+  const [inputValue, setInputValue] = useState('');
+
+  const handleChange = (event) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleSaveClick = () => {
+    handleSave(inputValue);
+    setInputValue('');
+  };
+
+  return (
+    <Box sx={{ mb: 2 }}>
+      <TextField
+        label="Enter Code Snippet"
+        value={inputValue}
+        onChange={handleChange}
+        fullWidth
+      />
+      <Button variant="contained" onClick={handleSaveClick}>Save</Button>
+    </Box>
+  );
+};
+
+const CodeSnippetDisplay = ({ code }) => (
+  <Box sx={{ mb: 2 }}>
+    <Typography variant="h6">Saved Code Snippet</Typography>
+    <Typography>{code}</Typography>
+  </Box>
+);
+
+const CodeSnippetList = ({ snippets, handleDelete }) => (
+  <List>
+    {snippets.map((snippet, index) => (
+      <ListItem key={index}>
+        <Typography>{snippet}</Typography>
+        <Button variant="outlined" onClick={() => handleDelete(index)}>Delete</Button>
+      </ListItem>
+    ))}
+  </List>
+);
+
+export default CodeSnippetApp;

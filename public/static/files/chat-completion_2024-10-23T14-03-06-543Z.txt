@@ -1,0 +1,69 @@
+{
+  "content": "# Gradient Ghost Button Component
+
+## Explanation
+This React component creates a stylish ghost button with a gradient effect on hover and active states. The button has a transparent background, a solid border, and a gradient color transition for an engaging user experience.
+
+## Code
+```jsx
+import React from 'react';
+import './GhostButton.css'; // Import the CSS file for styling
+
+const GradientGhostButton = ({ label, link }) => {
+  return (
+    <a className='ghost-button' href={link}>
+      {label}
+    </a>
+  );
+};
+
+export default GradientGhostButton;
+```
+
+## CSS Styling (GhostButton.css)
+```css
+.ghost-button {
+  display: inline-block;
+  width: 200px;
+  padding: 5px;
+  color: #fff;
+  background-color: transparent;
+  border: 3px solid #fff;
+  text-align: center;
+  outline: none;
+  text-decoration: none;
+  transition: color 0.1s ease-out, background-color 0.1s ease-out, border-color 0.1s ease-out;
+}
+
+.ghost-button:hover, .ghost-button:active {
+  background-image: linear-gradient(to right, #ff0000, #00ff00);
+  background-size: 100% 100%;
+  background-position: 0 0;
+  border-color: #ff0000;
+  color: #fff;
+}
+```
+
+## Usage Example
+```jsx
+import React from 'react';
+import GradientGhostButton from './GradientGhostButton';
+
+const App = () => {
+  return (
+    <div>
+      <GradientGhostButton label='Click here!' link='https://example.com' />
+    </div>
+  );
+};
+
+export default App;
+```
+
+## References
+1. Gradient Button with Pseudo Elements: [Source](#)
+2. CSS Gradient Effects: [Source](#)
+",
+  "type": "markdown",
+  "references": []
+}

@@ -1,16 +1,16 @@
-const { encode } = require('gpt-tokenizer');
-const { JSONLoader } = require('langchain/document_loaders/fs/json');
-const { RecursiveCharacterTextSplitter } = require('langchain/text_splitter');
-const { CHUNK_SIZE, CHUNK_OVERLAP } = require('@/config/constants');
+const { CHUNK_SIZE, CHUNK_OVERLAP } = require("../../../config/constants");
+const { encode } = require("gpt-tokenizer");
+const { JSONLoader } = require("langchain/document_loaders/fs/json");
+const { RecursiveCharacterTextSplitter } = require("langchain/text_splitter");
 
 const processJSON = async (json) => {
   const loader = new JSONLoader(json);
   const docs = await loader.load();
-  let completeText = docs.map((doc) => doc.pageContent).join(' ');
+  let completeText = docs.map((doc) => doc.pageContent).join(" ");
 
   const splitter = new RecursiveCharacterTextSplitter({
     chunkSize: CHUNK_SIZE,
-    chunkOverlap: CHUNK_OVERLAP,
+    chunkOverlap: CHUNK_OVERLAP
   });
   const splitDocs = await splitter.createDocuments([completeText]);
 
@@ -21,7 +21,7 @@ const processJSON = async (json) => {
 
     chunks.push({
       content: doc.pageContent,
-      tokens: encode(doc.pageContent).length,
+      tokens: encode(doc.pageContent).length
     });
   }
 

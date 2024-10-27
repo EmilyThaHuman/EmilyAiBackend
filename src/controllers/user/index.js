@@ -1,5 +1,5 @@
 module.exports = {
-  ...require('./local'),
-  ...require('./openAi'),
-  ...require('./service'),
+  ...require("./local"),
+  ...require("./openAi"),
+  ...require("./service")
 };

@@ -1,23 +1,23 @@
-const { logger } = require('@/config/logging');
-const { getEnv } = require('@/utils/api');
-const { logArrayAsTable } = require('@/utils/processing/utils/loggingFunctions');
-const { Pinecone } = require('@pinecone-database/pinecone');
+const { logger } = require("@config/logging");
+const { getEnv } = require("@utils/processing/api");
+const { logArrayAsTable } = require("@utils/processing/utils/loggingFunctions");
+const { Pinecone } = require("@pinecone-database/pinecone");
 
 const clients = {
-  pinecone: null,
+  pinecone: null
 };
 
 const getPineconeClient = async () => {
   let client;
   if (!clients.pinecone) {
     client = new Pinecone({
-      apiKey: getEnv('PINECONE_API_KEY'),
+      apiKey: getEnv("PINECONE_API_KEY")
     });
-    logger.info(`[PINECONE] Pinecone initialize created`);
+    logger.info("[PINECONE] Pinecone initialize created");
     clients.pinecone = client;
   } else {
     client = clients.pinecone;
-    console.log('Reusing Pinecone client');
+    console.log("Reusing Pinecone client");
   }
   return client;
   // return new Pinecone({
@@ -42,7 +42,7 @@ const getPineconeIndexListNames = async (pinecone) => {
           name: index.name,
           dimension: stats.dimension,
           indexFullness: stats.indexFullness,
-          totalVectorCount: stats.totalVectorCount,
+          totalVectorCount: stats.totalVectorCount
         };
       } catch (error) {
         console.error(`Error describing index stats for ${index.name}: ${error}`);
@@ -53,7 +53,7 @@ const getPineconeIndexListNames = async (pinecone) => {
     // Wait for all promises to resolve
     const indexDetails = await Promise.all(indexPromises);
 
-    console.log('Index Details:');
+    console.log("Index Details:");
     console.table(indexDetails);
 
     // Return just the names if needed
@@ -71,7 +71,7 @@ const getPineconeNamespaceList = async (pinecone, indexList) => {
     const namespaces = await getIndexNamespaceList(index);
     console.log(`Namespaces for index '${indexName}':`);
     logArrayAsTable(
-      namespaces.length > 0 ? namespaces.map((ns) => ({ namespace: ns })) : [{ namespace: 'None' }]
+      namespaces.length > 0 ? namespaces.map((ns) => ({ namespace: ns })) : [{ namespace: "None" }]
     );
     console.log();
   }
@@ -89,5 +89,5 @@ module.exports = {
   getPineconeIndexList,
   getPineconeNamespaceList,
   getIndexNamespaceList,
-  getPineconeIndexListNames,
+  getPineconeIndexListNames
 };

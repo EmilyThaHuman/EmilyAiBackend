@@ -1,11 +1,11 @@
 // String Manipulation, Parsing, and Extraction Utilities
-const axios = require('axios');
-const cheerio = require('cheerio');
-const { logger } = require('@/config/logging');
+const axios = require("axios");
+const cheerio = require("cheerio");
+const { logger } = require("@config/logging");
 
 function replaceUnsupportedCharacters(text) {
   const replacements = {
-    '●': '*',
+    "●": "*"
   };
   return text.replace(/[\u2022]/g, (char) => replacements[char] || char);
 }
@@ -15,11 +15,11 @@ function replacePlaceholders(text, placeholders) {
 }
 
 const escapeRegExp = (str) => {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 };
 
 function isString(test) {
-  return typeof test === 'string';
+  return typeof test === "string";
 }
 
 const extractFirstCodeBlock = (input) => {
@@ -28,11 +28,11 @@ const extractFirstCodeBlock = (input) => {
   while ((matches = pattern.exec(input)) !== null) {
     const language = matches[1];
     const codeBlock = matches[2];
-    if (language === undefined || language === 'tsx' || language === 'json') {
+    if (language === undefined || language === "tsx" || language === "json") {
       return codeBlock;
     }
   }
-  throw new Error('No code block found in input');
+  throw new Error("No code block found in input");
 };
 
 async function extractTextFromUrl(url) {
@@ -42,15 +42,15 @@ async function extractTextFromUrl(url) {
     const $ = cheerio.load(html);
 
     const text = [];
-    $('div.description__text').each((index, element) => {
+    $("div.description__text").each((index, element) => {
       text.push($(element).text().trim());
     });
 
     const lines = text.map((line) => line.trim()).filter((line) => line);
-    const document = splitTextDocuments(lines.join('\n'));
+    const document = splitTextDocuments(lines.join("\n"));
     return document;
   } catch (error) {
-    logger.error('Error extracting text from URL:', error);
+    logger.error("Error extracting text from URL:", error);
     throw error;
   }
 }
@@ -62,10 +62,10 @@ function splitTextDocuments(text) {
 
 function convertDraftContentStateToPlainText(draftContentState) {
   if (!draftContentState.blocks) {
-    logger.error('Invalid draft content state: Missing blocks');
-    return '';
+    logger.error("Invalid draft content state: Missing blocks");
+    return "";
   }
-  return draftContentState.blocks.map((block) => block.text).join('\n');
+  return draftContentState.blocks.map((block) => block.text).join("\n");
 }
 
 function convertToRegularObject(inputArray) {
@@ -79,7 +79,7 @@ function convertToRegularObject(inputArray) {
 }
 
 function cleanJSONString(str) {
-  return str.replace(/```json\s*([\s\S]*?)\s*```/, '$1').trim();
+  return str.replace(/```json\s*([\s\S]*?)\s*```/, "$1").trim();
 }
 
 module.exports = {
@@ -92,5 +92,5 @@ module.exports = {
   splitTextDocuments,
   convertDraftContentStateToPlainText,
   convertToRegularObject,
-  cleanJSONString,
+  cleanJSONString
 };

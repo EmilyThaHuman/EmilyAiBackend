@@ -1,40 +1,41 @@
-const { ChatOpenAI, OpenAIEmbeddings } = require('@langchain/openai');
-const { PineconeStore } = require('@langchain/pinecone');
-const { createPineconeIndex } = require('../pinecone');
-const { Pinecone } = require('@pinecone-database/pinecone');
-const { getEnv } = require('@/utils/api');
-const { logger } = require('@/config/logging');
-const cheerio = require('cheerio');
-const axios = require('axios');
-const { SystemMessage, HumanMessage } = require('@langchain/core/messages');
-const { UI_LIBRARIES } = require('@/config/constants');
-const { PromptTemplate } = require('@langchain/core/prompts');
+const { ChatOpenAI, OpenAIEmbeddings } = require("@langchain/openai");
+const { PineconeStore } = require("@langchain/pinecone");
+const { createPineconeIndex } = require("../pinecone");
+const { Pinecone } = require("@pinecone-database/pinecone");
+const { getEnv } = require("@utils/processing/api");
+const cheerio = require("cheerio");
+const axios = require("axios");
+const { SystemMessage, HumanMessage } = require("@langchain/core/messages");
+const { UI_LIBRARIES } = require("@config/constants");
+const { PromptTemplate } = require("@langchain/core/prompts");
+const { logger } = require("@config/logging");
 
 const chatOpenAI = new ChatOpenAI({
-  model: getEnv('OPENAI_API_CHAT_COMPLETION_MODEL'),
+  model: getEnv("OPENAI_API_CHAT_COMPLETION_MODEL"),
   temperature: 0.2,
   maxTokens: 500,
-  apiKey: process.env.OPENAI_API_PROJECT_KEY,
+  apiKey: process.env.OPENAI_API_PROJECT_KEY
 });
+
 const performSemanticSearch = async (query, k = 3) => {
   const pinecone = new Pinecone({
-    apiKey: process.env.PINECONE_API_KEY,
+    apiKey: process.env.PINECONE_API_KEY
   });
   // Initialize OpenAI embeddings
   let embedder;
   try {
     embedder = new OpenAIEmbeddings({
-      modelName: 'text-embedding-3-small',
+      modelName: "text-embedding-3-small",
       apiKey: process.env.OPENAI_API_PROJECT_KEY,
-      dimensions: 512,
+      dimensions: 512
     });
   } catch (error) {
-    throw new Error('Failed to initialize OpenAI embeddings: ' + error.message);
+    throw new Error("Failed to initialize OpenAI embeddings: " + error.message);
   }
   const vectorStore = await PineconeStore.fromExistingIndex(embedder, {
-    pineconeIndex: await createPineconeIndex(pinecone, getEnv('PINECONE_NAMESPACE_1')),
-    namespace: 'chat-history',
-    textKey: 'text',
+    pineconeIndex: await createPineconeIndex(pinecone, getEnv("PINECONE_NAMESPACE_1")),
+    namespace: "chat-history",
+    textKey: "text"
   });
   const results = await vectorStore.similaritySearch(query, k);
   return results.map((result) => result.pageContent);
@@ -52,7 +53,7 @@ const generateResponse = async (input, context) => {
 
   const promptTemplate = new PromptTemplate({
     template: template,
-    inputVariables: ['context', 'input'],
+    inputVariables: ["context", "input"]
   });
 
   const result = await chatOpenAI.invoke(promptTemplate.format({ context, input }));
@@ -70,7 +71,7 @@ const summarizeText = async (text) => {
 
   const promptTemplate = new PromptTemplate({
     template: template,
-    inputVariables: ['text'],
+    inputVariables: ["text"]
   });
 
   const result = await chatOpenAI.invoke(promptTemplate.format({ text }));
@@ -80,7 +81,7 @@ const summarizeText = async (text) => {
 const identifyLibrariesAndComponents = async (query) => {
   try {
     const systemMessage = new SystemMessage(
-      'You are an AI assistant that identifies UI libraries, JS libraries, and component types mentioned in a query. Respond only with the requested JSON format, nothing else.'
+      "You are an AI assistant that identifies UI libraries, JS libraries, and component types mentioned in a query. Respond only with the requested JSON format, nothing else."
     );
     const humanMessage = new HumanMessage(
       `Analyze the following query and identify any mentioned UI libraries, JS libraries, and component types:
@@ -111,21 +112,21 @@ const identifyLibrariesAndComponents = async (query) => {
       parsedResponse = JSON.parse(jsonString);
     } catch (parseError) {
       logger.error(`Error parsing JSON response: ${parseError}`);
-      throw new Error('Invalid JSON response');
+      throw new Error("Invalid JSON response");
     }
 
     // Ensure all expected properties exist and follow the rules
     const result = {
       uiLibraries: Array.isArray(parsedResponse.uiLibraries)
-        ? [...new Set(['React', ...parsedResponse.uiLibraries])]
-        : ['React'],
+        ? [...new Set(["React", ...parsedResponse.uiLibraries])]
+        : ["React"],
       jsLibraries: Array.isArray(parsedResponse.jsLibraries)
-        ? [...new Set(['React', ...parsedResponse.jsLibraries])]
-        : ['React'],
+        ? [...new Set(["React", ...parsedResponse.jsLibraries])]
+        : ["React"],
       componentTypes:
         Array.isArray(parsedResponse.componentTypes) && parsedResponse.componentTypes.length > 0
           ? parsedResponse.componentTypes
-          : ['Component'],
+          : ["Component"]
     };
 
     return result;
@@ -133,9 +134,9 @@ const identifyLibrariesAndComponents = async (query) => {
     logger.error(`Error identifying libraries and components: ${error}`);
     // Return default values in case of any error
     return {
-      uiLibraries: ['React'],
-      jsLibraries: ['React'],
-      componentTypes: ['App'],
+      uiLibraries: ["React"],
+      jsLibraries: ["React"],
+      componentTypes: ["App"]
     };
   }
 };
@@ -193,7 +194,7 @@ const getDocumentationUrl = async (library, componentType) => {
 
     // 5. Optimize URL search
     const lowercaseComponentType = componentType.toLowerCase();
-    const relevantUrl = $('url loc')
+    const relevantUrl = $("url loc")
       .filter((_, el) => $(el).text().toLowerCase().includes(lowercaseComponentType))
       .first()
       .text();
@@ -201,10 +202,10 @@ const getDocumentationUrl = async (library, componentType) => {
     return relevantUrl || null;
   } catch (error) {
     // 6. Improve error logging
-    logger.error('Error getting documentation URL:', {
+    logger.error("Error getting documentation URL:", {
       library,
       componentType,
-      error: error.message,
+      error: error.message
     });
     return null;
   }
@@ -215,7 +216,7 @@ const scrapeDocumentation = async (url) => {
   const $ = cheerio.load(response.data);
 
   // Customize this based on the structure of the documentation pages
-  const content = $('main').text();
+  const content = $("main").text();
   return content;
 };
 
@@ -233,27 +234,27 @@ const generateOptimizationPrompt = async (query, results) => {
 
   const promptTemplate = new PromptTemplate({
     template: template,
-    inputVariables: ['libraries', 'query', 'docSnippets'],
+    inputVariables: ["libraries", "query", "docSnippets"]
   });
 
-  const libraries = [...results.uiLibraries, ...results.jsLibraries].join(', ');
+  const libraries = [...results.uiLibraries, ...results.jsLibraries].join(", ");
   const docSnippets = results.documentationContent
     .map((doc) => `${doc.library} - ${doc.componentType}:\n${doc.content}\n`)
-    .join('\n');
+    .join("\n");
 
   return promptTemplate.format({
     libraries,
     query,
-    docSnippets,
+    docSnippets
   });
 };
 
 function parseIfNecessary(obj) {
-  if (typeof obj === 'string') {
+  if (typeof obj === "string") {
     try {
       return JSON.parse(obj); // Attempt to parse the string into an object
     } catch (error) {
-      console.error('Failed to parse object:', error);
+      console.error("Failed to parse object:", error);
       return null; // Return null or handle the error as needed
     }
   }
@@ -268,7 +269,7 @@ module.exports = {
   identifyLibrariesAndComponents,
   getDocumentationUrl,
   scrapeDocumentation,
-  parseIfNecessary,
+  parseIfNecessary
 };
 // function generateDocumentation(code) {
 //   const jsdocComments = extractJSDocComments(code);

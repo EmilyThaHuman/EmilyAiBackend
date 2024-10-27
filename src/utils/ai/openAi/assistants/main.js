@@ -1,11 +1,11 @@
-const { logger } = require('@/config/logging');
-const { openAiApiAssistantService } = require('./assistant');
-const { openAiApiFileService } = require('./files');
-const { openAiApiMessageService } = require('./messages');
-const { openAiApiRunService } = require('./runs');
-const { openAiApiThreadService } = require('./thread');
-const { getUserOpenaiClient } = require('../get');
-const { openAiApiStreamingService } = require('./streaming');
+const { logger } = require("@config/logging");
+const { openAiApiAssistantService } = require("./assistant");
+const { openAiApiFileService } = require("./files");
+const { openAiApiMessageService } = require("./messages");
+const { openAiApiRunService } = require("./runs");
+const { openAiApiThreadService } = require("./thread");
+const { getUserOpenaiClient } = require("../get");
+const { openAiApiStreamingService } = require("./streaming");
 let pollingInterval;
 // Initialize OpenAI services
 const openai = getUserOpenaiClient(process.env.OPENAI_API_PROJECT_KEY);
@@ -19,13 +19,13 @@ const streamingService = openAiApiStreamingService(openai);
 const processInput = async (request) => {
   try {
     const runResponse = await fetch(`https://api.openai.com/v1/threads/${thread.id}/runs`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${openaiApiKey}`,
-        'OpenAI-Beta': 'assistants=v1',
+        "OpenAI-Beta": "assistants=v1"
       },
-      body: JSON.stringify({ assistant_id: 'asst_74SL6VPdELw5pgHXO4cVdxqN', stream: true }),
+      body: JSON.stringify({ assistant_id: "asst_74SL6VPdELw5pgHXO4cVdxqN", stream: true })
     });
 
     if (!runResponse.ok) {
@@ -36,18 +36,18 @@ const processInput = async (request) => {
     const decoder = new TextDecoder();
 
     const handleStreamedResponse = (value) => {
-      const lines = decoder.decode(value).split('\n');
+      const lines = decoder.decode(value).split("\n");
       for (const line of lines) {
-        if (line.trim().startsWith('data:')) {
+        if (line.trim().startsWith("data:")) {
           const data = line.trim().slice(5);
-          if (data === '[DONE]') {
+          if (data === "[DONE]") {
             setIsLoading(false);
           } else {
             try {
               const event = JSON.parse(data);
               handleStreamedEvent(event);
             } catch (error) {
-              console.error('Error parsing streamed response:', error);
+              console.error("Error parsing streamed response:", error);
             }
           }
         }
@@ -64,7 +64,7 @@ const processInput = async (request) => {
 
     await readLoop();
   } catch (error) {
-    console.error('Error running thread:', error);
+    console.error("Error running thread:", error);
   }
 };
 // Function to check status and handle completion
@@ -73,9 +73,9 @@ const checkingStatus = async (res, threadId, runId) => {
 
   const status = runObject.status;
   console.log(runObject);
-  console.log('Current status: ' + status);
+  console.log("Current status: " + status);
 
-  if (status === 'completed') {
+  if (status === "completed") {
     clearInterval(pollingInterval);
 
     const messagesList = await messageService.listMessages(threadId);
@@ -95,10 +95,10 @@ const listAndCheckAssistantExistence = async (openai) => {
     logger.info(`Existing assistants: ${JSON.stringify(existingAssistants, null, 2)}`);
   }
   const existingAssistant = existingAssistants.find(
-    (assistant) => assistant.name === 'CODING_REACT'
+    (assistant) => assistant.name === "CODING_REACT"
   );
   if (!existingAssistant) {
-    throw new Error('CODING_REACT assistant does not exist. Please create it first.');
+    throw new Error("CODING_REACT assistant does not exist. Please create it first.");
   }
   return existingAssistant;
 };
@@ -110,17 +110,17 @@ const assistantTest = async (req, res, next) => {
     if (!prompt || !prompt.length) {
       return res.status(400).json({
         success: false,
-        message: 'Prompt is required',
+        message: "Prompt is required"
       });
     }
 
     const response = await myAssistant(threadId, prompt);
     return res.status(200).json({
       success: true,
-      message: response,
+      message: response
     });
   } catch (err) {
-    console.error('Error in assistantTest controller ---->', err);
+    console.error("Error in assistantTest controller ---->", err);
     next(err);
   }
 };
@@ -130,9 +130,9 @@ const myAssistant = async (threadId, prompt) => {
 
     const file = await openai.files.create({
       file: fs.createReadStream(
-        path.join(__dirname, '@/public/static/chatgpt-prompts-custom.json')
+        path.join(__dirname, "@/public/static/chatgpt-prompts-custom.json")
       ),
-      purpose: 'assistants',
+      purpose: "assistants"
     });
 
     const fileIds = [file.id];
@@ -140,12 +140,12 @@ const myAssistant = async (threadId, prompt) => {
     let assistant;
 
     if (existingAssistant) {
-      logger.info('Assistant already exists:', existingAssistant);
+      logger.info("Assistant already exists:", existingAssistant);
       assistant = existingAssistant; // Return the existing assistant if found
     } else {
       const assistantConfig = {
-        name: 'CODING_REACT',
-        description: 'Assistant specialized in developing React applications',
+        name: "CODING_REACT",
+        description: "Assistant specialized in developing React applications",
         instructions: `You are a highly knowledgeable and proficient assistant specialized in developing React applications. Your expertise includes setting up comprehensive project directories, designing scalable and efficient component architectures, and implementing best practices for state management, UI libraries, and performance optimization. You are familiar with modern tools and libraries such as Material-UI, Redux, React Router, and others.
           When responding to user requests, you should:
 
@@ -161,19 +161,19 @@ const myAssistant = async (threadId, prompt) => {
           Your responses should be helpful, accurate, and tailored to the user's specific needs.
           Remember to always stay up-to-date with the latest React and related libraries and tools.
         `,
-        tools: [{ type: 'code_interpreter' }, { type: 'file_search' }],
+        tools: [{ type: "code_interpreter" }, { type: "file_search" }],
         tool_resources: {
           code_interpreter: {
-            file_ids: fileIds,
+            file_ids: fileIds
           },
           file_search: {
-            vector_store_ids: [],
-          },
+            vector_store_ids: []
+          }
         },
-        model: 'gpt-4-1106-preview',
-        response_format: 'auto',
+        model: "gpt-4-1106-preview",
+        response_format: "auto",
         metadata: {},
-        temperature: 0.9,
+        temperature: 0.9
       };
 
       const newAssistant = await openai.beta.assistants.create(assistantConfig);
@@ -189,13 +189,13 @@ const myAssistant = async (threadId, prompt) => {
 
     // --- User message --- //
     const message = await openai.beta.threads.messages.create(currentThreadId, {
-      role: 'user',
-      content: prompt,
+      role: "user",
+      content: prompt
     });
 
     const run = await openai.beta.threads.runs.create(currentThreadId, {
       assistant_id: assistant.id,
-      instructions: 'Please address the user as Jane Doe. The user has a premium account.',
+      instructions: "Please address the user as Jane Doe. The user has a premium account."
     });
 
     logger.info(`Run created: ${JSON.stringify(run, null, 2)}`);
@@ -208,7 +208,7 @@ const myAssistant = async (threadId, prompt) => {
 
     return messages.data;
   } catch (err) {
-    console.error('Error in myAssistant function =====>', err);
+    console.error("Error in myAssistant function =====>", err);
     throw err;
   }
 };
@@ -355,18 +355,18 @@ const getAssistantByThreadId = async (req, res, next) => {
     const { createRun, retrieveRun } = openAiApiRunService(openai);
     // -- 1
     const file = await uploadFile(
-      path.join(__dirname, '@/public/static/chatgpt-prompts-custom.json')
+      path.join(__dirname, "@/public/static/chatgpt-prompts-custom.json")
     );
     fileIds.push(file.id);
     const existingAssistant = await listAndCheckAssistantExistence(openai);
     let assistant;
     if (existingAssistant) {
-      logger.info('Assistant already exists:', existingAssistant);
+      logger.info("Assistant already exists:", existingAssistant);
       assistant = existingAssistant; // Return the existing assistant if found
     } else {
       const assistantConfig = {
-        name: 'CODING_REACT',
-        description: 'Assistant specialized in developing React applications',
+        name: "CODING_REACT",
+        description: "Assistant specialized in developing React applications",
         instructions: `You are a highly knowledgeable and proficient assistant specialized in developing React applications. Your expertise includes setting up comprehensive project directories, designing scalable and efficient component architectures, and implementing best practices for state management, UI libraries, and performance optimization. You are familiar with modern tools and libraries such as Material-UI, Redux, React Router, and others.
           When responding to user requests, you should:
 
@@ -382,20 +382,20 @@ const getAssistantByThreadId = async (req, res, next) => {
           Your responses should be helpful, accurate, and tailored to the user's specific needs.
           Remember to always stay up-to-date with the latest React and related libraries and tools.
       `,
-        tools: [{ type: 'code_interpreter' }, { type: 'file_search' }],
+        tools: [{ type: "code_interpreter" }, { type: "file_search" }],
         tool_resources: {
           code_interpreter: {
-            file_ids: fileIds,
+            file_ids: fileIds
           },
           file_search: {
-            vector_store_ids: [],
-          },
+            vector_store_ids: []
+          }
         },
-        model: 'gpt-4-1106-preview',
+        model: "gpt-4-1106-preview",
         // file_ids: [file.id],
-        response_format: 'auto',
+        response_format: "auto",
         metadata: {},
-        temperature: 0.9,
+        temperature: 0.9
       };
       const newAssistant = await createAssistant(assistantConfig);
       assistant = newAssistant;
@@ -406,17 +406,17 @@ const getAssistantByThreadId = async (req, res, next) => {
     }
     // --- User message --- //
     const message = await createMessage(threadId, {
-      role: 'user',
-      content: prompt,
+      role: "user",
+      content: prompt
     });
     const run = await createRun(threadId, {
       assistant_id: assistant.id,
-      instructions: getMainAssistantMessageInstructions(),
+      instructions: getMainAssistantMessageInstructions()
     });
     const asstRun = await retrieveRun(threadId, run.id);
     const status = asstRun.status;
     // const messages = await listMessages(threadId);
-    if (status === 'completed') {
+    if (status === "completed") {
       clearInterval(pollingInterval);
       const messagesList = await messageService.listMessages(threadId);
       let messages = [];
@@ -427,7 +427,7 @@ const getAssistantByThreadId = async (req, res, next) => {
     }
     // return messages.data;
   } catch (err) {
-    console.error('Error in chat bot =====>', err);
+    console.error("Error in chat bot =====>", err);
     return err;
   }
 };
@@ -444,11 +444,11 @@ const assistantController = {
   createRunStreamWithFunctions,
   retrieveRun,
   listAssistants,
-  assistantTest,
+  assistantTest
 };
 
 module.exports = {
-  assistantController,
+  assistantController
 };
 // const createAssistant = async (req, res, next) => {
 //   try {

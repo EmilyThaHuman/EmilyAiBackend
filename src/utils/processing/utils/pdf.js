@@ -1,7 +1,7 @@
-const { PDFDocument, StandardFonts, rgb } = require('pdf-lib');
-const path = require('path');
-const fs = require('fs');
-const crypto = require('crypto');
+const { PDFDocument, StandardFonts, rgb } = require("pdf-lib");
+const path = require("path");
+const fs = require("fs");
+const crypto = require("crypto");
 
 async function generatePDF(generatedText) {
   const pdfDoc = await PDFDocument.create();
@@ -21,20 +21,20 @@ async function generatePDF(generatedText) {
       y: y,
       size: fontSize,
       font: font,
-      color: color,
+      color: color
     });
     return y - lineHeight;
   };
 
   const drawTextWithWrapping = (text, x, y, fontSize, lineHeight, font, color) => {
-    const words = text.split(' ');
-    let line = '';
+    const words = text.split(" ");
+    let line = "";
     let lines = [];
 
     for (const word of words) {
       if (font.widthOfTextAtSize(line + word, fontSize) > maxLineWidth) {
         lines.push(line.trim());
-        line = '';
+        line = "";
       }
       line += `${word} `;
     }
@@ -53,7 +53,7 @@ async function generatePDF(generatedText) {
         y: y,
         size: fontSize,
         font: font,
-        color: color,
+        color: color
       });
       y -= lineHeight;
     }
@@ -64,13 +64,13 @@ async function generatePDF(generatedText) {
   let yPosition = height - margin;
 
   // Define the different parts of the cover letter
-  const parts = generatedText.split('\n\n');
+  const parts = generatedText.split("\n\n");
   const headerSections = parts.slice(0, 3); // Assume first 3 parts are headers that should not wrap
   const bodySections = parts.slice(3); // The rest are body sections
 
   // Draw header sections without wrapping
   headerSections.forEach((part) => {
-    const lines = part.split('\n');
+    const lines = part.split("\n");
     lines.forEach((line) => {
       yPosition = drawText(
         line,
@@ -102,8 +102,8 @@ async function generatePDF(generatedText) {
   return await pdfDoc.save();
 }
 function savePDF(pdfBytes) {
-  const uniqueId = crypto.randomBytes(8).toString('hex');
-  const pdfDir = path.join(__dirname, '../generated');
+  const uniqueId = crypto.randomBytes(8).toString("hex");
+  const pdfDir = path.join(__dirname, "../generated");
   const pdfPath = path.join(pdfDir, `cover_letter_${uniqueId}.pdf`);
 
   if (!fs.existsSync(pdfDir)) {
@@ -117,13 +117,13 @@ async function loadPDF(pdfPath) {
   const data = fs.readFileSync(pdfPath);
   const pdfDoc = await PDFDocument.load(data);
   const pages = pdfDoc.getPages();
-  let text = '';
+  let text = "";
 
   pages.forEach((page) => {
     text += page
       .getTextContent()
       .items.map((item) => item.str)
-      .join(' ');
+      .join(" ");
   });
 
   return text;
@@ -132,5 +132,5 @@ async function loadPDF(pdfPath) {
 module.exports = {
   generatePDF,
   savePDF,
-  loadPDF,
+  loadPDF
 };

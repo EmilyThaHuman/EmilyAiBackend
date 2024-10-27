@@ -1,0 +1,43 @@
+# Message Box Component
+
+## Explanation
+
+The Message Box Component is designed to display chat messages in a visually appealing and organized manner. It allows users to view messages sent and received, with the ability to send new messages. The component includes styling for differentiating between sent and received messages.
+
+## Code
+jsx
+import React, { useState } from 'react';
+
+const MessageBox = () => {
+  const [messages, setMessages] = useState([
+    { text: 'Hello, how are you?', user: 'Alice' },
+    { text: 'I am good, thanks!', user: 'Bob' },
+  ]);
+
+  const handleSendMessage = (text) => {
+    setMessages((prevMessages) => [...prevMessages, { text, user: 'Alice' }]);
+  };
+
+  return (
+    <div className="message-box">
+      <div className="messages">
+        {messages.map((message, index) => (
+          <div key={index} className={`message ${message.user === 'Alice' ? 'sent' : 'received'}`}> 
+            <p>{message.text}</p>
+          </div>
+        ))}
+      </div>
+      <input
+        type="text"
+        className="input-message"
+        placeholder="Type a message..."
+        onKeyUp={(e) => {
+          if (e.key === 'Enter') {
+            handleSendMessage(e.target.value);
+            e.target.value = '';
+          }
+        }}
+      />
+    </div>
+  );
+};

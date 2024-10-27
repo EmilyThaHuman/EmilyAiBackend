@@ -1,29 +1,29 @@
-const { logger } = require('@/config/logging');
-const path = require('path');
+const { logger } = require("@config/logging");
+const path = require("path");
 
 // Detect the programming language based on file extension
 function detectLanguage(fileName) {
   const extension = path.extname(fileName).toLowerCase();
   const languageMap = {
-    '.js': 'JavaScript',
-    '.jsx': 'JavaScript (React)',
-    '.ts': 'TypeScript',
-    '.tsx': 'TypeScript (React)',
-    '.py': 'Python',
-    '.rb': 'Ruby',
-    '.java': 'Java',
-    '.cs': 'C#',
-    '.go': 'Go',
-    '.php': 'PHP',
-    '.swift': 'Swift',
-    '.kt': 'Kotlin',
-    '.rs': 'Rust',
-    '.html': 'HTML',
-    '.css': 'CSS',
-    '.scss': 'SCSS',
-    '.less': 'LESS',
+    ".js": "JavaScript",
+    ".jsx": "JavaScript (React)",
+    ".ts": "TypeScript",
+    ".tsx": "TypeScript (React)",
+    ".py": "Python",
+    ".rb": "Ruby",
+    ".java": "Java",
+    ".cs": "C#",
+    ".go": "Go",
+    ".php": "PHP",
+    ".swift": "Swift",
+    ".kt": "Kotlin",
+    ".rs": "Rust",
+    ".html": "HTML",
+    ".css": "CSS",
+    ".scss": "SCSS",
+    ".less": "LESS"
   };
-  return languageMap[extension] || 'Unknown';
+  return languageMap[extension] || "Unknown";
 }
 
 // Detect the type of UI component based on content
@@ -125,7 +125,7 @@ function detectComponentType(content) {
     Toolbar: /toolbar|action bar|button bar/i,
     Rating: /rating|star rating|score display/i,
     Skeleton: /skeleton|placeholder|loading placeholder/i,
-    Backdrop: /backdrop|overlay|dim background/i,
+    Backdrop: /backdrop|overlay|dim background/i
   };
 
   for (const [type, pattern] of Object.entries(componentPatterns)) {
@@ -133,7 +133,7 @@ function detectComponentType(content) {
       return type;
     }
   }
-  return 'Other';
+  return "Other";
 }
 
 // Detect the primary functionality of the code
@@ -234,7 +234,7 @@ function detectFunctionality(content) {
       /service worker|registerServiceWorker|workbox|manifest\.json|installable|push notifications|background sync/i,
 
     // Cryptography
-    Cryptography: /crypto|encrypt|decrypt|hash|salt|cipher|AES|RSA|digital signature|HMAC/i,
+    Cryptography: /crypto|encrypt|decrypt|hash|salt|cipher|AES|RSA|digital signature|HMAC/i
   };
 
   const detectedFunctionalities = [];
@@ -245,27 +245,27 @@ function detectFunctionality(content) {
     }
   }
 
-  return detectedFunctionalities.length > 0 ? detectedFunctionalities : ['General'];
+  return detectedFunctionalities.length > 0 ? detectedFunctionalities : ["General"];
 }
 
 // Detect the library version
 function detectLibraryVersion(content) {
   const versionPattern = /(?:version|v)\s*[=:]\s*["']?(\d+\.\d+(?:\.\d+)?)["']?/i;
   const match = content.match(versionPattern);
-  return match ? match[1] : 'Unknown';
+  return match ? match[1] : "Unknown";
 }
 
 // Calculate code complexity (this is a simple implementation)
 function calculateComplexity(content) {
-  const lines = content.split('\n').length;
+  const lines = content.split("\n").length;
   const cyclomaticComplexity = (content.match(/if|for|while|switch|catch/g) || []).length;
 
   if (lines > 200 || cyclomaticComplexity > 10) {
-    return 'High';
+    return "High";
   } else if (lines > 100 || cyclomaticComplexity > 5) {
-    return 'Medium';
+    return "Medium";
   } else {
-    return 'Low';
+    return "Low";
   }
 }
 
@@ -286,7 +286,7 @@ function detectLicense(content) {
     MIT: /MIT License/i,
     Apache: /Apache License/i,
     GPL: /GNU General Public License/i,
-    BSD: /BSD License/i,
+    BSD: /BSD License/i
   };
 
   for (const [license, pattern] of Object.entries(licensePatterns)) {
@@ -294,7 +294,7 @@ function detectLicense(content) {
       return license;
     }
   }
-  return 'Unknown';
+  return "Unknown";
 }
 
 function detectCodeSnippet(content) {
@@ -325,5 +325,5 @@ module.exports = {
   detectDependencies,
   detectLicense,
   detectCodeSnippet,
-  safeExecute,
+  safeExecute
 };

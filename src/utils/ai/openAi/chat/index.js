@@ -1,5 +1,9 @@
 module.exports = {
-  ...require('./context'),
-  ...require('./initialize'),
-  ...require('./combinedChatStream'),
+  ...require("./context"),
+  ...require("./chat_constants"),
+  ...require("./chat_helpers"),
+  ...require("./chat_optimize"),
+  ...require("./chat_history"),
+  ...require("./chat_record"),
+  ...require("./combinedStream")
 };

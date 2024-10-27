@@ -1,18 +1,18 @@
 /* eslint-disable no-undef */
-const { logger } = require('@/config/logging');
-const axios = require('axios');
-const cheerio = require('cheerio');
+const { logger } = require("@config/logging");
+const axios = require("axios");
+const cheerio = require("cheerio");
 
 // eslint-disable-next-line no-unused-vars
-async function factCheckAgainstDocs(generatedAnswer, library = 'react') {
-  const docsUrl = 'https://reactjs.org/docs/getting-started.html'; // Example URL
+async function factCheckAgainstDocs(generatedAnswer, library = "react") {
+  const docsUrl = "https://reactjs.org/docs/getting-started.html"; // Example URL
   const response = await axios.get(docsUrl);
   const $ = cheerio.load(response.data);
   // eslint-disable-next-line no-unused-vars
   const snippets = [];
 
-  const docContent = $('main').text();
-  const statements = generatedAnswer.split('.');
+  const docContent = $("main").text();
+  const statements = generatedAnswer.split(".");
 
   const checkedStatements = statements.map((statement) => {
     if (docContent.includes(statement.trim())) {
@@ -21,7 +21,7 @@ async function factCheckAgainstDocs(generatedAnswer, library = 'react') {
     return statement;
   });
 
-  return checkedStatements.join('. ');
+  return checkedStatements.join(". ");
 }
 
 async function clickExpandButtons(page) {
@@ -29,17 +29,17 @@ async function clickExpandButtons(page) {
     let expandButtonsFound = true;
     while (expandButtonsFound) {
       expandButtonsFound = await page.evaluate(() => {
-        const buttons = Array.from(document.querySelectorAll('.MuiButton-root.MuiButton-text'));
+        const buttons = Array.from(document.querySelectorAll(".MuiButton-root.MuiButton-text"));
         logger.info(`[1] Buttons found: ${buttons?.length}`);
         const expandButton = buttons.find(
           (button) =>
-            button.textContent.includes('Expand code') ||
-            button.textContent.includes('Show the full source')
+            button.textContent.includes("Expand code") ||
+            button.textContent.includes("Show the full source")
         );
         logger.info(`[2] Expand button found: ${!!expandButton}`);
         if (expandButton) {
           expandButton.click();
-          logger.info('[3] Expand button clicked');
+          logger.info("[3] Expand button clicked");
           return true;
         }
         return false;
@@ -49,12 +49,12 @@ async function clickExpandButtons(page) {
         // Wait for the DOM to update after clicking the expand button
         await page.waitForFunction(
           () => {
-            const buttons = Array.from(document.querySelectorAll('.MuiButton-root.MuiButton-text'));
+            const buttons = Array.from(document.querySelectorAll(".MuiButton-root.MuiButton-text"));
             logger.info(`[4] Buttons found after click: ${buttons.length}`);
             return !buttons.some(
               (button) =>
-                button.textContent.includes('Expand code') ||
-                button.textContent.includes('Show the full source')
+                button.textContent.includes("Expand code") ||
+                button.textContent.includes("Show the full source")
             );
           },
           { timeout: 50000 } // 5 second timeout
@@ -166,14 +166,14 @@ const filterAllElements = async function (filterParams, page) {
 
         const filterParams = JSON.parse(filterParamsString);
         const filterFn = filterElement(filterParams);
-        const allElements = document.querySelectorAll('*');
+        const allElements = document.querySelectorAll("*");
         return Array.from(allElements)
           .filter(filterFn)
           .map((el) => ({
             tagName: el.tagName,
             textContent: el.textContent,
             isVisible: el.offsetWidth > 0 && el.offsetHeight > 0,
-            boundingBox: el.getBoundingClientRect(),
+            boundingBox: el.getBoundingClientRect()
           }));
       },
       JSON.stringify(filterParams),
@@ -189,9 +189,9 @@ const filterAllElements = async function (filterParams, page) {
 async function findExpandCodeButtons(page) {
   return filterAllElements(
     {
-      tag: 'button',
-      text: 'expand code',
-      customFilter: (el) => el.textContent.trim().toLowerCase() === 'expand code',
+      tag: "button",
+      text: "expand code",
+      customFilter: (el) => el.textContent.trim().toLowerCase() === "expand code"
     },
     page
   );
@@ -205,12 +205,12 @@ async function expandAllCodeBlocks(page) {
     for (const button of expandButtons) {
       try {
         await page.evaluate((btn) => {
-          if (btn.isVisible && btn.textContent.trim().toLowerCase() === 'expand code') {
+          if (btn.isVisible && btn.textContent.trim().toLowerCase() === "expand code") {
             const element = document.elementFromPoint(
               btn.boundingBox.left + btn.boundingBox.width / 2,
               btn.boundingBox.top + btn.boundingBox.height / 2
             );
-            if (element && element.tagName === 'BUTTON') {
+            if (element && element.tagName === "BUTTON") {
               element.click();
             }
           }
@@ -360,10 +360,10 @@ async function expandAllCodeBlocks(page) {
 
 async function extractExpandedCode(page) {
   return page.evaluate(() => {
-    const codeBlocks = document.querySelectorAll('pre code');
+    const codeBlocks = document.querySelectorAll("pre code");
     return Array.from(codeBlocks).map((block) => ({
-      language: block.className.replace('language-', ''),
-      code: block.textContent,
+      language: block.className.replace("language-", ""),
+      code: block.textContent
     }));
   });
 }
@@ -374,7 +374,7 @@ module.exports = {
   expandAllCodeBlocks,
   filterAllElements,
   extractExpandedCode,
-  factCheckAgainstDocs,
+  factCheckAgainstDocs
 };
 // const findAllElements = function () {
 //   const nodes = document.querySelectorAll('*');

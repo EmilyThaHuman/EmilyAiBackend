@@ -1,14 +1,8 @@
-const { logger } = require('@/config/logging');
-const {
-  Preset: ChatPreset,
-  Tool: ChatTool,
-  Model: ChatModel,
-  Prompt,
-  Collection: ChatCollection,
-  User,
-  Workspace,
-  Folder,
-} = require('@/models');
+const { logger } = require("@config/logging");
+const { User } = require("@models/user");
+const { Workspace, Folder } = require("@models/workspace");
+const { Preset: ChatPreset, Tool: ChatTool, Model: ChatModel, Prompt } = require("@models/chat");
+const { Collection: ChatCollection } = require("@models/main");
 
 const createChatSettingsController = (Model, entityName) => {
   return {
@@ -76,7 +70,7 @@ const createChatSettingsController = (Model, entityName) => {
 
         res.status(201).json({
           message: `${entityName} created successfully and associated with user, workspace, and/or folder`,
-          data: savedEntity,
+          data: savedEntity
         });
       } catch (error) {
         res.status(400).json({ message: `Error creating ${entityName}`, error: error.message });
@@ -118,20 +112,20 @@ const createChatSettingsController = (Model, entityName) => {
       } catch (error) {
         res.status(500).json({ message: `Error deleting ${entityName}`, error: error.message });
       }
-    },
+    }
   };
 };
 
-const ChatPresetController = createChatSettingsController(ChatPreset, 'Chat preset');
-const ChatToolController = createChatSettingsController(ChatTool, 'Chat tool');
-const ChatModelController = createChatSettingsController(ChatModel, 'Chat model');
-const ChatPromptController = createChatSettingsController(Prompt, 'Prompt');
-const ChatCollectionController = createChatSettingsController(ChatCollection, 'Chat collection');
+const ChatPresetController = createChatSettingsController(ChatPreset, "Chat preset");
+const ChatToolController = createChatSettingsController(ChatTool, "Chat tool");
+const ChatModelController = createChatSettingsController(ChatModel, "Chat model");
+const ChatPromptController = createChatSettingsController(Prompt, "Prompt");
+const ChatCollectionController = createChatSettingsController(ChatCollection, "Chat collection");
 
 module.exports = {
   ChatPresetController,
   ChatToolController,
   ChatModelController,
   ChatPromptController,
-  ChatCollectionController,
+  ChatCollectionController
 };

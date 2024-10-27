@@ -1,11 +1,11 @@
-import dotenv from 'dotenv';
-dotenv.config({ path: '.env.local' });
+import dotenv from "dotenv";
+dotenv.config({ path: ".env.local" });
 // Configure dotenv before other imports
-import { Redis } from '@upstash/redis';
-import { DirectoryLoader } from 'langchain/document_loaders/fs/directory';
-import { TextLoader } from 'langchain/document_loaders/fs/text';
-import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
-import { getEmbeddingsCollection, getVectorStore } from '../src/lib/astradb';
+import { Redis } from "@upstash/redis";
+import { DirectoryLoader } from "langchain/document_loaders/fs/directory";
+import { TextLoader } from "langchain/document_loaders/fs/text";
+import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
+import { getEmbeddingsCollection, getVectorStore } from "../src/lib/astradb";
 
 async function generateEmbeddings() {
   await Redis.fromEnv().flushdb();
@@ -15,32 +15,32 @@ async function generateEmbeddings() {
   (await getEmbeddingsCollection()).deleteMany({});
 
   const loader = new DirectoryLoader(
-    'src/app/',
+    "src/app/",
     {
-      '.tsx': (path) => new TextLoader(path),
+      ".tsx": (path) => new TextLoader(path)
     },
     true
   );
 
   const docs = (await loader.load())
-    .filter((doc) => doc.metadata.source.endsWith('page.tsx'))
+    .filter((doc) => doc.metadata.source.endsWith("page.tsx"))
     .map((doc) => {
       const url =
-        doc.metadata.source.replace(/\\/g, '/').split('/src/app')[1].split('/page.')[0] || '/';
+        doc.metadata.source.replace(/\\/g, "/").split("/src/app")[1].split("/page.")[0] || "/";
 
       const pageContentTrimmed = doc.pageContent
-        .replace(/^import.*$/gm, '') // Remove all import statements
-        .replace(/ className=(["']).*?\1| className={.*?}/g, '') // Remove all className props
-        .replace(/^\s*[\r]/gm, '') // remove empty lines
+        .replace(/^import.*$/gm, "") // Remove all import statements
+        .replace(/ className=(["']).*?\1| className={.*?}/g, "") // Remove all className props
+        .replace(/^\s*[\r]/gm, "") // remove empty lines
         .trim();
 
       return {
         pageContent: pageContentTrimmed,
-        metadata: { url },
+        metadata: { url }
       };
     });
 
-  const splitter = RecursiveCharacterTextSplitter.fromLanguage('html');
+  const splitter = RecursiveCharacterTextSplitter.fromLanguage("html");
 
   const splitDocs = await splitter.splitDocuments(docs);
 

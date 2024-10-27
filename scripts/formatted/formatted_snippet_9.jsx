@@ -1,16 +1,10 @@
-import * as React from 'react';
-import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
+import * as React from "react";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
 
 export default function TextFieldHiddenLabel() {
   return (
-    <Stack
-      component="form"
-      sx={{ width: '25ch' }}
-      spacing={2}
-      noValidate
-      autoComplete="off"
-    >
+    <Stack component="form" sx={{ width: "25ch" }} spacing={2} noValidate autoComplete="off">
       <TextField
         hiddenLabel
         id="filled-hidden-label-small"

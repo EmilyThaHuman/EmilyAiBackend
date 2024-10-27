@@ -1,0 +1,755 @@
+
+    --- CHAT COMPLETION RESPONSE ---
+      --- SYSTEM / ASSISTANT PROMPTS ---
+      | SYSTEM: [
+You are an expert React/Tailwind developer. Your mission is to transform detailed descriptions or images into seamless single-page apps (SPAs) using HTML and TailwindCSS, ensuring adaptability for both light/dark modes and responsiveness across desktop, tablet, and mobile.
+
+*Design Guidelines:*
+- Use placehold.co for placeholder images with descriptive alt text.
+- Implement interactive elements with modern ES6 JavaScript and browser APIs.
+- Reference the following Tailwind-compatible colors for light/dark mode:
+
+```css
+  --background
+  --foreground
+  --primary
+  --border
+  --input
+  --ring
+  --primary-foreground
+  --secondary
+  --secondary-foreground
+  --accent
+  --accent-foreground
+  --destructive
+  --destructive-foreground
+  --muted
+  --muted-foreground
+  --card
+  --card-foreground
+  --popover
+  --popover-foreground
+```
+
+- Match all design details (e.g., background, text, font sizes, padding, margins, etc.).
+- Use exact text and element repetitions based on the description (e.g., no placeholder comments like "repeat items").
+- For images, use descriptive alt attributes and placehold.co URLs (e.g., `<img alt="magic wand" src="https://placehold.co/24x24.svg?text=🪄" />`).
+
+*Libraries:*
+- Include React with:
+```
+<script src="https://registry.npmmirror.com/react/18.2.0/files/umd/react.development.js"></script>
+<script src="https://registry.npmmirror.com/react-dom/18.2.0/files/umd/react-dom.development.js"></script>
+<script src="https://registry.npmmirror.com/@babel/standalone/7.23.6/files/babel.js"></script>
+```
+- Include Tailwind with:
+```
+<script src="https://cdn.tailwindcss.com"></script>
+```
+- Optionally use Google Fonts and Font Awesome icons.
+
+*Implementation Rules:*
+1. Provide a complete, functional React/Tailwind SPA within <html></html> tags.
+2. Include necessary scripts for React and Tailwind as specified.
+3. Utilize Google Fonts and Font Awesome when appropriate.
+4. Implement all described features and interactions using React hooks and components.
+5. Use Tailwind classes for styling, leveraging the provided color scheme.
+6. Ensure proper responsive design using Tailwind's responsive utilities.
+7. Implement dark mode toggle functionality.
+8. Use semantic HTML elements and ensure accessibility.
+9. Optimize performance using React best practices.
+10. Provide any necessary custom CSS using Tailwind's @apply directive or inline styles when Tailwind classes are insufficient.
+
+Your response should include:
+1. A brief explanation of the component structure and design decisions.
+2. The complete HTML file with all necessary scripts, styles, and React code.
+
+Return the full code wrapped in `<html></html>`.
+]
+      | ASSISTANT: [
+  ## Assistant Name
+   CodeGenius
+  ## Assistant Job Description
+   **summary:** Code Generation Assistant for React Development
+   **role:** You are an expert React developer with expertise in JavaScript, React, UI/UX, an extensive array of libraries, and frameworks. Specifically, you are a specialized code generation assistant focused on creating sophisticated JavaScript, JSX, and TSX code samples. Your expertise lies in producing components and code snippets with advanced styling and capabilities.
+  ## Assistant Skills
+   - **Programming Languages:** JavaScript, TypeScript
+   - **Frameworks and Libraries:** React, React Native, Node.js, Express, MongoDB, TailwindCSS
+   - **Tools and Technologies:** Git, Visual Studio Code, Webpack, Babel, ESLint, Prettier, Jest, React Testing Library, Cypress, Storybook, Netlify, Vercel, AWS, Azure, Google Cloud, Firebase, and more.
+  ## Assistant Task
+   **summary:** Generate a [COMPONENT_TYPE] component with the following specifications:
+   **details:**
+      1. Language: [JS/JSX/TSX]
+      2. Framework: [React/Next.js/Vue/Angular/etc.]
+      3. Styling: [CSS-in-JS/Styled-Components/Tailwind/SASS/etc.]
+      4. Key Features:
+         - [Feature 1]
+         - [Feature 2]
+         - [Feature 3]
+      5. Advanced Capabilities:
+         - [Capability 1]
+         - [Capability 2]
+   ## Response Requirements
+      1. Provide a complete, working code sample.
+      2. Include advanced styling techniques relevant to the chosen styling method.
+      3. Follow best practices and current industry standards.
+   ## Response Structure
+   Structure your response as follows:
+      1. **Component Explanation**: Provide a clear and concise description of what the component does, why it’s useful, and how it fits into the larger application (2-3 sentences).
+      2. **Code Snippet**: Include a comprehensive code snippet demonstrating the component's functionality, including any necessary imports, props, and state management. This snippet should be well-documented and easy to understand. Ensure the component code is wrapped in ``` code blocks.
+      3. **Citations**: If you reference any documentation or external sources, provide them in a 'References' section at the end.
+   ## Additional Information
+   - The code should be highly modular and reusable.
+   - Utilize advanced styling techniques like CSS-in-JS, Styled Components, or TailwindCSS.
+   - Implement error handling and edge cases to ensure robustness.
+   - Include TypeScript types/interfaces when using TypeScript.
+   - Provide comprehensive usage examples and documentation.
+   - Follow best practices and industry standards for code quality and maintainability.
+   - Implement performance optimizations where applicable.
+   - Wrap all code sections in triple backticks with the appropriate language tag (e.g., ```tsx, ```javascript).
+
+   Remember to adapt your response based on the specific requirements of each query, balancing between simplicity for basic use cases and advanced features for more complex scenarios.
+
+   ## Example Code From Response
+   ```jsx
+      import React, { useState, useEffect } from "react";
+      import {
+      Box,
+      Button,
+      Modal,
+      TextField,
+      Typography,
+      List,
+      ListItem,
+      ListItemText,
+      ListItemIcon,
+      IconButton,
+      Grid,
+      Paper,
+      InputAdornment,
+      Select,
+      MenuItem,
+      FormControl,
+      InputLabel
+      } from "@mui/material";
+      import { styled } from "@mui/system";
+      import { FaSearch, FaPlus, FaTrash, FaFolder } from "react-icons/fa";
+      import { FaFileAlt, FaFileCode, FaFileImport } from "react-icons/fa";
+      import SyntaxHighlighter from "react-syntax-highlighter";
+      import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
+
+      const StyledPaper = styled(Paper)(({ theme }) => ({
+      padding: theme.spacing(2),
+      height: "100%",
+      overflow: "auto",
+      }));
+
+      const StyledModal = styled(Modal)(({ theme }) => ({
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      }));
+
+      const ModalContent = styled(Box)(({ theme }) => ({
+      backgroundColor: theme.palette.background.paper,
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(4),
+      width: "400px",
+      borderRadius: theme.shape.borderRadius,
+      }));
+
+      const FileDirectory = () => {
+      const [files, setFiles] = useState([]);
+      const [modalOpen, setModalOpen] = useState(false);
+      const [fileName, setFileName] = useState("");
+      const [fileContent, setFileContent] = useState("");
+      const [fileType, setFileType] = useState(".txt");
+      const [selectedFile, setSelectedFile] = useState(null);
+      const [searchTerm, setSearchTerm] = useState("");
+      const [error, setError] = useState("");
+
+      useEffect(() => {
+         const storedFiles = JSON.parse(localStorage.getItem("files")) || [];
+         setFiles(storedFiles);
+      }, []);
+
+      const handleCreateFile = () => {
+         if (!fileName.trim()) {
+            setError("File name cannot be empty");
+            return;
+         }
+
+         const fullFileName = fileName + fileType;
+         if (files.some((file) => file.name === fullFileName)) {
+            setError("File name already exists");
+            return;
+         }
+
+         const newFile = { name: fullFileName, content: fileContent, type: fileType };
+         const updatedFiles = [...files, newFile];
+         setFiles(updatedFiles);
+         localStorage.setItem("files", JSON.stringify(updatedFiles));
+         setModalOpen(false);
+         setFileName("");
+         setFileContent("");
+         setFileType(".txt");
+         setError("");
+      };
+
+      const handleDeleteFile = (file) => {
+         const updatedFiles = files.filter((f) => f.name !== file.name);
+         setFiles(updatedFiles);
+         localStorage.setItem("files", JSON.stringify(updatedFiles));
+         setSelectedFile(null);
+      };
+
+      const handleImportFromCodeSnippets = () => {
+         const importedFiles = [
+            { name: "imported1.js", content: "console.log('Imported file 1');", type: ".js" },
+            { name: "imported2.jsx", content: "const App = () => <div>Hello World</div>;", type: ".jsx" },
+            { name: "imported3.txt", content: "This is a text file.", type: ".txt" },
+         ];
+         const updatedFiles = [...files, ...importedFiles];
+         setFiles(updatedFiles);
+         localStorage.setItem("files", JSON.stringify(updatedFiles));
+      };
+
+      const filteredFiles = files.filter((file) =>
+         file.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+
+      const getLanguage = (fileType) => {
+         switch (fileType) {
+            case ".js":
+            return "javascript";
+            case ".jsx":
+            return "jsx";
+            default:
+            return "text";
+         }
+      };
+
+      const getFileIcon = (fileType) => {
+         switch (fileType) {
+            case ".js":
+            case ".jsx":
+            return <FaFileCode style={{ color: "#F0DB4F" }} />;
+            case ".txt":
+            return <FaFileAlt style={{ color: "#2196F3" }} />;
+            default:
+            return <FaFileImport style={{ color: "#4CAF50" }} />;
+         }
+      };
+
+      return (
+         <Box sx={{ height: "100vh", display: "flex", flexDirection: "column" }}>
+            <Typography variant="h4" gutterBottom>
+            File Directory
+            </Typography>
+            <Grid container spacing={2} sx={{ flexGrow: 1 }}>
+            <Grid item xs={12} md={4}>
+               <StyledPaper>
+                  <Box sx={{ mb: 2, display: "flex", gap: 1 }}>
+                  <Button
+                     variant="contained"
+                     startIcon={<FaPlus />}
+                     onClick={() => setModalOpen(true)}
+                  >
+                     New File
+                  </Button>
+                  <Button
+                     variant="outlined"
+                     startIcon={<FaFolder />}
+                     onClick={handleImportFromCodeSnippets}
+                  >
+                     Import
+                  </Button>
+                  </Box>
+                  <TextField
+                  fullWidth
+                  variant="outlined"
+                  placeholder="Search files"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  InputProps={{
+                     startAdornment: (
+                        <InputAdornment position="start">
+                        <FaSearch />
+                        </InputAdornment>
+                     ),
+                  }}
+                  sx={{ mb: 2 }}
+                  />
+                  <List>
+                  {filteredFiles.map((file) => (
+                     <ListItem
+                        key={file.name}
+                        button
+                        selected={selectedFile && selectedFile.name === file.name}
+                        onClick={() => setSelectedFile(file)}
+                     >
+                        <ListItemIcon>
+                        {getFileIcon(file.type)}
+                        </ListItemIcon>
+                        <ListItemText primary={file.name} />
+                        <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={() => handleDeleteFile(file)}
+                        >
+                        <FaTrash />
+                        </IconButton>
+                     </ListItem>
+                  ))}
+                  </List>
+               </StyledPaper>
+            </Grid>
+            <Grid item xs={12} md={8}>
+               <StyledPaper>
+                  {selectedFile ? (
+                  <>
+                     <Typography variant="h6" gutterBottom>
+                        {selectedFile.name}
+                     </Typography>
+                     <SyntaxHighlighter language={getLanguage(selectedFile.type)} style={docco}>
+                        {selectedFile.content}
+                     </SyntaxHighlighter>
+                  </>
+                  ) : (
+                  <Typography variant="body1">Select a file to view its content</Typography>
+                  )}
+               </StyledPaper>
+            </Grid>
+            </Grid>
+
+            <StyledModal open={modalOpen} onClose={() => setModalOpen(false)}>
+            <ModalContent>
+               <Typography variant="h6" gutterBottom>
+                  Create New File
+               </Typography>
+               <TextField
+                  fullWidth
+                  label="File Name"
+                  value={fileName}
+                  onChange={(e) => setFileName(e.target.value)}
+                  error={!!error}
+                  helperText={error}
+                  sx={{ mb: 2 }}
+               />
+               <FormControl fullWidth sx={{ mb: 2 }}>
+                  <InputLabel>File Type</InputLabel>
+                  <Select
+                  value={fileType}
+                  onChange={(e) => setFileType(e.target.value)}
+                  label="File Type"
+                  >
+                  <MenuItem value=".txt">.txt</MenuItem>
+                  <MenuItem value=".js">.js</MenuItem>
+                  <MenuItem value=".jsx">.jsx</MenuItem>
+                  </Select>
+               </FormControl>
+               <TextField
+                  fullWidth
+                  label="File Content"
+                  multiline
+                  rows={4}
+                  value={fileContent}
+                  onChange={(e) => setFileContent(e.target.value)}
+                  sx={{ mb: 2 }}
+               />
+               <Button variant="contained" onClick={handleCreateFile}>
+                  Create File
+               </Button>
+            </ModalContent>
+            </StyledModal>
+         </Box>
+      );
+      };
+
+      export default FileDirectory;
+   ```
+  ]
+      ----------------------------------
+      --- USER FORMATTED PROMPT ---
+      | FORMATTED PROMPT: 
+  --- SECTION ONE: MAIN INSTRUCTIONS AND CONTEXT ---
+
+  CHAT HISTORY CONTEXT:
+    USER PROMPT HISTORY:
+      | ________________________________________ 
+      | User Prompts: Create a ResponsiveNavbarWithDropdownsAndSearch component that automatically adjusts to various screen sizes, includes multi-level dropdown menus with smooth transition animations, and integrates a search bar with autocomplete functionality. Ensure the component supports extensive styling customization for background colors, fonts, and active link states.
+Develop a CustomizableSidebarWithCollapsibleSectionsAndIcons component that allows users to toggle sections open or closed with animated transitions. It should support the inclusion of icons next to each item, offer options for fixed or floating positioning, and provide a wide range of styling options for colors, fonts, and section dividers
+Generate a reusable form dialog with a variety of data table components displaying data about chat bots
+Generate advanced styled dialog component
+Build a LoadingSpinnerWithProgressIndicatorAndTheming component that visually represents loading progress with a spinner and optional progress bar. It should support theming options for colors and sizes, with smooth animations and compatibility with various screen resolutions
+    SUMMARY OF CHAT HISTORY:
+      | ________________________________________ 
+      | Main Summary: The messages include requests for generating various React components and a data table component, focusing on a mix of general React components, a specific one for file uploads, and another to organize UI library documents in a vector database for AI agent creation. The requests span from general to specific use cases, indicating a project development effort involving user interface elements. |
+      | Previous 5 User Inquiries Summarized: [Summary 1][id 670c30063a88f6a7d8fcc4131]: Request to generate a general React button component.
+[Summary 2][id 670c1fc059ab56a3c92c10fe1]: Request to generate a React button component for file uploads.
+[Summary 3][id 670c1e0a59ab56a3c92c10ee1]: Another request for generating a general React button component, indicating a repeated request or need.
+[Summary 4][id 670af2f746ab40ecae9bb9f01]: Request to generate a data table component aimed at organizing lists of data and UI library documents for AI agent creation, indicating a complex use case.
+[Summary 5][id 670af210f6d3b57023a1f9791]: Request for generating an unspecified React component, indicating a broad development task. 
+      |
+  CHAT DATA CONTEXT:
+    RELEVANT DATA FROM CUSTOM DOCS:
+      | ________________________________________ 
+      | Custom UI Library DB: To generate a multi-step form for a React chatbot signup process, including progress indicators, you can follow these steps:
+
+1. **Define the Form Structure**:
+   - Create a state to manage the form steps and progress indicators.
+   - Use React hooks like `useState` to store the form data and `useEffect` to manage the form progression.
+
+2. **Design the Form Steps**:
+   - Create separate components for each form step (e.g., step 1: user information, step 2: contact information, etc.).
+   - Use conditional rendering to display each step based on the current state.
+
+3. **Implement Progress Indicators**:
+   - Use a progress bar or indicators like dots to show the user which step they are on.
+
+4. **Handle Form Submission**:
+   - Ensure that each step is validated before moving to the next one.
+   - Use functions to handle the submission of each step and update the state accordingly.
+
+Here is a simplified example of how you might implement this:
+2. **Implementation**:
+   - **Initialize the Date Picker**:
+     - Use the `CustomDatePicker` component and configure it to support range selection. This can be achieved by setting the `minDate` and `maxDate` properties dynamically based on the form's requirements.
+   - **Dark Theme**:
+     - Style the component with Tailwind CSS 3 to achieve a dark theme. This includes setting the `className` property to include dark theme classes such as `bg-dark`, `text-light`, etc.
+   - **Integration with Form**:
+     - Ensure the date picker is embedded within the form and handles events such as `onChange` to update the form state accordingly. This can be done by passing a callback function to the `onSelect` event of the date picker.
+To generate a reusable form dialog with various data table components displaying data about chat bots, you can use the following approaches:
+
+1. **Orbeon Forms**:
+   - **Section Templates**: Create reusable sections using section templates in Orbeon Forms. These templates can include nested grids, subsections, and services. For example, you can create a generic "Chat Bot Data" section template that can be reused across different forms.
+
+2. **Laravel Blade Components**:
+   - **Reusable Components**: Use Blade components in Laravel to create reusable components like data tables. You can define a Blade component for displaying chat bot data and include it in various forms. This approach provides cleaner and more concise code with less boilerplate.
+1. **Create a Form Field**:
+   - Use a text input field where users can enter their prompts.
+
+2. **Auto-Suggest Functionality**:
+   - Implement auto-suggest functionality that provides suggestions based on the above criteria.
+   - For example, as the user types, suggest possible completions that match the clarity, context, specificity, and constraints criteria.
+
+3. **Dynamic Prompt Generation**:
+   - Use the selected options to generate a dynamic prompt that aligns with the user's input and the suggested criteria.
+
+4. **Iterative Refinement**:
+   - Provide an option for users to test and refine their prompts based on the suggested options.
+
+By following these steps, you can create a comprehensive auto-suggest input component that helps users generate effective and relevant prompts for AI models.
+
+### References
+
+- **Prompt Engineering Guide for UX/UI Designers**: UXPin
+- **Create a GPT Prompt**: Microsoft Learn
+- **Automatic Prompt Optimization**: Galileo
+To generate a data table component for organizing projects, you can use a combination of tools and features from various platforms. Here’s a concise overview:
+
+1. **Form.io**: For creating a dynamic data table within a form, you can use the `Data Grid` component, which allows users to add multiple rows of field groupings and customize how the grid saves and displays the data.
+
+2. **UI Bakery**: This platform offers a robust `Table` component that supports various data types, including dynamic column configuration through JavaScript. It also includes features like filtering, sorting, and editing directly from the table.
+    RELEVANT DATA FROM SEARCH DOCS:
+      | ________________________________________ 
+      | Relevant Perplexity Web Search Results: 1. **Define Item Types**: Create a file like `ItemTypes.js` to define the item types used in your application.
+   ```js
+   export const ItemTypes = {
+     BUILDER_ITEM: 'builder-item',
+   };
+   ```
+
+2. **Customize Drag-and-Drop Behavior**: You can customize the appearance and behavior of your drag-and-drop interface by using CSS and additional components from the `react-dnd` library.
+
+3. **Integrate with Your Form Builder**: Once you have a working drag-and-drop interface, integrate it into your form builder component. This might involve creating custom components for the builder items and handling the drag-and-drop events to update your form builder state accordingly.
+
+This basic example should give you a good starting point for creating a drag-and-drop interface for your React form builder. You can further customize it to fit your specific needs and integrate it seamlessly into your application.
+To develop a `CustomizableSidebarWithCollapsibleSectionsAndIcons` component, you can combine elements from Bootstrap, Material UI, and Tailwind CSS to achieve the desired functionality. Here’s a step-by-step guide to creating such a component:
+
+### Step 1: Basic Structure
+To design a `FileUploaderButtonWithTooltip` component that seamlessly integrates into any web application, supporting drag-and-drop functionality for all file types, you can follow these steps:
+
+1. **Create the File Uploader Button**:
+   - Use an HTML `input` element with the type set to `file` for the drag-and-drop functionality.
+   - Add a button element to trigger the file selection dialog.
+   - Implement an event handler to handle the file selection and display the selected file details.
+
+2. **Generate an Icon for Each File Type**:
+   - Use JavaScript to determine the file type and generate an appropriate icon dynamically.
+   - You can use libraries like Font Awesome or Material Icons for this purpose.
+
+3. **Display a Tooltip with File Details**:
+   - Use a tooltip library like `react-tooltip` or create a custom tooltip using CSS.
+   - Display the file size and type in the tooltip.
+To create a `ResponsiveNavbarWithDropdownsAndSearch` component that automatically adjusts to various screen sizes, includes multi-level dropdown menus with smooth transition animations, and integrates a search bar with autocomplete functionality, you can combine elements from different frameworks and libraries. Here’s a detailed approach:
+
+### 1. **Base Component Structure**
+Use a framework like React to create the base structure of the navbar. This will help in managing the component's state and handling interactions.
+
+```jsx
+import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import { ReactComponent as Hamburger } from '../../assets/icons/hamburger.svg';
+import { ReactComponent as Brand } from '../../assets/icons/logo.svg';
+
+const Navbar = () => {
+  const [showNavbar, setShowNavbar] = useState(false);
+  const handleShowNavbar = () => {
+    setShowNavbar(!showNavbar);
+  };
+To generate a drag-and-drop interface for a builder using React, you can leverage the `react-dnd` library, which provides a robust set of components and hooks for implementing drag-and-drop functionality. Here’s a step-by-step guide:
+
+1. **Install `react-dnd` and its dependencies**:
+   ```bash
+   npm install react-dnd react-dnd-html5-backend
+   ```
+
+2. **Create a basic React component structure**:
+   - Set up your React environment and create a component that will serve as the drag-and-drop area.
+
+3. **Implement Drag-and-Drop Logic**:
+   - Use the `DragDropContext` component from `react-dnd` to wrap your app and provide the necessary context for drag-and-drop operations.
+   - Use the `DragSource` and `DropTarget` components to define the draggable items and the drop zones.
+
+Here’s a simple example to get you started:
+      | Raw Perplexity Search Results Data: 
+      | -- Results: To design a `DynamicFormGeneratorWithConditionalLogic` component that allows users to create complex forms with various field types and validation rules, implement the following features:
+
+### 1. **Conditional Field Visibility**
+- **Implementation**: Use conditional logic to show or hide fields based on user input or data values. This can be achieved by setting up conditions in the form builder where specific fields are displayed or hidden based on the values selected by the user. For example, in Forminator, you can select the form conditions for your form fields, set the condition to check whether the value of a specific field is met, and then trigger the submission behavior accordingly.
+
+### 2. **Multi-Page Forms**
+- **Implementation**: Allow users to create multi-page forms by adding multiple steps to the form. This can be done using a drag-and-drop builder where each step can have its own set of fields. For instance, Fluent Forms offers a multi-step form feature where you can create complex forms with multiple pages, each with its own set of fields and conditional logic.
+
+### 3. **Save Partially Completed Forms**
+- **Implementation**: Provide an option to save partially completed forms so that users can resume their form submissions later. This feature is essential for improving user experience and reducing form abandonment. Formidable Forms supports partial submissions, allowing users to save their progress and come back to the form later.
+
+### 4. **Theming and Localization**
+- **Implementation**: Include options for theming to allow users to customize the appearance of their forms. This can include custom CSS and JS integration. Additionally, provide localization options so that the form can be translated into different languages. Fluent Forms supports custom CSS and JS integration, making it easy to theme the forms, and it also offers RTL support for backend, which is a form of localization.
+
+### Example Implementation
+
+1. **Dynamic Form Builder**:
+   - Use a drag-and-drop interface to add various field types such as text, checkboxes, radio buttons, dropdowns, etc.
+   - Allow users to set up conditional logic for each field, determining its visibility based on user input.
+
+2. **Conditional Logic**:
+   - Implement a conditions tab where users can configure specific conditions under which submission behaviors should be triggered.
+   - Use merge tags to dynamically redirect users to different pages based on selected options in the form.
+
+3. **Multi-Page Forms**:
+   - Create a multi-step form builder where each step can have its own set of fields.
+   - Use progress bars to guide users through the form submission process.
+
+4. **Save Partially Completed Forms**:
+   - Add a save-and-continue option to allow users to save their progress and resume later.
+   - Store the partially completed form data in a database for easy retrieval.
+
+5. **Theming and Localization**:
+   - Provide an option to customize the form's appearance using custom CSS and JS.
+   - Support RTL languages and offer translation options for different languages.
+
+By combining these features, the `DynamicFormGeneratorWithConditionalLogic` component will offer a robust and user-friendly form creation experience.
+
+### Citations
+1. [Forminator Usage Documentation - WPMU DEV](https://wpmudev.com/docs/wpmu-dev-plugins/forminator/)
+2. [Fluent Forms Plugin - WordPress.org](https://en-ca.wordpress.org/plugins/fluentform/)
+3. [Benefits of Dynamic PDF Forms with Real-Time Salesforce Data](https://sfdclesson.com/2024/10/02/benefits-of-dynamic-pdf-forms-with-real-time-salesforce-data/)
+4. [Formidable Forms – Contact Form Plugin, Survey, Quiz, Payment](https://wordpress.org/plugins/formidable/)
+      | -- References: 
+    ADDITIONAL DATA:
+      | ________________________________________ 
+      | Keywords: DynamicFormGeneratorWithConditionalLogic, users, complex forms, field types, validation rules, conditional field visibility, multi-page forms, save, partially completed forms, theming, localization
+      | UI Libraries: React
+      | JS Libraries: React
+      | Component Types: DynamicFormGeneratorWithConditionalLogic
+      | Documentation Content: 
+
+  --- SECTION TWO: USER PROMPT/QUERY ---
+
+  USER PROMPT/QUERY: Design a DynamicFormGeneratorWithConditionalLogic component that allows users to create complex forms with various field types and validation rules. Implement features like conditional field visibility, multi-page forms, and the ability to save partially completed forms. Include options for theming and localization.
+  EXTRACTED KEYWORDS: DynamicFormGeneratorWithConditionalLogic, users, complex forms, field types, validation rules, conditional field visibility, multi-page forms, save, partially completed forms, theming, localization
+
+  --- SECTION THREE: FINAL INSTRUCTIONS ---
+
+  Based on the user's query, extracted information, and the provided context, please generate a response following the instructions given in the system and assistant messages. 
+  Ensure that your answer is comprehensive, professional, and tailored to creating high-quality React styled components. 
+  Please ensure your response includes:
+
+  1. A brief explanation of the component's purpose and design rationale
+  2. The full React component code, utilizing the latest React features and best practices
+  3. Examples of how to use and customize the component
+
+  --- SECTION FOUR: RESPONSE FORMATTING INSTRUCTIONS ---
+  
+--- BEGINNING OF RESPONSE FORMATTING INSTRUCTIONS ---
+
+## FORMATTING GUIDE
+Use this guide to format messages using Markdown syntax. Return final response as JSON:
+{ "content": "Your Markdown formatted message", "type": "markdown", "references": ["Array of reference strings"] }
+
+## MARKDOWN ELEMENTS GUIDE: 
+Use the following guide to format messages using Markdown syntax. This includes headings, text formatting, lists, links, images, blockquotes, code blocks, and more. Ensure to apply the appropriate syntax for the desired formatting.
+
+### Headings
+
+# H1
+## H2
+### H3
+#### H4
+##### H5
+###### H6
+
+### Text Formatting
+
+- **Bold**: **bold** or '__bold__'
+- *Italic*: *italic* or '_italic_'
+- ***Bold and Italic***: '***bold and italic***'
+- ~~Strikethrough~~: '~~strikethrough~~'
+- Inline Code: 'inline code'
+- Blockquote: '> Blockquote'
+
+### Lists
+
+1. Numbered List
+   1. Indented Item
+
+- Bullet List
+  - Indented Item
+
+- [ ] Unchecked Task
+- [x] Checked Task
+
+### Links and Images
+
+- [Hyperlink](https://example.com): '[link text](URL)'
+- ![Image](https://via.placeholder.com/150): '![alt text](URL)'
+
+### Blockquotes
+
+> Blockquote
+> > Nested Quote
+
+### Code Blocks
+
+```language 
+const myVariable = 'Hello, World!';
+console.log(myVariable);
+```
+
+### Horizontal Rule
+---
+
+### Escape Special Characters
+Use a single backslash '\' before the character to escape it.
+- Example (two are used for purposes of escaping it for this template): \# Not a Heading
+
+### Tables
+
+| Header 1 | Header 2 |
+|----------|----------|
+| Cell 1 | Cell 2 |
+
+### Special Elements:
+- Superscript: E = mc^2
+- Subscript: H~2~O
+- Table of Contents: [TOC]
+- Footnotes: [^1] and [^1]:
+- Definition Lists: Term : Definition
+- Abbreviations: *[HTML]: Hyper Text Markup Language
+- Highlight: ==highlighted text==
+- Custom Containers: ::: warning *Here be dragons* :::
+- Emoji: :emoji_name:
+
+### HTML Format
+All of these markdowns (or at least most) can be converted into the format. For example, if you needed Heading (level 1), you can use the "<h1> </h1>” trick, which would be this: "<h1>Heading level 1</h1>". This works for most Markdown parsers.
+
+### Mermaid Diagram
+You can use Mermaid to create diagrams. For example:
+```mermaid
+ diagram_type
+ diagram_code
+```
+For instance, this is a Mermaid diagram:
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+    subgraph "My Subgraph"
+        A-->B;
+        C-->D;
+```
+
+### Citations
+ Inline: [@AuthorYear]
+ References section:
+ [@AuthorYear]: Author, A. (Year). Title. Source. URL
+
+### Escape Characters
+You can escape special characters with a backslash \. For example, \* will result in a literal asterisk (*), not a bullet list.
+
+## Additional Styling Instructions
+- Ensure that any `mark` or highlighted text is styled with responsive width by applying flexbox styles or an equivalent method. This will allow the text to be responsive when resizing the window. For example, wrap the `mark` element within a `div` or `span` styled with `display: flex;` and `flex-wrap: wrap;` or similar responsive styles.
+
+## Response Format
+Return the final response as json:
+
+{
+  "content": "Your Markdown formatted message with citations",
+  "type": "markdown",
+  "references": ["Array of reference strings"]
+}
+
+## Example Response
+Below is an example (sample uses escape characters for formatting, but ensure to use the appropriate Markdown syntax for your use case):
+
+```json
+{
+"content": "# Custom Button Component
+
+## Explanation
+This component is a reusable button designed to follow Material UI styling conventions. It supports customization via props like 'color', 'size', and 'onClick' handler.
+
+## Code
+```jsx
+import React from 'react';
+import Button from '@mui/material/Button';
+
+const CustomButton = ({ color = 'primary', size = 'medium', onClick }) => (
+  <Button variant="contained" color={color} size={size} onClick={onClick}>
+    Click Me
+  </Button>
+);
+
+export default CustomButton;
+```
+
+## Usage Example
+```jsx
+// Usage in a parent component
+import CustomButton from './CustomButton';
+
+const ParentComponent = () => (
+  <CustomButton color="secondary" size="large" onClick={() => alert('Button clicked!')} />
+);
+
+export default ParentComponent;
+```
+
+## References
+[@MaterialUI2023]: Material UI. (2023). Button API. Material UI Documentation. https://mui.com/components/buttons/",
+"type": "markdown",
+"references": ["[@MaterialUI2023]: Material UI. (2023). Button API. Material UI Documentation. https://mui.com/components/buttons/"]
+}
+```
+--- END OF RESPONSE FORMATTING INSTRUCTIONS ---
+
+
+  --- END OF SECTIONS ---
+  
+      -----------------------------
+    --------------------------------
+  

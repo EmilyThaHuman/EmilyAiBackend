@@ -1,6 +1,6 @@
 module.exports = {
-  ...require('./callFunctions'),
-  ...require('./tools'),
-  ...require('./main'),
-  ...require('./componentTools'),
+  ...require("./callFunctions"),
+  ...require("./static"),
+  ...require("./main"),
+  ...require("./componentTools")
 };

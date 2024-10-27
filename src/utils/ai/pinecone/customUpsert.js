@@ -1,13 +1,13 @@
-const fs = require('fs').promises;
-const path = require('path');
-const { PineconeStore } = require('@langchain/pinecone');
-const { OpenAIEmbeddings } = require('@langchain/openai');
-const { getPineconeClient } = require('./get');
-const { scrapeCode } = require('@/utils/processing/utils');
-const { logger } = require('@/config/logging');
-const { File } = require('@/models');
-const { getEnv } = require('@/utils/api');
-const { createPineconeIndex } = require('./create');
+const fs = require("fs").promises;
+const path = require("path");
+const { PineconeStore } = require("@langchain/pinecone");
+const { OpenAIEmbeddings } = require("@langchain/openai");
+const { getPineconeClient } = require("./get");
+const { scrapeCode } = require("@utils/processing/utils");
+const { logger } = require("@config/logging");
+const { File } = require("@models/chat");
+const { getEnv } = require("@utils/processing/api");
+const { createPineconeIndex } = require("./create");
 const {
   detectLanguage,
   detectComponentType,
@@ -16,9 +16,9 @@ const {
   detectDependencies,
   detectLicense,
   detectFunctionality,
-  safeExecute,
-} = require('./utils');
-const { RecursiveCharacterTextSplitter } = require('langchain/text_splitter');
+  safeExecute
+} = require("./utils");
+const { RecursiveCharacterTextSplitter } = require("langchain/text_splitter");
 
 const CHUNK_SIZE = 1000;
 const CHUNK_OVERLAP = 200;
@@ -28,7 +28,7 @@ const textSplitter = new RecursiveCharacterTextSplitter({
   chunkSize: CHUNK_SIZE,
   chunkOverlap: CHUNK_OVERLAP,
   lengthFunction: (text) => text.length,
-  separators: ['\n\n', '\n', '. ', ', ', ' ', ''],
+  separators: ["\n\n", "\n", ". ", ", ", " ", ""]
 });
 
 const upsertDocs = async (req, res) => {
@@ -36,7 +36,7 @@ const upsertDocs = async (req, res) => {
 
   try {
     if (!userId || !url || !library) {
-      throw new Error('User ID, URL, and library are required fields.');
+      throw new Error("User ID, URL, and library are required fields.");
     }
 
     logger.info(`BODY: ${JSON.stringify(req.body)}`);
@@ -47,8 +47,8 @@ const upsertDocs = async (req, res) => {
     await File.bulkWrite(
       scrapedFiles.map((filePath) => ({
         insertOne: {
-          document: createFileDocument(filePath, userId, workspaceId, folderId),
-        },
+          document: createFileDocument(filePath, userId, workspaceId, folderId)
+        }
       }))
     );
     // const session = await File.startSession();
@@ -60,18 +60,18 @@ const upsertDocs = async (req, res) => {
     // session.endSession();
 
     const embedder = new OpenAIEmbeddings({
-      modelName: getEnv('PINECONE_EMBEDDING_MODEL_NAME'),
-      apiKey: getEnv('OPENAI_API_PROJECT_KEY'),
-      dimensions: getEnv('PINECONE_EMBEDDING_MODEL_DIMENSIONS'),
+      modelName: getEnv("PINECONE_EMBEDDING_MODEL_NAME"),
+      apiKey: getEnv("OPENAI_API_PROJECT_KEY"),
+      dimensions: getEnv("PINECONE_EMBEDDING_MODEL_DIMENSIONS")
     });
 
     const pinecone = await getPineconeClient();
-    const pineconeIndex = await createPineconeIndex(pinecone, getEnv('PINECONE_INDEX'));
+    const pineconeIndex = await createPineconeIndex(pinecone, getEnv("PINECONE_INDEX"));
 
     const vstore = await PineconeStore.fromExistingIndex(embedder, {
       pineconeIndex,
-      namespace: getEnv('PINECONE_NAMESPACE_3'),
-      textKey: 'text',
+      namespace: getEnv("PINECONE_NAMESPACE_3"),
+      textKey: "text"
     });
 
     // let totalDocs = 0;
@@ -84,7 +84,7 @@ const upsertDocs = async (req, res) => {
     res.status(200).send(`Successfully upserted ${totalDocs} documents from ${url}`);
   } catch (error) {
     logger.error(`Error upserting documentation: ${error}`, error);
-    res.status(500).send('An error occurred while processing your request.');
+    res.status(500).send("An error occurred while processing your request.");
   }
 };
 const createFileDocument = async (filePath, userId, workspaceId, folderId) => {
@@ -101,12 +101,12 @@ const createFileDocument = async (filePath, userId, workspaceId, folderId) => {
     originalFileType: fileType,
     filePath,
     type: fileType,
-    space: 'files',
+    space: "files",
     metadata: {
       fileSize: fileStats.size,
       fileType,
-      lastModified: fileStats.mtime,
-    },
+      lastModified: fileStats.mtime
+    }
   };
 };
 const processFilesInParallel = async (files, vstore, library, url, description) => {
@@ -138,7 +138,7 @@ async function processFile(filePath, vstore, library, url, description) {
 }
 
 async function readFileContent(filePath) {
-  const content = await fs.readFile(filePath, 'utf8');
+  const content = await fs.readFile(filePath, "utf8");
   if (!content) {
     throw new Error(`File ${filePath} is empty or could not be read`);
   }
@@ -167,7 +167,7 @@ async function upsertDocuments(vstore, docs, fileName, content, url, description
         return {
           id: `${fileName}_${index}`,
           values: doc.pageContent,
-          metadata: { ...metadata, ...doc.metadata },
+          metadata: { ...metadata, ...doc.metadata }
         };
       })
       .filter(Boolean); // Remove any null entries
@@ -180,8 +180,8 @@ async function upsertDocuments(vstore, docs, fileName, content, url, description
     logger.info(`Upserting ${upsertBatch.length} documents...`);
     logger.debug(`Upsert batch: ${JSON.stringify(upsertBatch)}`);
 
-    if (!vstore || typeof vstore.addDocuments !== 'function') {
-      throw new Error('Invalid vstore object');
+    if (!vstore || typeof vstore.addDocuments !== "function") {
+      throw new Error("Invalid vstore object");
     }
 
     await vstore.addDocuments(upsertBatch);
@@ -195,20 +195,20 @@ async function upsertDocuments(vstore, docs, fileName, content, url, description
 
 function createMetadata(content, fileName, url, description, library) {
   return {
-    language: safeExecute(() => detectLanguage(fileName), 'Unknown'),
+    language: safeExecute(() => detectLanguage(fileName), "Unknown"),
     framework: library,
-    componentType: safeExecute(() => detectComponentType(content), 'Unknown'),
-    functionality: safeExecute(() => detectFunctionality(content), ['General']),
-    libraryVersion: safeExecute(() => detectLibraryVersion(content), 'Unknown'),
+    componentType: safeExecute(() => detectComponentType(content), "Unknown"),
+    functionality: safeExecute(() => detectFunctionality(content), ["General"]),
+    libraryVersion: safeExecute(() => detectLibraryVersion(content), "Unknown"),
     releaseDate: new Date().toISOString(),
-    complexity: safeExecute(() => calculateComplexity(content), 'Unknown'),
-    linesOfCode: content.split('\n').length,
+    complexity: safeExecute(() => calculateComplexity(content), "Unknown"),
+    linesOfCode: content.split("\n").length,
     dependencies: safeExecute(() => detectDependencies(content), []),
-    useCase: description || 'Not specified',
-    performance: 'Not specified',
-    author: 'Unknown',
+    useCase: description || "Not specified",
+    performance: "Not specified",
+    author: "Unknown",
     sourceUrl: url,
-    license: safeExecute(() => detectLicense(content), 'Unknown'),
+    license: safeExecute(() => detectLicense(content), "Unknown")
   };
 }
 module.exports = { upsertDocs };
@@ -219,10 +219,10 @@ module.exports = { upsertDocs };
 // const { OpenAIEmbeddings } = require('@langchain/openai');
 // const { RecursiveCharacterTextSplitter } = require('langchain/text_splitter');
 // const { getPineconeClient } = require('./get');
-// const { scrapeCode } = require('@/utils/processing/utils');
-// const { logger } = require('@/config/logging');
-// const { File } = require('@/models');
-// const { getEnv } = require('@/utils/api');
+// const { scrapeCode } = require('@utils/processing/utils');
+// const { logger } = require('@config/logging');
+// const { File } = require('@models');
+// const { getEnv } = require('@utils/api');
 // const { createPineconeIndex } = require('./create');
 // const {
 //   detectLanguage,

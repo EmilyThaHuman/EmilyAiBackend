@@ -7,10 +7,7 @@
       "id": "67850bd7-f9f4-4d5b-8c9e-bd1451247ba6",
       "name": "When clicking \"Execute Workflow\"",
       "type": "n8n-nodes-base.manualTrigger",
-      "position": [
-        -740,
-        1000
-      ],
+      "position": [-740, 1000],
       "parameters": {},
       "typeVersion": 1
     },
@@ -18,10 +15,7 @@
       "id": "0d9133f9-b6d3-4101-95c6-3cd24cdb70c3",
       "name": "Fetch essay list",
       "type": "n8n-nodes-base.httpRequest",
-      "position": [
-        -520,
-        1000
-      ],
+      "position": [-520, 1000],
       "parameters": {
         "url": "http://www.paulgraham.com/articles.html",
         "options": {}
@@ -32,10 +26,7 @@
       "id": "ee634297-a456-4f70-a995-55b02950571e",
       "name": "Extract essay names",
       "type": "n8n-nodes-base.html",
-      "position": [
-        -300,
-        1000
-      ],
+      "position": [-300, 1000],
       "parameters": {
         "options": {},
         "operation": "extractHtmlContent",
@@ -58,10 +49,7 @@
       "id": "83d75693-dbb8-44c4-8533-da06f611c59c",
       "name": "Fetch essay texts",
       "type": "n8n-nodes-base.httpRequest",
-      "position": [
-        360,
-        1000
-      ],
+      "position": [360, 1000],
       "parameters": {
         "url": "=http://www.paulgraham.com/{{ $json.essay }}",
         "options": {}
@@ -72,10 +60,7 @@
       "id": "151022b5-8570-4176-bf3f-137f27ac7036",
       "name": "Extract title",
       "type": "n8n-nodes-base.html",
-      "position": [
-        700,
-        700
-      ],
+      "position": [700, 700],
       "parameters": {
         "options": {},
         "operation": "extractHtmlContent",
@@ -94,10 +79,7 @@
       "id": "07bcf095-3c4d-4a72-9bcb-341411750ff5",
       "name": "Clean up",
       "type": "n8n-nodes-base.set",
-      "position": [
-        1360,
-        980
-      ],
+      "position": [1360, 980],
       "parameters": {
         "fields": {
           "values": [
@@ -124,10 +106,7 @@
       "id": "11285de0-3c5d-4296-a322-9b7585af9acc",
       "name": "Sticky Note",
       "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        -580,
-        920
-      ],
+      "position": [-580, 920],
       "parameters": {
         "width": 1071.752021563343,
         "height": 285.66037735849045,
@@ -139,10 +118,7 @@
       "id": "c32f905d-dd7a-4b68-bbe0-dd8115ee0944",
       "name": "Sticky Note1",
       "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        620,
-        920
-      ],
+      "position": [620, 920],
       "parameters": {
         "width": 465.3908355795153,
         "height": 606.7924528301882,
@@ -154,10 +130,7 @@
       "id": "29d264f4-df6d-4a41-ab38-58e1b1becc9a",
       "name": "Split out into items",
       "type": "n8n-nodes-base.splitOut",
-      "position": [
-        -80,
-        1000
-      ],
+      "position": [-80, 1000],
       "parameters": {
         "options": {},
         "fieldToSplitOut": "essay"
@@ -168,10 +141,7 @@
       "id": "ccfa3a1d-f170-44b4-a1f2-3573c88cae98",
       "name": "Limit to first 3",
       "type": "n8n-nodes-base.limit",
-      "position": [
-        140,
-        1000
-      ],
+      "position": [140, 1000],
       "parameters": {
         "maxItems": 3
       },
@@ -181,10 +151,7 @@
       "id": "c3d05068-9d1a-4ef5-8249-e7384dc617ee",
       "name": "Default Data Loader",
       "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
-      "position": [
-        820,
-        1200
-      ],
+      "position": [820, 1200],
       "parameters": {
         "options": {}
       },
@@ -194,10 +161,7 @@
       "id": "db75adad-cb16-4e72-b16e-34684a733b05",
       "name": "Recursive Character Text Splitter",
       "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
-      "position": [
-        820,
-        1340
-      ],
+      "position": [820, 1340],
       "parameters": {
         "options": {}
       },
@@ -207,10 +171,7 @@
       "id": "022cc091-9b4c-45c2-bc8e-4037ec2d0d60",
       "name": "OpenAI Chat Model1",
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
-      "position": [
-        680,
-        1200
-      ],
+      "position": [680, 1200],
       "parameters": {
         "model": "gpt-4o-mini",
         "options": {}
@@ -227,10 +188,7 @@
       "id": "cda47bb7-36c5-4d15-a1ef-0c66b1194825",
       "name": "Merge",
       "type": "n8n-nodes-base.merge",
-      "position": [
-        1160,
-        980
-      ],
+      "position": [1160, 980],
       "parameters": {
         "mode": "combine",
         "options": {},
@@ -242,10 +200,7 @@
       "id": "28144e4c-e425-428d-b3d1-f563bfd4e5b3",
       "name": "Summarization Chain",
       "type": "@n8n/n8n-nodes-langchain.chainSummarization",
-      "position": [
-        720,
-        1000
-      ],
+      "position": [720, 1000],
       "parameters": {
         "options": {},
         "operationMode": "documentLoader"

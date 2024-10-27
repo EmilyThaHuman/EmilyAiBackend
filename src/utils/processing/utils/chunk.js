@@ -1,11 +1,11 @@
-const { TokenTextSplitter } = require('langchain/text_splitter');
-const { escapeRegExp } = require('./text');
+const { TokenTextSplitter } = require("langchain/text_splitter");
+const { escapeRegExp } = require("./text");
 
 const containsDiff = (message) => {
   return (
-    message.includes('<<<<<<< ORIGINAL') &&
-    message.includes('>>>>>>> UPDATED') &&
-    message.includes('=======\n')
+    message.includes("<<<<<<< ORIGINAL") &&
+    message.includes(">>>>>>> UPDATED") &&
+    message.includes("=======\n")
   );
 };
 
@@ -15,8 +15,8 @@ const applyDiff = (code, diff) => {
   while ((match = regex.exec(diff)) !== null) {
     const [, before, after] = match;
     let regex = escapeRegExp(before);
-    regex = regex.replaceAll(/\r?\n/g, '\\s+');
-    regex = regex.replaceAll(/\t/g, '');
+    regex = regex.replaceAll(/\r?\n/g, "\\s+");
+    regex = regex.replaceAll(/\t/g, "");
     const replaceRegex = new RegExp(regex);
     code = code.replace(replaceRegex, after);
   }
@@ -36,7 +36,7 @@ const chunkedUpsert = async (index, vectors, namespace, chunkSize = 10) => {
         try {
           await index.namespace(namespace).upsert(chunk);
         } catch (e) {
-          console.log('Error upserting chunk', e);
+          console.log("Error upserting chunk", e);
         }
       })
     );
@@ -47,7 +47,7 @@ const chunkedUpsert = async (index, vectors, namespace, chunkSize = 10) => {
 };
 
 const extractContent = (chunk) => {
-  return chunk.choices[0]?.delta?.content || '';
+  return chunk.choices[0]?.delta?.content || "";
 };
 
 const processChunkBatch = async (chunks) => {
@@ -58,18 +58,18 @@ const processChunkBatch = async (chunks) => {
         const chunkContent = extractContent(chunk);
         return chunkContent;
       })
-      .join('');
+      .join("");
 
     return batchContent;
   } catch (error) {
-    console.error('Error processing chunk batch:', error);
+    console.error("Error processing chunk batch:", error);
   }
 };
 
 function semanticChunking(text, chunkSize = 1000, overlap = 200) {
   const splitter = new TokenTextSplitter({
     chunkSize: chunkSize,
-    chunkOverlap: overlap,
+    chunkOverlap: overlap
   });
 
   return splitter.splitText(text);
@@ -78,7 +78,7 @@ function semanticChunking(text, chunkSize = 1000, overlap = 200) {
 function slidingWindowChunks(chunks, windowSize = 3) {
   const windows = [];
   for (let i = 0; i < chunks.length - windowSize + 1; i++) {
-    windows.push(chunks.slice(i, i + windowSize).join(' '));
+    windows.push(chunks.slice(i, i + windowSize).join(" "));
   }
   return windows;
 }
@@ -86,9 +86,9 @@ function slidingWindowChunks(chunks, windowSize = 3) {
 function cleanResponseData(responseData) {
   // Step 1: Remove leading/trailing quotes and escape characters
   const cleanedData = responseData
-    .replace(/^"|"$/g, '') // Remove leading and trailing quotes
-    .replace(/\\n/g, '\n') // Replace escaped newlines with actual newlines
-    .replace(/\\\\/g, '\\') // Replace double backslashes with a single backslash
+    .replace(/^"|"$/g, "") // Remove leading and trailing quotes
+    .replace(/\\n/g, "\n") // Replace escaped newlines with actual newlines
+    .replace(/\\\\/g, "\\") // Replace double backslashes with a single backslash
     .trim(); // Trim any extra whitespace
 
   // Step 2: Parse the cleaned data as JSON
@@ -96,7 +96,7 @@ function cleanResponseData(responseData) {
     const parsedData = JSON.parse(cleanedData);
     return parsedData;
   } catch (error) {
-    console.error('Error parsing JSON:', error);
+    console.error("Error parsing JSON:", error);
     return null; // Return null or handle the error as needed
   }
 }
@@ -110,5 +110,5 @@ module.exports = {
   extractContent,
   semanticChunking,
   slidingWindowChunks,
-  cleanResponseData,
+  cleanResponseData
 };

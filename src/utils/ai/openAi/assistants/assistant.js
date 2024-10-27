@@ -54,9 +54,9 @@ const openAiApiAssistantService = (openai) => ({
     const response = await openai.beta.assistants.del(assistantId);
     console.log(response);
     return response;
-  },
+  }
 });
 
 module.exports = {
-  openAiApiAssistantService,
+  openAiApiAssistantService
 };

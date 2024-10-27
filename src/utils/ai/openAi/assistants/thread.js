@@ -59,9 +59,9 @@ const openAiApiThreadService = (openai) => ({
     const response = await openai.beta.Threads.del(threadId);
     console.log(response);
     return response;
-  },
+  }
 });
 
 module.exports = {
-  openAiApiThreadService,
+  openAiApiThreadService
 };

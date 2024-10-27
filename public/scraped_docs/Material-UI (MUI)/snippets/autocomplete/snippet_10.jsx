@@ -1,1 +1,1 @@
-<Autocomplete filterOptions={(x) => x} />
+<Autocomplete filterOptions={(x) => x} />;

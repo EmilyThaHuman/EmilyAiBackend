@@ -1,37 +1,38 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const { Schema } = mongoose;
-const { createSchema, createModel } = require('../utils/schema');
+const { createSchema, createModel } = require("../utils/schema");
 
 // =============================
 // [MODELS]
 // =============================
 const modelSchema = createSchema({
-  userId: { type: Schema.Types.ObjectId, ref: 'User' },
-  workspaceId: { type: Schema.Types.ObjectId, ref: 'Workspace' },
-  folderId: { type: Schema.Types.ObjectId, ref: 'Folder' },
+  // -- RELATIONSHIPS
+  userId: { type: Schema.Types.ObjectId, ref: "User" },
+  workspaceId: { type: Schema.Types.ObjectId, ref: "Workspace" },
+  folderId: { type: Schema.Types.ObjectId, ref: "Folder" },
+
+  // -- REQUIRED FIELDS
+  sharing: {
+    type: String,
+    enum: ["private", "public", "shared"],
+    default: "private",
+    required: true
+  },
   apiKey: { type: String, required: false },
   baseUrl: { type: String, required: false },
-  modelId: { type: String, required: false },
-  label: { type: String },
-  contextLength: { type: Number },
-  maxToken: { type: Number },
-  defaultToken: { type: Number },
   name: {
     type: String,
-    required: false,
+    required: false
   },
   description: {
-    type: String,
+    type: String
   },
-  isDefault: {
-    type: Boolean,
-    default: false,
-  },
+  modelId: { type: String, required: false }
 });
 
-const Model = createModel('Model', modelSchema);
+const Model = createModel("ChatModel", modelSchema);
 
 module.exports = {
   modelSchema,
-  Model,
+  Model
 };

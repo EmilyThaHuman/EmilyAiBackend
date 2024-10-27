@@ -1,4 +1,4 @@
 module.exports = {
-  ...require('./workspaces'),
-  ...require('./folders'),
+  ...require("./workspaces"),
+  ...require("./folders")
 };

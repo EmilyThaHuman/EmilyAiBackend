@@ -1,6 +1,6 @@
 module.exports = {
-  ...require('./main'),
-  ...require('./user'),
-  ...require('./workspace'),
-  ...require('./chat'),
+  ...require("./chat"),
+  ...require("./main"),
+  ...require("./user"),
+  ...require("./workspace")
 };

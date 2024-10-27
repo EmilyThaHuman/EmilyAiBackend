@@ -1,22 +1,39 @@
-# Ignore the .env file
+# Ignore environment files
 .env
-# Ignore the package-lock.json file
-package-lock.json
-# Ignore the coverage directory
-/coverage
-# Ignore the build directory
-/build
-# Ignore the dist directory
-/dist
-# Ignore the ignore directory
-/ignore
-# Ignore logs
-/src/config/logging/logs
+.env.*local
+.env.test
+.api/
 
-# Ignore the node_modules directory
-/node_modules
-/.github/workflows
-.github/workflows
-.github
-.github/workflow
+# Ignore package-lock.json
+package-lock.json
+
+# Ignore coverage directory
+coverage/
+
+# Ignore build and dist directories
+build/
+dist/
+
+# Ignore specific directory (if it's intended to be ignored)
+ignore/
+
+# Ignore logs in the logging directory
+logs/
+
+# Ignore node_modules directory
+node_modules/
+
+# Ignore GitHub-specific files
+.github/
+.github/workflows/
+
+# Ignore specific script files
 scripts/conversations.json
+
+# Ignore specific cleanup folder
+archive/
+CLEANUP/
+
+
+
+

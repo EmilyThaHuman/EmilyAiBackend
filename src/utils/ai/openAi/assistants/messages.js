@@ -1,4 +1,4 @@
-const { logger } = require('@/config');
+const { logger } = require("@config/logging");
 
 const openAiApiMessageService = (openai) => ({
   /**
@@ -13,7 +13,7 @@ const openAiApiMessageService = (openai) => ({
    */
   createMessage: async (threadId, config) => {
     const myMessage = await openai.beta.Messages.create(threadId, config);
-    console.log(myMessage);
+    logger.info(myMessage);
     return myMessage;
   },
   /**
@@ -39,7 +39,7 @@ const openAiApiMessageService = (openai) => ({
    */
   retrieveMessage: async (threadId, messageId) => {
     const message = await openai.beta.Messages.retrieve(threadId, messageId);
-    console.log(message);
+    logger.info(message);
     return message;
   },
   /**
@@ -52,7 +52,7 @@ const openAiApiMessageService = (openai) => ({
    */
   modifyMessage: async (threadId, messageId, config) => {
     const myUpdatedMessage = await openai.beta.Messages.update(threadId, messageId, config);
-    console.log(myUpdatedMessage);
+    logger.info(myUpdatedMessage);
     return myUpdatedMessage;
   },
   /**
@@ -63,11 +63,11 @@ const openAiApiMessageService = (openai) => ({
    */
   deleteMessage: async (threadId, messageId) => {
     const response = await openai.beta.Messages.delete(threadId, messageId);
-    console.log(response);
+    logger.info(response);
     return response;
-  },
+  }
 });
 
 module.exports = {
-  openAiApiMessageService,
+  openAiApiMessageService
 };

@@ -1,4 +1,4 @@
-const { Assistant } = require('@/models');
+const { Assistant } = require("@models/chat");
 
 const getAllChatAssistants = async (req, res) => {
   const chatAssistants = await Assistant.find();
@@ -9,7 +9,7 @@ const getChatAssistantById = async (req, res) => {
   const chatAssistant = await Assistant.findById(req.params.id);
   if (!chatAssistant) {
     res.status(404);
-    throw new Error('Chat assistant not found');
+    throw new Error("Chat assistant not found");
   }
   res.status(200).json(chatAssistant);
 };
@@ -22,11 +22,11 @@ const createChatAssistant = async (req, res) => {
 
 const updateChatAssistant = async (req, res) => {
   const updatedChatAssistant = await Assistant.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
+    new: true
   });
   if (!updatedChatAssistant) {
     res.status(404);
-    throw new Error('Chat assistant not found');
+    throw new Error("Chat assistant not found");
   }
   res.status(200).json(updatedChatAssistant);
 };
@@ -35,9 +35,9 @@ const deleteChatAssistant = async (req, res) => {
   const deletedChatAssistant = await Assistant.findByIdAndDelete(req.params.id);
   if (!deletedChatAssistant) {
     res.status(404);
-    throw new Error('Chat assistant not found');
+    throw new Error("Chat assistant not found");
   }
-  res.status(200).json({ message: 'Chat assistant deleted successfully' });
+  res.status(200).json({ message: "Chat assistant deleted successfully" });
 };
 
 module.exports = {
@@ -45,5 +45,5 @@ module.exports = {
   getChatAssistantById,
   createChatAssistant,
   updateChatAssistant,
-  deleteChatAssistant,
+  deleteChatAssistant
 };

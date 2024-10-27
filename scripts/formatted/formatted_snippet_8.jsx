@@ -1,27 +1,18 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
+import * as React from "react";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
 
 export default function TextFieldSizes() {
   return (
     <Box
       component="form"
-      sx={{ '& .MuiTextField-root': { m: 1, width: '25ch' } }}
+      sx={{ "& .MuiTextField-root": { m: 1, width: "25ch" } }}
       noValidate
       autoComplete="off"
     >
       <div>
-        <TextField
-          label="Size"
-          id="outlined-size-small"
-          defaultValue="Small"
-          size="small"
-        />
-        <TextField
-          label="Size"
-          id="outlined-size-normal"
-          defaultValue="Normal"
-        />
+        <TextField label="Size" id="outlined-size-small" defaultValue="Small" size="small" />
+        <TextField label="Size" id="outlined-size-normal" defaultValue="Normal" />
       </div>
       <div>
         <TextField
@@ -31,12 +22,7 @@ export default function TextFieldSizes() {
           variant="filled"
           size="small"
         />
-        <TextField
-          label="Size"
-          id="filled-size-normal"
-          defaultValue="Normal"
-          variant="filled"
-        />
+        <TextField label="Size" id="filled-size-normal" defaultValue="Normal" variant="filled" />
       </div>
       <div>
         <TextField

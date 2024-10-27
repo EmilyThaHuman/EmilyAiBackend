@@ -4,5 +4,5 @@ function isImageUrl(url) {
 }
 
 module.exports = {
-  isImageUrl,
+  isImageUrl
 };

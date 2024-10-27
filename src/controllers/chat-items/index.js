@@ -1,4 +1,4 @@
 module.exports = {
-  ...require('./settings'),
-  ...require('./v2'),
+  ...require("./settings"),
+  ...require("./v2")
 };

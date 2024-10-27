@@ -1,0 +1,68 @@
+# Chat Dialog Component with Framer Motion Animations
+
+## Explanation
+This React component is designed to create a chat dialog that displays messages with smooth animations using Framer Motion. It allows users to interactively view chat messages with engaging motion effects.
+
+## Code
+jsx
+import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState } from 'react';
+
+const ChatDialog = ({ messages }) => {
+  const [currentMessage, setCurrentMessage] = useState(messages);
+
+  return (
+    <div className="chat-dialog">
+      <AnimatePresence initial={false} exitBeforeEnter={true}>
+        {currentMessage && (
+          <motion.div
+            key={currentMessage.id}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <motion.p>{currentMessage.text}</motion.p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      {messages.map((message, index) => (
+        <button key={index} onClick={() => setCurrentMessage(message)}>
+          Show Message {message.id}
+        </button>
+      ))}
+    </div>
+  );
+};
+
+const messages = [
+  { id: 1, text: "Hello, how are you?" },
+  { id: 2, text: "I'm good, thanks!" },
+  { id: 3, text: "Great How about you?" },
+];
+
+function App() {
+  return (
+    <div className="App">
+      <ChatDialog messages={messages} />
+    </div>
+  );
+}
+
+export default App;
+
+
+## Usage Example
+jsx
+// Usage in a parent component
+import ChatDialog from './ChatDialog';
+
+const ParentComponent = () => (
+  <ChatDialog messages={messages} />
+);
+
+export default ParentComponent;
+
+
+## References
+- Framer Motion Documentation: [Framer Motion](https://www.framer.com/motion/)

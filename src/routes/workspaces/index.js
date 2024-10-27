@@ -1,5 +1,5 @@
-const workspaceRoutes = require('./main');
+const workspaceRoutes = require("./main");
 
 module.exports = {
-  workspaceRoutes,
+  workspaceRoutes
 };

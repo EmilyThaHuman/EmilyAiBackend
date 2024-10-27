@@ -95,7 +95,7 @@ const componentRegexPatterns = {
   Toolbar: /<Toolbar\s*(?:[^>]*\s*)*(?:\/?>|\s*\n*\s*\/>)/g,
   Rating: /<Rating\s*(?:[^>]*\s*)*(?:\/?>|\s*\n*\s*\/>)/g,
   Skeleton: /<Skeleton\s*(?:[^>]*\s*)*(?:\/?>|\s*\n*\s*\/>)/g,
-  Backdrop: /<Backdrop\s*(?:[^>]*\s*)*(?:\/?>|\s*\n*\s*\/>)/g,
+  Backdrop: /<Backdrop\s*(?:[^>]*\s*)*(?:\/?>|\s*\n*\s*\/>)/g
 };
 
 module.exports = { componentRegexPatterns };

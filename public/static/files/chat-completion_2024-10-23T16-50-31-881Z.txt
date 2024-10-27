@@ -1,0 +1,114 @@
+# Message Box Component
+
+## Explanation
+
+The Message Box Component is designed to display chat messages in a visually appealing and organized manner. It allows users to view messages sent and received, with the ability to send new messages. The component includes styling for differentiating between sent and received messages.
+
+## Code
+jsx
+import React, { useState } from 'react';
+
+const MessageBox = () => {
+  const [messages, setMessages] = useState([
+    { text: 'Hello, how are you?', user: 'Alice' },
+    { text: 'I am good, thanks!', user: 'Bob' },
+  ]);
+
+  const handleSendMessage = (text) => {
+    setMessages((prevMessages) => [...prevMessages, { text, user: 'Alice' }]);
+  };
+
+  return (
+    <div className="message-box">
+      <div className="messages">
+        {messages.map((message, index) => (
+          <div key={index} className={`message ${message.user === 'Alice' ? 'sent' : 'received'}`}> 
+            <p>{message.text}</p>
+          </div>
+        ))}
+      </div>
+      <input
+        type="text"
+        className="input-message"
+        placeholder="Type a message..."
+        onKeyUp={(e) => {
+          if (e.key === 'Enter') {
+            handleSendMessage(e.target.value);
+            e.target.value = '';
+          }
+        }}
+      />
+    </div>
+  );
+};
+
+export default MessageBox;
+ 
+
+## CSS Styling
+
+You can add CSS to style the component as follows:
+
+css
+.message-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.messages {
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #f2f2f2;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.message {
+  margin-bottom: 10px;
+}
+
+.message.sent {
+  background-color: #e0e0e0;
+  border-radius: 10px;
+}
+
+.message.received {
+  background-color: #d0d0d0;
+  border-radius: 10px;
+}
+
+.input-message {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  margin-top: 10px;
+}
+ 
+
+## Usage
+
+To use this component in your application, simply import it and render it:
+
+jsx
+import React from 'react';
+import MessageBox from './MessageBox';
+
+const App = () => {
+  return (
+    <div>
+      <h1>Chat Box</h1>
+      <MessageBox />
+    </div>
+  );
+};
+
+export default App;
+ 
+
+## References
+
+1. React documentation for state management.
+2. CSS styling best practices.

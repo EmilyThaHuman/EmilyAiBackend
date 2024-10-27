@@ -1,9 +1,9 @@
-const { logger } = require('@/config/logging');
+const { logger } = require("@config/logging");
 
 function logArrayAsTable(array) {
   // Check if the array is empty
   if (array.length === 0) {
-    logger.info('The array is empty.');
+    logger.info("The array is empty.");
     return;
   }
 
@@ -11,8 +11,8 @@ function logArrayAsTable(array) {
   const keys = Object.keys(array[0]);
 
   // Create the header row
-  const headerRow = keys.join(' | ');
-  const separatorRow = keys.map(() => '---').join(' | ');
+  const headerRow = keys.join(" | ");
+  const separatorRow = keys.map(() => "---").join(" | ");
 
   // Log the header
   logger.info(headerRow);
@@ -20,18 +20,47 @@ function logArrayAsTable(array) {
 
   // Log each row of data
   array.forEach((item) => {
-    const row = keys.map((key) => item[key] || '').join(' | ');
+    const row = keys.map((key) => item[key] || "").join(" | ");
     logger.info(row);
   });
 }
 
-function recordTokenUsage({ promptTokens, completionTokens, totalTokens }) {
-  logger.info('Prompt tokens:', promptTokens);
-  logger.info('Completion tokens:', completionTokens);
-  logger.info('Total tokens:', totalTokens);
+function recordTokenUsage({ prompt_tokens, completion_tokens, total_tokens }) {
+  if (!prompt_tokens || !completion_tokens || !total_tokens) {
+    logger.error("Invalid token usage data");
+    return;
+  }
+  try {
+    logger.info("Prompt tokens:", prompt_tokens);
+    logger.info("Completion tokens:", completion_tokens);
+    logger.info("Total tokens:", total_tokens);
+  } catch (error) {
+    logger.error(`Error recording token usage: ${error.message}`);
+  }
+}
+
+/**
+ * Logs chat data.
+ * @param {string} section
+ * @param {object} chatData
+ */
+function logChatData(section, chatData) {
+  logger.info(`[CHECK][${section}]: ${JSON.stringify(chatData)}`);
+}
+
+/**
+ * Logs chat data errors.
+ * @param {string} section
+ * @param {object} chatData
+ * @param {Error} error
+ */
+function logChatDataError(section, chatData, error) {
+  logger.error(`[ERROR][${section}]: ${JSON.stringify(chatData)}: ${error}`);
 }
 
 module.exports = {
   logArrayAsTable,
   recordTokenUsage,
+  logChatData,
+  logChatDataError
 };

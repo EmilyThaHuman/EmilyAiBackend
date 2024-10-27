@@ -5,30 +5,30 @@
 // 5. Enter API keys in .env file
 // Optional: if you want to use other file loaders (https://js.langchain.com/docs/modules/indexes/document_loaders/examples/file_loaders/)
 
-const path = require('path');
-const { DirectoryLoader } = require('langchain/document_loaders/fs/directory');
-const { TextLoader } = require('langchain/document_loaders/fs/text');
-const { Pinecone } = require('@pinecone-database/pinecone');
-const { PDFLoader } = require('@langchain/community/document_loaders/fs/pdf');
-const { OpenAIEmbeddings } = require('@langchain/openai');
-const { CSVLoader } = require('@langchain/community/document_loaders/fs/csv');
-const { createPineconeIndex } = require('./create.js');
-const { updatePinecone } = require('./update.js');
-const { queryPineconeVectorStoreAndQueryLLM } = require('./query.js');
-const { getEnv } = require('@/utils/api/env.js');
-const { processDocument } = require('@/utils/processing/utils/main.js');
+const path = require("path");
+const { DirectoryLoader } = require("langchain/document_loaders/fs/directory");
+const { TextLoader } = require("langchain/document_loaders/fs/text");
+const { Pinecone } = require("@pinecone-database/pinecone");
+const { PDFLoader } = require("@langchain/community/document_loaders/fs/pdf");
+const { OpenAIEmbeddings } = require("@langchain/openai");
+const { CSVLoader } = require("@langchain/community/document_loaders/fs/csv");
+const { createPineconeIndex } = require("./create.js");
+const { updatePinecone } = require("./update.js");
+const { queryPineconeVectorStoreAndQueryLLM } = require("./query.js");
+const { getEnv } = require("@utils/processing/api/index.js");
+const { processDocument } = require("@utils/processing/utils/main.js");
 
-require('dotenv').config();
+require("dotenv").config();
 
-const publicFilesDirectory = path.join(__dirname, '@/public/files');
+const publicFilesDirectory = path.join(__dirname, "@/public/files");
 // 7. Set up DirectoryLoader to load documents from the ./documents directory
 const loader = new DirectoryLoader(publicFilesDirectory, {
-  '.txt': (path) => new TextLoader(path),
-  '.pdf': (path) => new PDFLoader(path),
-  '.csv': (path) => new CSVLoader(path),
-  '.docx': (path) => new DocxLoader(path),
-  '.json': (path) => new JSONLoader(path),
-  '.md': (path) => new MarkdownLoader(path),
+  ".txt": (path) => new TextLoader(path),
+  ".pdf": (path) => new PDFLoader(path),
+  ".csv": (path) => new CSVLoader(path),
+  ".docx": (path) => new DocxLoader(path),
+  ".json": (path) => new JSONLoader(path),
+  ".md": (path) => new MarkdownLoader(path)
   // '.html': (path) => new HTMLLoader(path),
   // '.js': (path) => new JavascriptLoader(path)
 });
@@ -38,30 +38,30 @@ const chatCompletionWithLLM = async (data) => {
 
   try {
     const pinecone = new Pinecone({
-      apiKey: getEnv('PINECONE_API_KEY'),
+      apiKey: getEnv("PINECONE_API_KEY")
     });
 
-    await createPineconeIndex(pinecone, getEnv('PINECONE_INDEX'), 3072);
+    await createPineconeIndex(pinecone, getEnv("PINECONE_INDEX"), 3072);
 
     const docs = await loader.load();
     const processedDocs = await Promise.all(docs.map(processDocument));
     const flattenedDocs = processedDocs.flat();
 
     const embeddings = new OpenAIEmbeddings({
-      apiKey: getEnv('OPENAI_API_PROJECT_KEY') || process.env.OPENAI_API_PROJECT_KEY,
+      apiKey: getEnv("OPENAI_API_PROJECT_KEY") || process.env.OPENAI_API_PROJECT_KEY,
       dimensions: 512, // Ensure dimensions are passed as an integer
-      model: getEnv('EMBEDDING_MODEL') || process.env.EMBEDDING_MODEL,
+      model: getEnv("EMBEDDING_MODEL") || process.env.EMBEDDING_MODEL
     });
-    await updatePinecone(pinecone, getEnv('PINECONE_INDEX'), flattenedDocs, embeddings);
+    await updatePinecone(pinecone, getEnv("PINECONE_INDEX"), flattenedDocs, embeddings);
 
     await queryPineconeVectorStoreAndQueryLLM(
       pinecone,
-      getEnv('PINECONE_INDEX'),
+      getEnv("PINECONE_INDEX"),
       question,
       embeddings
     );
   } catch (error) {
-    console.error('An error occurred:', error);
+    console.error("An error occurred:", error);
   }
 };
 module.exports = { chatCompletionWithLLM };
@@ -78,7 +78,7 @@ module.exports = { chatCompletionWithLLM };
 //     const flattenedDocs = processedDocs.flat();
 
 //     const embeddings = new OpenAIEmbeddings({
-// 			apiKey: getEnv('OPENAI_API_KEY') || process.env.OPENAI_API_KEY,
+// 			apiKey: getEnv('OPENAI_API_KEY') || process.env.OPENAI_API_PROJECT_KEY,
 //       dimensions: 512,  // Ensure dimensions are passed as an integer
 // 			model: getEnv('EMBEDDING_MODEL') || process.env.EMBEDDING_MODEL,
 // 		 });

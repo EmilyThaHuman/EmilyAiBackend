@@ -1,31 +1,38 @@
 /* eslint-disable no-dupe-keys */
-const jwt = require('jsonwebtoken');
-const { sign, verify } = jwt;
-const bcrypt = require('bcrypt');
-require('dotenv').config();
-const { Prompt, User, File } = require('@/models');
+require("dotenv").config();
+const bcrypt = require("bcrypt");
+const path = require("path");
+const fs = require("node:fs/promises");
+const { User } = require("@models/user");
+const { Collection } = require("@models/main");
+const { Prompt, File, Tool, Preset, Model } = require("@models/chat");
+const { presets, files, prompts, models, tools } = require("@lib");
+const { initialPresets } = presets;
+const { initialUserFiles } = files;
+const { initialModels } = models;
+const { initialUserPrompts } = prompts;
+const { tools: initialTools } = tools;
+const {
+  ValidationError,
+  ConflictError,
+  ALLOWED_FILE_TYPES_ABBR,
+  SUPPORTED_MIME_TYPES_ABBR
+} = require("@config/constants");
 const {
   createWorkspace,
   createFolders,
-  createFile,
-  createPreset,
   createAssistant,
-  createChatSession,
-  createPrompt,
-  createCollection,
-  createTool,
-  createModel,
-} = require('@/db/init'); // Adjust the path as needed
-const { logger } = require('@/config/logging');
-const { initialUserPrompts } = require('@/lib/prompts/static');
-const { ValidationError, ConflictError, ServerError } = require('@/config/constants');
+  createChatSession
+} = require("@db/helpers");
+const { logger } = require("@config/logging");
+const { getEnv } = require("@utils/processing/api");
 
 const validateUserInput = ({ username, email, password }) => {
   if (!username || !email || !password) {
-    throw new ValidationError('All fields (username, email, password) are required');
+    throw new ValidationError("All fields (username, email, password) are required");
   }
   if (password.length < 6) {
-    throw new ValidationError('Password must be at least 6 characters long');
+    throw new ValidationError("Password must be at least 6 characters long");
   }
 };
 
@@ -33,10 +40,10 @@ const checkUserExists = async ({ username, email }) => {
   try {
     const userExists = await User.findOne({ $or: [{ email }, { username }] });
     if (userExists) {
-      throw new ConflictError('Username or email already exists');
+      throw new ConflictError("Username or email already exists");
     }
   } catch (error) {
-    logger.error('Error checking user existence:', error);
+    logger.error("Error checking user existence:", error);
     throw error;
   }
 };
@@ -54,7 +61,7 @@ const createNewUser = async ({ username, email, password }) => {
     ...defaultUserData,
     username,
     email,
-    'auth.password': passwordHash,
+    "auth.password": passwordHash
   });
 
   await newUser.save();
@@ -69,310 +76,354 @@ const saveInitialPrompts = async (userId, workspaceId, folderId) => {
       folderId,
       name: prompt.name,
       content: prompt.content,
-      role: 'user',
+      role: "user",
       type: prompt.type,
       sharing: prompt.sharing,
       rating: prompt.rating,
-      tags: prompt.tags,
+      tags: prompt.tags
     }));
 
     const savedPrompts = await Prompt.insertMany(promptsToSave);
     return savedPrompts;
   } catch (error) {
-    logger.error('Error saving prompts:', error);
-    throw error;
-  }
-};
-const createDefaultFile = () => {
-  const filesToInsert = initialUserFiles.reduce((accumulator, file) => {
-    const fileExtension = path.extname(file.name).substring(1).toLowerCase();
-
-    if (!allowedTypes.includes(fileExtension)) {
-      console.warn(`Skipping unsupported file type: .${fileExtension}`);
-      return accumulator;
-    }
-
-    const mimeType = mimeTypes[fileExtension] || 'application/octet-stream';
-
-    // Get file stats
-    const fileStats = fs.statSync(file.path);
-    const fileSize = fileStats.size;
-
-    // Read the raw data of the file
-    const fileData = fs.readFileSync(file.path);
-
-    const mappedFile = new File({
-      _id: new mongoose.Types.ObjectId(),
-      name: file.name,
-      filePath: file.path,
-      content: fileData.toString('utf8'), // Convert Buffer to string if needed
-      size: fileSize,
-      type: fileExtension,
-      mimeType: mimeType,
-      originalFileType: fileExtension,
-      data: fileData,
-      space: 'files', // Adjust as needed
-      metadata: {
-        fileSize: fileSize,
-        fileType: fileExtension,
-        lastModified: fileStats.mtime,
-      },
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
-
-    accumulator.push(mappedFile);
-    return accumulator;
-  }, []);
-
-  return filesToInsert;
-};
-
-const createFileWithAssociation = async (userId, workspaceId, folderId, fileData) => {
-  const fileExtension = path.extname(fileData.name).substring(1).toLowerCase();
-
-  if (!allowedTypes.includes(fileExtension)) {
-    throw new Error(`File type .${fileExtension} is not supported.`);
-  }
-
-  const mimeType = mimeTypes[fileExtension] || 'application/octet-stream';
-
-  // Assuming fileData.content is a Buffer or string of the file content
-  const contentBuffer = Buffer.isBuffer(fileData.content)
-    ? fileData.content
-    : Buffer.from(fileData.content, 'utf8');
-
-  const fileSize = contentBuffer.length;
-
-  const newFile = new File({
-    _id: new mongoose.Types.ObjectId(),
-    name: fileData.name,
-    filePath: fileData.path || '', // Optional file path
-    content: contentBuffer.toString('utf8'), // Convert Buffer to string if needed
-    size: fileSize,
-    type: fileExtension,
-    mimeType: mimeType,
-    originalFileType: fileExtension,
-    data: contentBuffer,
-    space: 'files', // Adjust as needed
-    metadata: {
-      fileSize: fileSize,
-      fileType: fileExtension,
-      lastModified: new Date(),
-    },
-    userId: userId,
-    workspaceId: workspaceId,
-    folderId: folderId,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  });
-
-  try {
-    await newFile.save();
-    console.log('File created successfully with associations');
-    return newFile;
-  } catch (error) {
-    console.error('Error creating file with associations:', error);
+    logger.error("Error saving prompts:", error);
     throw error;
   }
 };
 
-// Function to save initial files with associations
 const saveInitialFiles = async (userId, workspaceId, folderId) => {
   try {
-    const filesToSave = initialUserFiles
-      .map((file) => {
-        const fileExtension = path.extname(file.name).substring(1).toLowerCase();
+    const filesToSave = await Promise.all(
+      initialUserFiles
+        .filter((file) => {
+          const fileExtension = path.extname(file.name).substring(1).toLowerCase();
+          if (!ALLOWED_FILE_TYPES_ABBR.includes(fileExtension)) {
+            logger.warn(`Skipping unsupported file type: .${fileExtension}`);
+            return false; // Skip unsupported files
+          }
+          return true;
+        })
+        .map(async (file) => {
+          const fileExtension = path.extname(file.name).substring(1).toLowerCase();
+          const mimeType = SUPPORTED_MIME_TYPES_ABBR[fileExtension] || "application/octet-stream";
 
-        if (!allowedTypes.includes(fileExtension)) {
-          console.warn(`Skipping unsupported file type: .${fileExtension}`);
-          return null; // Skip unsupported files
-        }
+          // Read file data
+          const filePath = file.path;
+          try {
+            await fs.access(filePath); // Check if file exists
+          } catch (err) {
+            logger.warn(`File does not exist: ${filePath}`);
+            return null;
+          }
+          const fileStats = await fs.stat(filePath);
+          const fileSize = fileStats.size;
+          const fileData = await fs.readFile(filePath);
 
-        const mimeType = mimeTypes[fileExtension] || 'application/octet-stream';
+          // Determine if the file is text or binary
+          const textFileTypes = ["txt", "md", "html", "json", "csv", "tsv", "jsx", "js"];
+          const isTextFile = textFileTypes.includes(fileExtension);
+          const content = isTextFile ? fileData.toString("utf8") : null;
 
-        // Read file data
-        const filePath = file.path;
-        const fileStats = fs.statSync(filePath);
-        const fileSize = fileStats.size;
-        const fileData = fs.readFileSync(filePath);
+          return {
+            userId,
+            workspaceId,
+            folderId,
+            name: file.name,
+            filePath: filePath,
+            content: content, // Only store content for text files
+            size: fileSize,
+            type: fileExtension,
+            mimeType: mimeType,
+            originalFileType: fileExtension,
+            data: fileData, // Raw file data as Buffer
+            space: "files",
+            metadata: {
+              fileSize: fileSize,
+              fileType: fileExtension,
+              lastModified: fileStats.mtime
+            },
+            createdAt: new Date(),
+            updatedAt: new Date()
+          };
+        })
+    );
 
-        // Determine if the file is text or binary
-        const textFileTypes = ['txt', 'md', 'html', 'json', 'csv', 'tsv', 'jsx', 'js'];
-        const isTextFile = textFileTypes.includes(fileExtension);
-        const content = isTextFile ? fileData.toString('utf8') : null;
-
-        return {
-          userId,
-          workspaceId,
-          folderId,
-          name: file.name,
-          filePath: filePath,
-          content: content, // Only store content for text files
-          size: fileSize,
-          type: fileExtension,
-          mimeType: mimeType,
-          originalFileType: fileExtension,
-          data: fileData, // Raw file data as Buffer
-          space: 'files',
-          metadata: {
-            fileSize: fileSize,
-            fileType: fileExtension,
-            lastModified: fileStats.mtime,
-          },
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        };
-      })
-      .filter((file) => file !== null); // Remove any null entries
-
-    const savedFiles = await File.insertMany(filesToSave);
-    console.log('Initial files saved successfully');
+    const validFiles = filesToSave.filter((file) => file !== null);
+    const savedFiles = await File.insertMany(validFiles);
+    logger.info("Initial files saved successfully");
     return savedFiles;
   } catch (error) {
-    console.error('Error saving initial files:', error);
+    logger.error("Error saving initial files:", error);
     throw error;
   }
 };
 
-const saveInitialTools = async (userId, workspaceId, folderId) => {
+const saveInitialTools = async (userId, workspaceId, folderId, assistantId) => {
   try {
-    const promptsToSave = initialUserPrompts.map((prompt) => ({
+    if (!initialTools || !Array.isArray(initialTools) || initialTools.length === 0) {
+      logger.warn("No tools to save or tools is not properly defined");
+      return [];
+    }
+    const toolsToSave = initialTools.map((tool, index) => ({
       userId,
       workspaceId,
       folderId,
-      name: prompt.name,
-      content: prompt.content,
-      role: 'user',
-      type: prompt.type,
-      sharing: prompt.sharing,
-      rating: prompt.rating,
-      tags: prompt.tags,
+      assistantId,
+      name: tool.function.name || `Tool ${index + 1}`,
+      description: tool.function.description || "No description provided",
+      schema: JSON.stringify(tool.function)
     }));
 
-    const savedPrompts = await Prompt.insertMany(promptsToSave);
-    return savedPrompts;
+    const savedTools = await Tool.insertMany(toolsToSave);
+    logger.info("All tools have been saved successfully.");
+    return savedTools;
   } catch (error) {
-    logger.error('Error saving prompts:', error);
+    logger.error("Error saving tools:", error);
     throw error;
   }
 };
 
+const saveInitialPresets = async (userId, workspaceId, folderId) => {
+  try {
+    const presetsToSave = initialPresets.map((preset) => ({
+      userId,
+      workspaceId,
+      folderId,
+      name: preset.name,
+      model: preset.model,
+      temperature: preset.temperature,
+      maxTokens: preset.maxTokens,
+      topP: preset.topP,
+      frequencyPenalty: preset.frequencyPenalty,
+      presencePenalty: preset.presencePenalty,
+      prompt: preset.prompt,
+      stop: preset.stop,
+      n: preset.n,
+      contextLength: preset.contextLength,
+      embeddingsProvider: preset.embeddingsProvider,
+      systemPrompt: preset.systemPrompt,
+      assistantPrompt: preset.assistantPrompt,
+      functions: preset.functions,
+      includeProfileContext: preset.includeProfileContext,
+      includeWorkspaceInstructions: preset.includeWorkspaceInstructions,
+      sharing: preset.sharing
+    }));
+
+    const savedPresets = await Preset.insertMany(presetsToSave);
+    return savedPresets;
+  } catch (error) {
+    logger.error("Error saving presets:", error);
+    throw error;
+  }
+};
+
+const saveInitialModels = async (userId, workspaceId, folderId) => {
+  try {
+    const modelsToSave = initialModels.map((model) => ({
+      userId,
+      workspaceId,
+      folderId,
+      name: model.name,
+      description: model.description,
+      modelId: model.modelId,
+      sharing: model.sharing,
+      apiKey: model.apiKey,
+      baseUrl: model.baseUrl
+    }));
+
+    const savedModels = await Model.insertMany(modelsToSave);
+    return savedModels;
+  } catch (error) {
+    logger.error("Error saving models:", error);
+    throw error;
+  }
+};
+
+const saveInitialCollections = async (userId, workspaceId, folderId) => {
+  const initialCollections = [
+    {
+      name: "Text Analysis Collection",
+      description: "A collection of datasets and tools optimized for text analysis and NLP.",
+      sharing: "private"
+    },
+    {
+      name: "Image Processing Collection",
+      description:
+        "A collection containing resources for image recognition and computer vision tasks.",
+      sharing: "shared"
+    },
+    {
+      name: "Data Science Tools Collection",
+      description:
+        "Comprehensive datasets and models for various data science and machine learning tasks.",
+      sharing: "public"
+    }
+  ];
+
+  try {
+    const collectionsToSave = initialCollections.map((collection) => ({
+      userId,
+      workspaceId,
+      folderId,
+      name: collection.name,
+      description: collection.description,
+      sharing: collection.sharing,
+      items: collection.items
+    }));
+    const savedCollections = await Collection.insertMany(collectionsToSave);
+    return savedCollections;
+  } catch (error) {
+    logger.error("Error saving collections:", error);
+    throw error;
+  }
+};
+
+/**
+ * Initializes user data by creating a workspace, folders, and saving the new user.
+ * @param {Object} newUser - The new user object to initialize data for.
+ * @param {string} accessToken - The access token for the new user.
+ * @param {string} refreshToken - The refresh token for the new user.
+ * @returns {Object} An object containing the new user, workspace, and folders.
+ * @throws {Error} If there is an error during initialization.
+ */
 const initializeUserData = async (newUser, accessToken, refreshToken) => {
   try {
-    // Create workspace and folders
+    // Create workspace and folders concurrently
     const workspace = await createWorkspace(newUser);
     const folders = await createFolders(newUser, workspace);
 
     // Map folder space to folder documents
-    const folderMap = {};
-    folders.forEach((folder) => {
-      folderMap[folder.space] = folder;
-    });
+    const folderMap = folders.reduce((acc, folder) => {
+      acc[folder.space] = folder;
+      return acc;
+    }, {});
+
+    // Helper function to update entities with items
+    const updateEntitiesWithItems = (entities, items, property) => {
+      items.forEach((item) => {
+        entities.forEach((entity) => {
+          entity[property].push(item._id);
+        });
+      });
+    };
 
     // Save initial prompts
-    const promptsFolder = folderMap['prompts'];
+    const promptsFolder = folderMap["prompts"];
     const savedPrompts = await saveInitialPrompts(newUser._id, workspace._id, promptsFolder._id);
+    updateEntitiesWithItems([newUser, workspace, promptsFolder], savedPrompts, "prompts");
+    updateEntitiesWithItems([promptsFolder], savedPrompts, "items");
+    await promptsFolder.save(); // Save the folder after updating
 
-    // Update user, workspace, and folder with prompts
-    savedPrompts.forEach((prompt) => {
-      newUser.prompts.push(prompt._id);
-      workspace.prompts.push(prompt._id);
-      promptsFolder.prompts.push(prompt._id);
-    });
+    // Save initial files
+    const filesFolder = folderMap["files"];
+    const savedFiles = await saveInitialFiles(newUser._id, workspace._id, filesFolder._id);
+    updateEntitiesWithItems([newUser, workspace, filesFolder], savedFiles, "files");
+    updateEntitiesWithItems([filesFolder], savedFiles, "items");
+    await filesFolder.save(); // Save the folder after updating
 
-    // Create other items
-    const [file, preset, prompt, collection, tool, model] = await Promise.all([
-      createFile(newUser, folderMap['files']),
-      createPreset(newUser, folderMap['presets']),
-      createPrompt(newUser, workspace, folderMap['prompts']),
-      createCollection(newUser, folderMap['collections']),
-      createTool(newUser, workspace, folderMap['tools']),
-      createModel(newUser, folderMap['models']),
-    ]);
+    // Use one of the saved files to create assistant
+    const assistantFolder = folderMap["assistants"];
+    const assistant = await createAssistant(newUser, assistantFolder, savedFiles[0]);
+    updateEntitiesWithItems([newUser, workspace, assistantFolder], [assistant], "assistants");
+    updateEntitiesWithItems([assistantFolder], [assistant], "items");
+    await assistantFolder.save(); // Save the folder after updating
 
-    const assistant = await createAssistant(newUser, folderMap['assistants'], file);
-    const chatSession = await createChatSession(
-      newUser,
-      workspace,
-      assistant,
-      folderMap['chatSessions']
+    // Save initial tools
+    const toolsFolder = folderMap["tools"];
+    const savedTools = await saveInitialTools(
+      newUser._id,
+      workspace._id,
+      toolsFolder._id,
+      assistant._id
     );
+    updateEntitiesWithItems([newUser, workspace, toolsFolder], savedTools, "tools");
+    updateEntitiesWithItems([toolsFolder], savedTools, "items");
+    await toolsFolder.save(); // Save the folder after updating
 
-    // Map of items
-    const itemsMap = {
-      files: file,
-      presets: preset,
-      prompts: prompt,
-      collections: collection,
-      tools: tool,
-      models: model,
-      assistants: assistant,
-      chatSessions: chatSession,
-    };
+    // Save initial presets
+    const presetsFolder = folderMap["presets"];
+    const savedPresets = await saveInitialPresets(newUser._id, workspace._id, presetsFolder._id);
+    updateEntitiesWithItems([newUser, workspace, presetsFolder], savedPresets, "presets");
+    updateEntitiesWithItems([presetsFolder], savedPresets, "items");
+    await presetsFolder.save(); // Save the folder after updating
 
-    // Update folders with new items
-    const folderUpdatePromises = folders.map((folder) => {
-      const item = itemsMap[folder.space];
-      if (item && folder[folder.space]) {
-        folder[folder.space].push(item._id);
-      }
-      return folder.save();
-    });
+    // Save initial models
+    const modelsFolder = folderMap["models"];
+    const savedModels = await saveInitialModels(newUser._id, workspace._id, modelsFolder._id);
+    updateEntitiesWithItems([newUser, workspace, modelsFolder], savedModels, "models");
+    updateEntitiesWithItems([modelsFolder], savedModels, "items");
+    await modelsFolder.save(); // Save the folder after updating
 
-    await Promise.all(folderUpdatePromises);
+    // Save initial collections
+    const collectionsFolder = folderMap["collections"];
+    const savedCollections = await saveInitialCollections(
+      newUser._id,
+      workspace._id,
+      collectionsFolder._id
+    );
+    updateEntitiesWithItems(
+      [newUser, workspace, collectionsFolder],
+      savedCollections,
+      "collections"
+    );
+    updateEntitiesWithItems([collectionsFolder], savedCollections, "items");
+    await collectionsFolder.save(); // Save the folder after updating
 
-    // Update workspace
-    workspace.files.push(file._id);
-    workspace.presets.push(preset._id);
+    // Create chat session
+    const chatSessionFolder = folderMap["chatSessions"];
+    const chatSession = await createChatSession(newUser, workspace, assistant, chatSessionFolder);
+    updateEntitiesWithItems([workspace, chatSessionFolder], [chatSession], "chatSessions");
+    updateEntitiesWithItems([chatSessionFolder], [chatSession], "items");
+    await chatSessionFolder.save(); // Save the folder after updating
+
+    // Save workspace and user
     workspace.assistants.push(assistant._id);
     workspace.chatSessions.push(chatSession._id);
-    workspace.prompts.push(prompt._id);
-    workspace.collections.push(collection._id);
-    workspace.tools.push(tool._id);
-    workspace.models.push(model._id);
     await workspace.save();
 
-    // Update user
     newUser.workspaces.push(workspace._id);
-    newUser.files.push(file._id);
-    newUser.presets.push(preset._id);
     newUser.assistants.push(assistant._id);
     newUser.chatSessions.push(chatSession._id);
-    newUser.prompts.push(prompt._id);
-    newUser.collections.push(collection._id);
-    newUser.tools.push(tool._id);
-    newUser.models.push(model._id);
-    newUser.authSession = {
-      accessToken,
-      refreshToken,
-      expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
-      createdAt: new Date(),
-    };
 
-    // Update OpenAI profile
+    newUser.isActive = true;
+    newUser.hasOnboarded = true;
+    newUser.homeWorkspaceId = workspace._id;
+
+    // Update user profile
+    newUser.profile.bio = "No bio provided";
+    newUser.profile.username = newUser.username || "No username provided";
+    newUser.profile.displayName = "No display name provided";
+    newUser.profile.envKeyMap["openaiApiKey"] = getEnv("OPENAI_API_PROJECT_KEY");
     newUser.profile.openai = {
-      apiKey: process.env.OPENAI_API_PROJECT_KEY,
+      apiKey: getEnv("OPENAI_API_PROJECT_KEY"),
       organizationId: process.env.OPENAI_API_ORG_ID,
-      apiVersion: '',
+      apiVersion: "",
       projects: [
         {
           name: process.env.OPENAI_API_PROJECT_NAME,
           id: process.env.OPENAI_API_PROJECT_ID,
           organizationId: process.env.OPENAI_API_ORG_ID,
           organizationName: process.env.OPENAI_API_ORG_NAME,
-          apiKey: process.env.OPENAI_API_PROJECT_KEY,
-          apiVersion: '',
+          apiKey: getEnv("OPENAI_API_PROJECT_KEY"),
+          apiVersion: "",
           default: true,
           users: [
             {
               userId: newUser._id,
-              role: 'admin',
-              readWrite: true,
-            },
-          ],
-        },
-      ],
+              role: "admin",
+              readWrite: true
+            }
+          ]
+        }
+      ]
+    };
+
+    // Update user authentication session
+    newUser.authSession = {
+      accessToken,
+      refreshToken,
+      expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
+      createdAt: new Date()
     };
 
     await newUser.save();
@@ -380,14 +431,198 @@ const initializeUserData = async (newUser, accessToken, refreshToken) => {
     return { newUser, workspace, folders };
   } catch (error) {
     logger.error(`Error initializing user data: ${error.message}`);
-    throw new ServerError('Failed to initialize user data');
+    throw new Error("Failed to initialize user data");
   }
 };
 
 module.exports = {
   saveInitialPrompts,
+  saveInitialFiles,
+  saveInitialTools,
   validateUserInput,
   checkUserExists,
   createNewUser,
-  initializeUserData,
+  initializeUserData
 };
+
+// const initializeUserData = async (newUser, accessToken, refreshToken) => {
+//   try {
+//     // Create workspace and folders
+//     const workspace = await createWorkspace(newUser);
+//     const folders = await createFolders(newUser, workspace);
+
+//     // Map folder space to folder documents
+//     const folderMap = {};
+//     folders.forEach((folder) => {
+//       folderMap[folder.space] = folder;
+//     });
+
+//     // Save initial prompts
+//     const promptsFolder = folderMap["prompts"];
+//     const savedPrompts = await saveInitialPrompts(newUser._id, workspace._id, promptsFolder._id);
+
+//     // Update user, workspace, and folder with prompts
+//     savedPrompts.forEach((prompt) => {
+//       newUser.prompts.push(prompt._id);
+//       workspace.prompts.push(prompt._id);
+//       promptsFolder.prompts.push(prompt._id);
+//       promptsFolder.items.push(prompt._id);
+//     });
+
+//     // Save initial files
+//     const filesFolder = folderMap["files"];
+//     const savedFiles = await saveInitialFiles(newUser._id, workspace._id, filesFolder._id);
+
+//     // Update user, workspace, and folder with files
+//     savedFiles.forEach((file) => {
+//       newUser.files.push(file._id);
+//       workspace.files.push(file._id);
+//       filesFolder.files.push(file._id);
+//       filesFolder.items.push(file._id);
+//     });
+
+//     // Use one of the saved files to create assistant
+//     const assistant = await createAssistant(newUser, folderMap["assistants"], savedFiles[0]);
+
+//     // Update user, workspace, and folder with assistant
+//     newUser.assistants.push(assistant._id);
+//     workspace.assistants.push(assistant._id);
+//     folderMap["assistants"].assistants.push(assistant._id);
+
+//     // Save initial tools
+//     const toolsFolder = folderMap["tools"];
+//     const savedTools = await saveInitialTools(
+//       newUser._id,
+//       workspace._id,
+//       toolsFolder._id,
+//       assistant._id
+//     );
+
+//     // Update user, workspace, and folder with tools
+//     savedTools.forEach((tool) => {
+//       newUser.tools.push(tool._id);
+//       workspace.tools.push(tool._id);
+//       toolsFolder.tools.push(tool._id);
+//       toolsFolder.items.push(tool._id);
+//     });
+
+//     // Save initial presets
+//     const presetsFolder = folderMap["presets"];
+//     const savedPresets = await saveInitialPresets(newUser._id, workspace._id, presetsFolder._id);
+
+//     // Update user, workspace, and folder with presets
+//     savedPresets.forEach((preset) => {
+//       newUser.presets.push(preset._id);
+//       workspace.presets.push(preset._id);
+//       presetsFolder.presets.push(preset._id);
+//       presetsFolder.items.push(preset._id);
+//     });
+
+//     // Save initial models
+//     const modelsFolder = folderMap["models"];
+//     const savedModels = await saveInitialModels(newUser._id, workspace._id, modelsFolder._id);
+
+//     // Update user, workspace, and folder with models
+//     savedModels.forEach((model) => {
+//       newUser.models.push(model._id);
+//       workspace.models.push(model._id);
+//       modelsFolder.models.push(model._id);
+//       modelsFolder.items.push(model._id);
+//     });
+
+//     // Save initial collections
+//     const collectionsFolder = folderMap["collections"];
+//     const savedCollections = await saveInitialCollections(
+//       newUser._id,
+//       workspace._id,
+//       collectionsFolder._id
+//     );
+
+//     // Update user, workspace, and folder with collections
+//     savedCollections.forEach((collection) => {
+//       newUser.collections.push(collection._id);
+//       workspace.collections.push(collection._id);
+//       collectionsFolder.collections.push(collection._id);
+//       collectionsFolder.items.push(collection._id);
+//     });
+
+//     const chatSessionFolder = folderMap["chatSessions"];
+//     const chatSession = await createChatSession(
+//       newUser,
+//       workspace,
+//       assistant,
+//       folderMap["chatSessions"]
+//     );
+//     chatSessionFolder.chatSessions.push(chatSession._id);
+
+//     const assistantFolder = folderMap["assistants"];
+//     assistantFolder.assistants.push(assistant._id);
+//     assistantFolder.items.push(assistant._id);
+
+//     await Promise.all(
+//       folders.map(async (folder) => {
+//         if        const item = chatSession._id === folder.space ? chatSession : assistant;
+//         if (item && folder[folder.space]) {
+//           folder[folder.space].push(item._id);
+//           folder.items.push(item._id);
+//           await folder.save();
+//         }
+//       })
+//     );
+
+//     workspace.assistants.push(assistant._id);
+//     workspace.chatSessions.push(chatSession._id);
+//     await workspace.save();
+
+//     // Update user
+//     newUser.workspaces.push(workspace._id);
+//     newUser.assistants.push(assistant._id);
+//     newUser.chatSessions.push(chatSession._id);
+
+//     // update auth
+//     newUser.authSession = {
+//       accessToken,
+//       refreshToken,
+//       expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
+//       createdAt: new Date()
+//     };
+//     newUser.isActive = true;
+//     newUser.hasOnboarded = true;
+
+//     // Update profile
+//     newUser.profile.bio = "No bio provided";
+//     newUser.profile.envKeyMap["openaiApiKey"] = process.env.OPENAI_API_PROJECT_KEY;
+
+//     newUser.profile.openai = {
+//       apiKey: process.env.OPENAI_API_PROJECT_KEY,
+//       organizationId: process.env.OPENAI_API_ORG_ID,
+//       apiVersion: "",
+//       projects: [
+//         {
+//           name: process.env.OPENAI_API_PROJECT_NAME,
+//           id: process.env.OPENAI_API_PROJECT_ID,
+//           organizationId: process.env.OPENAI_API_ORG_ID,
+//           organizationName: process.env.OPENAI_API_ORG_NAME,
+//           apiKey: process.env.OPENAI_API_PROJECT_KEY,
+//           apiVersion: "",
+//           default: true,
+//           users: [
+//             {
+//               userId: newUser._id,
+//               role: "admin",
+//               readWrite: true
+//             }
+//           ]
+//         }
+//       ]
+//     };
+
+//     await newUser.save();
+
+//     return { newUser, workspace, folders };
+//   } catch (error) {
+//     logger.error(`Error initializing user data: ${error.message}`);
+//     throw error;
+//     // throw new ServerError("Failed to initialize user data");
+//   }
+// };

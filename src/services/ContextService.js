@@ -1,9 +1,9 @@
-const { OpenAIEmbeddings } = require('@langchain/openai');
-const { PineconeStore } = require('@langchain/pinecone');
-const { Pinecone } = require('@pinecone-database/pinecone');
-const { Document } = require('@langchain/core/documents');
-const { OpenAI } = require('langchain/llms/openai');
-const { RetrievalQAChain } = require('langchain/chains');
+const { OpenAIEmbeddings } = require("@langchain/openai");
+const { PineconeStore } = require("@langchain/pinecone");
+const { Pinecone } = require("@pinecone-database/pinecone");
+const { Document } = require("@langchain/core/documents");
+const { OpenAI } = require("langchain/llms/openai");
+const { RetrievalQAChain } = require("langchain/chains");
 
 class ContextService {
   constructor() {
@@ -16,14 +16,14 @@ class ContextService {
 
   async initialize() {
     this.vectorStore = await PineconeStore.fromExistingIndex(this.embeddings, {
-      pineconeIndex: this.pineconeIndex,
+      pineconeIndex: this.pineconeIndex
     });
   }
 
   async addDocument(content, metadata = {}) {
     const doc = new Document({ pageContent: content, metadata });
     await PineconeStore.fromDocuments([doc], this.embeddings, {
-      pineconeIndex: this.pineconeIndex,
+      pineconeIndex: this.pineconeIndex
     });
   }
 

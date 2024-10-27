@@ -4,31 +4,31 @@
  * --------------------------------------------
  */
 
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-const compression = require('compression');
-const cookieParser = require('cookie-parser');
-const { morganMiddleware } = require('./morganMiddleware');
-const path = require('path');
-const session = require('express-session');
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const { User } = require('../models');
-const MongoStore = require('connect-mongo');
-const config = require('@/config');
-// const config = require('@/config');
+const path = require("path");
+const express = require("express");
+const cors = require("cors");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
+const compression = require("compression");
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
+const MongoStore = require("connect-mongo");
+const { morganMiddleware } = require("./morganMiddleware");
+const config = require("@config/main");
+const { User } = require("../models/user");
+const MongoDBStore = require('connect-mongodb-session')(session);
 
 const middlewares = (app) => {
   // Set up Helmet for enhanced security, including Content Security Policy (CSP)
-  app.use(helmet(config.security.helmet));
+  app.use(helmet(config.app.middlewares.security.helmet));
 
   // Use Morgan middleware for logging HTTP requests
   app.use(morganMiddleware);
 
   // Enable response compression for better performance
-  app.use(compression(config.compression));
+  app.use(compression(config.app.middlewares.compression));
 
   // Parse incoming JSON requests
   app.use(express.json());
@@ -37,18 +37,25 @@ const middlewares = (app) => {
   app.use(express.urlencoded({ extended: true }));
 
   // Parse cookies attached to client requests
-  app.use(cookieParser(config.cookie.secret));
+  app.use(cookieParser(config.auth.cookie.secret));
 
   // Configure CORS settings
-  app.use(cors(config.cors));
+  app.use(cors(config.app.middlewares.cors));
+
+  const store = new MongoDBStore({
+    uri: config.database.uri,
+    collection: "sessions"
+  });
+
+  store.on("error", function (error) {
+    console.log(error);
+  });
 
   // Session configuration
   app.use(
     session({
-      ...config.session,
-      store: new MongoStore({
-        mongoUrl: config.database.uri,
-      }),
+      ...config.auth.session,
+      store: store
     })
   );
 
@@ -58,15 +65,15 @@ const middlewares = (app) => {
 
   // Configure local strategy for user authentication
   passport.use(
-    new LocalStrategy(config.passport.local, async (email, password, done) => {
+    new LocalStrategy(config.auth.passport.local, async (email, password, done) => {
       try {
         const user = await User.findOne({ email });
         if (!user) {
-          return done(null, false, { message: 'Incorrect email or password' });
+          return done(null, false, { message: "Incorrect email or password" });
         }
         const isMatch = await user.comparePassword(password);
         if (!isMatch) {
-          return done(null, false, { message: 'Incorrect email or password' });
+          return done(null, false, { message: "Incorrect email or password" });
         }
         return done(null, user);
       } catch (error) {
@@ -77,7 +84,7 @@ const middlewares = (app) => {
 
   // Serialize and deserialize user for session management
   passport.serializeUser((user, done) => {
-    done(null, user.id);
+    done(null, user._id);
   });
 
   passport.deserializeUser(async (id, done) => {
@@ -90,28 +97,28 @@ const middlewares = (app) => {
   });
 
   // Serve static files
-  app.use(express.static(config.staticFiles.public));
+  app.use(express.static(config.app.middlewares.staticFiles.public));
 
-  config.staticFiles.dirs.forEach((dir) => {
+  config.app.middlewares.staticFiles.dirs.forEach((dir) => {
     app.use(
       `/static/${dir}`,
-      cors(config.cors),
-      express.static(path.join(config.staticFiles.public, `static/${dir}`))
+      cors(config.app.middlewares.cors),
+      express.static(path.join(config.app.middlewares.staticFiles.public, `static/${dir}`))
     );
   });
 
   // Endpoint to serve service-worker.js
-  app.get('/service-worker.js', cors(config.cors), (req, res) => {
-    res.sendFile(path.resolve(config.staticFiles.public, 'service-worker.js'));
+  app.get("/service-worker.js", cors(config.app.middlewares.cors), (req, res) => {
+    res.sendFile(path.resolve(config.app.middlewares.staticFiles.public, "service-worker.js"));
   });
 
   // Middleware for handling Server-Sent Events
   app.use(async (req, res, next) => {
-    if (req.headers.accept && req.headers.accept.includes('text/event-stream')) {
+    if (req.headers.accept && req.headers.accept.includes("text/event-stream")) {
       res.writeHead(200, {
-        'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
-        Connection: 'keep-alive',
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive"
       });
       res.flushHeaders();
     }
@@ -119,7 +126,7 @@ const middlewares = (app) => {
   });
 
   // Apply rate limiting to prevent abuse and improve security
-  app.use(rateLimit(config.rateLimit));
+  app.use(rateLimit(config.app.middlewares.rateLimit));
 };
 
 module.exports = middlewares;

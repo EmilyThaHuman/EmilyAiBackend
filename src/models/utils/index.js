@@ -1,4 +1,5 @@
 module.exports = {
-  ...require('./main'),
-  ...require('./schema'),
+  ...require("./main"),
+  ...require("./schema"),
+  ...require("./populate")
 };

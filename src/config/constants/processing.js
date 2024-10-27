@@ -4,5 +4,5 @@ const CHUNK_OVERLAP = 200;
 
 module.exports = {
   CHUNK_SIZE,
-  CHUNK_OVERLAP,
+  CHUNK_OVERLAP
 };
