@@ -1,6 +1,11 @@
 const { TokenTextSplitter } = require("langchain/text_splitter");
 const { escapeRegExp } = require("./text");
 
+/**
+ * Checks if a message contains specific diff markers.
+ * @param {string} message - The message to check for diff markers.
+ * @returns {boolean} True if the message contains all required diff markers, false otherwise.
+ */
 const containsDiff = (message) => {
   return (
     message.includes("<<<<<<< ORIGINAL") &&
@@ -9,6 +14,12 @@ const containsDiff = (message) => {
   );
 };
 
+/**
+ * Applies a diff to a given code string
+ * @param {string} code - The original code string to be modified
+ * @param {string} diff - The diff string containing the changes to be applied
+ * @returns {string} The modified code string after applying the diff
+ */
 const applyDiff = (code, diff) => {
   const regex = /<<<<<<< ORIGINAL\n(.*?)=======\n(.*?)>>>>>>> UPDATED/gs;
   let match;
@@ -23,11 +34,26 @@ const applyDiff = (code, diff) => {
   return code;
 };
 
+/**
+ * Slices an array into smaller chunks of a specified size.
+ * @param {Array} arr - The array to be sliced into chunks.
+ * @param {number} chunkSize - The size of each chunk.
+ * @returns {Array} An array of arrays, where each inner array is a chunk of the original array.
+ */
 const sliceIntoChunks = (arr, chunkSize) =>
   Array.from({ length: Math.ceil(arr.length / chunkSize) }, (_, i) =>
     arr.slice(i * chunkSize, (i + 1) * chunkSize)
   );
 
+/**
+ * Performs chunked upsert operations on a vector index within a specified namespace
+ * @param {Object} index - The vector index object to perform upserts on
+ * @param {Array} vectors - The array of vectors to be upserted
+ * @param {string} namespace - The namespace within the index to upsert the vectors
+ * @param {number} [chunkSize=10] - The size of each chunk for batch processing
+ * @returns {Promise<boolean>} Returns true if the upsert operation is successful
+ * @throws {Error} Throws an error if there's a problem upserting vectors into the index
+ */
 const chunkedUpsert = async (index, vectors, namespace, chunkSize = 10) => {
   const chunks = sliceIntoChunks(vectors, chunkSize);
   try {
@@ -46,10 +72,21 @@ const chunkedUpsert = async (index, vectors, namespace, chunkSize = 10) => {
   }
 };
 
+/**
+ * Extracts the content from a chunk object returned by an AI model.
+ * @param {Object} chunk - The chunk object containing the AI model's response.
+ * @returns {string} The extracted content as a string, or an empty string if no content is found.
+ */
 const extractContent = (chunk) => {
   return chunk.choices[0]?.delta?.content || "";
 };
 
+/**
+ * Processes a batch of chunks by extracting and concatenating their content.
+ * @param {Array} chunks - An array of chunks to be processed.
+ * @returns {string} A single string containing the concatenated content of all chunks.
+ * @throws {Error} Logs an error message if an exception occurs during processing.
+ */
 const processChunkBatch = async (chunks) => {
   try {
     // maps each chunk to its content and joins them into a single string
@@ -66,6 +103,13 @@ const processChunkBatch = async (chunks) => {
   }
 };
 
+/**
+ * Splits a given text into semantic chunks using a TokenTextSplitter.
+ * @param {string} text - The input text to be split into chunks.
+ * @param {number} [chunkSize=1000] - The maximum size of each chunk in tokens.
+ * @param {number} [overlap=200] - The number of overlapping tokens between chunks.
+ * @returns {string[]} An array of text chunks.
+ */
 function semanticChunking(text, chunkSize = 1000, overlap = 200) {
   const splitter = new TokenTextSplitter({
     chunkSize: chunkSize,
@@ -75,6 +119,12 @@ function semanticChunking(text, chunkSize = 1000, overlap = 200) {
   return splitter.splitText(text);
 }
 
+/**
+ * Creates an array of overlapping chunks from the input array.
+ * @param {Array} chunks - The input array to be windowed.
+ * @param {number} [windowSize=3] - The size of each window. Defaults to 3.
+ * @returns {Array} An array of strings, each representing a window of joined chunks.
+ */
 function slidingWindowChunks(chunks, windowSize = 3) {
   const windows = [];
   for (let i = 0; i < chunks.length - windowSize + 1; i++) {
@@ -83,6 +133,11 @@ function slidingWindowChunks(chunks, windowSize = 3) {
   return windows;
 }
 
+/**
+ * Cleans and parses response data by removing unnecessary characters and converting it to a JSON object.
+ * @param {string} responseData - The raw response data string to be cleaned and parsed.
+ * @returns {Object|null} The parsed JSON object, or null if parsing fails.
+ */
 function cleanResponseData(responseData) {
   // Step 1: Remove leading/trailing quotes and escape characters
   const cleanedData = responseData
