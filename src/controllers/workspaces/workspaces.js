@@ -13,6 +13,7 @@ const getAllWorkspaces = async (req, res) => {
     res.status(500).json({ message: "Error fetching workspaces", error: error.message });
   }
 };
+
 const getAllUserWorkspaces = async (req, res) => {
   try {
     const workspaces = await Workspace.find({ userId: req.params.userId })
@@ -288,15 +289,51 @@ function organizeFoldersIntoTree(folders) {
 const getHomeWorkspace = async (req, res) => {
   const userId = req.params.userId;
   try {
-    // const db = getDB();
     const homeWorkspace = await Workspace.findOne({
       userId: userId,
       isHome: true
-    });
+    })
+      .populate({
+        path: "folders",
+        populate: {
+          path: "items",
+          model: function (doc) {
+            // Dynamically determine the model based on folder type
+            switch (doc.type) {
+              case "prompts":
+                return "Prompt";
+              case "assistants":
+                return "Assistant";
+              case "files":
+                return "File";
+              case "chatSessions":
+                return "ChatSession";
+              default:
+                return null;
+            }
+          }
+        }
+      })
+      .populate({
+        path: "chatSessions",
+        populate: {
+          path: "messages",
+          model: "ChatMessage"
+        }
+      })
+      .populate("assistants")
+      .populate("tools")
+      .populate("prompts")
+      .populate("files");
+
     if (!homeWorkspace) {
       return res.status(404).json({ error: "Home workspace not found" });
     }
-    res.json({ id: homeWorkspace._id });
+
+    // Process folders to ensure correct population
+    const processedWorkspace = await processWorkspaceFolders(homeWorkspace);
+
+    res.json(processedWorkspace);
   } catch (error) {
     logger.error("Error retrieving home workspace:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -307,26 +344,108 @@ const getWorkspaceById = async (req, res) => {
   try {
     const workspace = await Workspace.findById(req.params.workspaceId)
       .populate({
+        path: "folders",
+        populate: {
+          path: "items",
+          model: function (doc) {
+            // Dynamically determine the model based on folder type
+            switch (doc.type) {
+              case "prompts":
+                return "Prompt";
+              case "assistants":
+                return "Assistant";
+              case "files":
+                return "File";
+              case "chatSessions":
+                return "ChatSession";
+              default:
+                return null;
+            }
+          }
+        }
+      })
+      .populate({
         path: "chatSessions",
         populate: [
           {
-            path: "messages", // Populating messages for each chatSession
-            model: "ChatMessage" // Explicitly defining the model if needed
+            path: "messages",
+            model: "ChatMessage"
+          },
+          {
+            path: "folder",
+            model: "Folder"
           }
         ]
       })
-      .populate("assistants")
-      .populate("tools")
-      .populate("prompts")
-      .populate("folders");
+      .populate({
+        path: "assistants",
+        populate: {
+          path: "folder",
+          model: "Folder"
+        }
+      })
+      .populate({
+        path: "prompts",
+        populate: {
+          path: "folder",
+          model: "Folder"
+        }
+      })
+      .populate({
+        path: "files",
+        populate: {
+          path: "folder",
+          model: "Folder"
+        }
+      })
+      .populate("tools");
 
     if (!workspace) {
       return res.status(404).json({ message: "Workspace not found" });
     }
-    res.status(200).json(workspace);
+
+    // Process folders to ensure correct population
+    const processedWorkspace = await processWorkspaceFolders(workspace);
+
+    res.status(200).json(processedWorkspace);
   } catch (error) {
     res.status(500).json({ message: "Error fetching workspace", error: error.message });
   }
+};
+
+// Helper function to process workspace folders
+const processWorkspaceFolders = async (workspace) => {
+  if (!workspace.folders) return workspace;
+
+  // Create a map of folder types to their respective collections
+  const collectionMap = {
+    prompts: workspace.prompts,
+    assistants: workspace.assistants,
+    files: workspace.files,
+    chats: workspace.chatSessions
+  };
+
+  // Process each folder
+  const processedFolders = workspace.folders.map((folder) => {
+    const folderType = folder.type;
+    const items = collectionMap[folderType] || [];
+
+    // Filter items that belong to this folder
+    const folderItems = items.filter(
+      (item) => item.folder && item.folder.toString() === folder._id.toString()
+    );
+
+    return {
+      ...folder.toObject(),
+      items: folderItems
+    };
+  });
+
+  // Return processed workspace
+  return {
+    ...workspace.toObject(),
+    folders: processedFolders
+  };
 };
 
 const createWorkspace = async (req, res) => {

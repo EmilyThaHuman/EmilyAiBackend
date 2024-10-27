@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const { logger } = require("@config/logging");
-const { getEnv } = require("@utils/api");
+const { getEnv } = require("@utils/processing/api");
 
 let bucket;
 

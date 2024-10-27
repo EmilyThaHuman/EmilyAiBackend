@@ -10,20 +10,96 @@ const {
   fetchWorkspaceAndChatSessions,
   fetchWorkspaceAndChatSession,
   createWorkspaceChatSession,
-  createWorkspaceFolder,
-  getUserWorkspaces,
+  createWorkspaceFolder
 } = require("@controllers/workspaces");
 const { ChatSession, Preset, Tool, Model, Prompt, Assistant, File } = require("@models/chat");
-const { Folder } = require("@models/workspace");
 const { Collection } = require("@models/main");
 const { logger } = require("@config/logging");
+const { Folder, Workspace } = require("@models/workspace");
 
 const router = express.Router();
 
 // --- Workspace service ---
 router.get("/", asyncHandler(getAllWorkspaces));
-router.get("/:userId", asyncHandler(getUserWorkspaces));
-router.get("/:workspaceId", asyncHandler(getWorkspaceById));
+// router.get("/:workspaceId", asyncHandler(getWorkspaceById));
+router.get("/:workspaceId", async (req, res) => {
+  try {
+    const workspaces = await Workspace.find({ _id: req.params.workspaceId })
+      .populate("chatSessions")
+      .populate("folders")
+      .populate("files")
+      .populate("prompts")
+      .populate("assistants");
+
+    // Process the workspaces to use getRequiredData methods
+    const processedWorkspaces = workspaces.map((workspace) => {
+      // Process files
+      if (workspace.files && Array.isArray(workspace.files)) {
+        workspace.files = workspace.files.map((file) => {
+          if (typeof file.getRequiredData === "function") {
+            return file.getRequiredData();
+          } else {
+            // Handle the case where getRequiredData is not available
+            return file;
+          }
+        });
+      }
+
+      // Process prompts
+      if (workspace.prompts && Array.isArray(workspace.prompts)) {
+        workspace.prompts = workspace.prompts.map((prompt) => {
+          if (typeof prompt.getRequiredData === "function") {
+            return prompt.getRequiredData();
+          } else {
+            return prompt;
+          }
+        });
+      }
+
+      // Process assistants
+      if (workspace.assistants && Array.isArray(workspace.assistants)) {
+        workspace.assistants = workspace.assistants.map((assistant) => {
+          if (typeof assistant.getRequiredData === "function") {
+            return assistant.getRequiredData();
+          } else {
+            return assistant;
+          }
+        });
+      }
+
+      // Similarly for chatSessions and folders if they have getRequiredData methods
+      // Process chatSessions
+      if (workspace.chatSessions && Array.isArray(workspace.chatSessions)) {
+        workspace.chatSessions = workspace.chatSessions.map((session) => {
+          if (typeof session.getRequiredData === "function") {
+            return session.getRequiredData();
+          } else {
+            return session;
+          }
+        });
+      }
+
+      // Process folders
+      if (workspace.folders && Array.isArray(workspace.folders)) {
+        workspace.folders = workspace.folders.map((folder) => {
+          if (typeof folder.getRequiredData === "function") {
+            return folder.getRequiredData();
+          } else {
+            return folder;
+          }
+        });
+      }
+
+      // Now convert the workspace to a plain object, if necessary
+      return workspace.toObject();
+    });
+
+    res.status(200).json(processedWorkspaces);
+  } catch (error) {
+    logger.error(`[ERROR] [${new Date().toLocaleTimeString()}] ERR: :userId/workspaces:`, error);
+    res.status(500).json({ message: "Error fetching workspaces", error: error.message });
+  }
+});
 router.post("/create", asyncHandler(createWorkspace));
 router.put("/:workspaceId", asyncHandler(updateWorkspace));
 router.delete("/:workspaceId", asyncHandler(deleteWorkspace));
@@ -109,7 +185,6 @@ router.get("/:workspaceId/folders/space/:space", async (req, res) => {
 
     // Fetch all items of the specified type for the given workspaceId
     const items = await ItemModel.find({ workspaceId }).lean();
-
 
     // Populate folders with their items
     const populatedFolders = folders.map((folder) => ({

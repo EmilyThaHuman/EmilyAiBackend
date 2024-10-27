@@ -3,7 +3,7 @@ const { loadQAStuffChain } = require("langchain/chains");
 const { Document } = require("langchain/document");
 const { getPineconeClient } = require("./get");
 const { vectorize } = require("@utils/processing/utils");
-const { getEnv } = require("@utils/api");
+const { getEnv } = require("@utils/processing/api");
 
 const queryPineconeVectorStoreAndQueryLLM = async (pinecone, indexName, question, embeddings) => {
   console.log("Querying Pinecone vector store...");

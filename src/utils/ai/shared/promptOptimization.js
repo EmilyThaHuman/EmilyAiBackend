@@ -2,7 +2,7 @@ const { ChatOpenAI, OpenAIEmbeddings } = require("@langchain/openai");
 const { PineconeStore } = require("@langchain/pinecone");
 const { createPineconeIndex } = require("../pinecone");
 const { Pinecone } = require("@pinecone-database/pinecone");
-const { getEnv } = require("@utils/api");
+const { getEnv } = require("@utils/processing/api");
 const cheerio = require("cheerio");
 const axios = require("axios");
 const { SystemMessage, HumanMessage } = require("@langchain/core/messages");
@@ -16,6 +16,7 @@ const chatOpenAI = new ChatOpenAI({
   maxTokens: 500,
   apiKey: process.env.OPENAI_API_PROJECT_KEY
 });
+
 const performSemanticSearch = async (query, k = 3) => {
   const pinecone = new Pinecone({
     apiKey: process.env.PINECONE_API_KEY

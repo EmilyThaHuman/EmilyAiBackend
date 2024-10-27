@@ -3,7 +3,7 @@ const { Workspace } = require("../workspace");
 const { User } = require("../user");
 const { getMainSystemMessageContent } = require("@lib/prompts");
 const { logger } = require("@config/logging");
-const { getEnv } = require("@utils/api");
+const { getEnv } = require("@utils/processing/api");
 
 const createMessage = async (sessionId, role, content, userId, sequenceNumber) => {
   const message = new ChatMessage({

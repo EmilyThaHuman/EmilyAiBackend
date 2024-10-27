@@ -43,13 +43,95 @@ router.get("/:userId/workspaces", async (req, res) => {
   try {
     const workspaces = await Workspace.find({ userId: req.params.userId })
       .populate("chatSessions")
-      .populate("folders");
-    res.status(200).json(workspaces);
+      .populate("folders")
+      .populate("files")
+      .populate("prompts")
+      .populate("assistants");
+
+    // Process the workspaces to use getRequiredData methods
+    const processedWorkspaces = workspaces.map((workspace) => {
+      // Process files
+      if (workspace.files && Array.isArray(workspace.files)) {
+        workspace.files = workspace.files.map((file) => {
+          if (typeof file.getRequiredData === "function") {
+            return file.getRequiredData();
+          } else {
+            // Handle the case where getRequiredData is not available
+            return file;
+          }
+        });
+      }
+
+      // Process prompts
+      if (workspace.prompts && Array.isArray(workspace.prompts)) {
+        workspace.prompts = workspace.prompts.map((prompt) => {
+          if (typeof prompt.getRequiredData === "function") {
+            return prompt.getRequiredData();
+          } else {
+            return prompt;
+          }
+        });
+      }
+
+      // Process assistants
+      if (workspace.assistants && Array.isArray(workspace.assistants)) {
+        workspace.assistants = workspace.assistants.map((assistant) => {
+          if (typeof assistant.getRequiredData === "function") {
+            return assistant.getRequiredData();
+          } else {
+            return assistant;
+          }
+        });
+      }
+
+      // Similarly for chatSessions and folders if they have getRequiredData methods
+      // Process chatSessions
+      if (workspace.chatSessions && Array.isArray(workspace.chatSessions)) {
+        workspace.chatSessions = workspace.chatSessions.map((session) => {
+          if (typeof session.getRequiredData === "function") {
+            return session.getRequiredData();
+          } else {
+            return session;
+          }
+        });
+      }
+
+      // Process folders
+      if (workspace.folders && Array.isArray(workspace.folders)) {
+        workspace.folders = workspace.folders.map((folder) => {
+          if (typeof folder.getRequiredData === "function") {
+            return folder.getRequiredData();
+          } else {
+            return folder;
+          }
+        });
+      }
+
+      // Now convert the workspace to a plain object, if necessary
+      return workspace.toObject();
+    });
+
+    res.status(200).json(processedWorkspaces);
   } catch (error) {
+    logger.error(`[ERROR] [${new Date().toLocaleTimeString()}] ERR: :userId/workspaces:`, error);
     res.status(500).json({ message: "Error fetching workspaces", error: error.message });
   }
 });
 
+router.get("/:userId/workspaces/home", async (req, res) => {
+  try {
+    const workspaces = await Workspace.find({ userId: req.params.userId })
+      .populate("chatSessions")
+      .populate("folders")
+      .populate("prompts")
+      .populate("files")
+      .populate("assistants");
+    const homeWorkspace = workspaces.find((workspace) => workspace.type === "Home");
+    res.status(200).json(homeWorkspace);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching workspaces", error: error.message });
+  }
+});
 // --- AUTHENTICATION ROUTES ---
 router.get("/validate-token", userController.validateToken);
 

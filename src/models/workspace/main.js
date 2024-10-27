@@ -340,18 +340,8 @@ folderSchema.methods.softDelete = async function () {
   return this.save();
 };
 
-// Method to get all folders with matching workspaceId and space value
-
 const Workspace = createModel("Workspace", workspaceSchema);
 const Folder = createModel("Folder", folderSchema);
-
-// const FileWorkspace = createModel("FileWorkspace", workspaceFilesSchema);
-// const PromptWorkspace = createModel("PromptWorkspace", workspacePromptSchema);
-// const CollectionWorkspace = createModel("CollectionWorkspace", workspaceCollectionSchema);
-// const ModelWorkspace = createModel("ModelWorkspace", workspaceModelSchema);
-// const PresetWorkspace = createModel("PresetWorkspace", workspacePresetsSchema);
-// const AssistantWorkspace = createModel("AssistantWorkspace", workspaceAssistantSchema);
-// const ToolWorkspace = createModel("ToolWorkspace", workspaceToolSchema);
 
 module.exports = {
   Workspace,

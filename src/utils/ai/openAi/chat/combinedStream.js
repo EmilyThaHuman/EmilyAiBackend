@@ -5,7 +5,7 @@ const {
   getFormattingInstructions
 } = require("@lib/prompts/createPrompt");
 const { performPerplexityCompletion, handleSummarization } = require("./context");
-const { handleChatError, checkApiKey } = require("@utils/api");
+const { handleChatError, checkApiKey } = require("@utils/processing/api");
 const { addMessageToSession, getSessionHistory } = require("./chat_history");
 const { CallbackManager } = require("@langchain/core/callbacks/manager");
 const { ChatOpenAI } = require("@langchain/openai");

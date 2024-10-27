@@ -1,0 +1,486 @@
+src/
+├── config/
+│   config/
+│   ├── constants/
+│   │   constants/
+│   │   ├── errors/
+│   │   │   errors/
+│   │   │   ├── CustomError.js
+│   │   │   ├── errors-list.js
+│   │   │   ├── ERRORS_LIST.js
+│   │   │   └── index.js
+│   │   ├── auth.js
+│   │   ├── components.js
+│   │   ├── files.js
+│   │   ├── index.js
+│   │   ├── limits.js
+│   │   ├── model-default-configs.js
+│   │   ├── models.js
+│   │   ├── processing.js
+│   │   └── scrape.js
+│   ├── logging/
+│   │   logging/
+│   │   ├── index.js
+│   │   └── logger.js
+│   ├── index.js
+│   └── main.js
+├── controllers/
+│   controllers/
+│   ├── chat-items/
+│   │   chat-items/
+│   │   ├── index.js
+│   │   ├── settings.js
+│   │   └── v2.js
+│   ├── chat-sessions/
+│   │   chat-sessions/
+│   │   ├── .DS_Store
+│   │   ├── assistants.js
+│   │   ├── attachments.js
+│   │   ├── chat.js
+│   │   ├── index.js
+│   │   └── v2.js
+│   ├── files/
+│   │   files/
+│   │   ├── fileController.js
+│   │   └── index.js
+│   ├── user/
+│   │   user/
+│   │   ├── helpers.js
+│   │   ├── index.js
+│   │   ├── local.js
+│   │   ├── openAi.js
+│   │   └── service.js
+│   ├── workspaces/
+│   │   workspaces/
+│   │   ├── folders.js
+│   │   ├── index.js
+│   │   └── workspaces.js
+│   ├── fileStreaming.js
+│   ├── index.js
+│   └── README.md
+├── db/
+│   db/
+│   ├── connect.js
+│   ├── fileAssociation.js
+│   ├── fileOperations.js
+│   ├── fileUpload.js
+│   ├── helpers.js
+│   ├── index.js
+│   ├── main.js
+│   └── streamProcessor.js
+├── lib/
+│   lib/
+│   ├── component-generation/
+│   │   component-generation/
+│   ├── files/
+│   │   files/
+│   │   ├── static/
+│   │   │   static/
+│   │   │   ├── defaultFiles/
+│   │   │   │   defaultFiles/
+│   │   │   │   ├── defaultCsv.csv
+│   │   │   │   ├── defaultHtml.html
+│   │   │   │   ├── defaultJs.js
+│   │   │   │   ├── defaultJson.json
+│   │   │   │   ├── defaultPdf.pdf
+│   │   │   │   ├── defaultPng.png
+│   │   │   │   └── defaultText.txt
+│   │   │   ├── index.js
+│   │   │   └── user.js
+│   │   ├── index.js
+│   │   ├── main.js
+│   │   └── replicate.js
+│   ├── functions/
+│   │   functions/
+│   │   ├── static/
+│   │   │   static/
+│   │   │   ├── index.js
+│   │   │   └── user.js
+│   │   ├── callFunctions.js
+│   │   ├── code.js
+│   │   ├── componentTools.js
+│   │   ├── functionCall.js
+│   │   ├── index.js
+│   │   ├── main.js
+│   │   └── translationAdapter.js
+│   ├── models/
+│   │   models/
+│   │   ├── custom/
+│   │   │   custom/
+│   │   │   └── index.js
+│   │   ├── llm/
+│   │   │   llm/
+│   │   │   ├── anthropic-llm-list.jsx
+│   │   │   ├── google-llm-list.jsx
+│   │   │   ├── index.jsx
+│   │   │   ├── llm-list.jsx
+│   │   │   ├── openai-llm-list.jsx
+│   │   │   └── perplexity-llm-list.jsx
+│   │   ├── static/
+│   │   │   static/
+│   │   │   ├── index.js
+│   │   │   └── user.js
+│   │   ├── index.js
+│   │   ├── main.js
+│   │   └── replicate.js
+│   ├── presets/
+│   │   presets/
+│   │   ├── static/
+│   │   │   static/
+│   │   │   ├── index.js
+│   │   │   └── user.js
+│   │   └── index.js
+│   ├── prompts/
+│   │   prompts/
+│   │   ├── old/
+│   │   │   old/
+│   │   │   └── index.js
+│   │   ├── static/
+│   │   │   static/
+│   │   │   ├── advancedTemplates.js
+│   │   │   ├── assistant.js
+│   │   │   ├── component.js
+│   │   │   ├── constants.js
+│   │   │   ├── index.js
+│   │   │   ├── instructions.js
+│   │   │   ├── system.js
+│   │   │   ├── templates.js
+│   │   │   └── user.js
+│   │   ├── createMessage.js
+│   │   ├── createPrompt.js
+│   │   └── index.js
+│   ├── ref/
+│   │   ref/
+│   │   ├── basic-chat.js
+│   │   ├── basic-embeddings.js
+│   │   ├── chat-templates.js
+│   │   ├── function-calling.js
+│   │   ├── output-parsers.js
+│   │   ├── pinecone-full.js
+│   │   ├── replicate.js
+│   │   └── similarity.js
+│   ├── stream/
+│   │   stream/
+│   │   ├── index.js
+│   │   ├── reedAi.js
+│   │   └── replicate.js
+│   ├── templates/
+│   │   templates/
+│   │   ├── agent.json
+│   │   ├── chat.json
+│   │   ├── index.js
+│   │   ├── prompt-format-md.json
+│   │   ├── scrape.json
+│   │   └── scrapesummary.json
+│   ├── tools/
+│   │   tools/
+│   │   ├── analyze/
+│   │   │   analyze/
+│   │   ├── pre-process/
+│   │   │   pre-process/
+│   │   ├── web/
+│   │   │   web/
+│   │   └── index.js
+│   ├── training/
+│   │   training/
+│   │   └── replicate.js
+│   ├── chat_1.txt
+│   ├── chat_2.md
+│   ├── chat_3.md
+│   ├── chat_4_live_code_render.md
+│   ├── chat_5.md
+│   ├── chat_6.txt
+│   └── index.js
+├── middlewares/
+│   middlewares/
+│   ├── asyncHandler.js
+│   ├── authenticate.js
+│   ├── error.js
+│   ├── index.js
+│   ├── morganMiddleware.js
+│   └── setupHeaders.js
+├── models/
+│   models/
+│   ├── chat/
+│   │   chat/
+│   │   ├── code/
+│   │   │   code/
+│   │   │   ├── Component.js
+│   │   │   └── index.js
+│   │   ├── assistant.js
+│   │   ├── chat-message.js
+│   │   ├── chat-session.js
+│   │   ├── files-metadata.js
+│   │   ├── files.js
+│   │   ├── index.js
+│   │   ├── main.js
+│   │   ├── methods.js
+│   │   ├── model.js
+│   │   ├── preset.js
+│   │   ├── prompt.js
+│   │   └── tool.js
+│   ├── user/
+│   │   user/
+│   │   ├── index.js
+│   │   └── User.js
+│   ├── utils/
+│   │   utils/
+│   │   ├── index.js
+│   │   ├── main.js
+│   │   ├── populate.js
+│   │   └── schema.js
+│   ├── workspace/
+│   │   workspace/
+│   │   ├── index.js
+│   │   └── main.js
+│   ├── index.js
+│   ├── main.js
+│   └── README.md
+├── routes/
+│   routes/
+│   ├── chat-copilot/
+│   │   chat-copilot/
+│   │   ├── index.js
+│   │   └── openai.js
+│   ├── chat-hosted/
+│   │   chat-hosted/
+│   │   ├── index.js
+│   │   └── openai.js
+│   ├── chat-items/
+│   │   chat-items/
+│   │   ├── index.js
+│   │   └── settings.js
+│   ├── chat-sessions/
+│   │   chat-sessions/
+│   │   ├── assistants.js
+│   │   ├── attachments.js
+│   │   ├── chat-components.js
+│   │   ├── chat-optimize.js
+│   │   ├── chat-v1.js
+│   │   ├── chat.js
+│   │   ├── index.js
+│   │   └── session.js
+│   ├── scripts/
+│   │   scripts/
+│   │   ├── index.js
+│   │   └── test-hosted-openai-aISdk.js
+│   ├── user/
+│   │   user/
+│   │   ├── index.js
+│   │   └── local.js
+│   ├── workspaces/
+│   │   workspaces/
+│   │   ├── index.js
+│   │   └── main.js
+│   └── index.js
+├── services/
+│   services/
+│   ├── ContextService.js
+│   └── index.js
+├── utils/
+│   utils/
+│   ├── ai/
+│   │   ai/
+│   │   ├── classes/
+│   │   │   classes/
+│   │   │   ├── index.js
+│   │   │   ├── LogStreamHandler.js
+│   │   │   ├── OpenAIStreamResponse .js
+│   │   │   └── StreamedChunk.js
+│   │   ├── google/
+│   │   │   google/
+│   │   │   ├── entityAnalysis.js
+│   │   │   └── index.js
+│   │   ├── mongodb/
+│   │   │   mongodb/
+│   │   │   ├── index.js
+│   │   │   ├── instance.js
+│   │   │   ├── main.js
+│   │   │   └── query.js
+│   │   ├── openAi/
+│   │   │   openAi/
+│   │   │   ├── assistants/
+│   │   │   │   assistants/
+│   │   │   │   ├── assistant.js
+│   │   │   │   ├── files.js
+│   │   │   │   ├── index.js
+│   │   │   │   ├── local.js
+│   │   │   │   ├── main.js
+│   │   │   │   ├── messages.js
+│   │   │   │   ├── runs.js
+│   │   │   │   ├── streaming.js
+│   │   │   │   └── thread.js
+│   │   │   ├── chat/
+│   │   │   │   chat/
+│   │   │   │   ├── res/
+│   │   │   │   │   res/
+│   │   │   │   │   ├── generate-text/
+│   │   │   │   │   │   generate-text/
+│   │   │   │   │   │   ├── generate-text-with-chat-prompt.js
+│   │   │   │   │   │   ├── generate-text-with-image-prompt.js
+│   │   │   │   │   │   ├── generate-text.js
+│   │   │   │   │   │   ├── index.js
+│   │   │   │   │   │   ├── rag.js
+│   │   │   │   │   │   ├── stream-text-with-chat-prompt.js
+│   │   │   │   │   │   └── stream-text.js
+│   │   │   │   │   ├── vercel/
+│   │   │   │   │   │   vercel/
+│   │   │   │   │   │   ├── 01-generating-text/
+│   │   │   │   │   │   │   01-generating-text/
+│   │   │   │   │   │   │   ├── 01-generate-text.mdx
+│   │   │   │   │   │   │   ├── 02-stream-text.mdx
+│   │   │   │   │   │   │   ├── 03-generate-text-with-chat-prompt.mdx
+│   │   │   │   │   │   │   ├── 04-stream-text-with-chat-prompt.mdx
+│   │   │   │   │   │   │   ├── 05-generate-text-with-image-prompt.mdx
+│   │   │   │   │   │   │   ├── 06-rag.mdx
+│   │   │   │   │   │   │   └── index.mdx
+│   │   │   │   │   │   ├── 02-generating-structured-data/
+│   │   │   │   │   │   │   02-generating-structured-data/
+│   │   │   │   │   │   │   ├── 01-generate-object.mdx
+│   │   │   │   │   │   │   ├── 03-add-images-to-prompt.mdx
+│   │   │   │   │   │   │   └── index.mdx
+│   │   │   │   │   │   ├── 02-streaming-structured-data/
+│   │   │   │   │   │   │   02-streaming-structured-data/
+│   │   │   │   │   │   │   ├── 01-stream-object.mdx
+│   │   │   │   │   │   │   ├── 10-token-usage.mdx
+│   │   │   │   │   │   │   ├── 12-object.mdx
+│   │   │   │   │   │   │   └── index.mdx
+│   │   │   │   │   │   ├── 03-tools/
+│   │   │   │   │   │   │   03-tools/
+│   │   │   │   │   │   │   ├── 01-call-tool.mdx
+│   │   │   │   │   │   │   ├── 02-call-tool-with-image-prompt.mdx
+│   │   │   │   │   │   │   ├── 03-call-tools-in-parallel.mdx
+│   │   │   │   │   │   │   ├── 05-call-tools-with-automatic-roundtrips.mdx
+│   │   │   │   │   │   │   └── index.mdx
+│   │   │   │   │   │   └── index.mdx
+│   │   │   │   │   ├── chat_model_completion.js
+│   │   │   │   │   ├── chat_model_completion_wretry.js
+│   │   │   │   │   ├── chat_model_stream_completion.js
+│   │   │   │   │   └── index.js
+│   │   │   │   ├── chat_classes.js
+│   │   │   │   ├── chat_constants.js
+│   │   │   │   ├── chat_context.js
+│   │   │   │   ├── chat_helpers.js
+│   │   │   │   ├── chat_history.js
+│   │   │   │   ├── chat_initialize.js
+│   │   │   │   ├── chat_optimize.js
+│   │   │   │   ├── chat_record.js
+│   │   │   │   ├── combinedStream.js
+│   │   │   │   ├── context.js
+│   │   │   │   ├── data.json
+│   │   │   │   └── index.js
+│   │   │   ├── .DS_Store
+│   │   │   ├── get.js
+│   │   │   ├── index.js
+│   │   │   └── main.js
+│   │   ├── perplexity/
+│   │   │   perplexity/
+│   │   │   ├── index.js
+│   │   │   └── instance.js
+│   │   ├── pinecone/
+│   │   │   pinecone/
+│   │   │   ├── chat_2024_09_29_15_15_32.md
+│   │   │   ├── chat_2024_09_29_15_23_06.md
+│   │   │   ├── create.js
+│   │   │   ├── customUpsert.js
+│   │   │   ├── get.js
+│   │   │   ├── index.js
+│   │   │   ├── main.js
+│   │   │   ├── populate.js
+│   │   │   ├── query.js
+│   │   │   ├── testing_code.js
+│   │   │   ├── update.js
+│   │   │   └── utils.js
+│   │   ├── prompt-utils/
+│   │   │   prompt-utils/
+│   │   │   ├── format.js
+│   │   │   └── index.js
+│   │   ├── react-agent/
+│   │   │   react-agent/
+│   │   │   ├── generative/
+│   │   │   │   generative/
+│   │   │   │   ├── index.js
+│   │   │   │   ├── ReactComponentGenerator.js
+│   │   │   │   ├── ReactComponentPicker.js
+│   │   │   │   ├── ReactComponentStoryBookGenerator.js
+│   │   │   │   └── ReactPageCompositionGenerator.js
+│   │   │   ├── utils/
+│   │   │   │   utils/
+│   │   │   │   ├── ChatBot.js
+│   │   │   │   ├── componentsPerPage.json
+│   │   │   │   ├── const.js
+│   │   │   │   ├── helpers.js
+│   │   │   │   ├── index.js
+│   │   │   │   └── read.js
+│   │   │   ├── generateComponents.js
+│   │   │   ├── generateComponentsConfigurations.js
+│   │   │   ├── generateComponentsFromConfigurations.js
+│   │   │   ├── generateComponentsStoryBook.js
+│   │   │   ├── generateComposedComponent.js
+│   │   │   ├── generateDemo.js
+│   │   │   ├── generateSkeletonCompositionFromStory.js
+│   │   │   └── index.js
+│   │   ├── shared/
+│   │   │   shared/
+│   │   │   ├── index.js
+│   │   │   └── promptOptimization.js
+│   │   └── index.js
+│   ├── processing/
+│   │   processing/
+│   │   ├── api/
+│   │   │   api/
+│   │   │   ├── index.js
+│   │   │   └── main.js
+│   │   ├── types/
+│   │   │   types/
+│   │   │   ├── check.js
+│   │   │   ├── csv.js
+│   │   │   ├── docx.js
+│   │   │   ├── index.js
+│   │   │   ├── json.js
+│   │   │   ├── jsx.js
+│   │   │   ├── main.js
+│   │   │   ├── md.js
+│   │   │   ├── pdf.js
+│   │   │   └── txt.js
+│   │   ├── utils/
+│   │   │   utils/
+│   │   │   ├── buffer.js
+│   │   │   ├── chunk.js
+│   │   │   ├── clean.js
+│   │   │   ├── documents.js
+│   │   │   ├── download.js
+│   │   │   ├── encoding.js
+│   │   │   ├── extract.js
+│   │   │   ├── files.js
+│   │   │   ├── format.js
+│   │   │   ├── http.js
+│   │   │   ├── identifyValue.js
+│   │   │   ├── index.js
+│   │   │   ├── loggingFunctions.js
+│   │   │   ├── main.js
+│   │   │   ├── metadata.js
+│   │   │   ├── misc.js
+│   │   │   ├── parse.js
+│   │   │   ├── pdf.js
+│   │   │   ├── scrape2.js
+│   │   │   ├── scrapeFunctions.js
+│   │   │   ├── storage.js
+│   │   │   ├── string.js
+│   │   │   ├── text.js
+│   │   │   ├── tokens.js
+│   │   │   └── vectorize.js
+│   │   ├── fileProcessing.js
+│   │   └── index.js
+│   └── index.js
+├── __mocks__/
+│   __mocks__/
+│   └── logging.js
+├── __test__/
+│   __test__/
+│   ├── helpers.test.js
+│   ├── registerUser.test.js
+│   ├── setup.js
+│   └── setupDB.js
+├── app.js
+└── index.js

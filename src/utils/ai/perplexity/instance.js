@@ -5,7 +5,7 @@ const { PromptTemplate } = require("@langchain/core/prompts");
 const { StringOutputParser } = require("@langchain/core/output_parsers");
 const { Document } = require("langchain/document");
 const { OpenAIEmbeddings } = require("@langchain/openai");
-const { getEnv } = require("@utils/api");
+const { getEnv } = require("@utils/processing/api");
 
 // Initialize OpenAI embeddings
 const embedding_model = new OpenAIEmbeddings({

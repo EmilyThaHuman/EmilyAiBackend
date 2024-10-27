@@ -3,7 +3,7 @@ const { asyncHandler } = require("@middlewares/asyncHandler");
 const { logger } = require("@config/logging");
 const { ChatOpenAI } = require("@langchain/openai");
 const { ChatMessage, ChatSession } = require("@models/chat");
-const { generateObjectId, getEnv } = require("@utils/api");
+const { generateObjectId, getEnv } = require("@utils/processing/api");
 
 const router = express.Router();
 

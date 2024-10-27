@@ -51,6 +51,23 @@ const assistantSchema = createSchema({
 
 assistantSchema.index({ userId: 1, workspaceId: 1 });
 
+// Method to get only the required data
+assistantSchema.statics.getRequiredData = function () {
+  return {
+    name: this.name,
+    systemInstructions: this.systemInstructions,
+    model: this.model,
+    fileSearch: this.fileSearch,
+    codeInterpreter: this.codeInterpreter,
+    functions: this.functions,
+    responseFormat: this.responseFormat,
+    temperature: this.temperature,
+    topP: this.topP,
+    instructions: this.instructions,
+    toolResources: this.toolResources
+  };
+};
+
 assistantSchema.pre("save", function (next) {
   // log
   logger.info("ChatMessage pre-save hook");

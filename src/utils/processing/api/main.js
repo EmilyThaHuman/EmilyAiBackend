@@ -33,6 +33,6 @@ const generateTokens = (user) => {
 module.exports = {
   generateToken,
   generateTokens,
-    getEnv,
+  getEnv,
   validateEnvironmentVariables
 };

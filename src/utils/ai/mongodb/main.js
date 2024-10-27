@@ -1,4 +1,4 @@
-const { getEnv } = require("@utils/api");
+const { getEnv } = require("@utils/processing/api");
 const { HumanMessage } = require("@langchain/core/messages");
 const { MongoDBChatMessageHistory } = require("@langchain/mongodb");
 const { ChatOpenAI } = require("@langchain/openai");

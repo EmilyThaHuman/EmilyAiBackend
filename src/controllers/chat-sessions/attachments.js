@@ -15,6 +15,13 @@ const path = require("path");
 const { default: mongoose } = require("mongoose");
 const { asyncHandler } = require("@middlewares/asyncHandler");
 const baseUrl = "http://localhost:3001/static/";
+
+/**
+ * Uploads a file to the specified bucket.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns None
+ */
 // Function to upload a file to the GridFS bucket
 const uploadFileToBucket = async (req, res) => {
   if (!req.file) {
@@ -45,7 +52,12 @@ const uploadFileToBucket = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
+/**
+ * Downloads a file from the bucket based on the provided file ID.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns None
+ */
 // Function to download a file from the GridFS bucket
 const downloadFileFromBucket = async (req, res) => {
   try {
@@ -65,7 +77,13 @@ const downloadFileFromBucket = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
+/**
+ * Deletes a file from the bucket using the file ID.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns None
+ * @throws {Error} If there is an error deleting the file.
+ */
 // Function to delete a file from the GridFS bucket
 const deleteFileFromBucket = async (req, res) => {
   try {
@@ -79,7 +97,13 @@ const deleteFileFromBucket = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
+/**
+ * Retrieves a list of files from a bucket and sends it as a JSON response.
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns None
+ * @throws {Error} If there is an error while listing files in the bucket.
+ */
 // Function to list all files in the GridFS bucket
 const listFilesInBucket = async (req, res) => {
   try {
@@ -91,6 +115,7 @@ const listFilesInBucket = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 // Reusable database operation function
 const handleDatabaseOperation = async (
   operation,
@@ -152,6 +177,7 @@ const handleFileUploadFunction = asyncHandler(async (req, res) => {
     }
   });
 });
+
 // Reusable function to update related models
 const updateRelatedModels = async (entity, folderId, workspaceId, userId) => {
   if (folderId) await Folder.findByIdAndUpdate(folderId, { $push: { files: entity._id } });

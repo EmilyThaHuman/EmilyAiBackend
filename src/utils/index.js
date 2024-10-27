@@ -1,5 +1,5 @@
 const processing = require("./processing");
-const api = require("./api");
+const api = require("./processing/api");
 const ai = require("./ai");
 
 module.exports = {

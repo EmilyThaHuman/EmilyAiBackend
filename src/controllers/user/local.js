@@ -10,15 +10,16 @@ const {
   REFRESH_TOKEN
 } = require("@config/constants");
 const { findAndPopulateUser } = require("@models/utils");
-const { generateTokens } = require("@utils/api");
+const { generateTokens } = require("@utils/processing/api");
 const {
   createNewUser,
   checkUserExists,
   validateUserInput,
   initializeUserData
 } = require("./helpers");
-const { getEnv } = require("@utils/api");
+const { getEnv } = require("@utils/processing/api");
 const { logger } = require("@config/logging");
+const { Folder } = require("@models/workspace");
 
 const registerUser = async (req, res, next) => {
   let newUser; // Declare newUser outside the try block for scope access in the catch block
@@ -46,6 +47,11 @@ const registerUser = async (req, res, next) => {
 
     // Populate user data for response
     const populatedUser = await findAndPopulateUser(newUser._id);
+    const populatedFolders = populatedUser.workspaces[0].folders;
+    // const populatedFolders = await Folder.find({
+    //   userId: populatedUser._id,
+    //   workspaceId: populatedUser.workspaces[0]._id
+    // }).populate("items");
 
     // Setup user session
     req.session.user = {
@@ -79,6 +85,7 @@ const registerUser = async (req, res, next) => {
         // -- app data --
         workspaces: populatedUser.workspaces,
         chatSessions: populatedUser.chatSessions,
+        folders: populatedFolders,
         homeWorkspaceId: populatedUser.homeWorkspaceId,
         // -- user profile --
         profile: {
@@ -157,6 +164,10 @@ const loginUser = async (req, res, next) => {
     logger.info(`User logged in: ${user.email}`);
 
     const populatedUser = await findAndPopulateUser(user._id);
+    const populatedFolders = await Folder.find({
+      userId: populatedUser._id,
+      workspaceId: populatedUser.workspaces[0]._id
+    }).populate("items");
     // Setup user session
     logger.info(`New User Session For: ${populatedUser.username}`);
 
@@ -178,6 +189,7 @@ const loginUser = async (req, res, next) => {
         // -- app data --
         workspaces: populatedUser.workspaces,
         chatSessions: populatedUser.chatSessions,
+        folders: populatedFolders,
         homeWorkspaceId: populatedUser.homeWorkspaceId,
 
         // -- user profile --

@@ -3,7 +3,7 @@ const { default: axios } = require("axios");
 const fs = require("node:fs/promises");
 const path = require("path");
 const { getOpenaiLangChainClient } = require("@utils/ai/openAi/get");
-const { getEnv } = require("@utils/api");
+const { getEnv } = require("@utils/processing/api");
 // const sharp = require('sharp');
 
 const analyzeTextWithGPT = async (text) => {

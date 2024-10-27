@@ -1,7 +1,4 @@
 {
-  "cSpell.words": ["COVERLETTER", "mockingoose", "openai", "rsyncwrapper", "topcard", "vectordb"],
-  "files.exclude": {
-    "**/archive": true
-}
+  "cSpell.words": ["COVERLETTER", "mockingoose", "openai", "rsyncwrapper", "topcard", "vectordb"]
 
 }

@@ -1,5 +1,5 @@
 const { logger } = require("@config/logging");
-const { getEnv } = require("@utils/api");
+const { getEnv } = require("@utils/processing/api");
 
 const createPineconeIndex = async (pinecone, indexName) => {
   logger.info(`Checking "${indexName}"...`);

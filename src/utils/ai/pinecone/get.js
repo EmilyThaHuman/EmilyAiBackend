@@ -1,5 +1,5 @@
 const { logger } = require("@config/logging");
-const { getEnv } = require("@utils/api");
+const { getEnv } = require("@utils/processing/api");
 const { logArrayAsTable } = require("@utils/processing/utils/loggingFunctions");
 const { Pinecone } = require("@pinecone-database/pinecone");
 

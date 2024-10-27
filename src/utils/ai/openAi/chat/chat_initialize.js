@@ -4,7 +4,7 @@ const { ChatSession } = require("@models/chat");
 const { Pinecone } = require("@pinecone-database/pinecone");
 const { ChatOpenAI, OpenAIEmbeddings } = require("@langchain/openai");
 const { tools } = require("@lib/functions");
-const { getEnv } = require("@utils/api");
+const { getEnv } = require("@utils/processing/api");
 const { logger } = require("@config/logging");
 const { logChatDataError } = require("@utils/processing/utils/loggingFunctions");
 

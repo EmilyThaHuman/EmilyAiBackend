@@ -41,12 +41,24 @@ const toolSchema = createSchema({
   // },
 });
 
+// Method to get only the required data
+toolSchema.statics.getRequiredData = function () {
+  return {
+    name: this.name,
+    description: this.description,
+    url: this.url,
+    schema: this.schema,
+    type: this.type
+  };
+};
+
 // Pre-save hook
 toolSchema.pre("save", async function (next) {
   logger.info("Tool pre-save hook");
   this.updatedAt = Date.now();
   next();
 });
+
 const assistantToolSchema = createSchema({
   toolId: { type: Schema.Types.ObjectId, ref: "Tool" },
   userId: { type: Schema.Types.ObjectId, ref: "User" }

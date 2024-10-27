@@ -14,8 +14,8 @@ const promptSchema = createSchema({
   folderId: { type: Schema.Types.ObjectId, ref: "Folder" },
 
   // -- REQUIRED FIELDS
-  name: { type: String, required: true, index: true },
-  content: { type: String, required: true },
+  name: { type: String, required: true, index: false },
+  content: { type: String, required: false },
 
   // -- ADDITIONAL FIELDS
   description: String,
@@ -39,7 +39,17 @@ const promptSchema = createSchema({
     }
   }
 });
+
 promptSchema.index({ userId: 1, name: 1 }, { unique: true });
+
+// Method to get only the required data
+promptSchema.statics.getRequiredData = function () {
+  return {
+    name: this.name,
+    description: this.description,
+    content: this.content
+  };
+};
 
 promptSchema.pre("save", async function (next) {
   logger.info("Prompt pre-save hook");

@@ -1,4 +1,4 @@
-const { getEnv } = require("@utils/api");
+const { getEnv } = require("@utils/processing/api");
 const { escapeRegExp } = require("@utils/processing");
 const OpenAI = require("openai");
 

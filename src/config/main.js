@@ -4,7 +4,7 @@
 const path = require("path");
 const dotenv = require("dotenv");
 const { CHAT_SETTING_LIMITS } = require("./constants");
-const { getEnv } = require("@utils/api");
+const { getEnv } = require("@utils/processing/api");
 
 // Load environment variables from .env file
 dotenv.config({ path: path.join(__dirname, ".env") });

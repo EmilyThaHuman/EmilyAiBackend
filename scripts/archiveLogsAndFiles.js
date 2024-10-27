@@ -3,14 +3,12 @@ const path = require("path");
 
 // Define the directories
 const logsDir = "../logs"; // Path to your logs folder
-const archiveDir = "../archive/logs"; // Path to your archive folder
+const archiveDir = "../archive"; // Path to your archive folder
 
 // Function to archive logs older than 5 days
-function archiveOldLogs() {
+async function archiveOldLogs() {
   // Ensure the archive directory exists
-  if (!fs.existsSync(archiveDir)) {
-    fs.mkdirSync(archiveDir, { recursive: true });
-  }
+  await fs.mkdir(archiveDir, { recursive: true });
 
   // Read log files from the directory
   fs.readdir(logsDir, (err, files) => {

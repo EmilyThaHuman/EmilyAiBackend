@@ -2,7 +2,7 @@
 const dotenv = require("dotenv");
 const { ChatOpenAI } = require("@langchain/openai");
 const crypto = require("crypto");
-const { getEnv } = require("@utils/api");
+const { getEnv } = require("@utils/processing/api");
 const { logger } = require("@config/logging");
 
 dotenv.config();

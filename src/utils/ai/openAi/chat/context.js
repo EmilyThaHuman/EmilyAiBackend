@@ -2,7 +2,7 @@ const { default: axios } = require("axios");
 const { PromptTemplate } = require("@langchain/core/prompts");
 const { ChatOpenAI } = require("@langchain/openai");
 const { SystemMessage, HumanMessage } = require("@langchain/core/messages");
-const { getEnv } = require("@utils/api");
+const { getEnv } = require("@utils/processing/api");
 const { logger } = require("@config/logging");
 const { logChatDataError } = require("@utils/processing/utils/loggingFunctions");
 

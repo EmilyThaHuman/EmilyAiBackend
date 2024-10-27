@@ -3,7 +3,9 @@ require("dotenv").config();
 const bcrypt = require("bcrypt");
 const path = require("path");
 const fs = require("node:fs/promises");
-const { Prompt, User, File, Tool, Preset, Model, Collection } = require("@models");
+const { User } = require("@models/user");
+const { Collection } = require("@models/main");
+const { Prompt, File, Tool, Preset, Model } = require("@models/chat");
 const { presets, files, prompts, models, tools } = require("@lib");
 const { initialPresets } = presets;
 const { initialUserFiles } = files;
@@ -23,7 +25,7 @@ const {
   createChatSession
 } = require("@db/helpers");
 const { logger } = require("@config/logging");
-const { getEnv } = require("@utils/api");
+const { getEnv } = require("@utils/processing/api");
 
 const validateUserInput = ({ username, email, password }) => {
   if (!username || !email || !password) {
@@ -276,15 +278,19 @@ const saveInitialCollections = async (userId, workspaceId, folderId) => {
   }
 };
 
+/**
+ * Initializes user data by creating a workspace, folders, and saving the new user.
+ * @param {Object} newUser - The new user object to initialize data for.
+ * @param {string} accessToken - The access token for the new user.
+ * @param {string} refreshToken - The refresh token for the new user.
+ * @returns {Object} An object containing the new user, workspace, and folders.
+ * @throws {Error} If there is an error during initialization.
+ */
 const initializeUserData = async (newUser, accessToken, refreshToken) => {
   try {
     // Create workspace and folders concurrently
     const workspace = await createWorkspace(newUser);
     const folders = await createFolders(newUser, workspace);
-    // const [workspace, folders] = await Promise.all([
-    //   createWorkspace(newUser),
-    //   createFolders(newUser)
-    // ]);
 
     // Map folder space to folder documents
     const folderMap = folders.reduce((acc, folder) => {
@@ -306,18 +312,21 @@ const initializeUserData = async (newUser, accessToken, refreshToken) => {
     const savedPrompts = await saveInitialPrompts(newUser._id, workspace._id, promptsFolder._id);
     updateEntitiesWithItems([newUser, workspace, promptsFolder], savedPrompts, "prompts");
     updateEntitiesWithItems([promptsFolder], savedPrompts, "items");
+    await promptsFolder.save(); // Save the folder after updating
 
     // Save initial files
     const filesFolder = folderMap["files"];
     const savedFiles = await saveInitialFiles(newUser._id, workspace._id, filesFolder._id);
     updateEntitiesWithItems([newUser, workspace, filesFolder], savedFiles, "files");
     updateEntitiesWithItems([filesFolder], savedFiles, "items");
+    await filesFolder.save(); // Save the folder after updating
 
     // Use one of the saved files to create assistant
     const assistantFolder = folderMap["assistants"];
     const assistant = await createAssistant(newUser, assistantFolder, savedFiles[0]);
     updateEntitiesWithItems([newUser, workspace, assistantFolder], [assistant], "assistants");
     updateEntitiesWithItems([assistantFolder], [assistant], "items");
+    await assistantFolder.save(); // Save the folder after updating
 
     // Save initial tools
     const toolsFolder = folderMap["tools"];
@@ -329,18 +338,21 @@ const initializeUserData = async (newUser, accessToken, refreshToken) => {
     );
     updateEntitiesWithItems([newUser, workspace, toolsFolder], savedTools, "tools");
     updateEntitiesWithItems([toolsFolder], savedTools, "items");
+    await toolsFolder.save(); // Save the folder after updating
 
     // Save initial presets
     const presetsFolder = folderMap["presets"];
     const savedPresets = await saveInitialPresets(newUser._id, workspace._id, presetsFolder._id);
     updateEntitiesWithItems([newUser, workspace, presetsFolder], savedPresets, "presets");
     updateEntitiesWithItems([presetsFolder], savedPresets, "items");
+    await presetsFolder.save(); // Save the folder after updating
 
     // Save initial models
     const modelsFolder = folderMap["models"];
     const savedModels = await saveInitialModels(newUser._id, workspace._id, modelsFolder._id);
     updateEntitiesWithItems([newUser, workspace, modelsFolder], savedModels, "models");
     updateEntitiesWithItems([modelsFolder], savedModels, "items");
+    await modelsFolder.save(); // Save the folder after updating
 
     // Save initial collections
     const collectionsFolder = folderMap["collections"];
@@ -355,12 +367,14 @@ const initializeUserData = async (newUser, accessToken, refreshToken) => {
       "collections"
     );
     updateEntitiesWithItems([collectionsFolder], savedCollections, "items");
+    await collectionsFolder.save(); // Save the folder after updating
 
     // Create chat session
     const chatSessionFolder = folderMap["chatSessions"];
     const chatSession = await createChatSession(newUser, workspace, assistant, chatSessionFolder);
     updateEntitiesWithItems([workspace, chatSessionFolder], [chatSession], "chatSessions");
     updateEntitiesWithItems([chatSessionFolder], [chatSession], "items");
+    await chatSessionFolder.save(); // Save the folder after updating
 
     // Save workspace and user
     workspace.assistants.push(assistant._id);
@@ -403,6 +417,7 @@ const initializeUserData = async (newUser, accessToken, refreshToken) => {
         }
       ]
     };
+
     // Update user authentication session
     newUser.authSession = {
       accessToken,
