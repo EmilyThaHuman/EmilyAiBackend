@@ -5,6 +5,15 @@ const path = require("path");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
+/**
+ * Uploads a file to a specified location based on user and file information.
+ * @param {Object} file - The file object to be uploaded.
+ * @param {Object} payload - An object containing user_id and file_id.
+ * @param {string} payload.user_id - The ID of the user uploading the file.
+ * @param {string} payload.file_id - The ID of the file being uploaded.
+ * @returns {string} The file path where the uploaded file is saved.
+ * @throws {Error} If the file size exceeds the specified limit.
+ */
 const uploadFile = async (file, payload) => {
   const SIZE_LIMIT = parseInt(process.env.FILE_SIZE_LIMIT || "10000000");
 
@@ -30,6 +39,12 @@ const uploadFile = async (file, payload) => {
   return filePath;
 };
 
+/**
+ * Deletes a file from storage
+ * @param {string} filePath - The path of the file to be deleted
+ * @returns {Promise<boolean>} Returns true if the file was successfully deleted
+ * @throws {Error} Throws an error if the file deletion fails
+ */
 const deleteFileFromStorage = async (filePath) => {
   try {
     fs.unlinkSync(filePath);
@@ -39,6 +54,12 @@ const deleteFileFromStorage = async (filePath) => {
   }
 };
 
+/**
+ * Generates a signed URL for file download from storage
+ * @param {string} filePath - The path of the file in storage
+ * @returns {Promise<string>} A promise that resolves to the signed URL for file download
+ * @throws {Error} If there's an error generating the signed URL
+ */
 const getFileFromStorage = async (filePath) => {
   try {
     // Generate a signed URL (JWT token)
@@ -50,6 +71,16 @@ const getFileFromStorage = async (filePath) => {
   }
 };
 
+/**
+ * Uploads a file to a specified storage path
+ * @param {string} filePath - The path of the file to be uploaded
+ * @param {Object} options - An object containing upload options
+ * @param {number} options.user_id - The ID of the user uploading the file
+ * @param {number} options.file_id - The ID of the file being uploaded
+ * @param {string} options.name - The name of the file
+ * @returns {string} The destination path where the file was uploaded
+ * @throws {Error} If there's an error during the upload process
+ */
 const uploadFile = async (filePath, options) => {
   try {
     // Define the storage path
