@@ -1,5 +1,5 @@
 const { OpenAIEmbeddings, ChatOpenAI } = require("@langchain/openai");
-const { getEnv } = require("../../../../CLEANUP/env.js/index.js");
+const { getEnv } = require("../../../../archive/CLEANUP/env.js/index.js");
 const { default: OpenAI } = require("openai");
 const { byteToImageURL } = require("@utils/processing/utils/files.js");
 const { SUPPORTED_MIME_TYPES } = require("@config/files.js");
