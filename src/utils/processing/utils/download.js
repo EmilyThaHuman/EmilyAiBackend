@@ -1,3 +1,10 @@
+/**
+ * Downloads a file from OpenAI API and saves it to the specified local path.
+ * @param {string} fileId - The ID of the file to download from OpenAI.
+ * @param {string} filePath - The local path where the file should be saved.
+ * @returns {Promise<void>} This function doesn't return a value, but writes the file to disk.
+ * @throws {Error} If there's an error during the download or file writing process.
+ */
 async function downloadFile(fileId, filePath) {
   try {
     const response = await openai.files.content(fileId);
