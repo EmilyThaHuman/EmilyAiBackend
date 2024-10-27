@@ -10,6 +10,12 @@ const { formatAndCleanCode } = require("./format");
 const { Cheerio } = require("cheerio");
 const { logger } = require("@config/logging");
 
+/**
+ * Scrapes content from a given URL
+ * @param {string} url - The URL of the website to scrape
+ * @returns {Promise<string>} The scraped content from the website's body
+ * @throws {Error} If there's an error during the scraping process
+ */
 const scrapeSite = async (url) => {
   try {
     const response = await axios.get(url);
@@ -22,6 +28,13 @@ const scrapeSite = async (url) => {
   }
 };
 
+/**
+ * Scrapes code snippets from a specified component URL and saves them to files.
+ * @param {string} componentUrl - The URL of the component to scrape.
+ * @param {string} componentLibrary - The name of the component library.
+ * @returns {Promise<string[]>} An array of file paths where the scraped data was saved.
+ * @throws {Error} If there's an issue during scraping or file operations.
+ */
 const scrapeCode = async (componentUrl, componentLibrary) => {
   const browser = await puppeteer.launch({ headless: "new" });
   const page = await browser.newPage();
