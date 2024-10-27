@@ -54,6 +54,12 @@ async function getTokenEmbedding(text) {
   return token;
 }
 
+/**
+ * Returns the first N non-empty characters from a string
+ * @param {string} s - The input string to process
+ * @param {number} n - The number of non-empty characters to return
+ * @returns {string} A substring containing the first N non-empty characters, or the entire string if N exceeds the number of non-empty characters
+ */
 function firstN(s, n) {
   let i = 0;
   for (let j = 0; j < s.length; j++) {
@@ -65,6 +71,12 @@ function firstN(s, n) {
   return s;
 }
 
+/**
+ * Converts a string to a File object with the specified file name.
+ * @param {string} str - The string to be converted into a file.
+ * @param {string} fileName - The name to be given to the resulting file.
+ * @returns {File} A File object containing the input string data with the specified file name.
+ */
 function stringToFileBuffer(str, fileName) {
   // Convert the string into a byte array using TextEncoder
   const byteArray = new TextEncoder().encode(str);

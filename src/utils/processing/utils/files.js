@@ -5,6 +5,12 @@ const { File } = require("@models/chat");
 const { encode } = require("gpt-tokenizer");
 const prettier = require("prettier");
 
+/**
+ * Formats the given content based on its type using Prettier and wraps it in Markdown code blocks.
+ * @param {string} content - The content to be formatted.
+ * @param {string} type - The type of content (e.g., "jsx", "javascript", "css").
+ * @returns {string} The formatted content wrapped in Markdown code blocks.
+ */
 function formatSection(content, type) {
   let formattedContent;
 
@@ -26,6 +32,16 @@ function formatSection(content, type) {
   return `\`\`\`${type}\n${formattedContent}\n\`\`\``;
 }
 
+/**
+ * Formats documentation based on provided title and sections
+ * @param {Object} options - The options object
+ * @param {string} options.title - The main title of the documentation
+ * @param {Array} options.sections - An array of section objects
+ * @param {string} options.sections[].title - The title of each section
+ * @param {string} [options.sections[].type] - The content type of the section (optional)
+ * @param {string} options.sections[].content - The content of the section
+ * @returns {string} Formatted documentation string
+ */
 function formatDocumentation({ title, sections }) {
   let documentation = `# ${title}\n\n`;
 
@@ -101,6 +117,12 @@ const saveMarkdown = async (content) => {
   }
 };
 
+/**
+ * Asynchronously saves JSON content to a file with a unique filename.
+ * @param {string|object} content - The JSON content to be saved. Can be a JSON string or an object.
+ * @returns {Promise<string>} A promise that resolves with the filepath of the saved JSON file.
+ * @throws {Error} If there's an error during the file saving process.
+ */
 const saveJson = async (content) => {
   try {
     const filename = generateUniqueFileName("response", "json");

@@ -1,16 +1,31 @@
 const { logger } = require("@config/logging");
 
+/**
+ * Removes leading and trailing whitespace from the given code string.
+ * @param {string} code - The code string to be cleaned.
+ * @returns {string} The cleaned code string with leading and trailing whitespace removed.
+ */
 function cleanWhitespace(code) {
   return code.trim();
 }
 function removeHtmlComments(code) {
   return code.replace(/<!--[\s\S]*?-->/g, "");
 }
+/**
+ * Normalizes line breaks in the given code by replacing multiple consecutive line breaks with a maximum of two.
+ * @param {string} code - The input code string to normalize.
+ * @returns {string} The normalized code with excessive line breaks removed.
+ */
 function normalizeLineBreaks(code) {
   return code.replace(/\n{3,}/g, "\n\n");
 }
 function removeIndentation(code) {
   const lines = code.split("\n");
+  /**
+   * Calculates the minimum indentation level across all non-empty lines in an array of strings.
+   * @param {string[]} lines - An array of strings representing lines of text.
+   * @returns {number} The minimum number of leading whitespace characters found in any non-empty line.
+   */
   const minIndent = lines.reduce((min, line) => {
     const indent = line.match(/^\s*/)[0].length;
     return line.trim() ? Math.min(min, indent) : min;
@@ -25,8 +40,18 @@ function unescapeHtml(code) {
     "&quot;": '"',
     "&#39;": "'"
   };
+  /**
+   * Replaces HTML special characters with their corresponding entity references.
+   * @param {string} code - The input string containing HTML special characters.
+   * @returns {string} A new string with HTML special characters replaced by their entity references.
+   */
   return code.replace(/&amp;|&lt;|&gt;|&quot;|&#39;/g, (match) => entities[match]);
 }
+/**
+ * Removes HTML tags from the given code string.
+ * @param {string} code - The input string containing HTML tags to be removed.
+ * @returns {string} A new string with all HTML tags removed.
+ */
 function removeHtmlTags(code) {
   return code.replace(/<\/?[^>]+(>|$)/g, "");
 }
@@ -45,6 +70,11 @@ function cleanCodeSnippetGeneral(snippet) {
   // Remove empty lines
   code = code
     .split("\n")
+    /**
+     * Filters out empty or whitespace-only lines from an array of strings.
+     * @param {Array<string>} lines - The array of strings to be filtered.
+     * @returns {Array<string>} A new array containing only non-empty lines.
+     */
     .filter((line) => line.trim() !== "")
     .join("\n");
 
