@@ -14,6 +14,12 @@ async function factCheckAgainstDocs(generatedAnswer, library = "react") {
   const docContent = $("main").text();
   const statements = generatedAnswer.split(".");
 
+  /**
+   * Checks each statement in an array against the content of a document and marks verified statements.
+   * @param {string[]} statements - An array of statements to be checked.
+   * @param {string} docContent - The content of the document to check statements against.
+   * @returns {string[]} An array of statements, with verified ones marked as "[Verified]".
+   */
   const checkedStatements = statements.map((statement) => {
     if (docContent.includes(statement.trim())) {
       return `${statement} [Verified]`;
@@ -24,6 +30,12 @@ async function factCheckAgainstDocs(generatedAnswer, library = "react") {
   return checkedStatements.join(". ");
 }
 
+/**
+ * Clicks all "Expand code" or "Show the full source" buttons on a webpage
+ * @param {Page} page - The Puppeteer Page object representing the current web page
+ * @returns {Promise<void>} This function doesn't return a value, it performs actions on the page
+ * @throws {Error} If there's an error while clicking expand buttons, it's caught and logged
+ */
 async function clickExpandButtons(page) {
   try {
     let expandButtonsFound = true;
@@ -160,6 +172,14 @@ const filterAllElements = async function (filterParams, page) {
     `;
 
     return page.evaluate(
+      /**
+       * Filters and transforms DOM elements based on provided parameters
+       * @param {string} filterParamsString - JSON string containing filter parameters
+       * @param {string} helperFunctions - String of helper functions to be evaluated
+       * @param {string} filterElementFunction - String representation of the filterElement function
+       * @returns {Array<Object>} Array of objects representing filtered DOM elements with properties:
+       *                          tagName, textContent, isVisible, and boundingBox
+       */
       (filterParamsString, helperFunctions, filterElementFunction) => {
         eval(helperFunctions);
         eval(filterElementFunction);
@@ -186,6 +206,11 @@ const filterAllElements = async function (filterParams, page) {
   }
 };
 
+/**
+ * Finds all 'expand code' buttons on a given page.
+ * @param {Page} page - The page object to search for 'expand code' buttons.
+ * @returns {Promise<Array<ElementHandle>>} A promise that resolves to an array of ElementHandle objects representing the 'expand code' buttons found on the page.
+ */
 async function findExpandCodeButtons(page) {
   return filterAllElements(
     {
@@ -197,6 +222,12 @@ async function findExpandCodeButtons(page) {
   );
 }
 
+/**
+ * Expands all code blocks on a given page by clicking on expand buttons.
+ * @param {Object} page - The page object representing the web page.
+ * @returns {Promise<void>} A promise that resolves when all code blocks have been expanded or attempted to expand.
+ * @throws {Error} If there's an error during the expansion process.
+ */
 async function expandAllCodeBlocks(page) {
   try {
     const expandButtons = await findExpandCodeButtons(page);
@@ -358,6 +389,11 @@ async function expandAllCodeBlocks(page) {
 //   }
 // };
 
+/**
+ * Extracts expanded code blocks from a given page.
+ * @param {Object} page - The page object representing the web page to extract code from.
+ * @returns {Promise<Array>} A promise that resolves to an array of objects, each containing the language and code content of a code block.
+ */
 async function extractExpandedCode(page) {
   return page.evaluate(() => {
     const codeBlocks = document.querySelectorAll("pre code");
