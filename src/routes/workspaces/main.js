@@ -1,8 +1,8 @@
+/* eslint-disable indent */
 const express = require("express");
 const { asyncHandler } = require("@middlewares/asyncHandler");
 const {
   getAllWorkspaces,
-  getWorkspaceById,
   createWorkspace,
   updateWorkspace,
   deleteWorkspace,
@@ -21,7 +21,6 @@ const router = express.Router();
 
 // --- Workspace service ---
 router.get("/", asyncHandler(getAllWorkspaces));
-// router.get("/:workspaceId", asyncHandler(getWorkspaceById));
 router.get("/:workspaceId", async (req, res) => {
   try {
     const workspaces = await Workspace.find({ _id: req.params.workspaceId })
@@ -103,6 +102,7 @@ router.get("/:workspaceId", async (req, res) => {
 router.post("/create", asyncHandler(createWorkspace));
 router.put("/:workspaceId", asyncHandler(updateWorkspace));
 router.delete("/:workspaceId", asyncHandler(deleteWorkspace));
+
 // --- Folders service ---
 router.post("/:workspaceId/folders", async (req, res) => {
   try {
@@ -178,7 +178,7 @@ router.get("/:workspaceId/folders/space/:space", async (req, res) => {
         break;
       case "chatSessions":
         ItemModel = ChatSession;
-      // Add other cases for different spaces/item types
+        break;
       default:
         throw new Error("Invalid space type");
     }
@@ -239,6 +239,7 @@ router.get("/:workspaceId/folders/:folderId/items/:itemId", async (req, res) => 
     res.status(500).json({ error: "Error fetching folders", message: error.message });
   }
 });
+
 // --- ChatSessions service ---
 router.get("/:workspaceId/chatSessions", async (req, res) => {
   try {

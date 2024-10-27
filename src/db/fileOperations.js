@@ -1,3 +1,4 @@
+const path = require("path");
 const { getBucket } = require("./connect");
 const { logger } = require("@config/logging");
 

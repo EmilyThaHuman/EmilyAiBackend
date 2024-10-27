@@ -17,7 +17,8 @@ const { connectDB } = require("./src/db");
 async function main() {
   logger.info("Starting the server...");
   try {
-    const { client, db, bucket } = await connectDB();
+    const { client, db } = await connectDB();
+
     if (process.env.NODE_ENV !== "test") {
       const PORT = 3001;
       app.listen(PORT, () => logger.info(`Server Open & Connected To Database 🤟: ${PORT}`));
@@ -29,7 +30,7 @@ async function main() {
           Connected to MongoDB: ${db.databaseName}
         --------------------------------------------`
       );
-    if (bucket) logger.info(`Connected to GridFS Bucket: ${bucket.bucketName}`);
+    // if (bucket) logger.info(`Connected to GridFS Bucket: ${bucket.bucketName}`);
   } catch (error) {
     logger.error(`Failed to start the server: ${error.message}`);
     throw error;

@@ -20,6 +20,7 @@ const scrape2Utils = require("./scrape2");
 const scrapeFunctionUtils = require("./scrapeFunctions");
 const textUtils = require("./text");
 const vectorizeUtils = require("./vectorize");
+const dateUtils = require("./date");
 
 module.exports = {
   ...bufferUtils,
@@ -43,30 +44,6 @@ module.exports = {
   ...scrapeFunctionUtils,
   ...textUtils,
   ...vectorizeUtils,
-  ...loggingUtils
+  ...loggingUtils,
+  ...dateUtils
 };
-
-// module.exports = {
-//   ...require("./buffer"),
-//   ...require("./chunk"),
-//   ...require("./clean"),
-//   ...require("./documents"),
-//   ...require("./download"),
-//   ...require("./encoding"),
-//   ...require("./extract"),
-//   ...require("./files"),
-//   ...require("./format"),
-//   ...require("./http"),
-//   ...require("./identifyValue"),
-//   ...require("./loggingFunctions"),
-//   ...require("./main"),
-//   ...require("./metadata"),
-//   ...require("./misc"),
-//   ...require("./parse"),
-//   ...require("./pdf"),
-//   ...require("./string"),
-//   ...require("./scrape2"),
-//   ...require("./scrapeFunctions"),
-//   ...require("./text"),
-//   ...require("./vectorize")
-// };

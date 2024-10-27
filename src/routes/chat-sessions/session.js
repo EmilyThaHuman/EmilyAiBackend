@@ -11,6 +11,7 @@ const {
 } = require("../../controllers/chat-sessions/chat");
 
 const router = express.Router();
+
 // --- Chat session and messages endpoints ---
 router.get("/", asyncHandler(getAllSessions));
 router.get("/:sessionId", asyncHandler(getSessionById));

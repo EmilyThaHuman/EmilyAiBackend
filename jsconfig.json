@@ -30,8 +30,17 @@
     "config/**/*",
     "public/**/*",
     "tests/**/*",
-    "CLEANUP/chat_helpers.js",
-    "CLEANUP/initialize.js"
-, "CLEANUP/chat", "CLEANUP/old", "CLEANUP/validate.js", "CLEANUP/user.js", "CLEANUP/main.js", "CLEANUP/response.js", "CLEANUP/env.js", "CLEANUP/auth.js"  ],
+    "archive/CLEANUP/chat_helpers.js",
+    "archive/CLEANUP/initialize.js",
+    "archive/CLEANUP/chat",
+    "archive/CLEANUP/old",
+    "archive/CLEANUP/validate.js",
+    "archive/CLEANUP/user.js",
+    "archive/CLEANUP/main.js",
+    "archive/CLEANUP/response.js",
+    "archive/CLEANUP/env.js",
+    "archive/CLEANUP/auth.js",
+    "archive/chat.js"
+  ],
   "exclude": ["node_modules", "dist", "coverage"]
 }

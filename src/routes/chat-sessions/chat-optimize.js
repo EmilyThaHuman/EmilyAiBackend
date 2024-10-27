@@ -12,11 +12,11 @@ const openai = new ChatOpenAI({
 });
 
 const logAndRespondError = (res, error, message) => {
-  // Using optional chaining and fallback values to avoid undefined error properties
   const errorMsg = error?.response?.data || error?.message || "Unknown error";
   logger.error(`${message}: ${errorMsg}`);
   res.status(500).json({ message, error: errorMsg });
 };
+
 // --- Generate chat title endpoint ---
 router.post(
   "/generate-title",
@@ -85,3 +85,5 @@ router.post(
     }
   })
 );
+
+module.exports = router;
