@@ -1,4 +1,5 @@
 <!-- src\models\README.md -->
+
 # Models
 
 ## Directory
@@ -52,6 +53,7 @@ This directory contains the models for the application.
 The following data is required for each model:
 
 - Files
+
   - `name` <!-- required -->
   - `description` <!-- required -->
   - `content` <!-- not required -->
@@ -70,11 +72,13 @@ The following data is required for each model:
     - `updatedAt`
 
 - Prompts
+
   - `name` <!-- required -->
   - `description` <!-- required -->
   - `content` <!-- required -->
 
 - Assistants
+
   - `name` <!-- required -->
   - `systemInstructions` <!-- required -->
   - `model` <!-- required -->

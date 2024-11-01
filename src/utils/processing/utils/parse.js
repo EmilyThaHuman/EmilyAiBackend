@@ -1,3 +1,4 @@
+/* eslint-disable no-control-regex */
 const { logger } = require("@config/logging");
 
 /**

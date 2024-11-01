@@ -1,6 +1,6 @@
-import { generateText } from "ai";
-import { openai } from "@ai-sdk/openai";
-import fs from "fs";
+const { generateText } = require("ai");
+const { openai } = require("@ai-sdk/openai");
+const fs = require("fs");
 
 const result = await generateText({
   model: openai("gpt-4-turbo"),

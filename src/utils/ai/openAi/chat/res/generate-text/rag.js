@@ -1,25 +1,41 @@
-import fs from "fs";
-import path from "path";
-import dotenv from "dotenv";
-import { openai } from "@ai-sdk/openai";
-import { cosineSimilarity, embed, embedMany, generateText } from "ai";
-import { PineconeClient } from "@pinecone-database/pinecone";
+const { streamText, cosineSimilarity, embed, embedMany, generateText } = require("ai");
+const { openai } = require("@ai-sdk/openai");
+const fs = require("fs");
+const path = require("path");
+
+const dotenv = require("dotenv");
+const { getPineconeClient, getPineconeIndex } = require("@utils/ai/pinecone");
 
 dotenv.config();
 
 async function main() {
   // Initialize Pinecone
-  const pinecone = new PineconeClient();
-  await pinecone.init({
-    apiKey: process.env.PINECONE_API_KEY,
-    environment: process.env.PINECONE_ENVIRONMENT
+  const pinecone = await getPineconeClient();
+  const indexName = getEnv("PINECONE_INDEX");
+  const index = await getPineconeIndex(indexName);
+  const publicDir = path.join(__dirname, "public");
+  const scraped_docsDir = path.join(publicDir, "scraped_docs");
+  const mui_scraped_docsDir = path.join(scraped_docsDir, "mui");
+  const mui_scraped_docs = fs.readdirSync(mui_scraped_docsDir);
+  const mui_scraped_docs_paths = mui_scraped_docs.map((doc) => path.join(mui_scraped_docsDir, doc));
+  const mui_scraped_docs_texts = mui_scraped_docs.map((doc) =>
+    fs.readFileSync(path.join(mui_scraped_docsDir, doc), "utf8")
+  );
+  const mui_scraped_docs_embeddings = await embedMany(mui_scraped_docs_texts, {
+    model: openai.embedding("text-embedding-3-small")
   });
-
-  const index = pinecone.Index("your-index-name"); // Replace with your Pinecone index name
-
-  const essay = fs.readFileSync(path.join(__dirname, "essay.txt"), "utf8");
-  const chunks = essay
-    .split(".")
+  const mui_scraped_docs_embeddings_ids = mui_scraped_docs.map((doc) => doc.replace(".txt", ""));
+  const docsToAnal = mui_scraped_docs_texts.slice(0, 10);
+  const docsToAnalyze = docsToAnal.map((doc) => ({
+    id: doc.replace(".txt", ""),
+    text: doc
+  }));
+  const singleDocToAnalyze = readFileSync(
+    path.join(mui_scraped_docsDir, "mui-docs-v5.txt"),
+    "utf8"
+  );
+  const chunks = singleDocToAnalyze
+    .split("\n")
     .map((chunk) => chunk.trim())
     .filter((chunk) => chunk.length > 0 && chunk !== "\n");
 

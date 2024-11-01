@@ -1,3 +1,13 @@
+const { createOpenAI } = require("@ai-sdk/openai");
+const { getEnv } = require("../api");
+const fs = require("fs");
+
+// Initialize OpenAI with API key
+const openai = createOpenAI({
+  apiKey: getEnv("OPENAI_API_PROJECT_KEY"),
+  compatibility: "strict"
+});
+
 /**
  * Downloads a file from OpenAI API and saves it to the specified local path.
  * @param {string} fileId - The ID of the file to download from OpenAI.

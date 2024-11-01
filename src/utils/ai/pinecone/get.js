@@ -24,6 +24,10 @@ const getPineconeClient = async () => {
   //   apiKey: getEnv('PINECONE_API_KEY'),
   // });
 };
+const getPineconeIndex = async (index) => {
+  const indexList = await index.listIndexes();
+  return indexList;
+};
 const getPineconeIndexList = async (index) => {
   const indexList = await index.listIndexes();
   return indexList;
@@ -64,6 +68,7 @@ const getPineconeIndexListNames = async (pinecone) => {
     return [];
   }
 };
+
 const getPineconeNamespaceList = async (pinecone, indexList) => {
   const namespaceList = [];
   for (const indexName of indexList) {
@@ -86,6 +91,7 @@ async function getIndexNamespaceList(index) {
 
 module.exports = {
   getPineconeClient,
+  getPineconeIndex,
   getPineconeIndexList,
   getPineconeNamespaceList,
   getIndexNamespaceList,

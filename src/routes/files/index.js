@@ -1,4 +1,4 @@
-const fileRoutes = require("./files");
+const fileRoutes = require("./fileRoutes");
 
 module.exports = {
   fileRoutes

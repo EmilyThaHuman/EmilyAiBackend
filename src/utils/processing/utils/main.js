@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 const { processCSV } = require("../../processing/types/csv.js");
 const { processDocX } = require("../../processing/types/docx.js");
 const { processJSON } = require("../../processing/types/json.js");

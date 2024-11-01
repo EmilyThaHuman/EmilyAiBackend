@@ -1,11 +1,11 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "Archive Logs",
-            "type": "shell",
-            "command": "npm run archive:logs",
-            "problemMatcher": []
-        }
-    ]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Archive Logs",
+      "type": "shell",
+      "command": "npm run archive:logs",
+      "problemMatcher": []
+    }
+  ]
 }

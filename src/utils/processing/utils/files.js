@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 const fs = require("node:fs/promises");
 const path = require("path");
 const { logger } = require("@config/logging");

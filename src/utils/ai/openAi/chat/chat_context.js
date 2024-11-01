@@ -1,11 +1,7 @@
 const { logger } = require("@config/logging");
 const { PineconeStore } = require("@langchain/pinecone");
 const { extractKeywords } = require("./context");
-const {
-  identifyLibrariesAndComponents,
-  getDocumentationUrl,
-  scrapeDocumentation
-} = require("../../shared");
+const { identifyLibrariesAndComponents } = require("../../shared");
 const { createPineconeIndex } = require("@utils/ai/pinecone");
 
 const setupVectorStores = async (pinecone, embedder, initializationData) => {

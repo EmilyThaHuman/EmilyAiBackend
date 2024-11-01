@@ -19,8 +19,8 @@ const { default: mongoose } = require("mongoose");
 const { morganMiddleware } = require("./morganMiddleware");
 const config = require("@config/main");
 const { logger } = require("@config/logging");
-const { User } = require("@/models/user");
 const { initGridFS } = require("@controllers/files");
+const { User } = require("@models/user");
 
 const middlewares = (app) => {
   // Set up Helmet for enhanced security, including Content Security Policy (CSP)
