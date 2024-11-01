@@ -201,7 +201,7 @@ const filterAllElements = async function (filterParams, page) {
       filterElementFunction
     );
   } catch (error) {
-    console.error(`Error filtering elements: ${error}`);
+    logger.error(`Error filtering elements: ${error}`);
     return [];
   }
 };
@@ -249,13 +249,13 @@ async function expandAllCodeBlocks(page) {
         await page.waitForTimeout(2000); // Wait for expansion animation
         expandedCount++;
       } catch (error) {
-        console.error(`Error expanding code block: ${error.message}`);
+        logger.error(`Error expanding code block: ${error.message}`);
       }
     }
 
-    console.log(`Expanded ${expandedCount} out of ${expandButtons.length} code blocks.`);
+    logger.info(`Expanded ${expandedCount} out of ${expandButtons.length} code blocks.`);
   } catch (error) {
-    console.error(`Error expanding code blocks: ${error.message}`);
+    logger.error(`Error expanding code blocks: ${error.message}`);
   }
 }
 // const filterAllElements = async function (filterParams, page) {

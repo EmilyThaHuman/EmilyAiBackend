@@ -52,12 +52,8 @@ Navigate to the `code-snippet-saver` directory and open the `package.json` file.
   "engines": {
     "vscode": "^1.70.0"
   },
-  "categories": [
-    "Other"
-  ],
-  "activationEvents": [
-    "onCommand:extension.saveSnippet"
-  ],
+  "categories": ["Other"],
+  "activationEvents": ["onCommand:extension.saveSnippet"],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
@@ -104,46 +100,51 @@ Navigate to the `code-snippet-saver` directory and open the `package.json` file.
 Open the `src/extension.ts` file and replace its content with the following code:
 
 ```typescript
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
 
 export function activate(context: vscode.ExtensionContext) {
-    // Register the 'saveSnippet' command
-    let disposable = vscode.commands.registerCommand('extension.saveSnippet', async () => {
-        try {
-            // Prompt the user for the programming language
-            const language = await vscode.window.showInputBox({
-                prompt: 'Enter the programming language of the snippet (e.g., javascript, python)',
-                placeHolder: 'Language'
-            });
+  // Register the 'saveSnippet' command
+  let disposable = vscode.commands.registerCommand("extension.saveSnippet", async () => {
+    try {
+      // Prompt the user for the programming language
+      const language = await vscode.window.showInputBox({
+        prompt: "Enter the programming language of the snippet (e.g., javascript, python)",
+        placeHolder: "Language"
+      });
 
-            if (!language) {
-                vscode.window.showErrorMessage('Language is required to create a code block.');
-                return;
-            }
+      if (!language) {
+        vscode.window.showErrorMessage("Language is required to create a code block.");
+        return;
+      }
 
-            // Create the markdown content with a code block template
-            const markdownContent = `### Code Snippet\n\`\`\`${language}\n\n\`\`\`\n`;
+      // Create the markdown content with a code block template
+      const markdownContent = `### Code Snippet\n\`\`\`${language}\n\n\`\`\`\n`;
 
-            // Create a new untitled markdown document with the template
-            const newDoc = await vscode.workspace.openTextDocument({ content: markdownContent, language: 'markdown' });
-            await vscode.window.showTextDocument(newDoc, { preview: false });
+      // Create a new untitled markdown document with the template
+      const newDoc = await vscode.workspace.openTextDocument({
+        content: markdownContent,
+        language: "markdown"
+      });
+      await vscode.window.showTextDocument(newDoc, { preview: false });
 
-            // Optional: Automatically place the cursor inside the code block for immediate pasting
-            const editor = vscode.window.activeTextEditor;
-            if (editor) {
-                const doc = editor.document;
-                const position = new vscode.Position(3, 0); // Line 3, character 0 (inside the code block)
-                editor.selection = new vscode.Selection(position, position);
-                editor.revealRange(new vscode.Range(position, position));
-            }
+      // Optional: Automatically place the cursor inside the code block for immediate pasting
+      const editor = vscode.window.activeTextEditor;
+      if (editor) {
+        const doc = editor.document;
+        const position = new vscode.Position(3, 0); // Line 3, character 0 (inside the code block)
+        editor.selection = new vscode.Selection(position, position);
+        editor.revealRange(new vscode.Range(position, position));
+      }
 
-            vscode.window.showInformationMessage('Markdown file with code block created. Paste your snippet inside the code block.');
-        } catch (error) {
-            vscode.window.showErrorMessage(`Failed to create snippet: ${error}`);
-        }
-    });
+      vscode.window.showInformationMessage(
+        "Markdown file with code block created. Paste your snippet inside the code block."
+      );
+    } catch (error) {
+      vscode.window.showErrorMessage(`Failed to create snippet: ${error}`);
+    }
+  });
 
-    context.subscriptions.push(disposable);
+  context.subscriptions.push(disposable);
 }
 
 export function deactivate() {}
@@ -192,17 +193,22 @@ npm run compile
 
 3. **Example Output:**
 
-   ```markdown
+   ````markdown
    ### Code Snippet
+
    ```javascript
 
    ```
+   ````
+
+   ```
+
    ```
 
 ### 6. Optional Enhancements
 
 - **Saving to a Specific Directory or File:**
-  
+
   Modify the extension to save snippets to a predefined markdown file or a specific directory within your workspace.
 
 - **Snippet Metadata:**
@@ -249,12 +255,8 @@ If you wish to share your extension with others, you can package and publish it 
   "engines": {
     "vscode": "^1.70.0"
   },
-  "categories": [
-    "Other"
-  ],
-  "activationEvents": [
-    "onCommand:extension.saveSnippet"
-  ],
+  "categories": ["Other"],
+  "activationEvents": ["onCommand:extension.saveSnippet"],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
@@ -293,46 +295,51 @@ If you wish to share your extension with others, you can package and publish it 
 ### `src/extension.ts`
 
 ```typescript
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
 
 export function activate(context: vscode.ExtensionContext) {
-    // Register the 'saveSnippet' command
-    let disposable = vscode.commands.registerCommand('extension.saveSnippet', async () => {
-        try {
-            // Prompt the user for the programming language
-            const language = await vscode.window.showInputBox({
-                prompt: 'Enter the programming language of the snippet (e.g., javascript, python)',
-                placeHolder: 'Language'
-            });
+  // Register the 'saveSnippet' command
+  let disposable = vscode.commands.registerCommand("extension.saveSnippet", async () => {
+    try {
+      // Prompt the user for the programming language
+      const language = await vscode.window.showInputBox({
+        prompt: "Enter the programming language of the snippet (e.g., javascript, python)",
+        placeHolder: "Language"
+      });
 
-            if (!language) {
-                vscode.window.showErrorMessage('Language is required to create a code block.');
-                return;
-            }
+      if (!language) {
+        vscode.window.showErrorMessage("Language is required to create a code block.");
+        return;
+      }
 
-            // Create the markdown content with a code block template
-            const markdownContent = `### Code Snippet\n\`\`\`${language}\n\n\`\`\`\n`;
+      // Create the markdown content with a code block template
+      const markdownContent = `### Code Snippet\n\`\`\`${language}\n\n\`\`\`\n`;
 
-            // Create a new untitled markdown document with the template
-            const newDoc = await vscode.workspace.openTextDocument({ content: markdownContent, language: 'markdown' });
-            await vscode.window.showTextDocument(newDoc, { preview: false });
+      // Create a new untitled markdown document with the template
+      const newDoc = await vscode.workspace.openTextDocument({
+        content: markdownContent,
+        language: "markdown"
+      });
+      await vscode.window.showTextDocument(newDoc, { preview: false });
 
-            // Optional: Automatically place the cursor inside the code block for immediate pasting
-            const editor = vscode.window.activeTextEditor;
-            if (editor) {
-                const doc = editor.document;
-                const position = new vscode.Position(3, 0); // Line 3, character 0 (inside the code block)
-                editor.selection = new vscode.Selection(position, position);
-                editor.revealRange(new vscode.Range(position, position));
-            }
+      // Optional: Automatically place the cursor inside the code block for immediate pasting
+      const editor = vscode.window.activeTextEditor;
+      if (editor) {
+        const doc = editor.document;
+        const position = new vscode.Position(3, 0); // Line 3, character 0 (inside the code block)
+        editor.selection = new vscode.Selection(position, position);
+        editor.revealRange(new vscode.Range(position, position));
+      }
 
-            vscode.window.showInformationMessage('Markdown file with code block created. Paste your snippet inside the code block.');
-        } catch (error) {
-            vscode.window.showErrorMessage(`Failed to create snippet: ${error}`);
-        }
-    });
+      vscode.window.showInformationMessage(
+        "Markdown file with code block created. Paste your snippet inside the code block."
+      );
+    } catch (error) {
+      vscode.window.showErrorMessage(`Failed to create snippet: ${error}`);
+    }
+  });
 
-    context.subscriptions.push(disposable);
+  context.subscriptions.push(disposable);
 }
 
 export function deactivate() {}

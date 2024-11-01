@@ -27,6 +27,7 @@
   },
   "include": [
     "src/**/*",
+    "@config/logging/logger.js",
     "config/**/*",
     "public/**/*",
     "tests/**/*",

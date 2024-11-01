@@ -2,7 +2,7 @@
 const OpenAI = require("openai");
 
 // Retrieve environment variables
-const apiKey = process.env.OPENAI_SECRET_KEY;
+const apiKey = process.env.OPENAI_API_PROJECT_KEY;
 const shouldLog = process.env.OPENAI_LOG === "true";
 const defaultModel = "gpt-4";
 

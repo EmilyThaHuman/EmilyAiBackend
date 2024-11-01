@@ -1,3 +1,5 @@
+const { generateText } = require("ai");
+
 const result = await generateText({
   model: openai("gpt-3.5-turbo"),
   maxTokens: 1024,

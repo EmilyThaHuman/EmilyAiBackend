@@ -1,4 +1,11 @@
 {
-  "cSpell.words": ["COVERLETTER", "mockingoose", "openai", "rsyncwrapper", "topcard", "vectordb"]
-
+  "cSpell.words": [
+    "COVERLETTER",
+    "dotenvx",
+    "mockingoose",
+    "openai",
+    "rsyncwrapper",
+    "topcard",
+    "vectordb"
+  ]
 }

@@ -5,13 +5,49 @@ const { SystemMessage, HumanMessage } = require("@langchain/core/messages");
 const { getEnv } = require("@utils/processing/api");
 const { logger } = require("@config/logging");
 const { logChatDataError } = require("@utils/processing/utils/loggingFunctions");
+const throttle = require("lodash/throttle");
 
-const chatOpenAI = new ChatOpenAI({
+const perplexityConfig = {
+  model: "llama-3.1-sonar-small-128k-online",
+  return_citations: true,
+  return_images: false,
+  search_recency_filter: "month",
+  stream: false,
+  max_tokens: 1024,
+  temperature: 0.5
+};
+
+const openAIConfig = {
   model: getEnv("OPENAI_API_CHAT_COMPLETION_MODEL"),
   temperature: 0.2,
   maxTokens: 500,
   apiKey: process.env.OPENAI_API_PROJECT_KEY
-});
+};
+const chatOpenAI = new ChatOpenAI(openAIConfig);
+
+const cache = new Map();
+
+const getCachedOrFetch = async (key, fetchFn) => {
+  if (cache.has(key)) return cache.get(key);
+  const result = await fetchFn();
+  cache.set(key, result);
+  return result;
+};
+
+const batchSummarizeMessages = async (messagesBatch, chatOpenAI) => {
+  return Promise.all(messagesBatch.map((messages) => summarizeMessages(messages, chatOpenAI)));
+};
+
+const withRetry = async (fn, maxRetries = 3) => {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await fn();
+    } catch (error) {
+      if (i === maxRetries - 1) throw error;
+      await new Promise((resolve) => setTimeout(resolve, 1000 * Math.pow(2, i)));
+    }
+  }
+};
 
 const extractKeywords = async (text) => {
   const systemMessage = new SystemMessage(
@@ -25,6 +61,7 @@ const extractKeywords = async (text) => {
   logger.info(`Extracted keywords: ${response.content}`);
   return response.content.split(",").map((keyword) => keyword.trim());
 };
+
 const summarizeMessages = async (messages, chatOpenAI) => {
   const summarizeFunction = {
     name: "summarize_messages",
@@ -60,7 +97,6 @@ const summarizeMessages = async (messages, chatOpenAI) => {
   };
   const response = await chatOpenAI.completionWithRetry({
     model: getEnv("OPENAI_API_CHAT_COMPLETION_MODEL"),
-    // prompt: template,
     messages: [
       { role: "system", content: "You are a helpful assistant that summarizes chat messages." },
       {
@@ -81,6 +117,7 @@ const summarizeMessages = async (messages, chatOpenAI) => {
   }
   return { overallSummary: "Unable to generate summary", individualSummaries: [] };
 };
+
 const extractSummaries = (summaryResponse) => {
   const overallSummaryString = summaryResponse.overallSummary;
   const individualSummariesArray = summaryResponse.individualSummaries.map((summary) => ({
@@ -93,6 +130,7 @@ const extractSummaries = (summaryResponse) => {
     individualSummariesArray
   };
 };
+
 const handleSummarization = async (messages, chatOpenAI, sessionId) => {
   try {
     const summary = await summarizeMessages(messages.slice(-5), chatOpenAI);
@@ -106,17 +144,7 @@ const handleSummarization = async (messages, chatOpenAI, sessionId) => {
     throw error;
   }
 };
-/**
- * Performs a perplexity completion using the Perplexity AI API.
- *
- * @param {string} prompt - The prompt for the completion.
- * @param {string} perplexityApiKey - The API key for accessing the Perplexity AI API.
- * @returns {Promise<Object>} - A promise that resolves to the response with content and citations.
- * @returns {string} .pageContent - The content returned by the API.
- * @returns {Object} .metadata - The metadata containing the citations.
- * @returns {Array<Object>} .metadata.citations - The array of citation objects.
- * @throws {Error} - If the prompt or API key is invalid, or if there is an error during the completion.
- */
+
 async function performPerplexityCompletion(prompt, perplexityApiKey) {
   if (!prompt || typeof prompt !== "string") {
     throw new Error("Invalid prompt: Prompt must be a non-empty string");
@@ -125,8 +153,25 @@ async function performPerplexityCompletion(prompt, perplexityApiKey) {
     throw new Error("Invalid API key: API key must be a non-empty string");
   }
   try {
+    // const data = {
+    //   model: "llama-3.1-sonar-small-128k-online",
+    //   messages: [
+    //     {
+    //       role: "system",
+    //       content:
+    //         "Provide a concise answer. Include in-text citations in the format [citation_number], and return a separate list of citations."
+    //     },
+    //     { role: "user", content: prompt }
+    //   ],
+    //   return_citations: true,
+    //   return_images: false,
+    //   search_recency_filter: "month",
+    //   stream: false,
+    //   max_tokens: 1024,
+    //   temperature: 0.5
+    // };
     const data = {
-      model: "llama-3.1-sonar-small-128k-online",
+      ...perplexityConfig,
       messages: [
         {
           role: "system",
@@ -134,13 +179,7 @@ async function performPerplexityCompletion(prompt, perplexityApiKey) {
             "Provide a concise answer. Include in-text citations in the format [citation_number], and return a separate list of citations."
         },
         { role: "user", content: prompt }
-      ],
-      return_citations: true,
-      return_images: false,
-      search_recency_filter: "month",
-      stream: false,
-      max_tokens: 1024,
-      temperature: 0.5
+      ]
     };
     const config = {
       method: "post",
@@ -152,7 +191,6 @@ async function performPerplexityCompletion(prompt, perplexityApiKey) {
       data: data
     };
     logger.info(`Perplexity completion: ${prompt}`);
-    // Perform the API request
     const response = await axios(config);
     if (!response.data || !response.data.choices || !response.data.choices[0]) {
       throw new Error("Invalid response format from Perplexity API");
@@ -162,7 +200,6 @@ async function performPerplexityCompletion(prompt, perplexityApiKey) {
     const citations = response.data.choices[0].message.citations || [];
     logger.info(`Perplexity completion response: ${completion} - Citations: ${citations.length}`);
 
-    // Return the content and citations separately
     return {
       pageContent: completion,
       metadata: {
@@ -190,6 +227,24 @@ async function performPerplexityCompletion(prompt, perplexityApiKey) {
     }
   }
 }
+
+async function rephraseInput(inputString) {
+  console.log(`4. Rephrasing input`);
+  const groqResponse = await openai.chat.completions.create({
+    model: "mixtral-8x7b-32768",
+    messages: [
+      {
+        role: "system",
+        content:
+          "You are a rephraser and always respond with a rephrased version of the input that is given to a search engine API. Always be succint and use the same words as the input. ONLY RETURN THE REPHRASED VERSION OF THE INPUT."
+      },
+      { role: "user", content: inputString }
+    ]
+  });
+  console.log(`5. Rephrased input and got answer from Groq`);
+  return groqResponse.choices[0].message.content;
+}
+
 const generateOptimizedPrompt = async (input) => {
   const template = `
     Given the user input: {input}
@@ -214,11 +269,15 @@ const generateOptimizedPrompt = async (input) => {
   return result.text;
 };
 
+const throttledPerplexityCompletion = throttle(performPerplexityCompletion, 1000);
+
 module.exports = {
   summarizeMessages,
   extractSummaries,
   handleSummarization,
   performPerplexityCompletion,
   generateOptimizedPrompt,
-  extractKeywords
+  extractKeywords,
+  rephraseInput,
+  throttledPerplexityCompletion
 };

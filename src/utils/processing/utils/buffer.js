@@ -1,4 +1,5 @@
 const tiktoken = require("tiktoken");
+const TextEncoder = require("util").TextEncoder;
 
 function newTextBuffer(n, prefix, suffix) {
   const builders = Array(n).fill("");

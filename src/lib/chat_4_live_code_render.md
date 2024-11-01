@@ -19,21 +19,21 @@ npm install react react-dom prop-types prism-react-renderer react-live @mdx-js/r
 
 ```jsx
 // App.js
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import ChatMessage from './ChatMessage';
-import PreviewModal from './PreviewModal';
+import React, { useState } from "react";
+import styled from "styled-components";
+import ChatMessage from "./ChatMessage";
+import PreviewModal from "./PreviewModal";
 
 // Sample chat data
 const initialMessages = [
   {
     id: 1,
-    type: 'text',
-    content: 'Hello! Here is some example code:',
+    type: "text",
+    content: "Hello! Here is some example code:"
   },
   {
     id: 2,
-    type: 'code',
+    type: "code",
     content: `import React from 'react';
 
 const HelloWorld = () => {
@@ -41,8 +41,8 @@ const HelloWorld = () => {
 };
 
 export default HelloWorld;`,
-    language: 'javascript',
-  },
+    language: "javascript"
+  }
 ];
 
 const AppContainer = styled.div`
@@ -95,10 +95,10 @@ export default App;
 
 ```jsx
 // ChatMessage.js
-import React from 'react';
-import styled from 'styled-components';
-import CodeBlock from './CodeBlock';
-import PropTypes from 'prop-types';
+import React from "react";
+import styled from "styled-components";
+import CodeBlock from "./CodeBlock";
+import PropTypes from "prop-types";
 
 const MessageContainer = styled.div`
   margin-bottom: 20px;
@@ -129,7 +129,7 @@ const PreviewButton = styled.button`
 `;
 
 const ChatMessage = ({ message, onPreview }) => {
-  if (message.type === 'text') {
+  if (message.type === "text") {
     return (
       <MessageContainer>
         <TextMessage>{message.content}</TextMessage>
@@ -137,13 +137,11 @@ const ChatMessage = ({ message, onPreview }) => {
     );
   }
 
-  if (message.type === 'code') {
+  if (message.type === "code") {
     return (
       <MessageContainer>
         <CodeBlockContainer>
-          <CodeBlock className={`language-${message.language}`}>
-            {message.content}
-          </CodeBlock>
+          <CodeBlock className={`language-${message.language}`}>{message.content}</CodeBlock>
           <PreviewButton onClick={() => onPreview(message.content, message.language)}>
             Preview
           </PreviewButton>
@@ -160,9 +158,9 @@ ChatMessage.propTypes = {
     id: PropTypes.number.isRequired,
     type: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,
-    language: PropTypes.string,
+    language: PropTypes.string
   }).isRequired,
-  onPreview: PropTypes.func.isRequired,
+  onPreview: PropTypes.func.isRequired
 };
 
 export default ChatMessage;
@@ -170,18 +168,18 @@ export default ChatMessage;
 
 ```jsx
 // CodeBlock.js
-import React from 'react';
-import PropTypes from 'prop-types';
-import Highlight, { defaultProps } from 'prism-react-renderer';
-import { LiveProvider, LiveEditor, LiveError, LivePreview } from 'react-live';
-import { mdx } from '@mdx-js/react';
+import React from "react";
+import PropTypes from "prop-types";
+import Highlight, { defaultProps } from "prism-react-renderer";
+import { LiveProvider, LiveEditor, LiveError, LivePreview } from "react-live";
+import { mdx } from "@mdx-js/react";
 
 const CodeBlock = ({ children, className, live, render }) => {
-  const language = className ? className.replace(/language-/, '') : 'javascript';
+  const language = className ? className.replace(/language-/, "") : "javascript";
 
   if (live) {
     return (
-      <div style={{ marginTop: '40px', backgroundColor: 'black' }}>
+      <div style={{ marginTop: "40px", backgroundColor: "black" }}>
         <LiveProvider
           code={children.trim()}
           transformCode={(code) => `/** @jsx mdx */${code}`}
@@ -197,7 +195,7 @@ const CodeBlock = ({ children, className, live, render }) => {
 
   if (render) {
     return (
-      <div style={{ marginTop: '40px' }}>
+      <div style={{ marginTop: "40px" }}>
         <LiveProvider code={children}>
           <LivePreview />
         </LiveProvider>
@@ -206,22 +204,17 @@ const CodeBlock = ({ children, className, live, render }) => {
   }
 
   return (
-    <Highlight
-      {...defaultProps}
-      code={children.trim()}
-      theme={undefined}
-      language={language}
-    >
+    <Highlight {...defaultProps} code={children.trim()} theme={undefined} language={language}>
       {({ className, style, tokens, getLineProps, getTokenProps }) => (
-        <pre className={className} style={{ ...style, padding: '20px', position: 'relative' }}>
+        <pre className={className} style={{ ...style, padding: "20px", position: "relative" }}>
           {tokens.map((line, i) => (
-            <div key={i} {...getLineProps({ line, key: i })} style={{ display: 'flex' }}>
+            <div key={i} {...getLineProps({ line, key: i })} style={{ display: "flex" }}>
               <span
                 style={{
-                  display: 'inline-block',
-                  width: '2em',
-                  userSelect: 'none',
-                  opacity: 0.5,
+                  display: "inline-block",
+                  width: "2em",
+                  userSelect: "none",
+                  opacity: 0.5
                 }}
               >
                 {i + 1}
@@ -243,7 +236,7 @@ CodeBlock.propTypes = {
   children: PropTypes.string,
   className: PropTypes.string,
   live: PropTypes.bool,
-  render: PropTypes.func,
+  render: PropTypes.func
 };
 
 export default CodeBlock;
@@ -251,10 +244,10 @@ export default CodeBlock;
 
 ```jsx
 // PreviewModal.js
-import React from 'react';
-import styled from 'styled-components';
-import PropTypes from 'prop-types';
-import Highlight, { defaultProps } from 'prism-react-renderer';
+import React from "react";
+import styled from "styled-components";
+import PropTypes from "prop-types";
+import Highlight, { defaultProps } from "prism-react-renderer";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -329,7 +322,7 @@ const PreviewModal = ({ code, language, onClose }) => {
 PreviewModal.propTypes = {
   code: PropTypes.string.isRequired,
   language: PropTypes.string.isRequired,
-  onClose: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired
 };
 
 export default PreviewModal;
@@ -338,18 +331,21 @@ export default PreviewModal;
 ### Explanation
 
 1. **App Component (`App.js`)**:
+
    - Initializes the chat with some sample messages.
    - Manages the state for messages and the code preview modal.
    - Renders each message using the `ChatMessage` component.
    - Displays the `PreviewModal` when a user clicks the "Preview" button.
 
 2. **ChatMessage Component (`ChatMessage.js`)**:
+
    - Checks the type of the message (`text` or `code`).
    - For text messages, it simply displays the content.
    - For code messages, it renders the `CodeBlock` component and attaches a "Preview" button.
    - When the "Preview" button is clicked, it calls the `onPreview` function passed from the `App` component.
 
 3. **CodeBlock Component (`CodeBlock.js`)**:
+
    - Renders code with syntax highlighting using `prism-react-renderer`.
    - Supports live editing and previewing if the `live` prop is true.
    - Displays line numbers alongside the code.

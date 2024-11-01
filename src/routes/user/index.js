@@ -1,5 +1,7 @@
-const userBaseRoutes = require("./local");
+const userBaseRoutes = require("./userBaseRoutes");
+const authRoutes = require("./auth");
 
 module.exports = {
-  userBaseRoutes
+  userBaseRoutes,
+  authRoutes
 };

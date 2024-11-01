@@ -1,6 +1,5 @@
-import { streamText } from "ai";
-import { openai } from "@ai-sdk/openai";
-
+const { streamText } = require("ai");
+const { openai } = require("@ai-sdk/openai");
 const result = await streamText({
   model: openai("gpt-3.5-turbo"),
   maxTokens: 512,

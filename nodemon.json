@@ -1,0 +1,23 @@
+{
+  "watch": [
+    "index.js",
+    "src",
+    "jsconfig.json",
+    "package.json",
+    "nodemon.json",
+    ".eslintrc.json",
+    "babel.config.js",
+    ".prettierrc.json",
+    ".env"
+  ],
+  "ext": "js,json",
+  "restartable": "rs",
+  "verbose": true,
+  "execMap": {
+    "js": "node"
+  },
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "ignore": [".git", "node_modules/**/node_modules", "dist", "coverage", "*.test.js", "*.spec.js"]
+}

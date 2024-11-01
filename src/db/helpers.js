@@ -18,6 +18,7 @@ const { tools: initialTools } = tools;
 const { ALLOWED_FILE_TYPES_ABBR, SUPPORTED_MIME_TYPES_ABBR } = require("@config/constants");
 const { logger } = require("@config/logging");
 const { getEnv } = require("@utils/processing/api");
+const { Readable } = require("stream");
 
 const createWorkspace = async (user) => {
   const workspaceData = {
@@ -297,11 +298,25 @@ const saveInitialFiles = async (userId, workspaceId, folderId) => {
             logger.warn(`File does not exist: ${filePath}`);
             return null;
           }
-          const fileStats = await fs.stat(filePath);
+          // Get file statistics
+          let fileStats;
+          try {
+            fileStats = await fs.stat(filePath);
+          } catch (err) {
+            logger.warn(`Error getting stats for file: ${filePath}`, err);
+            return null;
+          }
           const fileSize = fileStats.size;
-          const fileData = await fs.readFile(filePath);
+          // Read file data
+          let fileData;
+          try {
+            fileData = await fs.readFile(filePath);
+          } catch (err) {
+            logger.warn(`Error reading file: ${filePath}`, err);
+            return null;
+          }
 
-          // Determine if the file is text or binary
+          // Determine if the file is a text file
           const textFileTypes = ["txt", "md", "html", "json", "csv", "tsv", "jsx", "js"];
           const isTextFile = textFileTypes.includes(fileExtension);
           const content = isTextFile ? fileData.toString("utf8") : null;
@@ -311,8 +326,13 @@ const saveInitialFiles = async (userId, workspaceId, folderId) => {
             workspaceId,
             folderId,
             name: file.name,
+            fileName: "",
+            contentType: "",
+            uploadDate: "",
+            length: "",
             filePath: filePath,
-            content: content, // Only store content for text files
+            folderPath: "",
+            content: content,
             size: fileSize,
             type: fileExtension,
             mimeType: mimeType,
@@ -333,7 +353,129 @@ const saveInitialFiles = async (userId, workspaceId, folderId) => {
     const validFiles = filesToSave.filter((file) => file !== null);
     const savedFiles = await File.insertMany(validFiles);
     logger.info("Initial files saved successfully");
+
+    savedFiles.forEach((file) => {
+      file.folderPath = `/${folderId}/${file._id}`;
+    });
+
+    await File.bulkWrite(
+      savedFiles.map((file) => ({
+        updateOne: {
+          filter: { _id: file._id },
+          update: { $set: { folderPath: file.folderPath } }
+        }
+      }))
+    );
+
     return savedFiles;
+  } catch (error) {
+    logger.error("Error saving initial files:", error);
+    throw error;
+  }
+};
+
+const saveInitialFilesBucketVersion = async (userId, workspaceId, folderId) => {
+  try {
+    const filesToSave = await Promise.all(
+      initialUserFiles
+        .filter((file) => {
+          const fileExtension = path.extname(file.name).substring(1).toLowerCase();
+          if (!ALLOWED_FILE_TYPES_ABBR.includes(fileExtension)) {
+            logger.warn(`Skipping unsupported file type: .${fileExtension}`);
+            return false; // Skip unsupported files
+          }
+          return true;
+        })
+        .map(async (file) => {
+          const fileExtension = path.extname(file.name).substring(1).toLowerCase();
+          const mimeType = SUPPORTED_MIME_TYPES_ABBR[fileExtension] || "application/octet-stream";
+
+          const filePath = file.path;
+
+          try {
+            await fs.access(filePath, fs.constants.R_OK);
+          } catch (err) {
+            logger.warn(`File does not exist or is not readable: ${filePath}`);
+            return null;
+          }
+
+          // Get file statistics
+          let fileStats;
+          try {
+            fileStats = await fs.stat(filePath);
+          } catch (err) {
+            logger.warn(`Error getting stats for file: ${filePath}`, err);
+            return null;
+          }
+
+          const fileSize = fileStats.size;
+
+          // Read file data
+          let fileData;
+          try {
+            fileData = await fs.readFile(filePath);
+          } catch (err) {
+            logger.warn(`Error reading file: ${filePath}`, err);
+            return null;
+          }
+
+          // Determine if the file is a text file
+          const textFileTypes = ["txt", "md", "html", "json", "csv", "tsv", "jsx", "js"];
+          const isTextFile = textFileTypes.includes(fileExtension);
+          const content = isTextFile ? fileData.toString("utf8") : null;
+
+          // Create a readable stream from the file buffer
+          const readableStream = new Readable();
+          readableStream.push(fileData);
+          readableStream.push(null);
+
+          // Prepare metadata for GridFS
+          const metadata = {
+            userId,
+            workspaceId,
+            folderId,
+            fileSize,
+            fileType: fileExtension,
+            lastModified: fileStats.mtime,
+            content: content // Only for text files
+          };
+
+          return new Promise((resolve, reject) => {
+            // Open an upload stream to GridFSBucket
+            const uploadStream = bucket.openUploadStream(file.name, {
+              contentType: mimeType,
+              metadata: metadata
+            });
+
+            // Handle stream events
+            uploadStream.on("error", (err) => {
+              logger.error(`Error uploading file ${file.name}:`, err);
+              resolve(null);
+            });
+
+            uploadStream.on("finish", () => {
+              logger.info(`File uploaded successfully: ${file.name}`);
+              resolve({
+                _id: uploadStream.id,
+                filename: uploadStream.filename,
+                uploadDate: uploadStream.uploadDate,
+                length: uploadStream.length,
+                contentType: mimeType,
+                metadata: metadata
+              });
+            });
+
+            // Pipe the readable stream into the upload stream
+            readableStream.pipe(uploadStream);
+          });
+        })
+    );
+
+    // Filter out any null results (files that were skipped or failed to upload)
+    const validFiles = filesToSave.filter((file) => file !== null);
+
+    logger.info("Initial files saved successfully");
+    return validFiles;
   } catch (error) {
     logger.error("Error saving initial files:", error);
     throw error;

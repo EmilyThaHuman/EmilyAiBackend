@@ -1,7 +1,7 @@
-const chatAssistantRoutes = require("./assistants");
+const chatAssistantRoutes = require("./assistantRoutes");
 const chatRoutes = require("./chat-v1");
-const chatAttachmentRoutes = require("./attachments");
-const chatSessionRoutes = require("./session");
+const chatAttachmentRoutes = require("./attachmentRoutes");
+const chatSessionRoutes = require("./sessionRoutes");
 
 module.exports = {
   chatAssistantRoutes,

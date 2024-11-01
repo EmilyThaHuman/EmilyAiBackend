@@ -1,4 +1,9 @@
-/* eslint-disable indent */
+/**
+ * --------------------------------------------
+ * [routes/workspaces/index.js] Workspaces routes
+ * --------------------------------------------
+ */
+
 const express = require("express");
 const { asyncHandler } = require("@middlewares/asyncHandler");
 const {

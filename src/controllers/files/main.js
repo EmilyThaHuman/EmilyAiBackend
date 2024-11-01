@@ -3,15 +3,21 @@ const mongoose = require("mongoose");
 const Grid = require("gridfs-stream");
 const multer = require("multer");
 const { GridFsStorage } = require("multer-gridfs-storage");
-const { config, logger } = require("@config/index");
+const { config } = require("@config/index");
+const { logger } = require("@config/logging");
 
 // Initialize GridFS
 let gfs, bucket;
 
 const initGridFS = (conn) => {
-  bucket = new mongoose.mongo.bucket(conn.db, {
-    bucketName: "uploads"
+  bucket = new mongoose.mongo.GridFSBucket(conn.db, {
+    bucketName: "uploads",
+    chunkSizeBytes: 1048576, // 1MB
+    uploadOptions: {
+      chunkSize: 1048576
+    }
   });
+
   gfs = Grid(conn.db, mongoose.mongo);
   gfs.collection("uploads");
   // gfs.collection("uploads.files");
@@ -33,18 +39,19 @@ const storage = new GridFsStorage({
 // Multer middleware with file filter
 const upload = multer({
   storage,
-  fileFilter: (req, file, cb) => {
-    // Accept images and PDFs only
-    if (
-      file.mimetype === "image/jpeg" ||
-      file.mimetype === "image/png" ||
-      file.mimetype === "application/pdf"
-    ) {
-      cb(null, true);
-    } else {
-      cb(new Error("Invalid file type. Only JPEG, PNG, and PDF are allowed!"), false);
-    }
-  },
+  // fileFilter: (req, file, cb) => {
+  //   // Accept images and PDFs only
+  //   if (
+  //     file.mimetype === "image/jpeg" ||
+  //     file.mimetype === "image/png" ||
+  //     file.mimetype === "application/pdf" ||
+  //     file.mimetype === "text/plain"
+  //   ) {
+  //     cb(null, true);
+  //   } else {
+  //     cb(new Error("Invalid file type. Only JPEG, PNG, and PDF are allowed!"), false);
+  //   }
+  // },
   limits: { fileSize: 5 * 1024 * 1024 } // 5 MB limit
 });
 
@@ -85,7 +92,7 @@ const getAllFiles = async (req, res) => {
 const getFileById = async (req, res) => {
   let fileId;
   try {
-    fileId = new mongoose.Types.ObjectId(req.params.id);
+    fileId = req.params.id;
   } catch (err) {
     return res.status(400).json({ error: "Invalid file ID format" });
   }
@@ -115,7 +122,7 @@ const getFileById = async (req, res) => {
 const downloadFile = async (req, res) => {
   let fileId;
   try {
-    fileId = new mongoose.Types.ObjectId(req.params.id);
+    fileId = req.params.id;
   } catch (err) {
     return res.status(400).json({ error: "Invalid file ID format" });
   }
