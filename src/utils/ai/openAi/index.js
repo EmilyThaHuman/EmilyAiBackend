@@ -1,5 +1,5 @@
 module.exports = {
-  ...require("./main"),
   ...require("./assistants"),
-  ...require("./chat")
+  ...require("./chat"),
+  ...require("./get")
 };

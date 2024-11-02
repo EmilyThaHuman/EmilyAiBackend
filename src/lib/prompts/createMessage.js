@@ -9,7 +9,7 @@ const {
   FunctionMessage,
   ToolMessage
 } = require("@langchain/core/messages");
-const { tools } = require("../functions");
+const { tools } = require("../tools");
 
 const createMessage = async () => {};
 //   type,

@@ -42,6 +42,6 @@
     "archive/CLEANUP/env.js",
     "archive/CLEANUP/auth.js",
     "archive/chat.js"
-  ],
+, "archive/translationAdapter.js", "archive/testing_code.js"  ],
   "exclude": ["node_modules", "dist", "coverage"]
 }

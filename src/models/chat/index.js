@@ -6,5 +6,6 @@ module.exports = {
   ...require("./model"),
   ...require("./preset"),
   ...require("./prompt"),
-  ...require("./tool")
+  ...require("./tool"),
+  ...require("./prompt-template")
 };

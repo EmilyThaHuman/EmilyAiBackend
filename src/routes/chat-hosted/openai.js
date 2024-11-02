@@ -254,7 +254,7 @@ router.post("/rag", async (req, res) => {
     const relevantDocuments = results.matches.map((match) => match.metadata.text).join("\n");
 
     // Step 2: Use OpenAI to generate the response based on retrieved documents
-    const completion = await openai.createChatCompletion({
+    const completion = await openai.chat.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: [
         {

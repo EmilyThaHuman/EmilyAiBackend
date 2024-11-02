@@ -159,6 +159,17 @@ const cleanCodeSnippetMain = (code) => {
       .trim()
   );
 };
+/**
+ * Normalizes the data returned from a search engine by filtering out irrelevant results and extracting the title and link properties.
+ *
+ * @param {object[]} docs - The raw search engine results.
+ * @returns {object[]} - An array of objects with `title` and `link` properties.
+ */
+function normalizeData(docs) {
+  return JSON.parse(docs)
+    .filter((doc) => doc.title && doc.link && !doc.link.includes("brave.com"))
+    .map(({ title, link }) => ({ title, link }));
+}
 
 module.exports = {
   cleanWhitespace,
@@ -168,5 +179,6 @@ module.exports = {
   unescapeHtml,
   removeHtmlTags,
   cleanCodeSnippetGeneral,
-  cleanCodeSnippetMain
+  cleanCodeSnippetMain,
+  normalizeData
 };

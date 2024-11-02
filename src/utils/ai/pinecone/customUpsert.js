@@ -211,6 +211,7 @@ function createMetadata(content, fileName, url, description, library) {
     license: safeExecute(() => detectLicense(content), "Unknown")
   };
 }
+
 module.exports = { upsertDocs };
 
 // const fs = require('fs').promises;

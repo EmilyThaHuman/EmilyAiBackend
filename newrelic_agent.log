@@ -1150,3 +1150,551 @@
 {"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":38364,"time":"2024-11-01T00:57:48.414Z","msg":"Module disabled in configuration. Not starting."}
 {"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":23564,"time":"2024-11-01T01:11:58.535Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
 {"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":23564,"time":"2024-11-01T01:11:58.551Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":92768,"time":"2024-11-01T04:05:05.781Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":92768,"time":"2024-11-01T04:05:05.788Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":11196,"time":"2024-11-01T06:45:58.433Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":11196,"time":"2024-11-01T06:45:58.437Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":24856,"time":"2024-11-01T09:03:56.573Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":24856,"time":"2024-11-01T09:03:56.579Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":57944,"time":"2024-11-01T09:28:42.675Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":57944,"time":"2024-11-01T09:28:42.682Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":76972,"time":"2024-11-01T10:21:03.624Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":76972,"time":"2024-11-01T10:21:03.628Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":14968,"time":"2024-11-01T10:32:03.773Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":14968,"time":"2024-11-01T10:32:03.777Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":18296,"time":"2024-11-01T10:34:50.685Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":18296,"time":"2024-11-01T10:34:50.690Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":101448,"time":"2024-11-01T10:35:02.093Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":101448,"time":"2024-11-01T10:35:02.098Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":96976,"time":"2024-11-01T11:06:02.532Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":96976,"time":"2024-11-01T11:06:02.534Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":110744,"time":"2024-11-01T11:06:13.717Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":110744,"time":"2024-11-01T11:06:13.719Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":102504,"time":"2024-11-01T11:07:13.823Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":102504,"time":"2024-11-01T11:07:13.825Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":118096,"time":"2024-11-01T11:07:45.893Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":118096,"time":"2024-11-01T11:07:45.896Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":81644,"time":"2024-11-01T11:10:16.139Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":81644,"time":"2024-11-01T11:10:16.141Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":68364,"time":"2024-11-01T11:10:57.579Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":68364,"time":"2024-11-01T11:10:57.581Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":22620,"time":"2024-11-01T11:21:00.688Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":22620,"time":"2024-11-01T11:21:00.692Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":72008,"time":"2024-11-01T11:22:16.454Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":72008,"time":"2024-11-01T11:22:16.456Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":97956,"time":"2024-11-01T11:22:36.994Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":97956,"time":"2024-11-01T11:22:36.996Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":89680,"time":"2024-11-01T11:24:53.240Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":89680,"time":"2024-11-01T11:24:53.242Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":83208,"time":"2024-11-01T11:26:50.407Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":83208,"time":"2024-11-01T11:26:50.410Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":60336,"time":"2024-11-01T11:27:36.297Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":60336,"time":"2024-11-01T11:27:36.299Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":35324,"time":"2024-11-01T11:28:55.146Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":35324,"time":"2024-11-01T11:28:55.149Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":14140,"time":"2024-11-01T11:29:04.762Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":14140,"time":"2024-11-01T11:29:04.763Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":17040,"time":"2024-11-01T11:29:48.139Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":17040,"time":"2024-11-01T11:29:48.141Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":102500,"time":"2024-11-01T11:29:53.016Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":102500,"time":"2024-11-01T11:29:53.017Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":14440,"time":"2024-11-01T11:30:01.868Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":14440,"time":"2024-11-01T11:30:01.870Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":70284,"time":"2024-11-01T11:30:08.480Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":70284,"time":"2024-11-01T11:30:08.481Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":46452,"time":"2024-11-01T11:30:14.543Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":46452,"time":"2024-11-01T11:30:14.547Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":55048,"time":"2024-11-01T11:32:39.636Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":55048,"time":"2024-11-01T11:32:39.638Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":106272,"time":"2024-11-01T11:32:45.651Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":106272,"time":"2024-11-01T11:32:45.655Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":76604,"time":"2024-11-01T11:32:52.508Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":76604,"time":"2024-11-01T11:32:52.511Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":47060,"time":"2024-11-01T11:33:01.535Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":47060,"time":"2024-11-01T11:33:01.537Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":104032,"time":"2024-11-01T11:33:12.212Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":104032,"time":"2024-11-01T11:33:12.214Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":34392,"time":"2024-11-01T11:33:41.298Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":34392,"time":"2024-11-01T11:33:41.300Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":34344,"time":"2024-11-01T11:34:00.959Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":34344,"time":"2024-11-01T11:34:00.961Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":32676,"time":"2024-11-01T11:34:16.714Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":32676,"time":"2024-11-01T11:34:16.716Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":85996,"time":"2024-11-01T11:34:26.121Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":85996,"time":"2024-11-01T11:34:26.123Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":122064,"time":"2024-11-01T11:34:45.210Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":122064,"time":"2024-11-01T11:34:45.213Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":87960,"time":"2024-11-01T11:35:10.965Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":87960,"time":"2024-11-01T11:35:10.967Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":46392,"time":"2024-11-01T11:35:42.234Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":46392,"time":"2024-11-01T11:35:42.237Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":125088,"time":"2024-11-01T11:35:49.780Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":125088,"time":"2024-11-01T11:35:49.782Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":50732,"time":"2024-11-01T11:36:00.693Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":50732,"time":"2024-11-01T11:36:00.695Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":55348,"time":"2024-11-01T11:36:05.350Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":55348,"time":"2024-11-01T11:36:05.352Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":110532,"time":"2024-11-01T11:36:46.029Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":110532,"time":"2024-11-01T11:36:46.031Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":68080,"time":"2024-11-01T11:36:54.129Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":68080,"time":"2024-11-01T11:36:54.131Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":105232,"time":"2024-11-01T11:38:50.736Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":105232,"time":"2024-11-01T11:38:50.738Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":101776,"time":"2024-11-01T11:38:59.905Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":101776,"time":"2024-11-01T11:38:59.907Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":110292,"time":"2024-11-01T11:39:49.566Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":110292,"time":"2024-11-01T11:39:49.568Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":25692,"time":"2024-11-01T11:39:55.720Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":25692,"time":"2024-11-01T11:39:55.722Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":113624,"time":"2024-11-01T11:40:03.461Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":113624,"time":"2024-11-01T11:40:03.463Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":61564,"time":"2024-11-01T11:40:09.481Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":61564,"time":"2024-11-01T11:40:09.484Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":104016,"time":"2024-11-01T11:40:14.818Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":104016,"time":"2024-11-01T11:40:14.820Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":18424,"time":"2024-11-01T11:40:53.770Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":18424,"time":"2024-11-01T11:40:53.772Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":89752,"time":"2024-11-01T11:41:16.263Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":89752,"time":"2024-11-01T11:41:16.264Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":61196,"time":"2024-11-01T11:41:32.589Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":61196,"time":"2024-11-01T11:41:32.591Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":39832,"time":"2024-11-01T11:42:38.713Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":39832,"time":"2024-11-01T11:42:38.715Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":64564,"time":"2024-11-01T11:43:24.394Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":64564,"time":"2024-11-01T11:43:24.396Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":16752,"time":"2024-11-01T11:44:39.099Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":16752,"time":"2024-11-01T11:44:39.102Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":48712,"time":"2024-11-01T11:44:58.117Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":48712,"time":"2024-11-01T11:44:58.119Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":111628,"time":"2024-11-01T11:45:15.609Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":111628,"time":"2024-11-01T11:45:15.611Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":37156,"time":"2024-11-01T11:45:48.291Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":37156,"time":"2024-11-01T11:45:48.293Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":16756,"time":"2024-11-01T11:48:05.659Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":16756,"time":"2024-11-01T11:48:05.661Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":56916,"time":"2024-11-01T11:48:36.985Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":56916,"time":"2024-11-01T11:48:36.988Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":99040,"time":"2024-11-01T11:48:50.133Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":99040,"time":"2024-11-01T11:48:50.136Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":92260,"time":"2024-11-01T11:48:55.354Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":92260,"time":"2024-11-01T11:48:55.356Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":47244,"time":"2024-11-01T11:49:17.919Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":47244,"time":"2024-11-01T11:49:17.922Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":76824,"time":"2024-11-01T11:49:27.096Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":76824,"time":"2024-11-01T11:49:27.098Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":11704,"time":"2024-11-01T11:49:35.915Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":11704,"time":"2024-11-01T11:49:35.918Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":10800,"time":"2024-11-01T11:56:17.593Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":10800,"time":"2024-11-01T11:56:17.596Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":44712,"time":"2024-11-01T12:28:48.991Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":44712,"time":"2024-11-01T12:28:48.996Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":34940,"time":"2024-11-01T12:29:49.016Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":34940,"time":"2024-11-01T12:29:49.020Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":80608,"time":"2024-11-01T12:30:11.086Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":80608,"time":"2024-11-01T12:30:11.089Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":6740,"time":"2024-11-01T12:30:20.351Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":6740,"time":"2024-11-01T12:30:20.352Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":126356,"time":"2024-11-01T12:30:25.635Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":126356,"time":"2024-11-01T12:30:25.637Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":125504,"time":"2024-11-01T12:34:58.069Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":125504,"time":"2024-11-01T12:34:58.070Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":106684,"time":"2024-11-01T12:40:11.766Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":106684,"time":"2024-11-01T12:40:11.770Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":42220,"time":"2024-11-01T12:40:53.895Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":42220,"time":"2024-11-01T12:40:53.896Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":79380,"time":"2024-11-01T12:40:59.423Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":79380,"time":"2024-11-01T12:40:59.426Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":27756,"time":"2024-11-01T12:41:06.399Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":27756,"time":"2024-11-01T12:41:06.401Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":124228,"time":"2024-11-01T12:41:10.693Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":124228,"time":"2024-11-01T12:41:10.695Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":51600,"time":"2024-11-01T12:41:17.253Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":51600,"time":"2024-11-01T12:41:17.255Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":74200,"time":"2024-11-01T12:41:25.001Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":74200,"time":"2024-11-01T12:41:25.006Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":25964,"time":"2024-11-01T12:41:49.973Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":25964,"time":"2024-11-01T12:41:49.976Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":47272,"time":"2024-11-01T12:42:02.143Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":47272,"time":"2024-11-01T12:42:02.145Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":95164,"time":"2024-11-01T12:42:14.183Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":95164,"time":"2024-11-01T12:42:14.185Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":68824,"time":"2024-11-01T12:43:14.247Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":68824,"time":"2024-11-01T12:43:14.251Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":39520,"time":"2024-11-01T12:43:42.958Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":39520,"time":"2024-11-01T12:43:42.960Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":16752,"time":"2024-11-01T12:48:01.867Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":16752,"time":"2024-11-01T12:48:01.869Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":85528,"time":"2024-11-01T12:52:09.326Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":85528,"time":"2024-11-01T12:52:09.329Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":3492,"time":"2024-11-01T12:58:26.777Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":3492,"time":"2024-11-01T12:58:26.781Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":85968,"time":"2024-11-01T13:01:36.852Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":85968,"time":"2024-11-01T13:01:36.857Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":56808,"time":"2024-11-01T13:04:44.692Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":56808,"time":"2024-11-01T13:04:44.693Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":11912,"time":"2024-11-01T13:04:54.527Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":11912,"time":"2024-11-01T13:04:54.529Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":67292,"time":"2024-11-01T13:05:01.786Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":67292,"time":"2024-11-01T13:05:01.789Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":61288,"time":"2024-11-01T13:05:24.489Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":61288,"time":"2024-11-01T13:05:24.491Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":122088,"time":"2024-11-01T13:05:37.618Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":122088,"time":"2024-11-01T13:05:37.620Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":7848,"time":"2024-11-01T13:05:52.254Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":7848,"time":"2024-11-01T13:05:52.256Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":4968,"time":"2024-11-01T13:06:05.464Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":4968,"time":"2024-11-01T13:06:05.466Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":31644,"time":"2024-11-01T13:06:09.697Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":31644,"time":"2024-11-01T13:06:09.699Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":25136,"time":"2024-11-01T13:06:36.940Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":25136,"time":"2024-11-01T13:06:36.942Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":97052,"time":"2024-11-01T13:07:08.618Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":97052,"time":"2024-11-01T13:07:08.621Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":38272,"time":"2024-11-01T13:07:19.649Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":38272,"time":"2024-11-01T13:07:19.651Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":60716,"time":"2024-11-01T13:07:25.269Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":60716,"time":"2024-11-01T13:07:25.271Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":50512,"time":"2024-11-01T13:07:34.734Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":50512,"time":"2024-11-01T13:07:34.738Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":68276,"time":"2024-11-01T13:08:15.357Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":68276,"time":"2024-11-01T13:08:15.360Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":35856,"time":"2024-11-01T13:08:49.634Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":35856,"time":"2024-11-01T13:08:49.637Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":124524,"time":"2024-11-01T13:09:01.818Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":124524,"time":"2024-11-01T13:09:01.821Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":116260,"time":"2024-11-01T13:09:09.038Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":116260,"time":"2024-11-01T13:09:09.040Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":118272,"time":"2024-11-01T13:09:22.416Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":118272,"time":"2024-11-01T13:09:22.420Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":100928,"time":"2024-11-01T13:09:31.559Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":100928,"time":"2024-11-01T13:09:31.562Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":796,"time":"2024-11-01T13:09:41.124Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":796,"time":"2024-11-01T13:09:41.129Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":90164,"time":"2024-11-01T13:10:08.977Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":90164,"time":"2024-11-01T13:10:08.978Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":70744,"time":"2024-11-01T13:10:13.372Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":70744,"time":"2024-11-01T13:10:13.375Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":70556,"time":"2024-11-01T13:10:25.730Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":70556,"time":"2024-11-01T13:10:25.734Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":107204,"time":"2024-11-01T13:10:34.621Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":107204,"time":"2024-11-01T13:10:34.629Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":46444,"time":"2024-11-01T13:10:59.590Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":46444,"time":"2024-11-01T13:10:59.593Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":87284,"time":"2024-11-01T13:12:07.174Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":87284,"time":"2024-11-01T13:12:07.178Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":115372,"time":"2024-11-01T13:12:18.742Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":115372,"time":"2024-11-01T13:12:18.744Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":124428,"time":"2024-11-01T13:13:43.082Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":124428,"time":"2024-11-01T13:13:43.084Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":57844,"time":"2024-11-01T13:13:51.786Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":57844,"time":"2024-11-01T13:13:51.789Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":70164,"time":"2024-11-01T13:13:59.717Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":70164,"time":"2024-11-01T13:13:59.720Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":55968,"time":"2024-11-01T13:14:12.217Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":55968,"time":"2024-11-01T13:14:12.219Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":123780,"time":"2024-11-01T13:14:35.200Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":123780,"time":"2024-11-01T13:14:35.202Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":30240,"time":"2024-11-01T13:15:14.092Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":30240,"time":"2024-11-01T13:15:14.095Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":92864,"time":"2024-11-01T13:15:23.675Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":92864,"time":"2024-11-01T13:15:23.677Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":86836,"time":"2024-11-01T13:16:01.758Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":86836,"time":"2024-11-01T13:16:01.760Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":77208,"time":"2024-11-01T13:16:17.673Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":77208,"time":"2024-11-01T13:16:17.674Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":87484,"time":"2024-11-01T13:16:47.584Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":87484,"time":"2024-11-01T13:16:47.586Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":123016,"time":"2024-11-01T13:16:57.234Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":123016,"time":"2024-11-01T13:16:57.237Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":41268,"time":"2024-11-01T13:17:02.181Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":41268,"time":"2024-11-01T13:17:02.184Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":59428,"time":"2024-11-01T13:17:45.232Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":59428,"time":"2024-11-01T13:17:45.237Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":72332,"time":"2024-11-01T13:17:53.363Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":72332,"time":"2024-11-01T13:17:53.365Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":109072,"time":"2024-11-01T13:18:00.339Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":109072,"time":"2024-11-01T13:18:00.341Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":115732,"time":"2024-11-01T13:18:06.717Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":115732,"time":"2024-11-01T13:18:06.720Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":126504,"time":"2024-11-01T13:19:09.273Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":126504,"time":"2024-11-01T13:19:09.276Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":34460,"time":"2024-11-01T13:19:49.262Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":34460,"time":"2024-11-01T13:19:49.265Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":119692,"time":"2024-11-01T13:20:13.644Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":119692,"time":"2024-11-01T13:20:13.648Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":11636,"time":"2024-11-01T13:20:48.459Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":11636,"time":"2024-11-01T13:20:48.462Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":80868,"time":"2024-11-01T13:20:53.614Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":80868,"time":"2024-11-01T13:20:53.617Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":72676,"time":"2024-11-01T13:21:09.248Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":72676,"time":"2024-11-01T13:21:09.251Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":58800,"time":"2024-11-01T13:21:57.531Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":58800,"time":"2024-11-01T13:21:57.533Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":67368,"time":"2024-11-01T13:23:10.706Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":67368,"time":"2024-11-01T13:23:10.708Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":95100,"time":"2024-11-01T13:23:28.311Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":95100,"time":"2024-11-01T13:23:28.313Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":47692,"time":"2024-11-01T13:23:46.045Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":47692,"time":"2024-11-01T13:23:46.047Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":113328,"time":"2024-11-01T13:23:52.026Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":113328,"time":"2024-11-01T13:23:52.028Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":67676,"time":"2024-11-01T13:24:48.577Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":67676,"time":"2024-11-01T13:24:48.579Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":102956,"time":"2024-11-01T13:24:56.257Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":102956,"time":"2024-11-01T13:24:56.260Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":105432,"time":"2024-11-01T13:25:09.554Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":105432,"time":"2024-11-01T13:25:09.556Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":10620,"time":"2024-11-01T13:25:17.743Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":10620,"time":"2024-11-01T13:25:17.746Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":24756,"time":"2024-11-01T13:25:45.097Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":24756,"time":"2024-11-01T13:25:45.102Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":110272,"time":"2024-11-01T13:25:52.684Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":110272,"time":"2024-11-01T13:25:52.687Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":64356,"time":"2024-11-01T13:26:02.145Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":64356,"time":"2024-11-01T13:26:02.147Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":73960,"time":"2024-11-01T13:26:10.612Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":73960,"time":"2024-11-01T13:26:10.614Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":107536,"time":"2024-11-01T13:26:36.236Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":107536,"time":"2024-11-01T13:26:36.240Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":63084,"time":"2024-11-01T13:26:59.766Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":63084,"time":"2024-11-01T13:26:59.769Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":18664,"time":"2024-11-01T13:27:03.994Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":18664,"time":"2024-11-01T13:27:03.996Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":82692,"time":"2024-11-01T13:27:19.280Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":82692,"time":"2024-11-01T13:27:19.282Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":19088,"time":"2024-11-01T13:27:23.324Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":19088,"time":"2024-11-01T13:27:23.327Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":76988,"time":"2024-11-01T13:27:59.080Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":76988,"time":"2024-11-01T13:27:59.082Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":75944,"time":"2024-11-01T13:28:04.734Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":75944,"time":"2024-11-01T13:28:04.736Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":98688,"time":"2024-11-01T13:28:17.538Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":98688,"time":"2024-11-01T13:28:17.540Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":43188,"time":"2024-11-01T13:28:23.278Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":43188,"time":"2024-11-01T13:28:23.280Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":122828,"time":"2024-11-01T13:28:31.319Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":122828,"time":"2024-11-01T13:28:31.321Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":60460,"time":"2024-11-01T13:28:42.730Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":60460,"time":"2024-11-01T13:28:42.732Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":80724,"time":"2024-11-01T13:28:49.146Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":80724,"time":"2024-11-01T13:28:49.148Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":95808,"time":"2024-11-01T13:29:24.631Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":95808,"time":"2024-11-01T13:29:24.633Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":102592,"time":"2024-11-01T13:29:54.376Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":102592,"time":"2024-11-01T13:29:54.378Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":119504,"time":"2024-11-01T13:30:01.229Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":119504,"time":"2024-11-01T13:30:01.231Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":45144,"time":"2024-11-01T13:30:07.100Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":45144,"time":"2024-11-01T13:30:07.103Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":105836,"time":"2024-11-01T13:30:40.105Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":105836,"time":"2024-11-01T13:30:40.107Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":118032,"time":"2024-11-01T13:30:49.219Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":118032,"time":"2024-11-01T13:30:49.222Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":56168,"time":"2024-11-01T13:30:57.533Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":56168,"time":"2024-11-01T13:30:57.535Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":114396,"time":"2024-11-01T13:31:04.716Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":114396,"time":"2024-11-01T13:31:04.718Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":84228,"time":"2024-11-01T13:31:12.792Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":84228,"time":"2024-11-01T13:31:12.794Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":78040,"time":"2024-11-01T13:31:17.587Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":78040,"time":"2024-11-01T13:31:17.589Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":29852,"time":"2024-11-01T13:31:28.148Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":29852,"time":"2024-11-01T13:31:28.150Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":17864,"time":"2024-11-01T13:31:34.237Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":17864,"time":"2024-11-01T13:31:34.240Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":94724,"time":"2024-11-01T13:31:43.966Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":94724,"time":"2024-11-01T13:31:43.970Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":3648,"time":"2024-11-01T13:31:52.378Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":3648,"time":"2024-11-01T13:31:52.381Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":106544,"time":"2024-11-01T13:32:08.021Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":106544,"time":"2024-11-01T13:32:08.023Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":119680,"time":"2024-11-01T13:32:12.161Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":119680,"time":"2024-11-01T13:32:12.163Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":35268,"time":"2024-11-01T13:32:29.966Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":35268,"time":"2024-11-01T13:32:29.968Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":79856,"time":"2024-11-01T13:32:41.535Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":79856,"time":"2024-11-01T13:32:41.539Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":36072,"time":"2024-11-01T13:32:54.425Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":36072,"time":"2024-11-01T13:32:54.427Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":24960,"time":"2024-11-01T13:33:08.245Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":24960,"time":"2024-11-01T13:33:08.248Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":87004,"time":"2024-11-01T13:33:25.284Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":87004,"time":"2024-11-01T13:33:25.289Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":45752,"time":"2024-11-01T13:33:50.091Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":45752,"time":"2024-11-01T13:33:50.093Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":106616,"time":"2024-11-01T13:34:00.086Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":106616,"time":"2024-11-01T13:34:00.088Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":74596,"time":"2024-11-01T13:34:05.437Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":74596,"time":"2024-11-01T13:34:05.439Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":118012,"time":"2024-11-01T13:34:23.544Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":118012,"time":"2024-11-01T13:34:23.546Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":74972,"time":"2024-11-01T13:34:34.592Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":74972,"time":"2024-11-01T13:34:34.595Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":79140,"time":"2024-11-01T13:35:17.155Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":79140,"time":"2024-11-01T13:35:17.158Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":127440,"time":"2024-11-01T13:35:22.603Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":127440,"time":"2024-11-01T13:35:22.606Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":1888,"time":"2024-11-01T13:35:30.302Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":1888,"time":"2024-11-01T13:35:30.304Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":48968,"time":"2024-11-01T13:35:47.374Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":48968,"time":"2024-11-01T13:35:47.376Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":53204,"time":"2024-11-01T13:36:12.966Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":53204,"time":"2024-11-01T13:36:12.970Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":46404,"time":"2024-11-01T13:36:27.623Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":46404,"time":"2024-11-01T13:36:27.626Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":53060,"time":"2024-11-01T13:36:35.032Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":53060,"time":"2024-11-01T13:36:35.034Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":88936,"time":"2024-11-01T13:36:42.483Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":88936,"time":"2024-11-01T13:36:42.484Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":68764,"time":"2024-11-01T13:37:54.299Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":68764,"time":"2024-11-01T13:37:54.302Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":50864,"time":"2024-11-01T13:38:14.719Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":50864,"time":"2024-11-01T13:38:14.721Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":123548,"time":"2024-11-01T13:41:10.875Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":123548,"time":"2024-11-01T13:41:10.878Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":66940,"time":"2024-11-01T13:41:21.637Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":66940,"time":"2024-11-01T13:41:21.638Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":36320,"time":"2024-11-01T13:42:01.067Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":36320,"time":"2024-11-01T13:42:01.070Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":15040,"time":"2024-11-01T13:42:06.350Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":15040,"time":"2024-11-01T13:42:06.351Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":87064,"time":"2024-11-01T13:46:36.372Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":87064,"time":"2024-11-01T13:46:36.375Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":128284,"time":"2024-11-01T13:47:25.689Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":128284,"time":"2024-11-01T13:47:25.691Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":54968,"time":"2024-11-01T13:48:28.276Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":54968,"time":"2024-11-01T13:48:28.279Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":81908,"time":"2024-11-01T13:48:37.606Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":81908,"time":"2024-11-01T13:48:37.607Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":125704,"time":"2024-11-01T13:50:21.277Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":125704,"time":"2024-11-01T13:50:21.281Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":72208,"time":"2024-11-01T13:51:41.199Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":72208,"time":"2024-11-01T13:51:41.201Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":87736,"time":"2024-11-01T13:51:47.135Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":87736,"time":"2024-11-01T13:51:47.138Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":7180,"time":"2024-11-01T13:51:59.472Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":7180,"time":"2024-11-01T13:51:59.473Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":117148,"time":"2024-11-01T13:52:20.723Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":117148,"time":"2024-11-01T13:52:20.726Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":85684,"time":"2024-11-01T13:52:31.666Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":85684,"time":"2024-11-01T13:52:31.668Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":117736,"time":"2024-11-01T13:54:37.940Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":117736,"time":"2024-11-01T13:54:37.943Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":49472,"time":"2024-11-01T14:00:23.384Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":49472,"time":"2024-11-01T14:00:23.386Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":25484,"time":"2024-11-01T14:00:39.320Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":25484,"time":"2024-11-01T14:00:39.322Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":91192,"time":"2024-11-01T14:00:46.356Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":91192,"time":"2024-11-01T14:00:46.357Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":11224,"time":"2024-11-01T14:00:53.839Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":11224,"time":"2024-11-01T14:00:53.842Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":102504,"time":"2024-11-01T14:01:07.903Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":102504,"time":"2024-11-01T14:01:07.905Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":105820,"time":"2024-11-01T14:01:24.723Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":105820,"time":"2024-11-01T14:01:24.725Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":50028,"time":"2024-11-01T14:01:34.346Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":50028,"time":"2024-11-01T14:01:34.349Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":62284,"time":"2024-11-01T14:01:41.048Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":62284,"time":"2024-11-01T14:01:41.050Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":30452,"time":"2024-11-01T14:02:03.133Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":30452,"time":"2024-11-01T14:02:03.135Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":63060,"time":"2024-11-01T14:02:17.937Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":63060,"time":"2024-11-01T14:02:17.939Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":126748,"time":"2024-11-01T14:02:44.935Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":126748,"time":"2024-11-01T14:02:44.937Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":29000,"time":"2024-11-01T14:02:57.302Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":29000,"time":"2024-11-01T14:02:57.304Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":89776,"time":"2024-11-01T14:03:21.172Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":89776,"time":"2024-11-01T14:03:21.174Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":52228,"time":"2024-11-01T14:03:55.585Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":52228,"time":"2024-11-01T14:03:55.587Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":57872,"time":"2024-11-01T14:04:42.584Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":57872,"time":"2024-11-01T14:04:42.585Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":85892,"time":"2024-11-01T14:04:48.664Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":85892,"time":"2024-11-01T14:04:48.667Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":101536,"time":"2024-11-01T14:05:00.843Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":101536,"time":"2024-11-01T14:05:00.847Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":125124,"time":"2024-11-01T14:10:50.240Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":125124,"time":"2024-11-01T14:10:50.242Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":89248,"time":"2024-11-01T14:15:13.207Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":89248,"time":"2024-11-01T14:15:13.210Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":68788,"time":"2024-11-01T14:15:42.402Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":68788,"time":"2024-11-01T14:15:42.407Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":4868,"time":"2024-11-01T14:15:53.036Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":4868,"time":"2024-11-01T14:15:53.038Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":116840,"time":"2024-11-01T14:16:01.208Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":116840,"time":"2024-11-01T14:16:01.211Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":90588,"time":"2024-11-01T14:16:59.588Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":90588,"time":"2024-11-01T14:16:59.591Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":103108,"time":"2024-11-01T14:17:14.254Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":103108,"time":"2024-11-01T14:17:14.256Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":53124,"time":"2024-11-01T14:17:33.037Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":53124,"time":"2024-11-01T14:17:33.039Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":117832,"time":"2024-11-01T14:17:47.843Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":117832,"time":"2024-11-01T14:17:47.845Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":46496,"time":"2024-11-01T14:18:20.263Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":46496,"time":"2024-11-01T14:18:20.266Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":34832,"time":"2024-11-01T14:18:26.799Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":34832,"time":"2024-11-01T14:18:26.801Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":7840,"time":"2024-11-01T14:19:01.591Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":7840,"time":"2024-11-01T14:19:01.594Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":62684,"time":"2024-11-01T14:19:59.618Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":62684,"time":"2024-11-01T14:19:59.621Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":19116,"time":"2024-11-01T14:20:11.825Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":19116,"time":"2024-11-01T14:20:11.828Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":106012,"time":"2024-11-01T14:20:22.985Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":106012,"time":"2024-11-01T14:20:22.987Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":39528,"time":"2024-11-01T14:20:27.756Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":39528,"time":"2024-11-01T14:20:27.757Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":104096,"time":"2024-11-01T14:20:36.496Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":104096,"time":"2024-11-01T14:20:36.499Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":85872,"time":"2024-11-01T14:33:54.211Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":85872,"time":"2024-11-01T14:33:54.214Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":95224,"time":"2024-11-01T14:34:04.317Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":95224,"time":"2024-11-01T14:34:04.319Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":71192,"time":"2024-11-01T14:34:13.552Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":71192,"time":"2024-11-01T14:34:13.557Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":89436,"time":"2024-11-01T14:34:25.115Z","msg":"Using New Relic for Node.js. Agent version: 12.5.2; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":89436,"time":"2024-11-01T14:34:25.120Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":14540,"time":"2024-11-02T03:10:43.252Z","msg":"Using New Relic for Node.js. Agent version: 12.6.0; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":14540,"time":"2024-11-02T03:10:43.254Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":92964,"time":"2024-11-02T03:15:00.258Z","msg":"Using New Relic for Node.js. Agent version: 12.6.0; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":92964,"time":"2024-11-02T03:15:00.260Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":95744,"time":"2024-11-02T03:25:04.382Z","msg":"Using New Relic for Node.js. Agent version: 12.6.0; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":95744,"time":"2024-11-02T03:25:04.384Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":102320,"time":"2024-11-02T03:25:11.271Z","msg":"Using New Relic for Node.js. Agent version: 12.6.0; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":102320,"time":"2024-11-02T03:25:11.273Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":46396,"time":"2024-11-02T03:25:33.170Z","msg":"Using New Relic for Node.js. Agent version: 12.6.0; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":46396,"time":"2024-11-02T03:25:33.172Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":116536,"time":"2024-11-02T03:29:15.915Z","msg":"Using New Relic for Node.js. Agent version: 12.6.0; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":116536,"time":"2024-11-02T03:29:15.920Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":47644,"time":"2024-11-02T03:29:52.703Z","msg":"Using New Relic for Node.js. Agent version: 12.6.0; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":47644,"time":"2024-11-02T03:29:52.706Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":36688,"time":"2024-11-02T03:31:13.181Z","msg":"Using New Relic for Node.js. Agent version: 12.6.0; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":36688,"time":"2024-11-02T03:31:13.183Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":34412,"time":"2024-11-02T03:32:04.075Z","msg":"Using New Relic for Node.js. Agent version: 12.6.0; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":34412,"time":"2024-11-02T03:32:04.077Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":85744,"time":"2024-11-02T03:32:10.047Z","msg":"Using New Relic for Node.js. Agent version: 12.6.0; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":85744,"time":"2024-11-02T03:32:10.048Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":59468,"time":"2024-11-02T03:43:48.614Z","msg":"Using New Relic for Node.js. Agent version: 12.6.0; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":59468,"time":"2024-11-02T03:43:48.618Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":101492,"time":"2024-11-02T03:44:59.738Z","msg":"Using New Relic for Node.js. Agent version: 12.6.0; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":101492,"time":"2024-11-02T03:44:59.740Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":23928,"time":"2024-11-02T03:45:12.275Z","msg":"Using New Relic for Node.js. Agent version: 12.6.0; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":23928,"time":"2024-11-02T03:45:12.277Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":16368,"time":"2024-11-02T03:45:47.666Z","msg":"Using New Relic for Node.js. Agent version: 12.6.0; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":16368,"time":"2024-11-02T03:45:47.669Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":115652,"time":"2024-11-02T03:45:54.936Z","msg":"Using New Relic for Node.js. Agent version: 12.6.0; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":115652,"time":"2024-11-02T03:45:54.937Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":75348,"time":"2024-11-02T03:47:11.018Z","msg":"Using New Relic for Node.js. Agent version: 12.6.0; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":75348,"time":"2024-11-02T03:47:11.021Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":50148,"time":"2024-11-02T03:48:19.193Z","msg":"Using New Relic for Node.js. Agent version: 12.6.0; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":50148,"time":"2024-11-02T03:48:19.195Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":14592,"time":"2024-11-02T03:48:39.448Z","msg":"Using New Relic for Node.js. Agent version: 12.6.0; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":14592,"time":"2024-11-02T03:48:39.450Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":22936,"time":"2024-11-02T03:48:43.809Z","msg":"Using New Relic for Node.js. Agent version: 12.6.0; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":22936,"time":"2024-11-02T03:48:43.811Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":61988,"time":"2024-11-02T03:48:55.439Z","msg":"Using New Relic for Node.js. Agent version: 12.6.0; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":61988,"time":"2024-11-02T03:48:55.441Z","msg":"Module disabled in configuration. Not starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":37984,"time":"2024-11-02T03:49:04.844Z","msg":"Using New Relic for Node.js. Agent version: 12.6.0; Node version: v20.5.1."}
+{"v":0,"level":30,"name":"newrelic","hostname":"DESKTOP-UUP121U","pid":37984,"time":"2024-11-02T03:49:04.845Z","msg":"Module disabled in configuration. Not starting."}
