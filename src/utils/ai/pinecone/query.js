@@ -4,6 +4,9 @@ const { Document } = require("langchain/document");
 const { getPineconeClient } = require("./get");
 const { vectorize } = require("@utils/processing/utils");
 const { getEnv } = require("@utils/processing/api");
+const { Pinecone } = require("@pinecone-database/pinecone");
+const { getEmbedding } = require("../openAi");
+const { cosineSimilarity } = require("ai");
 
 const queryPineconeVectorStoreAndQueryLLM = async (pinecone, indexName, question, embeddings) => {
   console.log("Querying Pinecone vector store...");
@@ -29,7 +32,6 @@ const queryPineconeVectorStoreAndQueryLLM = async (pinecone, indexName, question
       const llm = new OpenAI({
         apiKey: getEnv("OPENAI_API_PROJECT_KEY") || process.env.OPENAI_API_PROJECT_KEY,
         model: getEnv("OPENAI_API_CHAT_COMPLETION_MODEL"),
-        // model: 'gpt-4-1106-preview',
         temperature: 0.7 // Adjust as needed
       });
       const chain = loadQAStuffChain(llm);
@@ -85,4 +87,65 @@ const searchSimilarVectors = async (pinecone, indexName, question, embeddings) =
   return searchResults.matches.map((match) => match.metadata);
 };
 
-module.exports = { queryPineconeVectorStoreAndQueryLLM, queryComponents, searchSimilarVectors };
+// Used to retrieve matches for the given embeddings
+const getMatchesFromEmbeddings = async (embeddings, topK, namespace) => {
+  const pinecone = new Pinecone();
+
+  let indexName = process.env.PINECONE_INDEX_NAME || "";
+  if (indexName === "") {
+    indexName = "namespace-notes";
+    console.warn("PINECONE_INDEX_NAME environment variable not set");
+  }
+  const indexes = (await pinecone.listIndexes())?.indexes;
+  if (!indexes || indexes.filter((i) => i.name === indexName).length !== 1) {
+    throw new Error(`Index ${indexName} does not exist. 
+    Create an index called "${indexName}" in your project.`);
+  }
+
+  const pineconeNamespace = pinecone.Index(indexName).namespace(namespace ?? "");
+
+  try {
+    const queryResult = await pineconeNamespace.query({
+      vector: embeddings,
+      topK,
+      includeMetadata: true
+    });
+    return queryResult.matches || [];
+  } catch (e) {
+    console.log("Error querying embeddings: ", e);
+    throw new Error(`Error querying embeddings: ${e}`);
+  }
+};
+
+// df["code_embedding"] = df["code"].map((x) => getEmbedding(x, (model = "text-embedding-3-small")));
+
+// function search_functions(df, code_query, n = 3, pprint = true, n_lines = 7) {
+//   const embedding = get_embedding(code_query, (model = "text-embedding-3-small"));
+//   df["similarities"] = df.code_embedding.map((x) => cosineSimilarity(x, embedding));
+//   const res = df.sort("similarities", "desc").head(n);
+//   return res;
+// }
+
+// const res = search_functions(df, "Completions API tests", (n = 3));
+const summarizeDocument = async (doc) => {
+  try {
+    const openaiClient = getOpenaiClient();
+
+    const response = await openaiClient.completions.create({
+      model: "text-davinci-003",
+      prompt: `Summarize the following content:\n\n${doc}`,
+      max_tokens: 150,
+      temperature: 0.7
+    });
+    return response.data.choices[0].text.trim();
+  } catch (error) {
+    console.error(`Error summarizing document: ${error.message}`);
+    throw error;
+  }
+};
+module.exports = {
+  queryPineconeVectorStoreAndQueryLLM,
+  queryComponents,
+  searchSimilarVectors,
+  getMatchesFromEmbeddings
+};

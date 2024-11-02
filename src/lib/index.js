@@ -2,7 +2,7 @@ const filesExports = require("./files");
 const modelsExports = require("./models");
 const presetsExports = require("./presets");
 const promptsExports = require("./prompts");
-const toolsExports = require("./functions");
+const toolsExports = require("./tools");
 const templatesExports = require("./templates");
 const lib = {
   files: filesExports,
@@ -38,7 +38,7 @@ module.exports.lib = {
 
 module.exports.default = {
   ...require("./files"),
-  ...require("./functions"),
+  ...require("./tools"),
   ...require("./models"),
   ...require("./presets"),
   ...require("./prompts"),

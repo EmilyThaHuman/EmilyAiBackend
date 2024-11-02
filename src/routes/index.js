@@ -11,11 +11,15 @@ const { userBaseRoutes, authRoutes } = require("./user");
 const { workspaceRoutes } = require("./workspaces");
 const { hostedModelRoutes } = require("./chat-hosted");
 const { fileRoutes } = require("./files");
-const { crawlRoutes } = require("./chat-tools");
+const { searchRoutes } = require("./chat-tools");
 
 const setupRoutes = (app) => {
+  // files
   app.use("/api/files", fileRoutes);
-  app.use("/api/crawl", crawlRoutes);
+  // chat tools
+  // app.use("/api/crawl", crawlRoutes);
+  app.use("/api/search", searchRoutes);
+  // main
   app.use("/api/auth", authRoutes);
   app.use("/api/user", userBaseRoutes);
   app.use("/api/chat/v1", chatRoutes); // <-- Main Route

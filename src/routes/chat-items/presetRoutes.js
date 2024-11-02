@@ -7,6 +7,8 @@ const router = express.Router();
 
 /* Preset Routes */
 router.get("/", asyncHandler(ChatPresetController.getAll));
+router.get("/?workspaceId", asyncHandler(ChatPresetController.getAll));
+router.get("/:workspaceId", asyncHandler(ChatPresetController.getAll));
 router.get("/:id", asyncHandler(ChatPresetController.getById));
 router.post("/", asyncHandler(ChatPresetController.create));
 router.put("/:id", asyncHandler(ChatPresetController.update));

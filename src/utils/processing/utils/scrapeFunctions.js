@@ -258,142 +258,12 @@ async function expandAllCodeBlocks(page) {
     logger.error(`Error expanding code blocks: ${error.message}`);
   }
 }
-// const filterAllElements = async function (filterParams, page) {
-//   try {
-//     // Helper function to check if an element is in the viewport
-//     const isInViewport = (el) => {
-//       const rect = el.getBoundingClientRect();
-//       return (
-//         rect.top >= 0 &&
-//         rect.left >= 0 &&
-//         rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-//         rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-//       );
-//     };
-
-//     // Helper function to check if an element is clickable
-//     const isClickable = (el) => {
-//       const clickableTags = ['A', 'BUTTON', 'INPUT', 'SELECT', 'TEXTAREA'];
-//       return (
-//         clickableTags.includes(el.tagName) ||
-//         el.onclick != null ||
-//         getComputedStyle(el).cursor === 'pointer'
-//       );
-//     };
-
-//     // Helper function to check if an element is interactive
-//     const isInteractive = (el) => {
-//       const interactiveTags = ['INPUT', 'SELECT', 'TEXTAREA', 'BUTTON', 'A'];
-//       return interactiveTags.includes(el.tagName) || el.hasAttribute('contenteditable');
-//     };
-
-//     // Main filtering function
-//     const filterElement = (filterParams) => (el) => {
-//       const computedStyle = window.getComputedStyle(el);
-
-//       // Check visibility
-//       if (
-//         computedStyle.visibility === 'hidden' ||
-//         computedStyle.display === 'none' ||
-//         computedStyle.opacity === '0'
-//       ) {
-//         return false;
-//       }
-
-//       // Apply filters based on filterParams
-//       for (const [key, value] of Object.entries(filterParams)) {
-//         switch (key) {
-//           case 'tag':
-//             if (el.tagName.toLowerCase() !== value.toLowerCase()) return false;
-//             break;
-//           case 'id':
-//             if (el.id !== value) return false;
-//             break;
-//           case 'class':
-//             if (!el.classList.contains(value)) return false;
-//             break;
-//           case 'name':
-//           case 'type':
-//           case 'value':
-//           case 'href':
-//           case 'src':
-//           case 'alt':
-//           case 'title':
-//           case 'placeholder':
-//           case 'role':
-//             if (el.getAttribute(key) !== value) return false;
-//             break;
-//           case 'ariaLabel':
-//             if (el.getAttribute('aria-label') !== value) return false;
-//             break;
-//           case 'dataAttr':
-//             if (!el.dataset[value]) return false;
-//             break;
-//           case 'text':
-//             if (!el.textContent.toLowerCase().includes(value.toLowerCase())) return false;
-//             break;
-//           case 'minWidth':
-//             if (el.offsetWidth < value) return false;
-//             break;
-//           case 'maxWidth':
-//             if (el.offsetWidth > value) return false;
-//             break;
-//           case 'minHeight':
-//             if (el.offsetHeight < value) return false;
-//             break;
-//           case 'maxHeight':
-//             if (el.offsetHeight > value) return false;
-//             break;
-//           case 'backgroundColor':
-//           case 'color':
-//           case 'fontFamily':
-//           case 'fontSize':
-//           case 'position':
-//             if (computedStyle[key] !== value) return false;
-//             break;
-//           case 'isClickable':
-//             if (value !== isClickable(el)) return false;
-//             break;
-//           case 'isInteractive':
-//             if (value !== isInteractive(el)) return false;
-//             break;
-//           case 'isInViewport':
-//             if (value !== isInViewport(el)) return false;
-//             break;
-//           case 'customFilter':
-//             if (typeof value === 'function' && !value(el)) return false;
-//             break;
-//         }
-//       }
-
-//       return true;
-//     };
-
-//     // Execute the filtering in the browser context
-//     return page.evaluate((filterParamsString) => {
-//       const filterParams = JSON.parse(filterParamsString);
-//       const filterFn = eval(`(${filterElement})`)(filterParams);
-//       const allElements = document.querySelectorAll('*');
-//       return Array.from(allElements)
-//         .filter(filterFn)
-//         .map((el) => ({
-//           tagName: el.tagName,
-//           textContent: el.textContent,
-//           isVisible: el.offsetWidth > 0 && el.offsetHeight > 0,
-//           boundingBox: el.getBoundingClientRect(),
-//         }));
-//     }, JSON.stringify(filterParams));
-//   } catch (error) {
-//     logger.error(`Error filtering elements: ${error}`);
-//     return [];
-//   }
-// };
 
 /**
  * Extracts expanded code blocks from a given page.
  * @param {Object} page - The page object representing the web page to extract code from.
  * @returns {Promise<Array>} A promise that resolves to an array of objects, each containing the language and code content of a code block.
- */
+*/
 async function extractExpandedCode(page) {
   return page.evaluate(() => {
     const codeBlocks = document.querySelectorAll("pre code");
@@ -413,37 +283,37 @@ module.exports = {
   factCheckAgainstDocs
 };
 // const findAllElements = function () {
-//   const nodes = document.querySelectorAll('*');
+  //   const nodes = document.querySelectorAll('*');
 //   const allElements = [];
 
 //   for (let i = 0, el; (el = nodes[i]); ++i) {
-//     allElements.push(el);
+  //     allElements.push(el);
 //     // If the element has a shadow root, dig deeper.
 //     if (el.shadowRoot) {
-//       findAllElements(el.shadowRoot.querySelectorAll('*'));
-//     }
-//   }
+  //       findAllElements(el.shadowRoot.querySelectorAll('*'));
+  //     }
+  //   }
 //   return allElements;
 // };
 // async function expandCodeBlocksSequentially(page) {
 //   const expandButtons = filterAllElements(
-//     {
-//       tag: 'button',
-//       text: 'Expand code',
-//       isInViewport: true,
-//       customFilter: (el) => el.textContent.trim().toLowerCase() === 'expand code',
-//     },
-//     page
-//   );
-//   let expandedCount = 0;
-
-//   for (const button of expandButtons) {
-//     try {
-//       button.click();
+  //     {
+    //       tag: 'button',
+    //       text: 'Expand code',
+    //       isInViewport: true,
+    //       customFilter: (el) => el.textContent.trim().toLowerCase() === 'expand code',
+    //     },
+    //     page
+    //   );
+    //   let expandedCount = 0;
+    
+    //   for (const button of expandButtons) {
+      //     try {
+        //       button.click();
 //       await new Promise((resolve) => setTimeout(resolve, 200));
 //       expandedCount++;
 //     } catch (error) {
-//       logger.error(`Error expanding code block: ${error.message}`);
+  //       logger.error(`Error expanding code block: ${error.message}`);
 //     }
 //   }
 
@@ -451,7 +321,7 @@ module.exports = {
 // }
 // async function expandVisibleCodeBlocks(page) {
 //   const expandButtons = filterAllElements(
-//     {
+  //     {
 //       tag: 'button',
 //       text: 'Expand code',
 //       isInViewport: true,
@@ -461,18 +331,18 @@ module.exports = {
 //   );
 
 //   for (const button of expandButtons) {
-//     button.click();
-//     await new Promise((resolve) => setTimeout(resolve, 150));
-//   }
-
-//   logger.info(`Expanded ${expandButtons.length} visible code blocks.`);
-// }
-// async function expandCodeBlocksWhileScrolling() {
+  //     button.click();
+  //     await new Promise((resolve) => setTimeout(resolve, 150));
+  //   }
+  
+  //   logger.info(`Expanded ${expandButtons.length} visible code blocks.`);
+  // }
+  // async function expandCodeBlocksWhileScrolling() {
 //   let expandedCount = 0;
 //   let lastScrollPosition = 0;
 
 //   async function expandVisibleBlocks() {
-//     const expandButtons = filterAllElements({
+  //     const expandButtons = filterAllElements({
 //       tag: 'button',
 //       text: 'Expand code',
 //       isInViewport: true,
@@ -487,13 +357,13 @@ module.exports = {
 //   }
 
 //   while (true) {
-//     await expandVisibleBlocks();
-
+  //     await expandVisibleBlocks();
+  
 //     window.scrollBy(0, 300);
 //     await new Promise((resolve) => setTimeout(resolve, 500));
 
 //     if (window.scrollY === lastScrollPosition) {
-//       break; // Stop if we've reached the end of the page
+  //       break; // Stop if we've reached the end of the page
 //     }
 //     lastScrollPosition = window.scrollY;
 //   }
@@ -501,29 +371,29 @@ module.exports = {
 //   logger.info(`Expanded ${expandedCount} code blocks while scrolling.`);
 // }
 // function expandCodeBlocksWithObserver(maxExpansions = Infinity) {
-//   let expandedCount = 0;
-//   const observer = new MutationObserver((mutations) => {
-//     mutations.forEach((mutation) => {
-//       if (mutation.type === 'childList') {
+  //   let expandedCount = 0;
+  //   const observer = new MutationObserver((mutations) => {
+    //     mutations.forEach((mutation) => {
+      //       if (mutation.type === 'childList') {
 //         const newButtons = Array.from(mutation.addedNodes)
 //           .filter((node) => node.nodeType === Node.ELEMENT_NODE)
 //           .flatMap((node) => Array.from(node.querySelectorAll('button')))
 //           .filter((button) => button.textContent.trim().toLowerCase() === 'expand code');
 
 //         newButtons.forEach((button) => {
-//           if (expandedCount < maxExpansions) {
+  //           if (expandedCount < maxExpansions) {
 //             setTimeout(
-//               () => {
-//                 button.click();
-//                 expandedCount++;
-//                 logger.info(`Expanded code block ${expandedCount}`);
-//               },
-//               Math.random() * 1000 + 500
-//             ); // Random delay between 500ms and 1500ms
-//           }
-//         });
-//       }
-//     });
+  //               () => {
+    //                 button.click();
+    //                 expandedCount++;
+    //                 logger.info(`Expanded code block ${expandedCount}`);
+    //               },
+    //               Math.random() * 1000 + 500
+    //             ); // Random delay between 500ms and 1500ms
+    //           }
+    //         });
+    //       }
+    //     });
 //   });
 
 //   observer.observe(document.body, { childList: true, subtree: true });
@@ -533,7 +403,7 @@ module.exports = {
 //   initialButtons.forEach((button, index) => {
 //     if (index < maxExpansions) {
 //       setTimeout(
-//         () => {
+  //         () => {
 //           button.click();
 //           expandedCount++;
 //           logger.info(`Expanded initial code block ${expandedCount}`);
@@ -545,12 +415,143 @@ module.exports = {
 
 //   // Return a function to stop observing
 //   return () => {
-//     observer.disconnect();
-//     logger.info(`Finished expanding. Total expanded: ${expandedCount}`);
-//   };
-// }
-
-// // Usage:
-// const stopObserving = expandCodeBlocksWithObserver(50); // Expand up to 50 code blocks
-// // Later, when you want to stop:
-// // stopObserving();
+  //     observer.disconnect();
+  //     logger.info(`Finished expanding. Total expanded: ${expandedCount}`);
+  //   };
+  // }
+  
+  // // Usage:
+  // const stopObserving = expandCodeBlocksWithObserver(50); // Expand up to 50 code blocks
+  // // Later, when you want to stop:
+  // // stopObserving();
+  
+  // const filterAllElements = async function (filterParams, page) {
+  //   try {
+  //     // Helper function to check if an element is in the viewport
+  //     const isInViewport = (el) => {
+  //       const rect = el.getBoundingClientRect();
+  //       return (
+  //         rect.top >= 0 &&
+  //         rect.left >= 0 &&
+  //         rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+  //         rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+  //       );
+  //     };
+  
+  //     // Helper function to check if an element is clickable
+  //     const isClickable = (el) => {
+  //       const clickableTags = ['A', 'BUTTON', 'INPUT', 'SELECT', 'TEXTAREA'];
+  //       return (
+  //         clickableTags.includes(el.tagName) ||
+  //         el.onclick != null ||
+  //         getComputedStyle(el).cursor === 'pointer'
+  //       );
+  //     };
+  
+  //     // Helper function to check if an element is interactive
+  //     const isInteractive = (el) => {
+  //       const interactiveTags = ['INPUT', 'SELECT', 'TEXTAREA', 'BUTTON', 'A'];
+  //       return interactiveTags.includes(el.tagName) || el.hasAttribute('contenteditable');
+  //     };
+  
+  //     // Main filtering function
+  //     const filterElement = (filterParams) => (el) => {
+  //       const computedStyle = window.getComputedStyle(el);
+  
+  //       // Check visibility
+  //       if (
+  //         computedStyle.visibility === 'hidden' ||
+  //         computedStyle.display === 'none' ||
+  //         computedStyle.opacity === '0'
+  //       ) {
+  //         return false;
+  //       }
+  
+  //       // Apply filters based on filterParams
+  //       for (const [key, value] of Object.entries(filterParams)) {
+  //         switch (key) {
+  //           case 'tag':
+  //             if (el.tagName.toLowerCase() !== value.toLowerCase()) return false;
+  //             break;
+  //           case 'id':
+  //             if (el.id !== value) return false;
+  //             break;
+  //           case 'class':
+  //             if (!el.classList.contains(value)) return false;
+  //             break;
+  //           case 'name':
+  //           case 'type':
+  //           case 'value':
+  //           case 'href':
+  //           case 'src':
+  //           case 'alt':
+  //           case 'title':
+  //           case 'placeholder':
+  //           case 'role':
+  //             if (el.getAttribute(key) !== value) return false;
+  //             break;
+  //           case 'ariaLabel':
+  //             if (el.getAttribute('aria-label') !== value) return false;
+  //             break;
+  //           case 'dataAttr':
+  //             if (!el.dataset[value]) return false;
+  //             break;
+  //           case 'text':
+  //             if (!el.textContent.toLowerCase().includes(value.toLowerCase())) return false;
+  //             break;
+  //           case 'minWidth':
+  //             if (el.offsetWidth < value) return false;
+  //             break;
+  //           case 'maxWidth':
+  //             if (el.offsetWidth > value) return false;
+  //             break;
+  //           case 'minHeight':
+  //             if (el.offsetHeight < value) return false;
+  //             break;
+  //           case 'maxHeight':
+  //             if (el.offsetHeight > value) return false;
+  //             break;
+  //           case 'backgroundColor':
+  //           case 'color':
+  //           case 'fontFamily':
+  //           case 'fontSize':
+  //           case 'position':
+  //             if (computedStyle[key] !== value) return false;
+  //             break;
+  //           case 'isClickable':
+  //             if (value !== isClickable(el)) return false;
+  //             break;
+  //           case 'isInteractive':
+  //             if (value !== isInteractive(el)) return false;
+  //             break;
+  //           case 'isInViewport':
+  //             if (value !== isInViewport(el)) return false;
+  //             break;
+  //           case 'customFilter':
+  //             if (typeof value === 'function' && !value(el)) return false;
+  //             break;
+  //         }
+  //       }
+  
+  //       return true;
+  //     };
+  
+  //     // Execute the filtering in the browser context
+  //     return page.evaluate((filterParamsString) => {
+  //       const filterParams = JSON.parse(filterParamsString);
+  //       const filterFn = eval(`(${filterElement})`)(filterParams);
+  //       const allElements = document.querySelectorAll('*');
+  //       return Array.from(allElements)
+  //         .filter(filterFn)
+  //         .map((el) => ({
+  //           tagName: el.tagName,
+  //           textContent: el.textContent,
+  //           isVisible: el.offsetWidth > 0 && el.offsetHeight > 0,
+  //           boundingBox: el.getBoundingClientRect(),
+  //         }));
+  //     }, JSON.stringify(filterParams));
+  //   } catch (error) {
+  //     logger.error(`Error filtering elements: ${error}`);
+  //     return [];
+  //   }
+  // };

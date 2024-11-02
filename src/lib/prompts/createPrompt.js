@@ -3,7 +3,7 @@
 const { assistantPrompts } = require("./static/assistant");
 const { systemPrompts } = require("./static/system");
 // const { SystemMessagePromptTemplate } = require('@langchain/core/prompts');
-const { toolPrompts } = require("../functions");
+const { toolPrompts } = require("../tools");
 const { instructionsPrompts } = require("./static");
 const { MARKDOWN_FORMATTING_GUIDE } = require("./static/constants");
 
@@ -25,6 +25,7 @@ const getPromptByName = (type, name) => {
     toolPrompts[name];
   }
 };
+
 const createPrompt = (type, name) => {
   const prompt = getPromptByName(type, name);
   return {
@@ -32,6 +33,7 @@ const createPrompt = (type, name) => {
     content: prompt
   };
 };
+
 const getMainSystemMessageContent = (params) => {
   const defaultPrompt = "REACT_TAILWIND_SYSTEM_PROMPT_TEXT";
   const formattingInstructions = MARKDOWN_FORMATTING_GUIDE;
@@ -43,6 +45,7 @@ const getMainSystemMessageContent = (params) => {
   // return systemPrompts[defaultPrompt];
   return formattedSystemPrompt;
 };
+
 const getMainAssistantMessageInstructions = (params) => {
   const defaultPrompt = "JS_COMPONENT_ASSISTANT";
   const promptList = convertMapToArray(assistantPrompts);
@@ -51,9 +54,11 @@ const getMainAssistantMessageInstructions = (params) => {
   }
   return assistantPrompts[defaultPrompt];
 };
+
 const getFormattingInstructions = () => {
   return instructionsPrompts["ORIGINAL_RESPONSE_FORMAT"];
 };
+
 const getMainToolMessageContent = () => createPrompt("tool", "SUMMARIZE_MESSAGES");
 
 module.exports = {

@@ -10,6 +10,20 @@ const {
 } = require("@config/constants");
 const { User } = require("@models/user");
 const { logger } = require("@config/logging");
+const fetch = require("node-fetch");
+
+const fetchJson = async (url, options) => {
+  try {
+    const response = await fetch(url, options);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+};
 
 const getEnv = (key) => {
   return process.env[key];
@@ -67,5 +81,6 @@ module.exports = {
   getEnv,
   validateEnvironmentVariables,
   validateUserInput,
-  checkUserExists
+  checkUserExists,
+  fetchJson
 };

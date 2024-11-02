@@ -239,8 +239,8 @@ const defaults = {
     }
     // --- Chat Models --- //
   },
-  // --- Chat --- //
-  chat: {
+  // --- AI --- //
+  ai: {
     settings: {
       limits: CHAT_SETTING_LIMITS,
       default: {
@@ -258,51 +258,115 @@ const defaults = {
     },
     // --- Chat Model Names --- //
     models: {
-      // GPT-3 models
-      gpt3: process.env.GPT3_MODEL,
-      gpt35Turbo: process.env.GPT35_TURBO_MODEL,
-      gpt35Turbo16k: process.env.GPT35_TURBO_16K_MODEL,
-      textDavinci003: process.env.TEXT_DAVINCI_003_MODEL,
-      textDavinci002: process.env.TEXT_DAVINCI_002_MODEL,
-      textCurie001: process.env.TEXT_CURIE_001_MODEL,
-      textBabbage001: process.env.TEXT_BABBAGE_001_MODEL,
-      textAda001: process.env.TEXT_ADA_001_MODEL,
+      idMap: {
+        // GPT-3 models
+        gpt3: process.env.GPT3_MODEL,
+        gpt35Turbo: process.env.GPT35_TURBO_MODEL,
+        gpt35Turbo16k: process.env.GPT35_TURBO_16K_MODEL,
+        textDavinci003: process.env.TEXT_DAVINCI_003_MODEL,
+        textDavinci002: process.env.TEXT_DAVINCI_002_MODEL,
+        textCurie001: process.env.TEXT_CURIE_001_MODEL,
+        textBabbage001: process.env.TEXT_BABBAGE_001_MODEL,
+        textAda001: process.env.TEXT_ADA_001_MODEL,
 
-      // GPT-4 models
-      gpt4: process.env.GPT4_MODEL,
-      gpt4_32k: process.env.GPT4_32K_MODEL,
-      gpt4Turbo: process.env.GPT4_TURBO_MODEL,
-      gpt4TurboVision: process.env.GPT4_TURBO_VISION_MODEL,
+        // GPT-4 models
+        gpt4: process.env.GPT4_MODEL,
+        gpt4_32k: process.env.GPT4_32K_MODEL,
+        gpt4Turbo: process.env.GPT4_TURBO_MODEL,
+        gpt4TurboVision: process.env.GPT4_TURBO_VISION_MODEL,
 
-      // GPT-4o models
-      gpt4o: process.env.GPT4O_MODEL,
-      gpt4oMini: process.env.GPT4O_MINI_MODEL,
+        // GPT-4o models
+        gpt4o: process.env.GPT4O_MODEL,
+        gpt4oMini: process.env.GPT4O_MINI_MODEL,
 
-      // Instruct models
-      gpt35TurboInstruct: process.env.GPT35_TURBO_INSTRUCT_MODEL,
+        // Instruct models
+        gpt35TurboInstruct: process.env.GPT35_TURBO_INSTRUCT_MODEL,
 
-      // Embedding models
-      adaEmbedding: process.env.ADA_EMBEDDING_MODEL,
-      textEmbedding3Small: process.env.TEXT_EMBEDDING_3_SMALL_MODEL,
-      textEmbedding3Large: process.env.TEXT_EMBEDDING_3_LARGE_MODEL,
+        // Embedding models
+        adaEmbedding: process.env.ADA_EMBEDDING_MODEL,
+        textEmbedding3Small: process.env.TEXT_EMBEDDING_3_SMALL_MODEL,
+        textEmbedding3Large: process.env.TEXT_EMBEDDING_3_LARGE_MODEL,
 
-      // Other OpenAI models
-      whisper: process.env.WHISPER_MODEL,
-      dalle2: process.env.DALLE2_MODEL,
-      dalle3: process.env.DALLE3_MODEL,
+        // Other OpenAI models
+        whisper: process.env.WHISPER_MODEL,
+        dalle2: process.env.DALLE2_MODEL,
+        dalle3: process.env.DALLE3_MODEL,
 
-      // Non-OpenAI models (for comparison)
-      claudeV1: process.env.CLAUDE_V1_MODEL,
-      claudeV2: process.env.CLAUDE_V2_MODEL,
-      claudeInstant: process.env.CLAUDE_INSTANT_MODEL,
-      palmV2: process.env.PALM_V2_MODEL,
-      geminiBison: process.env.GEMINI_BISON_MODEL,
-      llama2: process.env.LLAMA2_MODEL,
-      mistral7b: process.env.MISTRAL7B_MODEL,
-      falcon40b: process.env.FALCON40B_MODEL
+        // Non-OpenAI models (for comparison)
+        claudeV1: process.env.CLAUDE_V1_MODEL,
+        claudeV2: process.env.CLAUDE_V2_MODEL,
+        claudeInstant: process.env.CLAUDE_INSTANT_MODEL,
+        palmV2: process.env.PALM_V2_MODEL,
+        geminiBison: process.env.GEMINI_BISON_MODEL,
+        llama2: process.env.LLAMA2_MODEL,
+        mistral7b: process.env.MISTRAL7B_MODEL,
+        falcon40b: process.env.FALCON40B_MODEL
+      }
     },
     // --- Chat Model Configurations --- //
     configurations: {
+      // --- Chat Model Base Configurations --- //
+      baseConfigMap: {
+        openAi: {
+          model: getEnv("OPENAI_API_CHAT_COMPLETION_MODEL"),
+          temperature: 0.2,
+          maxTokens: 500,
+          apiKey: process.env.OPENAI_API_PROJECT_KEY
+        },
+        openAiLangChain: {
+          model: getEnv("OPENAI_API_CHAT_COMPLETION_MODEL"),
+          temperature: 0.2,
+          maxTokens: 500,
+          apiKey: process.env.OPENAI_API_PROJECT_KEY
+        },
+        openAiVercel: {
+          model: getEnv("OPENAI_API_CHAT_COMPLETION_MODEL"),
+          temperature: 0.2,
+          maxTokens: 500,
+          apiKey: process.env.OPENAI_API_PROJECT_KEY
+        },
+        openAiVercelLangChain: {
+          model: getEnv("OPENAI_API_CHAT_COMPLETION_MODEL"),
+          temperature: 0.2,
+          maxTokens: 500,
+          apiKey: process.env.OPENAI_API_PROJECT_KEY
+        },
+
+        anthropic: {},
+        groq: {},
+        googleGemini: {},
+        mistral: {},
+        llama2: {},
+        perplexity: {
+          model: "llama-3.1-sonar-small-128k-online",
+          return_citations: true,
+          return_images: false,
+          search_recency_filter: "month",
+          stream: false,
+          max_tokens: 1024,
+          temperature: 0.5
+        }
+      },
+      // --- Presets and Unique Configurations --- //
+      presets: {
+        llm: {
+          useOllamaInference: false,
+          useOllamaEmbeddings: false,
+          searchProvider: "serper", // 'serper', 'google' // 'serper' is the default
+          inferenceModel: "llama-3.1-70b-versatile", // Groq: 'mixtral-8x7b-32768', 'gemma-7b-it' // OpenAI: 'gpt-3.5-turbo', 'gpt-4' // Ollama 'mistral', 'llama3' etc
+          inferenceAPIKey: process.env.GROQ_API_KEY, // Groq: process.env.GROQ_API_KEY // OpenAI: process.env.OPENAI_API_KEY // Ollama: 'ollama' is the default
+          embeddingsModel: "text-embedding-3-small", // Ollama: 'llama2', 'nomic-embed-text' // OpenAI 'text-embedding-3-small', 'text-embedding-3-large'
+          textChunkSize: 800, // Recommended to decrease for Ollama
+          textChunkOverlap: 200, // Recommended to decrease for Ollama
+          numberOfSimilarityResults: 4, // Number of similarity results to return per page
+          numberOfPagesToScan: 10, // Recommended to decrease for Ollama
+          nonOllamaBaseURL: "https://api.groq.com/openai/v1", //Groq: https://api.groq.com/openai/v1 // OpenAI: https://api.openai.com/v1
+          useFunctionCalling: true, // Set to true to enable function calling and conditional streaming UI (currently in beta)
+          useRateLimiting: false, // Uses Upstash rate limiting to limit the number of requests per user
+          useSemanticCache: false, // Uses Upstash semantic cache to store and retrieve data for faster response times
+          usePortkey: false // Uses Portkey for AI Gateway in @mentions (currently in beta) see config-tools.tsx to configure + mentionTools.tsx for source code
+        }
+      },
       // --- Embedding --- //
       embedding: {
         general: {

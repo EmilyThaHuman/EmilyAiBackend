@@ -68,25 +68,35 @@ assistantSchema.statics.getRequiredData = function () {
   };
 };
 
-assistantSchema.pre("save", function (next) {
-  // log
-  logger.info("ChatMessage pre-save hook");
+assistantSchema.pre("save", async function (next) {
+  logger.info("Assistant pre-save hook");
 
-  // Check if the assistant has a folderId
-  // if (this.folderId) {
-  //   // Check if the folderId is valid
-  //   if (!mongoose.Types.ObjectId.isValid(this.folderId)) {
-  //     // If the folderId is not valid, set it to null
-  //     this.folderId = null;
-  //   }
-  //   // Check if the folder exists
-  //   if (!mongoose.model("Folder").findById(this.folderId)) {
-  //     // If the folder doesn't exist, set the folderId to null
-  //     this.folderId = null;
-  //   }
-  //   next();
-  //   return;
-  // }
+  if (this.isNew) {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+      // Check if the assistant is already in the workspace's assistants
+      const workspace = await mongoose.model("Workspace").findById(this.workspaceId);
+      if (!workspace.assistants.includes(this._id)) {
+        // Add the assistant to the workspace's assistants
+        await mongoose.model("Workspace").findByIdAndUpdate(
+          this.workspaceId,
+          {
+            $addToSet: { assistants: this._id }
+          },
+          { session }
+        );
+      }
+
+      await session.commitTransaction();
+      session.endSession();
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      logger.error("Error in Assistant pre-save hook:", error);
+      return next(error);
+    }
+  }
   next();
 });
 

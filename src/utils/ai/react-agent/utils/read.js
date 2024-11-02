@@ -2,7 +2,7 @@
 const fs = require("fs").promises;
 const path = require("path");
 const { UI_COMPONENTS_DIR, DEMO_COMPONENTS_DIR, LOCAL_COMPONENTS_DIR } = require("./const");
-const { Component, replaceDoubleSpaces } = require("./helpers");
+const { replaceDoubleSpaces } = require("./helpers");
 
 /**
  * Reads the user story from a specified directory.

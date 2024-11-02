@@ -7,6 +7,7 @@ module.exports = {
   ...require("./logging"),
   ...require("./constants"),
   ...require("./passport"),
+  ...config,
   passport: passport,
   config: config,
   logger: logger.logger

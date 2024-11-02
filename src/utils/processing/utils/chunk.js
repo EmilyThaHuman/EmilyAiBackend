@@ -156,6 +156,52 @@ function cleanResponseData(responseData) {
   }
 }
 
+/**
+ * Splits a given text into chunks of 1 to many paragraphs.
+ *
+ * @param {string} text - The input text to be chunked.
+ * @param {number} [maxChunkSize=1500] - The maximum size (in characters) allowed for each chunk.
+ * @param {number} [minChunkSize=500] - The minimum size (in characters) required for each chunk.
+ * @returns {string[]} An array of chunked text, where each chunk contains 1 or multiple paragraphs
+ */
+function chunkTextByMultiParagraphs(text, maxChunkSize = 1500, minChunkSize = 500) {
+  const chunks = [];
+  let currentChunk = "";
+
+  let startIndex = 0;
+  while (startIndex < text.length) {
+    let endIndex = startIndex + maxChunkSize;
+    if (endIndex >= text.length) {
+      endIndex = text.length;
+    } else {
+      const paragraphBoundary = text.indexOf("\n\n", endIndex);
+      if (paragraphBoundary !== -1) {
+        endIndex = paragraphBoundary;
+      }
+    }
+
+    const chunk = text.slice(startIndex, endIndex).trim();
+    if (chunk.length >= minChunkSize) {
+      chunks.push(chunk);
+      currentChunk = "";
+    } else {
+      currentChunk += chunk + "\n\n";
+    }
+
+    startIndex = endIndex + 1;
+  }
+
+  if (currentChunk.length >= minChunkSize) {
+    chunks.push(currentChunk.trim());
+  } else if (chunks.length > 0) {
+    chunks[chunks.length - 1] += "\n\n" + currentChunk.trim();
+  } else {
+    chunks.push(currentChunk.trim());
+  }
+
+  return chunks;
+}
+
 module.exports = {
   containsDiff,
   applyDiff,
@@ -165,5 +211,6 @@ module.exports = {
   extractContent,
   semanticChunking,
   slidingWindowChunks,
-  cleanResponseData
+  cleanResponseData,
+  chunkTextByMultiParagraphs
 };

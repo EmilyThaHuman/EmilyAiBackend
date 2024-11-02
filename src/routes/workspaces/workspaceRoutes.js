@@ -108,6 +108,38 @@ router.post("/create", asyncHandler(createWorkspace));
 router.put("/:workspaceId", asyncHandler(updateWorkspace));
 router.delete("/:workspaceId", asyncHandler(deleteWorkspace));
 
+// --- Presets service ---
+router.get("/:workspaceId/presets", async (req, res) => {
+  try {
+    const { workspaceId } = req.params;
+    if (!workspaceId) {
+      logger.error(`[ERROR] [${new Date().toLocaleTimeString()}] ERR: :userId/workspaces:`, error);
+      return res.status(400).json({ message: "Workspace ID is required" });
+    }
+
+    // Find the workspace and populate the 'presets' field
+    const workspace = await Workspace.findById({
+      _id: workspaceId
+    })
+      .populate("presets")
+      .exec();
+    if (!workspace) {
+      logger.error(`[ERROR] [${new Date().toLocaleTimeString()}] ERR: :userId/workspaces:`, error);
+      return res.status(404).json({ message: "Workspace not found" });
+    }
+
+    logger.info(
+      `[PRESETS] [${new Date().toLocaleTimeString()}] :workspaceId/presets: ${workspace.presets}`,
+      workspace.presets
+    );
+    // Use populated 'presets' directly as entities
+    const entities = workspace.presets || [];
+    res.status(200).json(entities);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching presets", error: error.message });
+  }
+});
+
 // --- Folders service ---
 router.post("/:workspaceId/folders", async (req, res) => {
   try {

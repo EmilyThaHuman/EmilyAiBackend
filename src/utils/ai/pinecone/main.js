@@ -20,7 +20,7 @@ const { processDocument } = require("@utils/processing/utils/main.js");
 
 require("dotenv").config();
 
-const publicFilesDirectory = path.join(__dirname, "@/public/files");
+const publicFilesDirectory = path.join(__dirname, "public/files");
 // 7. Set up DirectoryLoader to load documents from the ./documents directory
 const loader = new DirectoryLoader(publicFilesDirectory, {
   ".txt": (path) => new TextLoader(path),
@@ -41,7 +41,7 @@ const chatCompletionWithLLM = async (data) => {
       apiKey: getEnv("PINECONE_API_KEY")
     });
 
-    await createPineconeIndex(pinecone, getEnv("PINECONE_INDEX"), 3072);
+    await createPineconeIndex(pinecone, getEnv("PINECONE_INDEX"));
 
     const docs = await loader.load();
     const processedDocs = await Promise.all(docs.map(processDocument));
@@ -64,31 +64,5 @@ const chatCompletionWithLLM = async (data) => {
     console.error("An error occurred:", error);
   }
 };
+
 module.exports = { chatCompletionWithLLM };
-// const main = async () => {
-//   try {
-//     const pinecone = new Pinecone({
-//       apiKey: getEnv('PINECONE_API_KEY'),
-//     });
-
-//     await createPineconeIndex(pinecone, getEnv('PINECONE_INDEX'), 512);
-
-//     const docs = await loader.load();
-//     const processedDocs = await Promise.all(docs.map(processDocument));
-//     const flattenedDocs = processedDocs.flat();
-
-//     const embeddings = new OpenAIEmbeddings({
-// 			apiKey: getEnv('OPENAI_API_KEY') || process.env.OPENAI_API_PROJECT_KEY,
-//       dimensions: 512,  // Ensure dimensions are passed as an integer
-// 			model: getEnv('EMBEDDING_MODEL') || process.env.EMBEDDING_MODEL,
-// 		 });
-//     await updatePinecone(pinecone, getEnv('PINECONE_INDEX'), flattenedDocs, embeddings);
-
-//     const question = 'When is mr Gatsby?';
-//     await queryPineconeVectorStoreAndQueryLLM(pinecone, getEnv('PINECONE_INDEX'), question, embeddings);
-//   } catch (error) {
-//     console.error('An error occurred:', error);
-//   }
-// };
-
-// main();

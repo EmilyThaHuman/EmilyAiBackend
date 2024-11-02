@@ -52,7 +52,7 @@ const saveSkeletonComposition = (dirPath) => async (userStory) => {
  * @returns {Promise<void>} A promise that resolves when the composition is generated and saved.
  *
  * @example
- * // Usage Example:
+ * Example 1: Generates a composition for the Button component
  * generateSkeletonCompositionFromStory('components/Button');
  */
 const generateSkeletonCompositionFromStory = async (containerPath) => {

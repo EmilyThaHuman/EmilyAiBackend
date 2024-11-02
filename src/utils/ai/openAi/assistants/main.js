@@ -4,11 +4,11 @@ const { openAiApiFileService } = require("./files");
 const { openAiApiMessageService } = require("./messages");
 const { openAiApiRunService } = require("./runs");
 const { openAiApiThreadService } = require("./thread");
-const { getUserOpenaiClient } = require("../get");
+const { getOpenaiClient } = require("../get");
 const { openAiApiStreamingService } = require("./streaming");
 let pollingInterval;
 // Initialize OpenAI services
-const openai = getUserOpenaiClient(process.env.OPENAI_API_PROJECT_KEY);
+const openai = getOpenaiClient(process.env.OPENAI_API_PROJECT_KEY);
 const assistantService = openAiApiAssistantService(openai);
 const fileService = openAiApiFileService(openai);
 const threadService = openAiApiThreadService(openai);
@@ -102,6 +102,7 @@ const listAndCheckAssistantExistence = async (openai) => {
   }
   return existingAssistant;
 };
+
 const assistantTest = async (req, res, next) => {
   try {
     logger.info(`REQUEST: ${JSON.stringify(req.body)}`);
@@ -124,6 +125,7 @@ const assistantTest = async (req, res, next) => {
     next(err);
   }
 };
+
 const myAssistant = async (threadId, prompt) => {
   try {
     const openai = getUserOpenaiClient(process.env.OPENAI_API_PROJECT_KEY);
@@ -347,7 +349,7 @@ const getAssistantByThreadId = async (req, res, next) => {
   try {
     const threadId = req.body.threadId;
     const prompt = req.body.prompt;
-    const openai = getUserOpenaiClient(process.env.OPENAI_API_PROJECT_KEY);
+    const openai = getOpenaiClient();
     const { createAssistant } = openAiApiAssistantService(openai);
     const { uploadFile } = openAiApiFileService(openai);
     const { createThread } = openAiApiThreadService(openai);

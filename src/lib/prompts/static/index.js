@@ -3,5 +3,7 @@ module.exports = {
   ...require("./assistant"),
   ...require("./system"),
   ...require("./instructions"),
-  ...require("./component")
+  ...require("./component"),
+  ...require("./constants"),
+  ...require("./exampleResponses")
 };

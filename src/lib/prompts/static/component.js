@@ -61,6 +61,73 @@ ${componentExample}
   return prompt;
 };
 
+/**
+ * Creates a prompt for the OpenAI API based on the input and output languages and the input code.
+ *
+ * @param {string} inputLanguage - The language of the input code or description (e.g., 'JavaScript', 'Natural Language').
+ * @param {string} outputLanguage - The desired language for the output code or description.
+ * @param {string} inputCode - The code snippet or natural language description to translate.
+ * @returns {string} - The constructed prompt.
+ */
+const createPrompt = (inputLanguage, outputLanguage, inputCode) => {
+  const codeExample = `for (let i = 0; i < 10; i++) {
+  console.log(i);
+}`;
+  const naturalLanguageExample = 'Print the numbers 0 to 9.';
+
+  if (inputLanguage === 'Natural Language') {
+    return `// Translate the following natural language description into ${outputLanguage} code.
+
+// Example:
+
+// Natural language:
+// ${naturalLanguageExample}
+
+// ${outputLanguage} code:
+${codeExample}
+
+// Natural language:
+${inputCode}
+
+// ${outputLanguage} code (no \`\`\`):`;
+  } else if (outputLanguage === 'Natural Language') {
+    return `// Translate the following ${inputLanguage} code into plain English that the average adult could understand.
+// Respond as bullet points starting with "-".
+
+// Example:
+
+// ${inputLanguage} code:
+${codeExample}
+
+// Natural language:
+// - ${naturalLanguageExample}
+
+// ${inputLanguage} code:
+${inputCode}
+
+// Natural language:`;
+  } else {
+    const translatedCodeExample = `for i in range(10):
+  print(i)`;
+
+    return `// Translate the following ${inputLanguage} code into ${outputLanguage} code.
+
+// Example:
+
+// ${inputLanguage} code:
+${codeExample}
+
+// ${outputLanguage} code:
+${translatedCodeExample}
+
+// ${inputLanguage} code:
+${inputCode}
+
+// ${outputLanguage} code (no \`\`\`):`;
+  }
+};
+
+
 module.exports = {
   generateComponentPrompt
 };

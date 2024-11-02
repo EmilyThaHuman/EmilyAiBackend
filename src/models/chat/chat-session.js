@@ -1,4 +1,3 @@
-/* eslint-disable no-constant-condition */
 // models/ChatSession.js
 const mongoose = require("mongoose");
 const natural = require("natural");
@@ -173,7 +172,24 @@ const chatSessionSchema = createSchema(
   }
 );
 
+// Indexes
+// const indexes = [
+//   { fields: { "metadata.name": 1 }, unique: true }, // Unique index on metadata.name
+//   { fields: { "metadata.type": 1 } }, // Index on metadata.type
+//   { fields: { "metadata.category": 1 } }, // Index on metadata.category
+//   { fields: { "metadata.subcategory": 1 } } // Index on metadata.sub
+// ];
+// // Create indexes
+// indexes.forEach((index) => {
+//   Schema.index(index.fields, index.unique);
+// });
+
+// -- this index is used for querying by userId and workspaceId together
 chatSessionSchema.index({ userId: 1, workspaceId: 1 });
+// -- this index is used for querying by workspaceId and _id together
+chatSessionSchema.index({ workspaceId: 1, _id: 1 });
+// -- this index is used for querying by folderId and _id together
+chatSessionSchema.index({ folderId: 1, _id: 1 });
 
 // Static methods
 chatSessionSchema.statics.createSession = async function (sessionData) {
@@ -393,14 +409,18 @@ chatSessionSchema.pre("save", async function (next) {
         { session }
       );
 
-      // Add the session to the workspace's chatSessions
-      await mongoose.model("Workspace").findByIdAndUpdate(
-        this.workspaceId,
-        {
-          $addToSet: { chatSessions: this._id }
-        },
-        { session }
-      );
+      // Check if the session is already in the workspace's chatSessions
+      const workspace = await mongoose.model("Workspace").findById(this.workspaceId);
+      if (!workspace.chatSessions.includes(this._id)) {
+        // Add the session to the workspace's chatSessions
+        await mongoose.model("Workspace").findByIdAndUpdate(
+          this.workspaceId,
+          {
+            $addToSet: { chatSessions: this._id }
+          },
+          { session }
+        );
+      }
 
       await session.commitTransaction();
       session.endSession();
